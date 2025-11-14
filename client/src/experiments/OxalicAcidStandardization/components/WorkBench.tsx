@@ -1414,7 +1414,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
           {/* Measurements & Actions (moved from left panel) */}
           <div className="bg-white border-t border-gray-200 p-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <h4 className="text-sm font-semibold text-gray-700 mb-2">Measurements</h4>
                 <div className="text-xs space-y-1">
@@ -1423,14 +1423,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   <div className="flex justify-between"><span>Target Molarity:</span><span className="font-mono">{measurements.targetMolarity.toFixed(3)} M</span></div>
                   <div className="flex justify-between"><span>Actual Molarity:</span><span className="font-mono">{measurements.actualMolarity.toFixed(6)} M</span></div>
                   <div className="flex justify-between"><span>Temperature:</span><span className="font-mono">{temperature}°C</span></div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-sm font-semibold text-gray-700 mb-2">Chemical Equation</h4>
-                <div className="text-xs font-mono bg-gray-50 rounded-lg p-3 border text-center leading-relaxed">
-                  <div>H₂C₂O₄·2H₂O (s) → H₂C₂O₄ (aq) + 2H₂O</div>
-                  <div className="mt-1">H₂C₂O₄ (aq) ⇌ 2H⁺ + C₂O₄²⁻</div>
                 </div>
               </div>
 
