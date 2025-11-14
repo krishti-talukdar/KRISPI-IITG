@@ -1554,39 +1554,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
             </div>
           </div>
 
-          {/* Results Panel */}
-          <div className="h-32 bg-white border-t border-gray-200 p-4 overflow-y-auto">
-            <h3 className="text-sm font-semibold text-gray-900 mb-2">
-              Observations & Results
-            </h3>
-            <div className="space-y-1">
-              {results.slice(-3).map((result) => (
-                <div
-                  key={result.id}
-                  className={`text-xs p-2 rounded-md ${
-                    result.type === "success"
-                      ? "bg-green-50 text-green-800"
-                      : result.type === "warning"
-                      ? "bg-yellow-50 text-yellow-800"
-                      : result.type === "error"
-                      ? "bg-red-50 text-red-800"
-                      : "bg-blue-50 text-blue-800"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">{result.title}</span>
-                    <span className="text-gray-500">{result.timestamp}</span>
-                  </div>
-                  <p className="mt-1">{result.description}</p>
-                </div>
-              ))}
-              {results.length === 0 && (
-                <p className="text-xs text-gray-500 italic">
-                  No observations yet. Start the experiment to see results.
-                </p>
-              )}
-            </div>
-          </div>
         </div>
       </div>
 
