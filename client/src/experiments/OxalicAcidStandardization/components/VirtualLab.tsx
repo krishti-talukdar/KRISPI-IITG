@@ -185,8 +185,8 @@ function OxalicAcidVirtualLab({
         const targetBalanceX = Math.max(0, (surfaceRect.width - balanceRect.width) / 2);
         const targetBalanceY = Math.max(0, surfaceRect.height * 0.12);
         const targetBoatX = targetBalanceX + (balanceRect.width - boatRect.width) / 2;
-        const panCenterY = targetBalanceY + balanceRect.height * 0.55;
-        const targetBoatY = panCenterY - boatRect.height / 2;
+        const panTopY = targetBalanceY + balanceRect.height * 0.35;
+      const targetBoatY = panTopY - boatRect.height / 2;
 
         setEquipmentPositions(prev => {
           let changed = false;
@@ -469,8 +469,8 @@ function OxalicAcidVirtualLab({
       const targetBalanceX = Math.max(0, (surfaceRect.width - balanceRect.width) / 2);
       const targetBalanceY = Math.max(0, surfaceRect.height * 0.12);
       const targetBoatX = targetBalanceX + (balanceRect.width - boatRect.width) / 2;
-      const panCenterY = targetBalanceY + balanceRect.height * 0.55;
-      const targetBoatY = panCenterY - boatRect.height / 2;
+      const panTopY = targetBalanceY + balanceRect.height * 0.35;
+      const targetBoatY = panTopY - boatRect.height / 2;
 
       setEquipmentPositions(prev => {
         let changed = false;
@@ -577,8 +577,8 @@ function OxalicAcidVirtualLab({
       const targetBalanceX = Math.max(0, (surfaceRect.width - balanceRect.width) / 2);
       const targetBalanceY = Math.max(0, surfaceRect.height * 0.12);
       const targetBoatX = targetBalanceX + (balanceRect.width - boatRect.width) / 2;
-      const panCenterY = targetBalanceY + balanceRect.height * 0.55;
-      const targetBoatY = panCenterY - boatRect.height / 2;
+      const panTopY = targetBalanceY + balanceRect.height * 0.35;
+      const targetBoatY = panTopY - boatRect.height / 2;
 
       setEquipmentPositions(prev => {
         let changed = false;
