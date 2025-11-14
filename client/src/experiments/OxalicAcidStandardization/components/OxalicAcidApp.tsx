@@ -211,7 +211,7 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
               </div>
 
               <h3 className="text-sm font-semibold text-gray-900 mb-3">Chemicals</h3>
-              <div className="space-y-3">
+              <div className="space-y-3 mb-6 pb-6 border-b">
                 {OXALIC_ACID_CHEMICALS.filter(c => !usedEquipment.includes(c.id)).map((chemical) => (
                   <Chemical
                     key={chemical.id}
@@ -228,6 +228,12 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
                     blink={currentStep + 1 === 3 && !usedEquipment.includes(chemical.id)}
                   />
                 ))}
+              </div>
+
+              <h3 className="text-sm font-semibold text-gray-900 mb-3">Chemical Equation</h3>
+              <div className="text-xs font-mono bg-gray-50 rounded-lg p-3 border text-center leading-relaxed space-y-1">
+                <div>H₂C₂O₄·2H₂O (s) → H₂C₂O₄ (aq) + 2H₂O</div>
+                <div>H₂C₂O₄ (aq) ⇌ 2H⁺ + C₂O₄²⁻</div>
               </div>
             </CardContent>
           </Card>
