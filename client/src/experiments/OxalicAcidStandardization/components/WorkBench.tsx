@@ -1119,57 +1119,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     <div className="h-full flex flex-col bg-gray-50">
       {/* Header */}
       <div className="flex-shrink-0 p-4 bg-white border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Button
-              onClick={() => setShowCalculator(!showCalculator)}
-              variant="outline"
-              size="sm"
-            >
-              <Calculator className="w-4 h-4 mr-2" />
-              Calculator
-            </Button>
-            {!experimentStarted ? (
-              (() => {
-                const isOxalicPreparation = experimentTitle === "Preparation of Standard Solution of Oxalic Acid";
-                if (isOxalicPreparation) {
-                  return (
-                    <Button onClick={() => onStartExperiment(false)} size="sm">
-                      <Pause className="w-4 h-4 mr-2" />
-                      Pause Experiment
-                    </Button>
-                  );
-                }
-                return (
-                  <Button onClick={() => onStartExperiment(true)} size="sm">
-                    <Play className="w-4 h-4 mr-2" />
-                    Start Experiment
-                  </Button>
-                );
-              })()
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Button
-                  onClick={() => setIsRunning(!isRunning)}
-                  variant={isRunning ? "secondary" : "default"}
-                  size="sm"
-                >
-                  {isRunning ? (
-                    <Pause className="w-4 h-4" />
-                  ) : (
-                    <Play className="w-4 h-4" />
-                  )}
-                </Button>
-                <Button onClick={onResetTimer} variant="outline" size="sm">
-                  <RotateCcw className="w-4 h-4" />
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-        
         {/* Step Progress */}
-        <div className="mt-3 flex items-center space-x-4">
+        <div className="flex items-center space-x-4">
           <div className="flex-1 bg-gray-200 rounded-full h-2">
             <div
               className="bg-blue-500 h-2 rounded-full transition-all duration-300"
