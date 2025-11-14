@@ -175,21 +175,25 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
           <CardHeader>
             <CardTitle className="text-lg">Experiment Steps</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="space-y-4">
             {[experiment.stepDetails[currentStep]].map((step) => (
               <div
                 key={step.id}
-                className={`p-3 rounded-lg border cursor-pointer transition-colors bg-blue-50 border-blue-200`}
-                onClick={() => handleStepChange(currentStep)}
+                className={`p-4 rounded-lg border transition-colors bg-blue-50 border-blue-200`}
               >
-                <div className="flex items-center space-x-2">
-                  <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-blue-500 text-white">
+                <div className="flex items-start space-x-3 mb-3">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-blue-500 text-white flex-shrink-0">
                     {currentStep + 1}
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-sm">{step.title}</p>
-                    <p className="text-xs text-gray-600">{step.duration}</p>
+                    <p className="font-bold text-base text-gray-900">Step {currentStep + 1}: {step.title}</p>
                   </div>
+                </div>
+                <p className="text-sm text-gray-700 mb-3 ml-11">{step.description}</p>
+                <div className="flex items-center space-x-4 ml-11 text-xs text-gray-600">
+                  <span className="font-medium">Duration: {step.duration}</span>
+                  {step.temperature && <span>• Temperature: {step.temperature}</span>}
+                  {step.safety && <span>• {step.safety}</span>}
                 </div>
               </div>
             ))}
