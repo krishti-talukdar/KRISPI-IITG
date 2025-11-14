@@ -1120,19 +1120,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       {/* Header */}
       <div className="flex-shrink-0 p-4 bg-white border-b border-gray-200">
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Step {stepNumber}: {step.title}
-            </h2>
-            <p className="text-sm text-gray-600 mt-1">
-              {getCurrentStepGuidance()}
-            </p>
-            {stepNumber === 1 && (
-              <p className="text-sm text-blue-700 font-medium mt-2">
-                Drag the analytical balance and weighing boat into the workbench.
-              </p>
-            )}
-          </div>
           <div className="flex items-center space-x-2">
             <Button
               onClick={() => setShowCalculator(!showCalculator)}
