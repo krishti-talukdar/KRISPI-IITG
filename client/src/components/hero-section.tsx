@@ -1,0 +1,48 @@
+import { Button } from "@/components/ui/button";
+import { Play, Book } from "lucide-react";
+import { useLocation } from "wouter";
+import SafetyGuideModal from "./safety-guide-modal";
+
+export default function HeroSection() {
+  const [, navigate] = useLocation();
+  
+  const scrollToExperiments = () => {
+    const experimentsSection = document.getElementById('experiments');
+    if (experimentsSection) {
+      experimentsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+
+
+  return (
+    <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white drop-shadow-lg">
+            Discover Chemistry Through Virtual Experiments
+          </h2>
+          <p className="hero-initiative hero-initiative-font text-xl md:text-2xl font-bold mt-2">An initiative by TIH, IITG</p>
+          <div className="mt-6 flex flex-col sm:flex-row gap-6 justify-center">
+            <Button 
+              onClick={scrollToExperiments}
+              className="bg-white text-blue-600 px-8 py-3 hover:bg-gray-100 font-semibold"
+            >
+              <Play className="mr-2 h-4 w-4" />
+              Start Experimenting
+            </Button>
+            <SafetyGuideModal>
+              <Button 
+                variant="outline" 
+                className="border-2 border-white text-white px-8 py-3 bg-transparent hover:bg-white hover:text-blue-600 font-semibold"
+              >
+                <Book className="mr-2 h-4 w-4" />
+                View Safety Guide
+              </Button>
+            </SafetyGuideModal>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

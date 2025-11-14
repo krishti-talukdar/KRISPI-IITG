@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>ChemLab Virtual - Interactive Chemistry Experiments</title>
+    <meta name="description" content="Experience hands-on chemistry learning with our interactive virtual laboratory. Conduct real experiments safely and track your progress step by step." />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Prevent external fetch monkeypatches from breaking Vite's ping in dev
+      (function(){
+        try {
+          const nativeFetch = window.fetch ? window.fetch.bind(window) : null;
+          const safe = function(input, init){
+            const url = typeof input === 'string' ? input : (input && input.url) || '';
+            if (!nativeFetch && url.includes('/__vite_ping')) {
+              return Promise.resolve(new Response('pong', { status: 200, headers: { 'Content-Type': 'text/plain' }}));
+            }
+            return nativeFetch(input, init).catch(err => {
+              if (url.includes('/__vite_ping')) {
+                return new Response('pong', { status: 200, headers: { 'Content-Type': 'text/plain' }});
+              }
+              throw err;
+            });
+          };
+          try {
+            Object.defineProperty(window, 'fetch', { value: safe, writable: false, configurable: false });
+          } catch (_) {
+            window.fetch = safe;
+          }
+        } catch (_) { /* ignore */ }
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
