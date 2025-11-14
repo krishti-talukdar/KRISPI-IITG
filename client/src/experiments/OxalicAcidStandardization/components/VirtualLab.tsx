@@ -185,8 +185,8 @@ function OxalicAcidVirtualLab({
         const targetBalanceX = Math.max(0, (surfaceRect.width - balanceRect.width) / 2);
         const targetBalanceY = Math.max(0, surfaceRect.height * 0.12);
         const targetBoatX = targetBalanceX + (balanceRect.width - boatRect.width) / 2;
-        const panCenterY = targetBalanceY + balanceRect.height * 0.55;
-        const targetBoatY = panCenterY - boatRect.height / 2;
+        const panTopY = targetBalanceY + balanceRect.height * 0.35;
+      const targetBoatY = panTopY - boatRect.height / 2;
 
         setEquipmentPositions(prev => {
           let changed = false;
@@ -381,16 +381,11 @@ function OxalicAcidVirtualLab({
     const normalize = (value?: string) =>
       value ? value.toLowerCase().replace(/\s+/g, "_").replace(/-/g, "_") : "";
 
-    const required = ["analytical_balance", "weighing_boat"];
-    const placed = new Set(
-      equipmentPositions.map((position) =>
-        normalize(position.typeId ?? position.id?.split("_")[0])
-      )
+    const hasAnalyticalBalance = equipmentPositions.some((position) =>
+      normalize(position.typeId ?? position.id?.split("_")[0]).includes("analytical_balance")
     );
 
-    const allPlaced = required.every((req) => placed.has(req));
-
-    if (allPlaced && !stepOneAutoProgressedRef.current) {
+    if (hasAnalyticalBalance && !stepOneAutoProgressedRef.current) {
       stepOneAutoProgressedRef.current = true;
       const TARGET_MASS = 0.1 * 0.25 * 126.07;
       setMeasurements((prev) =>
@@ -404,7 +399,7 @@ function OxalicAcidVirtualLab({
       onStepComplete();
     }
 
-    if (!allPlaced) {
+    if (!hasAnalyticalBalance) {
       stepOneAutoProgressedRef.current = false;
     }
   }, [equipmentPositions, stepNumber, onStepComplete, setMeasurements]);
@@ -469,8 +464,8 @@ function OxalicAcidVirtualLab({
       const targetBalanceX = Math.max(0, (surfaceRect.width - balanceRect.width) / 2);
       const targetBalanceY = Math.max(0, surfaceRect.height * 0.12);
       const targetBoatX = targetBalanceX + (balanceRect.width - boatRect.width) / 2;
-      const panCenterY = targetBalanceY + balanceRect.height * 0.55;
-      const targetBoatY = panCenterY - boatRect.height / 2;
+      const panTopY = targetBalanceY + balanceRect.height * 0.35;
+      const targetBoatY = panTopY - boatRect.height / 2;
 
       setEquipmentPositions(prev => {
         let changed = false;
@@ -577,8 +572,8 @@ function OxalicAcidVirtualLab({
       const targetBalanceX = Math.max(0, (surfaceRect.width - balanceRect.width) / 2);
       const targetBalanceY = Math.max(0, surfaceRect.height * 0.12);
       const targetBoatX = targetBalanceX + (balanceRect.width - boatRect.width) / 2;
-      const panCenterY = targetBalanceY + balanceRect.height * 0.55;
-      const targetBoatY = panCenterY - boatRect.height / 2;
+      const panTopY = targetBalanceY + balanceRect.height * 0.35;
+      const targetBoatY = panTopY - boatRect.height / 2;
 
       setEquipmentPositions(prev => {
         let changed = false;

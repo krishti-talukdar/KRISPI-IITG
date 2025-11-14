@@ -85,7 +85,7 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
 
   const handleResetTimer = () => {
     setTimer(0);
-    setIsRunning(false);
+    setIsRunning(true);
   };
 
   const handleUndoStep = () => {
@@ -175,21 +175,25 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
           <CardHeader>
             <CardTitle className="text-lg">Experiment Steps</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="space-y-4">
             {[experiment.stepDetails[currentStep]].map((step) => (
               <div
                 key={step.id}
-                className={`p-3 rounded-lg border cursor-pointer transition-colors bg-blue-50 border-blue-200`}
-                onClick={() => handleStepChange(currentStep)}
+                className={`p-4 rounded-lg border transition-colors bg-blue-50 border-blue-200`}
               >
-                <div className="flex items-center space-x-2">
-                  <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-blue-500 text-white">
+                <div className="flex items-start space-x-3 mb-3">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-blue-500 text-white flex-shrink-0">
                     {currentStep + 1}
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-sm">{step.title}</p>
-                    <p className="text-xs text-gray-600">{step.duration}</p>
+                    <p className="font-bold text-base text-gray-900">Step {currentStep + 1}: {step.title}</p>
                   </div>
+                </div>
+                <p className="text-sm text-gray-700 mb-3 ml-11">{step.description}</p>
+                <div className="flex items-center space-x-4 ml-11 text-xs text-gray-600">
+                  <span className="font-medium">Duration: {step.duration}</span>
+                  {step.temperature && <span>• Temperature: {step.temperature}</span>}
+                  {step.safety && <span>• {step.safety}</span>}
                 </div>
               </div>
             ))}
@@ -211,7 +215,7 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
               </div>
 
               <h3 className="text-sm font-semibold text-gray-900 mb-3">Chemicals</h3>
-              <div className="space-y-3">
+              <div className="space-y-3 mb-6 pb-6 border-b">
                 {OXALIC_ACID_CHEMICALS.filter(c => !usedEquipment.includes(c.id)).map((chemical) => (
                   <Chemical
                     key={chemical.id}
@@ -228,6 +232,12 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
                     blink={currentStep + 1 === 3 && !usedEquipment.includes(chemical.id)}
                   />
                 ))}
+              </div>
+
+              <h3 className="text-sm font-semibold text-gray-900 mb-3">Chemical Equation</h3>
+              <div className="text-xs font-mono bg-gray-50 rounded-lg p-3 border text-center leading-relaxed space-y-1">
+                <div>H₂C₂O₄·2H₂O (s) → H₂C₂O₄ (aq) + 2H₂O</div>
+                <div>H₂C₂O₄ (aq) ⇌ 2H⁺ + C₂O₄²⁻</div>
               </div>
             </CardContent>
           </Card>

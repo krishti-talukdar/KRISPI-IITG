@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Equipment } from "./Equipment";
 import { Chemical } from "./Chemical";
-import { Play, Pause, RotateCcw, Calculator, FlaskConical } from "lucide-react";
+import { FlaskConical } from "lucide-react";
 import StirringAnimation from "./StirringAnimation";
 import type {
   EquipmentPosition,
@@ -1119,70 +1119,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     <div className="h-full flex flex-col bg-gray-50">
       {/* Header */}
       <div className="flex-shrink-0 p-4 bg-white border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Step {stepNumber}: {step.title}
-            </h2>
-            <p className="text-sm text-gray-600 mt-1">
-              {getCurrentStepGuidance()}
-            </p>
-            {stepNumber === 1 && (
-              <p className="text-sm text-blue-700 font-medium mt-2">
-                Drag the analytical balance and weighing boat into the workbench.
-              </p>
-            )}
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              onClick={() => setShowCalculator(!showCalculator)}
-              variant="outline"
-              size="sm"
-            >
-              <Calculator className="w-4 h-4 mr-2" />
-              Calculator
-            </Button>
-            {!experimentStarted ? (
-              (() => {
-                const isOxalicPreparation = experimentTitle === "Preparation of Standard Solution of Oxalic Acid";
-                if (isOxalicPreparation) {
-                  return (
-                    <Button onClick={() => onStartExperiment(false)} size="sm">
-                      <Pause className="w-4 h-4 mr-2" />
-                      Pause Experiment
-                    </Button>
-                  );
-                }
-                return (
-                  <Button onClick={() => onStartExperiment(true)} size="sm">
-                    <Play className="w-4 h-4 mr-2" />
-                    Start Experiment
-                  </Button>
-                );
-              })()
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Button
-                  onClick={() => setIsRunning(!isRunning)}
-                  variant={isRunning ? "secondary" : "default"}
-                  size="sm"
-                >
-                  {isRunning ? (
-                    <Pause className="w-4 h-4" />
-                  ) : (
-                    <Play className="w-4 h-4" />
-                  )}
-                </Button>
-                <Button onClick={onResetTimer} variant="outline" size="sm">
-                  <RotateCcw className="w-4 h-4" />
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-        
         {/* Step Progress */}
-        <div className="mt-3 flex items-center space-x-4">
+        <div className="flex items-center space-x-4">
           <div className="flex-1 bg-gray-200 rounded-full h-2">
             <div
               className="bg-blue-500 h-2 rounded-full transition-all duration-300"
@@ -1414,7 +1352,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
           {/* Measurements & Actions (moved from left panel) */}
           <div className="bg-white border-t border-gray-200 p-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <h4 className="text-sm font-semibold text-gray-700 mb-2">Measurements</h4>
                 <div className="text-xs space-y-1">
@@ -1423,14 +1361,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   <div className="flex justify-between"><span>Target Molarity:</span><span className="font-mono">{measurements.targetMolarity.toFixed(3)} M</span></div>
                   <div className="flex justify-between"><span>Actual Molarity:</span><span className="font-mono">{measurements.actualMolarity.toFixed(6)} M</span></div>
                   <div className="flex justify-between"><span>Temperature:</span><span className="font-mono">{temperature}°C</span></div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-sm font-semibold text-gray-700 mb-2">Chemical Equation</h4>
-                <div className="text-xs font-mono bg-gray-50 rounded-lg p-3 border text-center leading-relaxed">
-                  <div>H₂C₂O₄·2H₂O (s) → H₂C₂O₄ (aq) + 2H₂O</div>
-                  <div className="mt-1">H₂C₂O₄ (aq) ⇌ 2H⁺ + C₂O₄²⁻</div>
                 </div>
               </div>
 
@@ -1624,39 +1554,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
             </div>
           </div>
 
-          {/* Results Panel */}
-          <div className="h-32 bg-white border-t border-gray-200 p-4 overflow-y-auto">
-            <h3 className="text-sm font-semibold text-gray-900 mb-2">
-              Observations & Results
-            </h3>
-            <div className="space-y-1">
-              {results.slice(-3).map((result) => (
-                <div
-                  key={result.id}
-                  className={`text-xs p-2 rounded-md ${
-                    result.type === "success"
-                      ? "bg-green-50 text-green-800"
-                      : result.type === "warning"
-                      ? "bg-yellow-50 text-yellow-800"
-                      : result.type === "error"
-                      ? "bg-red-50 text-red-800"
-                      : "bg-blue-50 text-blue-800"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">{result.title}</span>
-                    <span className="text-gray-500">{result.timestamp}</span>
-                  </div>
-                  <p className="mt-1">{result.description}</p>
-                </div>
-              ))}
-              {results.length === 0 && (
-                <p className="text-xs text-gray-500 italic">
-                  No observations yet. Start the experiment to see results.
-                </p>
-              )}
-            </div>
-          </div>
         </div>
       </div>
 
