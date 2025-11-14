@@ -85,7 +85,7 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
 
   const handleResetTimer = () => {
     setTimer(0);
-    setIsRunning(false);
+    setIsRunning(true);
   };
 
   const handleUndoStep = () => {
