@@ -251,13 +251,9 @@ export default function WorkBench({ step, totalSteps, equipmentItems, onNext, on
       ref={containerRef}
       onDrop={onDrop}
       onDragOver={handleDragOver}
-      className="relative w-full h-full min-h-[500px] bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg overflow-hidden transition-all duration-300 border-2 border-dashed border-gray-300"
+      className="relative w-full h-full min-h-[500px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-dashed border-gray-400"
       style={{
-        backgroundImage: `
-          linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%),
-          radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
-          radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.1) 0%, transparent 25%)
-        `,
+        backgroundColor: '#d3d3d3',
       }}
     >
       <div
