@@ -72,9 +72,9 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
 
   const defaultRootClass =
-    `relative w-full h-full min-h-[500px] bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg overflow-hidden transition-all duration-300 ${
+    `relative w-full h-full min-h-[500px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-gray-400 ${
       isDragOver
-        ? "bg-gradient-to-br from-blue-100 to-purple-100 ring-4 ring-blue-300 ring-opacity-50"
+        ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
         : ""
     }`;
 

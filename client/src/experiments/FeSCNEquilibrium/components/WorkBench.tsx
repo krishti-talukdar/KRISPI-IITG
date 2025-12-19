@@ -67,25 +67,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={`relative w-full h-full min-h-[600px] bg-gradient-to-br from-gray-50 to-red-50 rounded-lg overflow-hidden transition-all duration-300 ${
+      className={`relative w-full h-full min-h-[600px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-gray-400 ${
         isDragOver
-          ? "bg-gradient-to-br from-red-100 to-orange-100 ring-4 ring-red-300 ring-opacity-50"
+          ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
           : ""
       }`}
       style={{
-        backgroundImage: isDragOver
-          ? `
-            radial-gradient(circle at center, rgba(239, 68, 68, 0.1) 0%, rgba(251, 146, 60, 0.1) 100%),
-            radial-gradient(circle at 25% 25%, rgba(239, 68, 68, 0.1) 0%, transparent 25%),
-            radial-gradient(circle at 75% 75%, rgba(251, 146, 60, 0.1) 0%, transparent 25%),
-            linear-gradient(45deg, transparent 45%, rgba(239, 68, 68, 0.05) 50%, transparent 55%)
-          `
-          : `
-            linear-gradient(135deg, #fef7f0 0%, #fed7aa 100%),
-            radial-gradient(circle at 25% 25%, rgba(239, 68, 68, 0.1) 0%, transparent 25%),
-            radial-gradient(circle at 75% 75%, rgba(251, 146, 60, 0.1) 0%, transparent 25%),
-            linear-gradient(45deg, transparent 45%, rgba(239, 68, 68, 0.05) 50%, transparent 55%)
-          `,
+        backgroundColor: isDragOver ? '#d1d5db' : '#d3d3d3',
       }}
     >
       {/* Laboratory surface pattern */}
