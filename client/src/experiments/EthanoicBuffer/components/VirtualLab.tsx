@@ -8,7 +8,7 @@ import type { Experiment, ExperimentStep } from "@shared/schema";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PHMeterScale } from "./PHMeterScale";
+import { PHScale } from "@/components/PHScale";
 
 interface VirtualLabProps {
   experiment: Experiment;
@@ -795,7 +795,7 @@ const stepsProgress = (
                   <span className="inline-block w-3 h-3 rounded-full bg-amber-500 mr-2"></span>
                   Initial pH (Ethanoic Acid)
                 </h5>
-                {initialAcidPH != null && <PHMeterScale value={initialAcidPH} />}
+                {initialAcidPH != null && <PHScale value={initialAcidPH} />}
                 {initialAcidPH == null && <p className="text-xs text-gray-500">No measurement yet</p>}
               </div>
 
@@ -805,7 +805,7 @@ const stepsProgress = (
                     <span className="inline-block w-3 h-3 rounded-full bg-cyan-500 mr-2"></span>
                     pH After Adding Sodium Ethanoate
                   </h5>
-                  <PHMeterScale value={case2PH} />
+                  <PHScale value={case2PH} />
                 </div>
               )}
             </div>
