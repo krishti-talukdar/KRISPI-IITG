@@ -9,6 +9,7 @@ import { COLORS, INITIAL_TESTTUBE, GUIDED_STEPS, ANIMATION } from "../constants"
 import { Beaker, Info, Wrench, CheckCircle, ArrowRight, ArrowLeft, TestTube, Undo2, TrendingUp, Clock, Home } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PHScale } from "@/components/PHScale";
 
 interface ExperimentMode {
   current: 'guided';
@@ -596,7 +597,8 @@ useEffect(() => {
 
               <div className="mb-4">
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
-                <div className="flex items-center space-x-2">
+                <PHScale value={lastMeasuredPH} />
+                <div className="flex items-center space-x-2 mt-4">
                   {(() => {
                     const display = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
                     return (
