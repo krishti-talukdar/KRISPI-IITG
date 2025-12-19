@@ -777,6 +777,20 @@ const stepsProgress = (
               <h4 className="font-semibold mb-2">pH Comparison Analysis</h4>
               <p className="text-sm text-gray-700">Initial pH: {initialAcidPH != null ? initialAcidPH.toFixed(2) : 'N/A'}. After adding sodium ethanoate the pH shifted to {case2PH != null ? case2PH.toFixed(2) : 'N/A'}. This indicates buffer formation (CH3COOH/CH3COO–) and can be interpreted using the Henderson–Hasselbalch relation.</p>
 
+              {/* pH Meter Scale visualization */}
+              <div className="mt-4 p-4 bg-gray-50 border rounded">
+                <div className="font-medium text-sm mb-3">Initial pH (Ethanoic Acid)</div>
+                {initialAcidPH != null && <PHMeterScale value={initialAcidPH} />}
+                {initialAcidPH == null && <p className="text-xs text-gray-500">No measurement yet</p>}
+              </div>
+
+              {case2PH != null && (
+                <div className="mt-3 p-4 bg-gray-50 border rounded">
+                  <div className="font-medium text-sm mb-3">pH After Adding Sodium Ethanoate</div>
+                  <PHMeterScale value={case2PH} />
+                </div>
+              )}
+
               {/* Henderson–Hasselbalch calculation details */}
               <div className="mt-3 p-3 bg-gray-50 border rounded text-sm">
                 <div className="font-medium mb-2">Henderson–Hasselbalch Calculation</div>
