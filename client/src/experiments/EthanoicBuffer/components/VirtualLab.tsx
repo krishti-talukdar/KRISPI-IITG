@@ -8,6 +8,7 @@ import type { Experiment, ExperimentStep } from "@shared/schema";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PHMeterScale } from "./PHMeterScale";
 
 interface VirtualLabProps {
   experiment: Experiment;
