@@ -756,85 +756,136 @@ const stepsProgress = (
       {/* Results modal shown after CASE 2 is available */}
       <Dialog open={showResultsModal} onOpenChange={setShowResultsModal}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Experiment Results & Analysis</DialogTitle>
-            <DialogDescription>Complete analysis of your pH buffer experiment</DialogDescription>
+          <DialogHeader className="bg-gradient-to-r from-blue-600 to-purple-600 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
+            <DialogTitle className="text-2xl font-bold text-white">Experiment Results & Analysis</DialogTitle>
+            <DialogDescription className="text-blue-100">Complete analysis of your pH buffer experiment</DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4">
+          <div className="space-y-6 pt-4">
+            {/* Initial Measurements */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 border rounded bg-red-50">
-                <div className="text-sm font-medium">0.1 M Ethanoic Acid</div>
-                <div className="text-lg font-semibold mt-2">{initialAcidPH != null ? `${initialAcidPH.toFixed(2)} (Acidic)` : '—'}</div>
+              <div className="p-5 border-2 border-red-400 rounded-lg bg-gradient-to-br from-red-50 to-red-100 shadow-md hover:shadow-lg transition-shadow">
+                <div className="text-xs font-bold uppercase tracking-wider text-red-700 mb-1">Initial Solution</div>
+                <div className="text-sm font-medium text-gray-700 mb-2">0.1 M Ethanoic Acid</div>
+                <div className="text-3xl font-bold text-red-600">{initialAcidPH != null ? `${initialAcidPH.toFixed(2)}` : '—'}</div>
+                <div className="text-xs text-red-600 font-semibold mt-1">(Acidic)</div>
               </div>
-              <div className="p-4 border rounded bg-green-50">
-                <div className="text-sm font-medium">0.1 M Sodium Ethanoate (after addition)</div>
-                <div className="text-lg font-semibold mt-2">{case2PH != null ? `${case2PH.toFixed(2)} (${case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})` : '—'}</div>
+              <div className="p-5 border-2 border-green-400 rounded-lg bg-gradient-to-br from-green-50 to-green-100 shadow-md hover:shadow-lg transition-shadow">
+                <div className="text-xs font-bold uppercase tracking-wider text-green-700 mb-1">After Addition</div>
+                <div className="text-sm font-medium text-gray-700 mb-2">0.1 M Sodium Ethanoate</div>
+                <div className="text-3xl font-bold text-green-600">{case2PH != null ? `${case2PH.toFixed(2)}` : '—'}</div>
+                <div className="text-xs font-semibold mt-1" style={{color: case2PH != null ? (case2PH < 7 ? '#dc2626' : case2PH > 7 ? '#2563eb' : '#7c3aed') : '#666'}}>
+                  ({case2PH != null ? (case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral') : 'N/A'})
+                </div>
               </div>
             </div>
 
-            <div>
-              <h4 className="font-semibold mb-2">pH Comparison Analysis</h4>
-              <p className="text-sm text-gray-700">Initial pH: {initialAcidPH != null ? initialAcidPH.toFixed(2) : 'N/A'}. After adding sodium ethanoate the pH shifted to {case2PH != null ? case2PH.toFixed(2) : 'N/A'}. This indicates buffer formation (CH3COOH/CH3COO–) and can be interpreted using the Henderson–Hasselbalch relation.</p>
+            {/* pH Comparison Analysis */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-lg border-l-4 border-blue-500">
+              <h4 className="text-lg font-bold text-blue-900 mb-3">📊 pH Comparison Analysis</h4>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                Initial pH: <span className="font-bold text-red-600">{initialAcidPH != null ? initialAcidPH.toFixed(2) : 'N/A'}</span>. After adding sodium ethanoate the pH shifted to <span className="font-bold text-green-600">{case2PH != null ? case2PH.toFixed(2) : 'N/A'}</span>. This indicates <span className="font-semibold">buffer formation (CH₃COOH/CH₃COO⁻)</span> and can be interpreted using the Henderson–Hasselbalch relation.
+              </p>
+            </div>
 
-              {/* pH Meter Scale visualization */}
-              <div className="mt-4 p-4 bg-gray-50 border rounded">
-                <div className="font-medium text-sm mb-3">Initial pH (Ethanoic Acid)</div>
+            {/* pH Meter Scale visualization */}
+            <div>
+              <div className="mb-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border-2 border-amber-300 shadow-sm">
+                <h5 className="text-base font-bold text-amber-900 mb-4 flex items-center">
+                  <span className="inline-block w-3 h-3 rounded-full bg-amber-500 mr-2"></span>
+                  Initial pH (Ethanoic Acid)
+                </h5>
                 {initialAcidPH != null && <PHMeterScale value={initialAcidPH} />}
                 {initialAcidPH == null && <p className="text-xs text-gray-500">No measurement yet</p>}
               </div>
 
               {case2PH != null && (
-                <div className="mt-3 p-4 bg-gray-50 border rounded">
-                  <div className="font-medium text-sm mb-3">pH After Adding Sodium Ethanoate</div>
+                <div className="p-4 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg border-2 border-cyan-300 shadow-sm">
+                  <h5 className="text-base font-bold text-cyan-900 mb-4 flex items-center">
+                    <span className="inline-block w-3 h-3 rounded-full bg-cyan-500 mr-2"></span>
+                    pH After Adding Sodium Ethanoate
+                  </h5>
                   <PHMeterScale value={case2PH} />
                 </div>
               )}
-
-              {/* Henderson–Hasselbalch calculation details */}
-              <div className="mt-3 p-3 bg-gray-50 border rounded text-sm">
-                <div className="font-medium mb-2">Henderson–Hasselbalch Calculation</div>
-                {concHA != null && concA != null && hhRatio != null ? (
-                  <div className="space-y-1">
-                    <div>pKa = {pKa.toFixed(2)}</div>
-                    <div>[HA] = {concHA.toExponential(3)} M</div>
-                    <div>[A⁻] = {concA.toExponential(3)} M</div>
-                    <div>[A⁻]/[HA] = {hhRatio.toFixed(3)}</div>
-                    <div className="font-semibold">pH = pKa + log10([A⁻]/[HA]) = {pKa.toFixed(2)} + log10({hhRatio.toFixed(3)}) ≈ {hhPH != null ? hhPH.toFixed(2) : 'N/A'}</div>
-                  </div>
-                ) : (
-                  <div>
-                    {/* Fallback approximations when only one species is present */}
-                    {acidMoles > 0 && sodiumMoles === 0 && (
-                      <div>Only weak acid present. Approximate pH using weak acid formula: pH ≈ 0.5*(pKa - log10([HA])) ≈ {initialAcidPH != null ? initialAcidPH.toFixed(2) : 'N/A'}</div>
-                    )}
-                    {sodiumMoles > 0 && acidMoles === 0 && (
-                      <div>Only conjugate base present. Solution will be basic. Measured/estimated pH: {case2PH != null ? case2PH.toFixed(2) : 'N/A'}</div>
-                    )}
-                    {acidMoles === 0 && sodiumMoles === 0 && <div>No reagents present to compute Henderson–Hasselbalch values.</div>}
-                  </div>
-                )}
-              </div>
             </div>
 
-            <div>
-              <h4 className="font-semibold mb-2">Action Timeline</h4>
-              <ol className="list-decimal list-inside text-sm text-gray-700">
-                <li>Added ethanoic acid — initial pH recorded {initialAcidPH != null ? `(${initialAcidPH.toFixed(2)})` : ''}</li>
-                <li>Added sodium ethanoate — stored CASE values {case1PH != null ? `CASE1: ${case1PH.toFixed(2)}` : ''} {case2PH != null ? `CASE2: ${case2PH.toFixed(2)}` : ''}</li>
+            {/* Henderson–Hasselbalch calculation details */}
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-5 rounded-lg border-2 border-purple-300">
+              <h5 className="text-base font-bold text-purple-900 mb-4 flex items-center">
+                <span className="inline-block w-3 h-3 rounded-full bg-purple-500 mr-2"></span>
+                Henderson–Hasselbalch Calculation
+              </h5>
+              {concHA != null && concA != null && hhRatio != null ? (
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between items-center p-2 bg-white rounded border border-purple-200">
+                    <span className="text-gray-700">pK<sub>a</sub></span>
+                    <span className="font-bold text-purple-700">{pKa.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-white rounded border border-purple-200">
+                    <span className="text-gray-700">[HA] (Ethanoic acid)</span>
+                    <span className="font-bold text-purple-700">{concHA.toExponential(3)} M</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-white rounded border border-purple-200">
+                    <span className="text-gray-700">[A⁻] (Ethanoate ion)</span>
+                    <span className="font-bold text-purple-700">{concA.toExponential(3)} M</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-white rounded border border-purple-200">
+                    <span className="text-gray-700">[A⁻]/[HA] Ratio</span>
+                    <span className="font-bold text-purple-700">{hhRatio.toFixed(3)}</span>
+                  </div>
+                  <div className="p-3 bg-purple-100 rounded border-2 border-purple-400 mt-2">
+                    <div className="text-xs text-gray-600 mb-1">Formula:</div>
+                    <div className="font-bold text-purple-900">pH = {pKa.toFixed(2)} + log₁₀({hhRatio.toFixed(3)}) ≈ <span className="text-lg text-purple-700">{hhPH != null ? hhPH.toFixed(2) : 'N/A'}</span></div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-700 space-y-2">
+                  {acidMoles > 0 && sodiumMoles === 0 && (
+                    <div className="p-2 bg-white rounded border border-purple-200">Only weak acid present. Approximate pH: <span className="font-bold text-purple-700">{initialAcidPH != null ? initialAcidPH.toFixed(2) : 'N/A'}</span></div>
+                  )}
+                  {sodiumMoles > 0 && acidMoles === 0 && (
+                    <div className="p-2 bg-white rounded border border-purple-200">Only conjugate base present. pH: <span className="font-bold text-purple-700">{case2PH != null ? case2PH.toFixed(2) : 'N/A'}</span></div>
+                  )}
+                  {acidMoles === 0 && sodiumMoles === 0 && <div className="p-2 bg-white rounded border border-purple-200 text-gray-600">No reagents present.</div>}
+                </div>
+              )}
+            </div>
+
+            {/* Action Timeline */}
+            <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-5 rounded-lg border-2 border-indigo-300">
+              <h5 className="text-base font-bold text-indigo-900 mb-4 flex items-center">
+                <span className="inline-block w-3 h-3 rounded-full bg-indigo-500 mr-2"></span>
+                Action Timeline
+              </h5>
+              <ol className="space-y-2 text-sm">
+                <li className="flex items-start p-2 bg-white rounded border border-indigo-200">
+                  <span className="inline-flex items-center justify-center w-6 h-6 bg-indigo-500 text-white text-xs font-bold rounded-full mr-3 flex-shrink-0">1</span>
+                  <span>Added <span className="font-semibold">ethanoic acid</span> — initial pH recorded <span className="text-indigo-700 font-bold">{initialAcidPH != null ? `(${initialAcidPH.toFixed(2)})` : ''}</span></span>
+                </li>
+                <li className="flex items-start p-2 bg-white rounded border border-indigo-200">
+                  <span className="inline-flex items-center justify-center w-6 h-6 bg-indigo-500 text-white text-xs font-bold rounded-full mr-3 flex-shrink-0">2</span>
+                  <span>Added <span className="font-semibold">sodium ethanoate</span> — stored CASE values {case1PH != null ? <span className="text-indigo-700 font-bold">CASE1: {case1PH.toFixed(2)}</span> : ''} {case2PH != null ? <span className="text-indigo-700 font-bold">CASE2: {case2PH.toFixed(2)}</span> : ''}</span>
+                </li>
               </ol>
             </div>
 
-            <div>
-              <h4 className="font-semibold mb-2">Final Experimental State</h4>
+            {/* Final Experimental State */}
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-5 rounded-lg border-2 border-emerald-400">
+              <h5 className="text-base font-bold text-emerald-900 mb-4 flex items-center">
+                <span className="inline-block w-3 h-3 rounded-full bg-emerald-500 mr-2"></span>
+                Final Experimental State
+              </h5>
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 border rounded">
-                  <div className="text-sm font-medium">Solution</div>
-                  <div className="text-sm mt-1">pH: {case2PH != null ? case2PH.toFixed(2) : 'N/A'}</div>
+                <div className="p-4 bg-white rounded-lg border-2 border-emerald-300 shadow-sm">
+                  <div className="text-xs font-bold uppercase text-emerald-700 mb-2">Solution pH</div>
+                  <div className="text-2xl font-bold text-emerald-600">{case2PH != null ? case2PH.toFixed(2) : 'N/A'}</div>
+                  <div className="text-xs text-emerald-600 font-semibold mt-1">Final measurement</div>
                 </div>
-                <div className="p-3 border rounded">
-                  <div className="text-sm font-medium">Notes</div>
-                  <div className="text-sm mt-1">Buffer formed: CH3COOH/CH3COO–</div>
+                <div className="p-4 bg-white rounded-lg border-2 border-teal-300 shadow-sm">
+                  <div className="text-xs font-bold uppercase text-teal-700 mb-2">Key Result</div>
+                  <div className="text-sm font-bold text-teal-700">Buffer formed:</div>
+                  <div className="text-sm font-semibold text-gray-700 mt-1">CH₃COOH/CH₃COO⁻</div>
                 </div>
               </div>
             </div>
