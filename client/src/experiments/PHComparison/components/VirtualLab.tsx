@@ -8,6 +8,7 @@ import { COLORS, INITIAL_TESTTUBE, GUIDED_STEPS, ANIMATION } from "../constants"
 import { Beaker, Info, Wrench, CheckCircle, ArrowRight, ArrowLeft, TestTube, Undo2, TrendingUp, Clock, FlaskConical, Home } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PHScale } from "@/components/PHScale";
 
 interface ExperimentMode {
   current: 'guided';
@@ -600,12 +601,8 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
               {compareMode && (
                 <div className="absolute inset-0 pointer-events-none">
                   {/* pH scale at the top center to use the empty workbench space */}
-                  <div className="absolute top-24 left-1/2 -translate-x-1/2">
-                    <img
-                      src="https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2F7d9627b53247494cb290097a41570c50?format=webp&width=800"
-                      alt="Universal pH color chart"
-                      className="max-w-[560px] w-[75vw] md:w-[520px] h-auto drop-shadow-md opacity-95"
-                    />
+                  <div className="absolute top-24 left-1/2 -translate-x-1/2 w-full max-w-[600px] px-8 pointer-events-auto">
+                    <PHScale value={lastMeasuredPH} />
                   </div>
 
                   {/* Two final samples pinned to the bottom */}

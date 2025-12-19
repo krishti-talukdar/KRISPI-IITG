@@ -1,11 +1,11 @@
 import React from 'react';
 
-interface PHMeterScaleProps {
+interface PHScaleProps {
   value?: number | null;
   showLabel?: boolean;
 }
 
-export function PHMeterScale({ value = null, showLabel = true }: PHMeterScaleProps) {
+export function PHScale({ value = null, showLabel = true }: PHScaleProps) {
   // pH scale colors: 0-14 (15 segments for pH values 0-14)
   const colors = [
     '#e53935', // 0 - red
@@ -60,9 +60,9 @@ export function PHMeterScale({ value = null, showLabel = true }: PHMeterScalePro
           >
             <div className="flex flex-col items-center">
               {/* Triangle pointer */}
-              <div className="w-0 h-0 border-l-3 border-r-3 border-t-4 border-l-transparent border-r-transparent border-t-gray-900" />
+              <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-gray-900" />
               {/* Value label */}
-              <div className="text-xs font-bold text-gray-900 bg-white px-2 py-0.5 rounded border border-gray-300 mt-1 whitespace-nowrap">
+              <div className="text-xs font-bold text-gray-900 bg-white px-2 py-0.5 rounded border border-gray-300 mt-1 whitespace-nowrap shadow-sm">
                 {value?.toFixed(2)}
               </div>
             </div>
@@ -71,7 +71,7 @@ export function PHMeterScale({ value = null, showLabel = true }: PHMeterScalePro
       </div>
 
       {/* pH scale numbers (0-14) */}
-      <div className="flex justify-between text-xs font-semibold text-gray-700 px-0.5">
+      <div className="flex justify-between text-[10px] font-semibold text-gray-700 px-0.5">
         {Array.from({ length: 15 }, (_, i) => (
           <span key={i} className="flex-1 text-center">
             {i}
@@ -81,9 +81,9 @@ export function PHMeterScale({ value = null, showLabel = true }: PHMeterScalePro
 
       {/* Labels */}
       {showLabel && (
-        <div className="relative flex justify-between text-xs font-semibold text-gray-600 px-0.5">
+        <div className="relative flex justify-between text-[10px] font-bold uppercase tracking-wider text-gray-500 px-1">
           <span>acidic</span>
-          <span className="absolute left-1/2 transform -translate-x-1/2">neutral</span>
+          <span className="absolute left-1/2 transform -translate-x-1/2 text-gray-700">neutral</span>
           <span>alkaline</span>
         </div>
       )}
