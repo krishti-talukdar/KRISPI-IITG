@@ -49,17 +49,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={`relative w-full h-full min-h-[500px] bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg overflow-hidden transition-all duration-300 border-2 border-dashed ${
+      className={`relative w-full h-full min-h-[500px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-dashed ${
         isDragOver
-          ? "border-blue-400 bg-blue-50"
-          : "border-gray-300"
+          ? "border-blue-400 bg-gray-300"
+          : "border-gray-400"
       }`}
       style={{
-        backgroundImage: `
-          linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%),
-          radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
-          radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.1) 0%, transparent 25%)
-        `,
+        backgroundColor: isDragOver ? '#d1d5db' : '#d3d3d3',
       }}
     >
       {/* Laboratory surface pattern */}
