@@ -81,7 +81,7 @@ export function PHMeterScale({ value = null, showLabel = true }: PHMeterScalePro
 
       {/* Labels */}
       {showLabel && (
-        <div className="flex justify-between text-xs font-semibold text-gray-600 px-0.5">
+        <div className="relative flex justify-between text-xs font-semibold text-gray-600 px-0.5">
           <span>acidic</span>
           <span className="absolute left-1/2 transform -translate-x-1/2">neutral</span>
           <span>alkaline</span>
