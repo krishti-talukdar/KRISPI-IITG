@@ -462,6 +462,15 @@ const stepsProgress = (
   const concA = sodiumMoles > 0 ? sodiumMoles / totalVolLForResults : null;
   const hhRatio = concHA && concA ? concA / concHA : null;
   const hhPH = hhRatio ? Math.max(0, Math.min(14, pKa + Math.log10(hhRatio))) : null;
+  const resultsReady = case2PH != null && case2Version != null && measurementVersion >= case2Version;
+  const handleViewResults = () => {
+    if (resultsReady) {
+      setShowResultsModal(true);
+      return;
+    }
+    setShowToast("Complete the sodium ethanoate additions to unlock the analysis.");
+    setTimeout(() => setShowToast(null), 2500);
+  };
 
   return (
     <TooltipProvider>
