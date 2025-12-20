@@ -485,7 +485,7 @@ function ChemicalEquilibriumVirtualLab({
 
   return (
     <TooltipProvider>
-      {isPHExperiment ? (
+      {usePhStyleLayout ? (
         <div className="w-full flex gap-6" style={{ minHeight: '75vh' }}>
           {/* Left Equipment Column */}
           <aside className="w-72 bg-white/90 border border-gray-200 rounded-lg p-4 flex flex-col">
