@@ -826,7 +826,7 @@ const stepsProgress = (
                 <div className="text-sm font-medium text-gray-700 mb-2">0.1 M Sodium Ethanoate</div>
                 <div className="text-3xl font-bold text-green-600">{case2PH != null ? `${case2PH.toFixed(2)}` : '—'}</div>
                 <div className="text-xs font-semibold mt-1" style={{color: case2PH != null ? (case2PH < 7 ? '#dc2626' : case2PH > 7 ? '#2563eb' : '#7c3aed') : '#666'}}>
-                  ({case2PH != null ? (case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral') : 'N/A'})
+                  {case2PH != null ? `(${case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})` : 'Awaiting sodium additions'}
                 </div>
               </div>
             </div>
