@@ -665,6 +665,7 @@ function ChemicalEquilibriumVirtualLab({
                 isRunning={isRunning}
                 experimentTitle={experimentTitle}
                 currentGuidedStep={currentStep}
+                totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find((eq) => eq.id === pos.id);
