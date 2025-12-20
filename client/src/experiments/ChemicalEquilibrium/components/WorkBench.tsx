@@ -195,12 +195,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           )}
 
           {/* Safety guidelines overlay */}
-          <div className="absolute bottom-4 left-4 bg-yellow-100 border border-yellow-300 rounded-lg px-3 py-2 shadow-md">
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 text-yellow-600">⚠️</div>
-              <span className="text-xs font-medium text-yellow-800">Chemical Equilibrium Lab</span>
+          {!isDryTestWorkbench && (
+            <div className="absolute bottom-4 left-4 bg-yellow-100 border border-yellow-300 rounded-lg px-3 py-2 shadow-md">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 text-yellow-600">⚠️</div>
+                <span className="text-xs font-medium text-yellow-800">Chemical Equilibrium Lab</span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Drop zone indicator */}
           {isDragOver && (
