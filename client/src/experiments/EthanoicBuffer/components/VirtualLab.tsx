@@ -850,15 +850,17 @@ const stepsProgress = (
                 {initialAcidPH == null && <p className="text-xs text-gray-500">No measurement yet</p>}
               </div>
 
-              {case2PH != null && (
-                <div className="p-4 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg border-2 border-cyan-300 shadow-sm">
-                  <h5 className="text-base font-bold text-cyan-900 mb-4 flex items-center">
-                    <span className="inline-block w-3 h-3 rounded-full bg-cyan-500 mr-2"></span>
-                    pH After Adding Sodium Ethanoate
-                  </h5>
+              <div className="p-4 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg border-2 border-cyan-300 shadow-sm">
+                <h5 className="text-base font-bold text-cyan-900 mb-4 flex items-center">
+                  <span className="inline-block w-3 h-3 rounded-full bg-cyan-500 mr-2"></span>
+                  pH After Adding Sodium Ethanoate
+                </h5>
+                {case2PH != null ? (
                   <PHScale value={case2PH} />
-                </div>
-              )}
+                ) : (
+                  <p className="text-xs text-gray-500">Add sodium ethanoate additions and measure the pH to visualize the change.</p>
+                )}
+              </div>
             </div>
 
             {/* Henderson–Hasselbalch calculation details */}
