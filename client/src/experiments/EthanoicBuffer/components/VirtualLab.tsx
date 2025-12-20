@@ -450,8 +450,8 @@ const stepsProgress = (
           {completedSteps.includes(currentStep) ? <CheckCircle className="w-4 h-4" /> : <span className="text-sm font-bold">{currentStep}</span>}
         </div>
         <div className="flex-1">
-          <h4 className="font-semibold text-gray-800 mb-1">{experiment.stepDetails[currentStep-1]?.title}</h4>
-          <p className="text-xs text-gray-600">{experiment.stepDetails[currentStep-1]?.description}</p>
+          <h4 className="font-semibold text-gray-800 mb-1">{currentStepDetail?.title}</h4>
+          <p className="text-xs text-gray-600">{currentStepDetail?.description}</p>
         </div>
       </div>
     </div>
