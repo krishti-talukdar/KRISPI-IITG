@@ -25,6 +25,8 @@ interface VirtualLabProps {
 
 export default function VirtualLab({ experiment, experimentStarted, onStartExperiment, isRunning, setIsRunning, currentStep, onStepComplete, onStepUndo, onReset, completedSteps }: VirtualLabProps) {
   const totalSteps = experiment.stepDetails.length;
+  const currentStepDetail = experiment.stepDetails[currentStep - 1];
+  const completedStepDetails = experiment.stepDetails.filter((step) => completedSteps.includes(step.id));
   const [equipmentOnBench, setEquipmentOnBench] = useState<Array<{ id: string; name: string; position: { x: number; y: number } }>>([]);
 
   // Test tube visual state
