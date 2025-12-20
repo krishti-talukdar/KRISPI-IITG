@@ -122,8 +122,18 @@ function ChemicalEquilibriumVirtualLab({
 
   // Choose chemicals and equipment based on experiment
   const isPHExperiment = experimentTitle === PHHClExperiment.title;
-  const chemicalsList = isPHExperiment ? PH_HCL_CHEMICALS : CHEMICAL_EQUILIBRIUM_CHEMICALS;
-  const equipmentList = isPHExperiment ? PH_HCL_EQUIPMENT : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
+  const isDryTestExperiment = experimentTitle === ChemicalEquilibriumData.title;
+  const usePhStyleLayout = isPHExperiment || isDryTestExperiment;
+  const chemicalsList = isPHExperiment
+    ? PH_HCL_CHEMICALS
+    : isDryTestExperiment
+      ? DRY_TESTS_CHEMICALS
+      : CHEMICAL_EQUILIBRIUM_CHEMICALS;
+  const equipmentList = usePhStyleLayout
+    ? isPHExperiment
+      ? PH_HCL_EQUIPMENT
+      : mapDryTestEquipment(experiment.equipment)
+    : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
 
