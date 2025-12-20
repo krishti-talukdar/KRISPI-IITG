@@ -154,58 +154,26 @@
     "rating": 4.7,
     "imageUrl": "https://images.unsplash.com/photo-1576086213369-97a306d36557?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=400",
     "equipment": [
-      "Nichrome/Platinum Wire Loop",
-      "Concave Watch Glass",
+      "Beakers",
       "Test Tubes",
-      "Ceramic Tile",
-      "Bunsen Burner (virtual heat source)",
-      "Dilute Acids and Reagents"
+      "pH Meter or Universal Indicator",
+      "Ethanoic acid solution (CH3COOH, 0.1 M)",
+      "Sodium ethanoate solution (CH3COONa, 0.1 M)",
+      "Pipettes",
+      "Magnetic Stirrer (optional)",
+      "pH Color Chart"
     ],
     "stepDetails": [
-      {
-        "id": 1,
-        "title": "Clean the Wire Loop",
-        "description": "Heat the wire loop to red-hot and cool in distilled water to remove contaminants. A clean loop prevents false positives during dry tests.",
-        "duration": "5 minutes",
-        "temperature": "Red-hot (virtual)",
-        "completed": false
-      },
-      {
-        "id": 2,
-        "title": "Test for Carbonates (CO3^2-)",
-        "description": "Place a small sample on the wire loop and strongly heat. Observe effervescence on subsequent wet testing or formation of white residue; add dilute acid to confirm CO2 evolution (effervescence).",
-        "duration": "8 minutes",
-        "safety": "Perform in well-ventilated area (virtual)",
-        "completed": false
-      },
-      {
-        "id": 3,
-        "title": "Test for Sulfates (SO4^2-)",
-        "description": "Heat the sample and observe for any characteristic changes; follow with a wet confirmatory test (barium chloride on acidified solution) if required. In dry test, sulfate often gives no flame color but leaves a persistent residue.",
-        "duration": "6 minutes",
-        "completed": false
-      },
-      {
-        "id": 4,
-        "title": "Test for Chlorides and Halides",
-        "description": "Warm the sample and observe for white fumes or reaction with silver nitrate in a subsequent wet confirmatory test. Some halides may impart characteristic flame colors when heated on a wire loop with proper reagents.",
-        "duration": "7 minutes",
-        "completed": false
-      },
-      {
-        "id": 5,
-        "title": "Test for Nitrates and Nitrites",
-        "description": "Heat the sample on the loop; nitrates may decompose to give brown fumes (NO2) or a peculiar smell. Use the observed decomposition behavior as a qualitative indicator and follow up with wet tests if needed.",
-        "duration": "7 minutes",
-        "completed": false
-      },
-      {
-        "id": 6,
-        "title": "Record Observations and Conclusions",
-        "description": "Document colors, residues, fumes, and odors observed during dry tests. Compare results against known characteristic behaviors of common acid radicals and conclude the most likely identities.",
-        "duration": "7 minutes",
-        "completed": false
-      }
+      { "id": 1, "title": "Prepare Ethanoic Acid Solution", "description": "Prepare approximately 100 mL of 0.1 M ethanoic acid (CH3COOH) in a beaker. Record initial concentration and temperature.", "duration": "5 minutes", "completed": false },
+      { "id": 2, "title": "Measure Initial pH", "description": "Calibrate the pH meter or prepare universal indicator. Measure and record the initial pH of the ethanoic acid solution.", "duration": "3 minutes", "completed": false },
+      { "id": 3, "title": "Add Sodium Ethanoate Incrementally", "description": "Add known small volumes (e.g., 0.5 mL increments) of 0.1 M sodium ethanoate solution to the acid solution. Stir and allow the solution to equilibrate after each addition.", "duration": "8 minutes", "safety": "Avoid skin contact; handle reagents with care.", "completed": false },
+      { "id": 4, "title": "Record pH After Each Addition", "description": "Measure and record pH after each addition. Observe increase in pH as ethanoate ion concentration increases, showing buffer action.", "duration": "6 minutes", "completed": false },
+      { "id": 5, "title": "Analyze with Henderson–Hasselbalch", "description": "Use recorded concentrations and pH values to apply the Henderson–Hasselbalch equation and calculate pKa. Discuss how the common-ion effect stabilizes pH.", "duration": "6 minutes", "completed": false },
+      { "id": 6, "title": "Cleanup and Safety",
+        "description": "Neutralize and dispose solutions according to local guidelines. Rinse glassware thoroughly and wash hands. Store reagents properly.",
+        "duration": "2 minutes",
+        "safety": "Ethanoic acid is an irritant and has a strong odor; work in a well-ventilated area. Wear goggles and gloves.",
+        "completed": false }
     ],
     "safetyInfo": "This is a virtual simulation. In real laboratory practice, dry tests use hot wire loops and can produce toxic fumes (eg. NO2) or hot residues. Always use proper ventilation, a fume hood, safety goggles, heat-resistant gloves, and follow institutional safety protocols."
   },
