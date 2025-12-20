@@ -73,12 +73,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const phRootClass =
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
 
-  const defaultRootClass =
-    `relative w-full h-full min-h-[500px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-gray-400 ${
-      isDragOver
-        ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
-        : ""
-    }`;
+  const defaultRootClass = isDryTestWorkbench
+    ? "relative w-full h-full min-h-[500px] bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg overflow-hidden transition-all duration-300 border border-gray-200 shadow-sm"
+    : `relative w-full h-full min-h-[500px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-gray-400 ${
+        isDragOver
+          ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
+          : ""
+      }`;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
 
