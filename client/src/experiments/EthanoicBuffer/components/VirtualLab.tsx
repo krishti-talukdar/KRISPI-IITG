@@ -817,7 +817,9 @@ const stepsProgress = (
                 <div className="text-xs font-bold uppercase tracking-wider text-red-700 mb-1">Initial Solution</div>
                 <div className="text-sm font-medium text-gray-700 mb-2">0.1 M Ethanoic Acid</div>
                 <div className="text-3xl font-bold text-red-600">{initialAcidPH != null ? `${initialAcidPH.toFixed(2)}` : '—'}</div>
-                <div className="text-xs text-red-600 font-semibold mt-1">(Acidic)</div>
+                <div className="text-xs text-red-600 font-semibold mt-1">
+                  {initialAcidPH != null ? (initialAcidPH < 7 ? 'Acidic' : initialAcidPH > 7 ? 'Basic' : 'Neutral') : 'Awaiting measurement'}
+                </div>
               </div>
               <div className="p-5 border-2 border-green-400 rounded-lg bg-gradient-to-br from-green-50 to-green-100 shadow-md hover:shadow-lg transition-shadow">
                 <div className="text-xs font-bold uppercase tracking-wider text-green-700 mb-1">After Addition</div>
