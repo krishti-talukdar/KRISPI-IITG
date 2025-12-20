@@ -3,10 +3,10 @@ import type { ChemicalEquilibriumExperiment } from "./types";
 // Complete Chemical Equilibrium experiment data
 const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   id: 3,
-  title: "Chemical Equilibrium",
+  title: "Dry Tests for Acid Radicals",
   description:
-    "Investigate Le Chatelier's principle by observing how changes in concentration, temperature, and pressure affect chemical equilibrium. Study the cobalt(II) chloride equilibrium system.",
-  category: "Equilibrium",
+    "Learn classical dry test techniques to identify common acid radicals (anions) such as carbonate, sulfate, chloride, nitrate and nitrite using a clean wire loop and heat. This qualitative analysis focuses on observation of color, smell, and residue characteristics in a safe virtual environment.",
+  category: "Qualitative Analysis",
   difficulty: "Intermediate",
   duration: 40,
   steps: 6,
@@ -14,71 +14,67 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   imageUrl:
     "https://images.unsplash.com/photo-1576086213369-97a306d36557?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=400",
   equipment: [
+    "Nichrome/Platinum Wire Loop",
+    "Concave Watch Glass",
     "Test Tubes",
-    "Test Tube Rack",
-    "Dropper Pipettes",
-    "Hot Water Bath",
-    "Ice Bath",
-    "Graduated Cylinders",
-    "Stirring Rods",
-    "Thermometer",
+    "Ceramic Tile",
+    "Bunsen Burner (virtual heat source)",
+    "Dilute Acids and Reagents",
   ],
   stepDetails: [
     {
       id: 1,
-      title: "Prepare Solutions",
+      title: "Clean the Wire Loop",
       description:
-        "1. Take a test tube and add a small amount of cobalt chloride crystals. 2. Add distilled water slowly and stir until it dissolves. 3. You will see a pink solution because of the hydrated [Co(H₂O)₆]²⁺ complex.",
+        "Heat the wire loop to red-hot and cool in distilled water to remove contaminants. A clean loop prevents false positives during dry tests.",
       duration: "5 minutes",
-      temperature: "Room temperature",
+      temperature: "Red-hot (virtual)",
       completed: false,
     },
     {
       id: 2,
-      title: "Add Concentrated HCl",
+      title: "Test for Carbonates (CO3^2-)",
       description:
-        "Slowly add drops of concentrated HCl to the cobalt solution. Observe the color change from pink to blue as the equilibrium shifts.",
+        "Place a small sample on the wire loop and strongly heat. Observe effervescence on subsequent wet testing or formation of white residue; add dilute acid to confirm CO2 evolution (effervescence).",
       duration: "8 minutes",
-      safety: "Caution: Concentrated HCl is corrosive",
+      safety: "Perform in well-ventilated area (virtual)",
       completed: false,
     },
     {
       id: 3,
-      title: "Dilute with Water",
+      title: "Test for Sulfates (SO4^2-)",
       description:
-        "Add distilled water to the blue solution. Observe the color change back to pink as the equilibrium shifts in the reverse direction.",
-      duration: "5 minutes",
+        "Heat the sample and observe for any characteristic changes; follow with a wet confirmatory test (barium chloride on acidified solution) if required. In dry test, sulfate often gives no flame color but leaves a persistent residue.",
+      duration: "6 minutes",
       completed: false,
     },
     {
       id: 4,
-      title: "Temperature Effect - Heating",
+      title: "Test for Chlorides and Halides",
       description:
-        "Heat the pink solution in a water bath. Observe how increased temperature affects the equilibrium position and color.",
-      duration: "10 minutes",
-      temperature: "60°C",
+        "Warm the sample and observe for white fumes or reaction with silver nitrate in a subsequent wet confirmatory test. Some halides may impart characteristic flame colors when heated on a wire loop with proper reagents.",
+      duration: "7 minutes",
       completed: false,
     },
     {
       id: 5,
-      title: "Temperature Effect - Cooling",
+      title: "Test for Nitrates and Nitrites",
       description:
-        "Cool the heated solution in an ice bath. Observe how decreased temperature shifts the equilibrium back.",
-      duration: "8 minutes",
-      temperature: "0°C",
+        "Heat the sample on the loop; nitrates may decompose to give brown fumes (NO2) or a peculiar smell. Use the observed decomposition behavior as a qualitative indicator and follow up with wet tests if needed.",
+      duration: "7 minutes",
       completed: false,
     },
     {
       id: 6,
-      title: "Record Observations",
+      title: "Record Observations and Conclusions",
       description:
-        "Document all color changes and relate them to Le Chatelier's principle. Calculate equilibrium constants where applicable.",
+        "Document colors, residues, fumes, and odors observed during dry tests. Compare results against known characteristic behaviors of common acid radicals and conclude the most likely identities.",
       duration: "7 minutes",
       completed: false,
     },
   ],
   safetyInfo:
-    "Concentrated HCl is highly corrosive. Cobalt compounds are toxic if ingested. Always wear safety goggles, gloves, and work in a well-ventilated area. Handle hot and cold solutions with appropriate equipment.",
+    "This is a virtual simulation. In real laboratory practice, dry tests use hot wire loops and can produce toxic fumes (eg. NO2) or hot residues. Always use proper ventilation, a fume hood, safety goggles, heat-resistant gloves, and follow institutional safety protocols.",
 };
 
 export const PHHClExperiment: ChemicalEquilibriumExperiment = {
