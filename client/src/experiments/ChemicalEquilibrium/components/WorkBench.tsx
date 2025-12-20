@@ -160,35 +160,37 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           />
 
           {/* Ambient laboratory indicators */}
-          <div className="absolute top-4 right-4 flex flex-col space-y-2">
-            {/* Temperature indicator */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-orange-400 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium text-gray-700">{temperature}°C</span>
+          {!isDryTestWorkbench && (
+            <div className="absolute top-4 right-4 flex flex-col space-y-2">
+              {/* Temperature indicator */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-orange-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-gray-700">{temperature}°C</span>
+                </div>
               </div>
+
+              {/* Running indicator */}
+              {isRunning && (
+                <div className="bg-green-500 text-white rounded-lg px-3 py-2 shadow-md">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium">Active</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Chemical selection indicator */}
+              {selectedChemical && (
+                <div className="bg-blue-500 text-white rounded-lg px-3 py-2 shadow-md">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+                    <span className="text-xs font-medium">Chemical Selected</span>
+                  </div>
+                </div>
+              )}
             </div>
-
-            {/* Running indicator */}
-            {isRunning && (
-              <div className="bg-green-500 text-white rounded-lg px-3 py-2 shadow-md">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  <span className="text-xs font-medium">Active</span>
-                </div>
-              </div>
-            )}
-
-            {/* Chemical selection indicator */}
-            {selectedChemical && (
-              <div className="bg-blue-500 text-white rounded-lg px-3 py-2 shadow-md">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
-                  <span className="text-xs font-medium">Chemical Selected</span>
-                </div>
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Safety guidelines overlay */}
           <div className="absolute bottom-4 left-4 bg-yellow-100 border border-yellow-300 rounded-lg px-3 py-2 shadow-md">
