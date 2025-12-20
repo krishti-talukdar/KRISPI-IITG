@@ -12,7 +12,6 @@
       "Test Tube",
       "Reagent Bottles",
       "Graduated Droppers",
-
       "Thermometer",
       "Color Chart"
     ],
@@ -129,12 +128,12 @@
         "completed": false
       },
       {
-      "id": 6,
-      "title": "Mix Oxalic Acid with Distilled Water",
-      "description": "Mix oxalic acid with distilled water",
-      "duration": "5 minutes",
-      "completed": false
-    },
+        "id": 6,
+        "title": "Mix Oxalic Acid with Distilled Water",
+        "description": "Mix oxalic acid with distilled water",
+        "duration": "5 minutes",
+        "completed": false
+      },
       {
         "id": 7,
         "title": "Final Mixing and Calculation",
@@ -146,73 +145,69 @@
     "safetyInfo": "Oxalic acid is toxic and corrosive. Avoid skin contact and inhalation. Wear safety goggles and gloves. Work in a well-ventilated area. Wash hands thoroughly after handling."
   },
   {
-    "title": "Chemical Equilibrium",
-    "description": "Investigate Le Chatelier's principle by observing how changes in concentration, temperature, and pressure affect chemical equilibrium. Study the cobalt(II) chloride equilibrium system.",
-    "category": "Equilibrium",
+    "title": "Dry Tests for Acid Radicals",
+    "description": "Learn classical dry test techniques to identify common acid radicals (anions) such as carbonate, sulfate, chloride, nitrate and nitrite using a clean wire loop and heat. This qualitative analysis focuses on observation of color, smell, and residue characteristics in a safe virtual environment.",
+    "category": "Qualitative Analysis",
     "difficulty": "Intermediate",
     "duration": 40,
     "steps": 6,
     "rating": 4.7,
     "imageUrl": "https://images.unsplash.com/photo-1576086213369-97a306d36557?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=400",
     "equipment": [
+      "Nichrome/Platinum Wire Loop",
+      "Concave Watch Glass",
       "Test Tubes",
-      "Test Tube Rack",
-      "Dropper Pipettes",
-      "Hot Water Bath",
-      "Ice Bath",
-      "Graduated Cylinders",
-
-      "Thermometer"
+      "Ceramic Tile",
+      "Bunsen Burner (virtual heat source)",
+      "Dilute Acids and Reagents"
     ],
     "stepDetails": [
       {
         "id": 1,
-        "title": "Prepare Solutions",
-        "description": "1. Take a test tube and add a small amount of cobalt chloride crystals. 2. Add distilled water slowly and stir until it dissolves. 3. You will see a pink solution because of the hydrated [Co(H��O)₆]²⁺ complex.",
+        "title": "Clean the Wire Loop",
+        "description": "Heat the wire loop to red-hot and cool in distilled water to remove contaminants. A clean loop prevents false positives during dry tests.",
         "duration": "5 minutes",
-        "temperature": "Room temperature",
+        "temperature": "Red-hot (virtual)",
         "completed": false
       },
       {
         "id": 2,
-        "title": "Add Concentrated HCl",
-        "description": "Slowly add drops of concentrated HCl to the cobalt solution. Observe the color change from pink to blue as the equilibrium shifts.",
+        "title": "Test for Carbonates (CO3^2-)",
+        "description": "Place a small sample on the wire loop and strongly heat. Observe effervescence on subsequent wet testing or formation of white residue; add dilute acid to confirm CO2 evolution (effervescence).",
         "duration": "8 minutes",
-        "safety": "Caution: Concentrated HCl is corrosive",
+        "safety": "Perform in well-ventilated area (virtual)",
         "completed": false
       },
       {
         "id": 3,
-        "title": "Dilute with Water",
-        "description": "Add distilled water to the blue solution. Observe the color change back to pink as the equilibrium shifts in the reverse direction.",
-        "duration": "5 minutes",
+        "title": "Test for Sulfates (SO4^2-)",
+        "description": "Heat the sample and observe for any characteristic changes; follow with a wet confirmatory test (barium chloride on acidified solution) if required. In dry test, sulfate often gives no flame color but leaves a persistent residue.",
+        "duration": "6 minutes",
         "completed": false
       },
       {
         "id": 4,
-        "title": "Temperature Effect - Heating",
-        "description": "Heat the pink solution in a water bath. Observe how increased temperature affects the equilibrium position and color.",
-        "duration": "10 minutes",
-        "temperature": "60°C",
+        "title": "Test for Chlorides and Halides",
+        "description": "Warm the sample and observe for white fumes or reaction with silver nitrate in a subsequent wet confirmatory test. Some halides may impart characteristic flame colors when heated on a wire loop with proper reagents.",
+        "duration": "7 minutes",
         "completed": false
       },
       {
         "id": 5,
-        "title": "Temperature Effect - Cooling",
-        "description": "Cool the heated solution in an ice bath. Observe how decreased temperature shifts the equilibrium back.",
-        "duration": "8 minutes",
-        "temperature": "0°C",
+        "title": "Test for Nitrates and Nitrites",
+        "description": "Heat the sample on the loop; nitrates may decompose to give brown fumes (NO2) or a peculiar smell. Use the observed decomposition behavior as a qualitative indicator and follow up with wet tests if needed.",
+        "duration": "7 minutes",
         "completed": false
       },
       {
         "id": 6,
-        "title": "Record Observations",
-        "description": "Document all color changes and relate them to Le Chatelier's principle. Calculate equilibrium constants where applicable.",
+        "title": "Record Observations and Conclusions",
+        "description": "Document colors, residues, fumes, and odors observed during dry tests. Compare results against known characteristic behaviors of common acid radicals and conclude the most likely identities.",
         "duration": "7 minutes",
         "completed": false
       }
     ],
-    "safetyInfo": "Concentrated HCl is highly corrosive. Cobalt compounds are toxic if ingested. Always wear safety goggles, gloves, and work in a well-ventilated area. Handle hot and cold solutions with appropriate equipment."
+    "safetyInfo": "This is a virtual simulation. In real laboratory practice, dry tests use hot wire loops and can produce toxic fumes (eg. NO2) or hot residues. Always use proper ventilation, a fume hood, safety goggles, heat-resistant gloves, and follow institutional safety protocols."
   },
   {
     "title": "Study of Equilibrium Shift between Ferric Ions and Thiocyanate Ions",
@@ -367,7 +362,7 @@
         "completed": false
       }
     ],
-    "safetyInfo": "Here’s a *comprehensive safety guide* for the experiment:  *“To determine pH values of hydrochloric acid of different strengths using pH paper and universal indicator.”*  ---  ## 🔰 *SAFETY GUIDE*  ### *1. Objective*  To ensure safe handling and use of *hydrochloric acid (HCl)* solutions of different concentrations during pH determination using *pH paper* and *universal indicator*.  ---  ### *2. Chemical Information*  * *Chemical name:* Hydrochloric acid (HCl) * *Nature:* Strong acid; corrosive * *Hazard classification:*    * Corrosive to skin, eyes, and mucous membranes   * Produces irritating and toxic fumes (HCl vapour)  ---  ### *3. Personal Protective Equipment (PPE)*  ✅ *Mandatory PPE:*  * Lab coat or apron (acid-resistant if available) * Safety goggles or face shield * Nitrile or rubber gloves * Closed shoes (no sandals) * Long pants and tied-back hair  ---  ### *4. Laboratory Safety Precautions*  * Work in a *well-ventilated area* or *fume hood* when handling concentrated acid. * *Never* pipette by mouth; use a pipette filler or bulb. * Always *add acid to water*, not water to acid — prevents splashing or violent reaction. * Use *labeled containers* for each concentration to avoid mix-up. * Keep *neutralizing agents* (e.g., sodium bicarbonate or sodium carbonate) nearby. * Keep a *source of running water* or an *eye-wash station* accessible.  ---  ### *5. Handling Procedures*  1. *Preparation of dilute acids:*     * Carefully measure the required volume of stock HCl.    * Slowly pour the acid into water with gentle stirring.    * Allow solutions to cool before testing.  2. *Testing with indicators:*     * Use small quantities of solution (5–10 mL).    * Avoid touching pH paper or universal indicator with bare hands.    * Do not reuse contaminated indicator droppers or strips.  3. *Observation:*     * Observe color changes on white background for clarity.    * Dispose of used strips in a designated waste bin.  ---  ### *6. Spill and Accident Procedures*  * *Minor acid spill:*   Sprinkle sodium bicarbonate or carbonate powder to neutralize; wipe with plenty of water. * *Skin contact:*   Immediately flush with *copious running water* for at least *10–15 minutes*. * *Eye contact:*   Rinse eyes in *eye-wash station* for *15–20 minutes* and seek medical help. * *Inhalation:*   Move to fresh air immediately; seek medical attention if irritation persists. * *Ingestion:*   Do *not* induce vomiting; rinse mouth with water and call for medical help.  ---  ### *7. Waste Disposal*  * Collect all acid wastes in a labeled *“Acid Waste”* container. * Neutralize before disposal if permitted by lab rules. * Rinse all glassware thoroughly with water before returning.  ---  ### *8. Emergency Equipment to Keep Nearby*  * First aid kit * Eye wash and safety shower * Sodium bicarbonate (NaHCO₃) for neutralization * Fire extinguisher (CO₂ type) * Clean water supply  ---  ### *9. Good Laboratory Practices*  * Do not eat, drink, or use mobile phones in the laboratory. * Label all beakers and flasks clearly. * Keep workspace organized and dry. * Report all accidents or spills immediately to the instructor or lab supervisor. * Wash hands thoroughly after completing the experiment.  ---  ### *10. Disposal and Clean-up*  * Neutralize any residual acid before pouring into sink (if allowed by instructor). * Dispose of pH paper and indicator-stained samples in *non-recyclable chemical waste*. * Clean the bench with a wet cloth to remove traces of acid.  ---  ✅ *Summary of Key Rules*  | DO’s                          | DON’Ts                              | | ----------------------------- | ----------------------------------- | | Wear full PPE                 | Never mix acid with base directly   | | Add acid to water slowly      | Don’t pipette by mouth              | | Work in ventilated area       | Don’t touch acid with bare skin     | | Neutralize spills immediately | Don’t dispose acid directly in sink |  ---"
+    "safetyInfo": "Here’s a *comprehensive safety guide* for the experiment:  *“To determine pH values of hydrochloric acid of different strengths using pH paper and universal indicator.”*  ---  ## 🔰 *SAFETY GUIDE*  ### *1. Objective*  To ensure safe handling and use of *hydrochloric acid (HCl)* solutions of different concentrations during pH determination using *pH paper* and *universal indicator*.  ---  ### *2. Chemical Information*  * *Chemical name:* Hydrochloric acid (HCl) * *Nature:* Strong acid; corrosive * *Hazard classification:*    * Corrosive to skin, eyes, and mucous membranes   * Produces irritating and toxic fumes (HCl vapour)  ---  ### *3. Personal Protective Equipment (PPE)*  ✅ *Mandatory PPE:*  * Lab coat or apron (acid-resistant if available) * Safety goggles or face shield * Nitrile or rubber gloves * Closed shoes (no sandals) * Long pants and tied-back hair  ---  ### *4. Laboratory Safety Precautions*  * Work in a *well-ventilated area* or *fume hood* when handling concentrated acid. * *Never* pipette by mouth; use a pipette filler or bulb. * Always *add acid to water*, not water to acid — prevents splashing or violent reaction. * Use *labeled containers* for each concentration to avoid mix-up. * Keep *neutralizing agents* (e.g., sodium bicarbonate or sodium carbonate) nearby. * Keep a *source of running water* or an *eye-wash station* accessible.  ---  ### *5. Handling Procedures*  1. *Preparation of dilute acids:*     * Carefully measure the required vo... 
   },
   {
     "title": "Determine the strength of a given solution of sodium hydroxide by titrating it against a standard solution of oxalic acid, having the strength 0.1N.",
@@ -414,7 +409,7 @@
       {
         "id": 4,
         "title": "Initial Titration",
-        "description": "Begin titrating by adding NaOH solution dropwise while swirling the flask continuously. The reaction is: H₂C₂O₄ + 2NaOH �� Na₂C₂O₄ + 2H₂O",
+        "description": "Begin titrating by adding NaOH solution dropwise while swirling the flask continuously. The reaction is: H₂C₂O₄ + 2NaOH → Na₂C₂O₄ + 2H₂O",
         "duration": "8 minutes",
         "completed": false
       },
@@ -511,7 +506,7 @@
     ],
     "stepDetails": [
       { "id": 1, "title": "Label and Prepare Test Tubes", "description": "Label two clean test tubes as HCl and CH3COOH. Add about 5 mL of each 0.01 M solution to the respective tubes.", "duration": "3 minutes", "completed": false },
-      { "id": 2, "title": "Add Universal Indicator", "description": "Add 2–3 drops of universal indicator solution to each test tube. Swirl gently to mix.", "duration": "2 minutes", "safety": "Avoid contact with skin and eyes; indicator contains dyes/solvents.", "completed": false },
+      { "id": 2, "title": "Add Universal Indicator", "description": "Add 2–3 drops of universal indicator solution to each test tube. Swirl gently to mix.", "duration": "2 minutes", "completed": false },
       { "id": 3, "title": "Observe and Match Colors", "description": "Observe the color developed in each tube and compare with the standard pH color chart to estimate pH.", "duration": "5 minutes", "completed": false },
       { "id": 4, "title": "Record Estimated pH", "description": "Record the approximate pH for 0.01 M HCl and 0.01 M CH3COOH. Note that strong acids give lower pH than weak acids at the same molarity.", "duration": "4 minutes", "completed": false },
       { "id": 5, "title": "Compare with Expected Values", "description": "Compare observations with theoretical expectations: HCl (~pH 2) vs CH3COOH (typically higher pH, ~2.4–3.0 due to partial ionization).", "duration": "4 minutes", "completed": false },
@@ -599,7 +594,7 @@
       { "id": 2, "title": "Measure Initial pH", "description": "Calibrate the pH meter or prepare universal indicator. Measure and record the initial pH of the ethanoic acid solution.", "duration": "3 minutes", "completed": false },
       { "id": 3, "title": "Add Sodium Ethanoate Incrementally", "description": "Add known small volumes (e.g., 0.5 mL increments) of 0.1 M sodium ethanoate solution to the acid solution. Stir and allow the solution to equilibrate after each addition.", "duration": "8 minutes", "safety": "Avoid skin contact; handle reagents with care.", "completed": false },
       { "id": 4, "title": "Record pH After Each Addition", "description": "Measure and record pH after each addition. Observe increase in pH as ethanoate ion concentration increases, showing buffer action.", "duration": "6 minutes", "completed": false },
-      { "id": 5, "title": "Analyze with Henderson���Hasselbalch", "description": "Use recorded concentrations and pH values to apply the Henderson–Hasselbalch equation and calculate pKa. Discuss how the common-ion effect stabilizes pH.", "duration": "6 minutes", "completed": false },
+      { "id": 5, "title": "Analyze with Henderson–Hasselbalch", "description": "Use recorded concentrations and pH values to apply the Henderson–Hasselbalch equation and calculate pKa. Discuss how the common-ion effect stabilizes pH.", "duration": "6 minutes", "completed": false },
       { "id": 6, "title": "Cleanup and Safety",
         "description": "Neutralize and dispose solutions according to local guidelines. Rinse glassware thoroughly and wash hands. Store reagents properly.",
         "duration": "2 minutes",
