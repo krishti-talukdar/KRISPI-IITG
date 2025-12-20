@@ -561,6 +561,7 @@ function ChemicalEquilibriumVirtualLab({
 
           {/* Center Workbench Area */}
           <main className="flex-1 flex flex-col">
+            {isDryTestWorkbench ? null : (
             <div className="mb-4">
               <div className="rounded-lg bg-gradient-to-b from-yellow-50 to-white border p-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -622,6 +623,7 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
             </div>
+          )}
 
             <div className="flex-1 p-2">
               <WorkBench
