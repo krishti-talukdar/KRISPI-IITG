@@ -7,6 +7,7 @@ interface WorkBenchProps {
   isRunning: boolean;
   experimentTitle: string;
   currentGuidedStep?: number;
+  totalGuidedSteps?: number;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -16,6 +17,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   isRunning,
   experimentTitle,
   currentGuidedStep = 1,
+  totalGuidedSteps,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
@@ -67,16 +69,20 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       experimentTitle.toLowerCase().includes("ph ")
     : false;
 
+  const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
+  const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
+
   // PH-specific classes
   const phRootClass =
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
 
-  const defaultRootClass =
-    `relative w-full h-full min-h-[500px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-gray-400 ${
-      isDragOver
-        ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
-        : ""
-    }`;
+  const defaultRootClass = isDryTestWorkbench
+    ? "relative w-full h-full min-h-[500px] bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg overflow-hidden transition-all duration-300 border border-gray-200 shadow-sm"
+    : `relative w-full h-full min-h-[500px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-gray-400 ${
+        isDragOver
+          ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
+          : ""
+      }`;
 
   return (
     <div
@@ -102,32 +108,34 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           </div>
 
           {/* Right top ambient indicators */}
-          <div className="absolute top-4 right-4 flex flex-col space-y-2">
-            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-orange-400 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium text-gray-700">{temperature}°C</span>
+          {!isDryTestWorkbench && (
+            <div className="absolute top-4 right-4 flex flex-col space-y-2">
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-orange-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-gray-700">{temperature}°C</span>
+                </div>
               </div>
+
+              {isRunning && (
+                <div className="bg-green-500 text-white rounded-lg px-3 py-2 shadow-md">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium">Active</span>
+                  </div>
+                </div>
+              )}
+
+              {selectedChemical && (
+                <div className="bg-blue-500 text-white rounded-lg px-3 py-2 shadow-md">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+                    <span className="text-xs font-medium">Chemical Selected</span>
+                  </div>
+                </div>
+              )}
             </div>
-
-            {isRunning && (
-              <div className="bg-green-500 text-white rounded-lg px-3 py-2 shadow-md">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  <span className="text-xs font-medium">Active</span>
-                </div>
-              </div>
-            )}
-
-            {selectedChemical && (
-              <div className="bg-blue-500 text-white rounded-lg px-3 py-2 shadow-md">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
-                  <span className="text-xs font-medium">Chemical Selected</span>
-                </div>
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Safety box bottom-left */}
           <div className="absolute bottom-4 left-4 bg-yellow-100 border border-yellow-300 rounded-lg px-3 py-2 shadow-md">
@@ -156,43 +164,47 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           />
 
           {/* Ambient laboratory indicators */}
-          <div className="absolute top-4 right-4 flex flex-col space-y-2">
-            {/* Temperature indicator */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-orange-400 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium text-gray-700">{temperature}°C</span>
+          {!isDryTestWorkbench && (
+            <div className="absolute top-4 right-4 flex flex-col space-y-2">
+              {/* Temperature indicator */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-orange-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-gray-700">{temperature}°C</span>
+                </div>
               </div>
+
+              {/* Running indicator */}
+              {isRunning && (
+                <div className="bg-green-500 text-white rounded-lg px-3 py-2 shadow-md">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium">Active</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Chemical selection indicator */}
+              {selectedChemical && (
+                <div className="bg-blue-500 text-white rounded-lg px-3 py-2 shadow-md">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+                    <span className="text-xs font-medium">Chemical Selected</span>
+                  </div>
+                </div>
+              )}
             </div>
-
-            {/* Running indicator */}
-            {isRunning && (
-              <div className="bg-green-500 text-white rounded-lg px-3 py-2 shadow-md">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  <span className="text-xs font-medium">Active</span>
-                </div>
-              </div>
-            )}
-
-            {/* Chemical selection indicator */}
-            {selectedChemical && (
-              <div className="bg-blue-500 text-white rounded-lg px-3 py-2 shadow-md">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
-                  <span className="text-xs font-medium">Chemical Selected</span>
-                </div>
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Safety guidelines overlay */}
-          <div className="absolute bottom-4 left-4 bg-yellow-100 border border-yellow-300 rounded-lg px-3 py-2 shadow-md">
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 text-yellow-600">⚠️</div>
-              <span className="text-xs font-medium text-yellow-800">Chemical Equilibrium Lab</span>
+          {!isDryTestWorkbench && (
+            <div className="absolute bottom-4 left-4 bg-yellow-100 border border-yellow-300 rounded-lg px-3 py-2 shadow-md">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 text-yellow-600">⚠️</div>
+                <span className="text-xs font-medium text-yellow-800">Chemical Equilibrium Lab</span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Drop zone indicator */}
           {isDragOver && (
@@ -211,13 +223,26 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
             </div>
           )}
 
-          {/* Experiment step indicator - specific to Chemical Equilibrium */}
-          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">Chemical Equilibrium</span>
+          {isDryTestWorkbench ? (
+            <>
+              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-sm border border-gray-200 flex items-center space-x-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span className="text-xs font-semibold text-gray-700">
+                  Step {currentGuidedStep} of {totalGuidedSteps ?? 6}
+                </span>
+              </div>
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-sm border border-gray-200 text-xs font-semibold text-gray-600">
+                Laboratory Workbench
+              </div>
+            </>
+          ) : (
+            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                <span className="text-sm font-medium text-gray-700">Chemical Equilibrium</span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Equipment positions and children */}
           <div className="absolute inset-0 transform -translate-y-8">{children}</div>

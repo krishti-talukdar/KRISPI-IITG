@@ -127,6 +127,7 @@ function ChemicalEquilibriumVirtualLab({
   const isPHExperiment = experimentTitle === PHHClExperiment.title;
   const isDryTestExperiment = experimentTitle === ChemicalEquilibriumData.title;
   const usePhStyleLayout = isPHExperiment || isDryTestExperiment;
+  const totalGuidedSteps = experiment.stepDetails.length;
   const chemicalsList = isPHExperiment
     ? PH_HCL_CHEMICALS
     : isDryTestExperiment
@@ -137,6 +138,8 @@ function ChemicalEquilibriumVirtualLab({
       ? PH_HCL_EQUIPMENT
       : mapDryTestEquipment(experiment.equipment)
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
+  const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
+  const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
 
@@ -483,6 +486,17 @@ function ChemicalEquilibriumVirtualLab({
     if (onResetExperiment) onResetExperiment();
   };
 
+  const handleUndoStep = () => {
+    setCurrentStep((prev) => Math.max(1, prev - 1));
+    setToastMessage("Reverted to previous step");
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
+  const handleViewResults = () => {
+    setToastMessage("Results & analysis will appear after completing the steps.");
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
   return (
     <TooltipProvider>
       {usePhStyleLayout ? (
@@ -492,30 +506,32 @@ function ChemicalEquilibriumVirtualLab({
             <h4 className="text-sm font-semibold mb-3">Equipment</h4>
 
             {/* Experiment progress above equipment (PH experiment) */}
-            <div className="mb-3">
-              <div className="text-xs font-medium text-gray-700 mb-1">Experiment Progress</div>
-              <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.round((currentStep / totalSteps) * 100)}%` }}
-                />
-              </div>
+            {!isDryTestWorkbench && (
+              <div className="mb-3">
+                <div className="text-xs font-medium text-gray-700 mb-1">Experiment Progress</div>
+                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${Math.round((currentStep / totalSteps) * 100)}%` }}
+                  />
+                </div>
 
-              <div className="flex items-center gap-2 mt-2">
-                {Array.from({ length: totalSteps }).map((_, i) => {
-                  const stepIndex = i + 1;
-                  const active = stepIndex <= currentStep;
-                  return (
-                    <div
-                      key={stepIndex}
-                      className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-medium ${active ? 'bg-blue-500 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}
-                    >
-                      {stepIndex}
-                    </div>
-                  );
-                })}
+                <div className="flex items-center gap-2 mt-2">
+                  {Array.from({ length: totalSteps }).map((_, i) => {
+                    const stepIndex = i + 1;
+                    const active = stepIndex <= currentStep;
+                    return (
+                      <div
+                        key={stepIndex}
+                        className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-medium ${active ? 'bg-blue-500 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}
+                      >
+                        {stepIndex}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="flex-1 overflow-auto">
               <div className="space-y-3">
@@ -554,6 +570,23 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="mt-4 text-xs text-gray-500">Tip: Drag equipment from the left panel to the workbench.</div>
 
+            {isDryTestExperiment && (
+              <div className="mt-4 space-y-2">
+                <button
+                  onClick={handleUndoStep}
+                  className="w-full px-3 py-2 bg-white border border-gray-200 text-gray-700 rounded shadow-sm hover:bg-gray-50 transition"
+                >
+                  Undo
+                </button>
+                <button
+                  onClick={handleViewResults}
+                  className="w-full px-3 py-2 bg-blue-600 text-white rounded shadow-sm hover:bg-blue-700 transition"
+                >
+                  View Results &amp; Analysis
+                </button>
+              </div>
+            )}
+
             <div className="mt-4">
               <button onClick={handleReset} className="w-full px-3 py-2 bg-red-50 text-red-600 rounded">Reset Experiment</button>
             </div>
@@ -561,6 +594,7 @@ function ChemicalEquilibriumVirtualLab({
 
           {/* Center Workbench Area */}
           <main className="flex-1 flex flex-col">
+          {!isDryTestWorkbench && (
             <div className="mb-4">
               <div className="rounded-lg bg-gradient-to-b from-yellow-50 to-white border p-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -622,6 +656,7 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
             </div>
+          )}
 
             <div className="flex-1 p-2">
               <WorkBench
@@ -630,6 +665,7 @@ function ChemicalEquilibriumVirtualLab({
                 isRunning={isRunning}
                 experimentTitle={experimentTitle}
                 currentGuidedStep={currentStep}
+                totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find((eq) => eq.id === pos.id);
@@ -756,6 +792,8 @@ function ChemicalEquilibriumVirtualLab({
                 selectedChemical={experimentStarted ? selectedChemical : null}
                 isRunning={isRunning}
                 experimentTitle={experimentTitle}
+                currentGuidedStep={currentStep}
+                totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(

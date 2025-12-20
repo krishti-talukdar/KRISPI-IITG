@@ -24,6 +24,7 @@ export default function ChemicalEquilibriumApp({
   const [match, params] = useRoute("/experiment/:id");
   const experimentId = Number(params?.id ?? 4);
   const experiment = experimentId === PHHClExperiment.id ? PHHClExperiment : ChemicalEquilibriumData;
+  const isDryTestExperiment = experiment.id === ChemicalEquilibriumData.id;
   const updateProgress = useUpdateProgress();
 
   // Auto-start when URL contains ?autostart=1 for the PH experiment
@@ -135,8 +136,8 @@ export default function ChemicalEquilibriumApp({
           </h1>
           <p className="text-gray-600 mb-4">{experiment.description}</p>
 
-          {/* Progress Bar - hidden for PH HCl experiment (we show per-panel progress) */}
-          {experiment.id !== PHHClExperiment.id && (
+          {/* Progress Bar - hidden for PH HCl experiment and dry tests (we show per-panel progress) */}
+          {experiment.id !== PHHClExperiment.id && !isDryTestExperiment && (
             <>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-gray-700">Overall Progress</span>
@@ -146,6 +147,46 @@ export default function ChemicalEquilibriumApp({
             </>
           )}
         </div>
+        {isDryTestExperiment && (
+          <div className="mb-6">
+            <div className="rounded-lg bg-white border border-gray-200 shadow-sm">
+              <div className="px-5 py-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Experiment Progress</p>
+                    <h3 className="text-lg font-semibold text-gray-900">{experiment.title}</h3>
+                    <p className="text-xs text-gray-500">Follow the guided steps below to complete the dry tests.</p>
+                  </div>
+                  <div className="text-xs font-semibold text-gray-600">Step {currentStep + 1} of {experiment.stepDetails.length}</div>
+                </div>
+                <div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="h-2 rounded-full bg-blue-500 transition-all duration-300"
+                      style={{ width: `${Math.round(((currentStep + 1) / experiment.stepDetails.length) * 100)}%` }}
+                    />
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {Array.from({ length: experiment.stepDetails.length }).map((_, i) => {
+                      const stepIndex = i + 1;
+                      const active = stepIndex <= currentStep + 1;
+                      return (
+                        <div
+                          key={stepIndex}
+                          className={`flex items-center justify-center w-9 h-9 rounded-full border ${
+                            active ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-200 text-gray-600'
+                          }`}
+                        >
+                          <span className="text-xs font-semibold">{stepIndex}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Lab Area */}
         <div className="w-full relative">
