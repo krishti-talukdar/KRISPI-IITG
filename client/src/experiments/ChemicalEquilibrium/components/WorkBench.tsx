@@ -7,6 +7,7 @@ interface WorkBenchProps {
   isRunning: boolean;
   experimentTitle: string;
   currentGuidedStep?: number;
+  totalGuidedSteps?: number;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -16,6 +17,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   isRunning,
   experimentTitle,
   currentGuidedStep = 1,
+  totalGuidedSteps,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
@@ -217,13 +219,26 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
             </div>
           )}
 
-          {/* Experiment step indicator - specific to Chemical Equilibrium */}
-          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">Chemical Equilibrium</span>
+          {isDryTestWorkbench ? (
+            <>
+              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-sm border border-gray-200 flex items-center space-x-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span className="text-xs font-semibold text-gray-700">
+                  Step {currentGuidedStep} of {totalGuidedSteps ?? 6}
+                </span>
+              </div>
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-sm border border-gray-200 text-xs font-semibold text-gray-600">
+                Laboratory Workbench
+              </div>
+            </>
+          ) : (
+            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                <span className="text-sm font-medium text-gray-700">Chemical Equilibrium</span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Equipment positions and children */}
           <div className="absolute inset-0 transform -translate-y-8">{children}</div>
