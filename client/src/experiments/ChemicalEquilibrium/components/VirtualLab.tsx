@@ -20,6 +20,7 @@ import type {
   Measurements,
   Result,
   ExperimentStep,
+  ChemicalEquilibriumExperiment,
 } from "../types";
 
 interface ChemicalEquilibriumVirtualLabProps {
@@ -97,6 +98,7 @@ function ChemicalEquilibriumVirtualLab({
   stepNumber,
   totalSteps,
   experimentTitle,
+  experiment,
   allSteps,
   experimentStarted,
   onStartExperiment,
