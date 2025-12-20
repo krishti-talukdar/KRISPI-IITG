@@ -593,43 +593,8 @@ function ChemicalEquilibriumVirtualLab({
 
           {/* Center Workbench Area */}
           <main className="flex-1 flex flex-col">
+          {!isDryTestWorkbench && (
             <div className="mb-4">
-            {isDryTestWorkbench ? (
-              <div className="rounded-lg bg-white border border-gray-200 shadow-sm">
-                <div className="px-5 py-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Experiment Progress</p>
-                      <h3 className="text-lg font-semibold text-gray-900">{experimentTitle}</h3>
-                      <p className="text-xs text-gray-500">Follow the guided steps below to complete the dry tests.</p>
-                    </div>
-                    <div className="text-xs font-semibold text-gray-600">Step {currentStep} of {totalSteps}</div>
-                  </div>
-                  <div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="h-2 rounded-full bg-blue-500 transition-all duration-300"
-                        style={{ width: `${Math.round((currentStep / totalSteps) * 100)}%` }}
-                      />
-                    </div>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {Array.from({ length: totalSteps }).map((_, i) => {
-                        const stepIndex = i + 1;
-                        const active = stepIndex <= currentStep;
-                        return (
-                          <div
-                            key={stepIndex}
-                            className={`flex items-center justify-center w-9 h-9 rounded-full border ${active ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-200 text-gray-600'}`}
-                          >
-                            <span className="text-xs font-semibold">{stepIndex}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
               <div className="rounded-lg bg-gradient-to-b from-yellow-50 to-white border p-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex-1">
@@ -689,8 +654,8 @@ function ChemicalEquilibriumVirtualLab({
                   </div>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
             <div className="flex-1 p-2">
               <WorkBench
