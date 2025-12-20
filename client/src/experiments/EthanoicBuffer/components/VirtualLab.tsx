@@ -903,43 +903,6 @@ const stepsProgress = (
               )}
             </div>
 
-            {/* Action Timeline */}
-            <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-5 rounded-lg border-2 border-indigo-300">
-              <h5 className="text-base font-bold text-indigo-900 mb-4 flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full bg-indigo-500 mr-2"></span>
-                Action Timeline
-              </h5>
-              <ol className="space-y-2 text-sm">
-                <li className="flex items-start p-2 bg-white rounded border border-indigo-200">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-indigo-500 text-white text-xs font-bold rounded-full mr-3 flex-shrink-0">1</span>
-                  <span>Added <span className="font-semibold">ethanoic acid</span> — initial pH recorded <span className="text-indigo-700 font-bold">{initialAcidPH != null ? `(${initialAcidPH.toFixed(2)})` : ''}</span></span>
-                </li>
-                <li className="flex items-start p-2 bg-white rounded border border-indigo-200">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-indigo-500 text-white text-xs font-bold rounded-full mr-3 flex-shrink-0">2</span>
-                  <span>Added <span className="font-semibold">sodium ethanoate</span> — stored CASE values {case1PH != null ? <span className="text-indigo-700 font-bold">CASE1: {case1PH.toFixed(2)}</span> : ''} {case2PH != null ? <span className="text-indigo-700 font-bold">CASE2: {case2PH.toFixed(2)}</span> : ''}</span>
-                </li>
-              </ol>
-            </div>
-
-            {/* Final Experimental State */}
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-5 rounded-lg border-2 border-emerald-400">
-              <h5 className="text-base font-bold text-emerald-900 mb-4 flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full bg-emerald-500 mr-2"></span>
-                Final Experimental State
-              </h5>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-white rounded-lg border-2 border-emerald-300 shadow-sm">
-                  <div className="text-xs font-bold uppercase text-emerald-700 mb-2">Solution pH</div>
-                  <div className="text-2xl font-bold text-emerald-600">{case2PH != null ? case2PH.toFixed(2) : 'N/A'}</div>
-                  <div className="text-xs text-emerald-600 font-semibold mt-1">Final measurement</div>
-                </div>
-                <div className="p-4 bg-white rounded-lg border-2 border-teal-300 shadow-sm">
-                  <div className="text-xs font-bold uppercase text-teal-700 mb-2">Key Result</div>
-                  <div className="text-sm font-bold text-teal-700">Buffer formed:</div>
-                  <div className="text-sm font-semibold text-gray-700 mt-1">CH₃COOH/CH₃COO⁻</div>
-                </div>
-              </div>
-            </div>
           </div>
 
           <DialogFooter>
