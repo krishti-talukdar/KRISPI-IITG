@@ -30,6 +30,7 @@ interface ChemicalEquilibriumVirtualLabProps {
   stepNumber: number;
   totalSteps: number;
   experimentTitle: string;
+  experiment: ChemicalEquilibriumExperiment;
   allSteps: ExperimentStep[];
   experimentStarted: boolean;
   onStartExperiment: () => void;
