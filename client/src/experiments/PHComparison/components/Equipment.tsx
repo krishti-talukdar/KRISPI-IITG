@@ -16,6 +16,7 @@ interface EquipmentProps {
   displayVolume?: number;
   onInteract?: (id: string) => void;
   isActive?: boolean;
+  toolbarLayout?: "stack" | "card";
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -31,6 +32,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   displayVolume,
   onInteract,
   isActive = false,
+  toolbarLayout = "stack",
 }) => {
   const isFixed = Boolean(position && (position as any).fixed);
 
@@ -68,6 +70,15 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
   // Toolbar item
   if (!position) {
+    const toolbarLayoutClass = toolbarLayout === "card"
+      ? "flex-row items-center gap-3 text-left justify-start"
+      : "flex-col items-center";
+    const toolbarStateClass = disabled
+      ? "border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
+      : "border-gray-300 bg-white hover:border-blue-400 hover:shadow-lg cursor-pointer";
+    const iconLayoutClass = toolbarLayout === "card" ? "text-3xl flex-shrink-0 text-blue-600" : "text-3xl mb-2 text-blue-600";
+    const nameLayoutClass = toolbarLayout === "card" ? "text-sm font-medium text-gray-700 text-left" : "text-sm font-medium text-gray-700 text-center";
+
     return (
       <Tooltip>
         <TooltipTrigger asChild>
@@ -75,12 +86,10 @@ export const Equipment: React.FC<EquipmentProps> = ({
             draggable={!disabled}
             onDragStart={handleDragStart}
             onClick={() => { if (onInteract) onInteract(id); }}
-            className={`flex flex-col items-center p-4 rounded-lg border-2 ${
-              disabled ? 'border-gray-200 bg-gray-50 opacity-50' : 'border-gray-300 bg-white hover:border-blue-400 hover:shadow-lg'
-            }`}
+            className={`flex ${toolbarLayoutClass} p-4 rounded-lg border-2 transition ${toolbarStateClass}`}
           >
-            <div className="text-3xl mb-2 text-blue-600">{icon}</div>
-            <span className="text-sm font-medium text-gray-700 text-center">{name}</span>
+            <div className={iconLayoutClass}>{icon}</div>
+            <span className={nameLayoutClass}>{name}</span>
           </div>
         </TooltipTrigger>
         <TooltipContent>

@@ -25,6 +25,8 @@ interface VirtualLabProps {
 
 export default function VirtualLab({ experiment, experimentStarted, onStartExperiment, isRunning, setIsRunning, currentStep, onStepComplete, onStepUndo, onReset, completedSteps }: VirtualLabProps) {
   const totalSteps = experiment.stepDetails.length;
+  const currentStepDetail = experiment.stepDetails[currentStep - 1];
+  const completedStepDetails = experiment.stepDetails.filter((step) => completedSteps.includes(step.id));
   const [equipmentOnBench, setEquipmentOnBench] = useState<Array<{ id: string; name: string; position: { x: number; y: number } }>>([]);
 
   // Test tube visual state
@@ -448,8 +450,8 @@ const stepsProgress = (
           {completedSteps.includes(currentStep) ? <CheckCircle className="w-4 h-4" /> : <span className="text-sm font-bold">{currentStep}</span>}
         </div>
         <div className="flex-1">
-          <h4 className="font-semibold text-gray-800 mb-1">{experiment.stepDetails[currentStep-1]?.title}</h4>
-          <p className="text-xs text-gray-600">{experiment.stepDetails[currentStep-1]?.description}</p>
+          <h4 className="font-semibold text-gray-800 mb-1">{currentStepDetail?.title}</h4>
+          <p className="text-xs text-gray-600">{currentStepDetail?.description}</p>
         </div>
       </div>
     </div>
@@ -462,6 +464,15 @@ const stepsProgress = (
   const concA = sodiumMoles > 0 ? sodiumMoles / totalVolLForResults : null;
   const hhRatio = concHA && concA ? concA / concHA : null;
   const hhPH = hhRatio ? Math.max(0, Math.min(14, pKa + Math.log10(hhRatio))) : null;
+  const resultsReady = case2PH != null && case2Version != null && measurementVersion >= case2Version;
+  const handleViewResults = () => {
+    if (resultsReady) {
+      setShowResultsModal(true);
+      return;
+    }
+    setShowToast("Complete the sodium ethanoate additions to unlock the analysis.");
+    setTimeout(() => setShowToast(null), 2500);
+  };
 
   return (
     <TooltipProvider>
@@ -476,7 +487,15 @@ const stepsProgress = (
               </h3>
               <div className="space-y-3">
                 {items.map((eq) => (
-                  <PHEquipment key={eq.id} id={eq.id} name={eq.id === 'test-tube' ? '25ml Test Tube' : eq.name} icon={eq.icon} disabled={!experimentStarted} onInteract={handleInteract} />
+                  <PHEquipment
+                    key={eq.id}
+                    id={eq.id}
+                    name={eq.id === 'test-tube' ? '25ml Test Tube' : eq.name}
+                    icon={eq.icon}
+                    disabled={!experimentStarted}
+                    toolbarLayout="card"
+                    onInteract={handleInteract}
+                  />
                 ))}
               </div>
               <div className="mt-4 p-3 bg-blue-50 rounded-lg">
@@ -484,16 +503,34 @@ const stepsProgress = (
               </div>
             </div>
             <div className="space-y-2">
-              <Button onClick={() => { if (equipmentOnBench.length) { handleRemove(equipmentOnBench[equipmentOnBench.length-1].id); } }} variant="outline" className="w-full bg-white border-gray-200 text-gray-700 hover:bg-gray-100 flex items-center justify-center">
+              <Button
+                onClick={() => {
+                  if (equipmentOnBench.length) {
+                    handleRemove(equipmentOnBench[equipmentOnBench.length - 1].id);
+                  }
+                }}
+                variant="outline"
+                disabled={equipmentOnBench.length === 0}
+                className="w-full bg-white border-gray-200 text-gray-700 hover:bg-gray-100 flex items-center justify-center"
+              >
                 <Undo2 className="w-4 h-4 mr-2" /> UNDO
               </Button>
 
-              {/* Quick access to results when CASE 2 is available */}
-              {(case2PH != null && case2Version != null && measurementVersion >= case2Version) && (
-                <Button onClick={() => setShowResultsModal(true)} className="w-full bg-blue-500 hover:bg-blue-600 text-white">View Results & Analysis</Button>
-              )}
+              <Button
+                onClick={handleViewResults}
+                className={`w-full flex items-center justify-center text-white rounded-md transition ${resultsReady ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-400 hover:bg-blue-500 opacity-90'}`}
+              >
+                <CheckCircle className="w-4 h-4 mr-2" />
+                View Results & Analysis
+              </Button>
 
-              <Button onClick={() => { setEquipmentOnBench([]); onReset(); }} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100">Reset Experiment</Button>
+              <Button
+                onClick={() => { setEquipmentOnBench([]); onReset(); }}
+                variant="destructive"
+                className="w-full"
+              >
+                Reset Experiment
+              </Button>
             </div>
           </div>
 
@@ -620,56 +657,68 @@ const stepsProgress = (
               </h3>
               <div className="mb-4">
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Current Step</h4>
-                <p className="text-xs text-gray-600">{experiment.stepDetails[currentStep-1]?.title}</p>
+                <p className="text-xs text-gray-600">{currentStepDetail?.title ?? 'Awaiting action'}</p>
               </div>
               <div className="mb-4">
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Completed Steps</h4>
-                <div className="space-y-1">
-                  {experiment.stepDetails.map((step) => (
-                    <div key={step.id} className={`flex items-center space-x-2 text-xs ${completedSteps.includes(step.id) ? 'text-green-600' : 'text-gray-400'}`}>
-                      <CheckCircle className="w-3 h-3" />
-                      <span>{step.title}</span>
-                    </div>
-                  ))}
-                </div>
+                {completedStepDetails.length ? (
+                  <div className="space-y-1 text-xs text-green-600">
+                    {completedStepDetails.map((step) => (
+                      <div key={step.id} className="flex items-center space-x-2">
+                        <CheckCircle className="w-3 h-3" />
+                        <span>{step.title}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-500">No steps completed yet.</p>
+                )}
               </div>
 
-              {/* Measured pH */}
               <div className="mb-4">
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
                 <div className="flex items-center space-x-2">
-                  {(() => {
-                    const display = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
-                    return (
-                      <>
-                        <div className="text-2xl font-bold text-purple-700">{display}</div>
-                        <div className="text-xs text-gray-500">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet'}</div>
-                      </>
-                    );
-                  })()}
+                  <div className="text-2xl font-bold text-purple-700">{lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--'}</div>
+                  <div className="text-xs text-gray-500">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet'}</div>
                 </div>
-
-                {/* pH of Ethanoic Acid (initial) */}
-                <div className="mt-8">
-                  <h5 className="font-medium text-sm text-black mb-1"><span className="inline-block w-2 h-2 rounded-full bg-black mr-2" aria-hidden="true" /> <span className="inline-block mr-2 font-bold">A</span>pH of Ethanoic acid</h5>
-                  <div className="text-lg text-black font-semibold">{lastMeasuredPH != null && initialAcidPH != null ? `${initialAcidPH.toFixed(2)} (${initialAcidPH < 7 ? 'Acidic' : initialAcidPH > 7 ? 'Basic' : 'Neutral'})` : 'No result yet'}</div>
-                </div>
-
-                {/* CASE results (auto-filled after adding sodium ethanoate) */}
-                <div className="text-sm text-black mt-3 mb-2"><span className="inline-block w-2 h-2 rounded-full bg-black mr-2" aria-hidden="true" /> <span className="inline-block mr-2 font-bold">B</span>When Sodium Ethanoate is added</div>
-                <div className="mt-3 grid grid-cols-1 gap-2">
-                  <div className="p-2 rounded border border-gray-200 bg-gray-50 text-sm">
-                    <div className="font-medium">CASE 1</div>
-                    <div className="text-lg text-black font-semibold">{(case1PH != null && case1Version != null && measurementVersion >= case1Version) ? `${case1PH.toFixed(2)} (${case1PH < 7 ? 'Acidic' : case1PH > 7 ? 'Basic' : 'Neutral'})` : 'No result yet'}</div>
-                  </div>
-                  <div className="p-2 rounded border border-gray-200 bg-gray-50 text-sm">
-                    <div className="font-medium">CASE 2</div>
-                    <div className="text-lg text-black font-semibold">{(case2PH != null && case2Version != null && measurementVersion >= case2Version) ? `${case2PH.toFixed(2)} (${case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})` : 'No result yet'}</div>
-                  </div>
-                </div>
-
-                {showToast && <p className="text-xs text-blue-700 mt-2">{showToast}</p>}
               </div>
+
+              <div className="grid grid-cols-1 gap-3 text-sm">
+                <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
+                  <div className="flex items-center font-semibold tracking-wide text-gray-800 gap-2">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px]">A</span>
+                    <span>pH of Ethanoic acid</span>
+                  </div>
+                  <div className="text-lg font-bold text-gray-900 mt-2">
+                    {initialAcidPH != null ? `${initialAcidPH.toFixed(2)} (${initialAcidPH < 7 ? 'Acidic' : initialAcidPH > 7 ? 'Basic' : 'Neutral'})` : 'Awaiting measurement'}
+                  </div>
+                </div>
+                <div className="p-3 bg-white rounded-xl border border-gray-200 space-y-2">
+                  <div className="flex items-center font-semibold tracking-wide text-gray-800 gap-2">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px]">B</span>
+                    <span>When Sodium Ethanoate is added</span>
+                  </div>
+                  <div className="text-lg font-bold text-gray-900">
+                    {(case2PH != null && case2Version != null && measurementVersion >= case2Version) ? `${case2PH.toFixed(2)} (${case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})` : 'Add sodium ethanoate to log results'}
+                  </div>
+                  <div className="grid grid-cols-1 gap-2">
+                    <div className="p-2 rounded border border-gray-200 bg-gray-50">
+                      <div className="text-xs font-medium text-gray-600">CASE 1</div>
+                      <div className="text-base font-semibold text-gray-900">
+                        {(case1PH != null && case1Version != null && measurementVersion >= case1Version) ? `${case1PH.toFixed(2)} (${case1PH < 7 ? 'Acidic' : case1PH > 7 ? 'Basic' : 'Neutral'})` : 'Awaiting data'}
+                      </div>
+                    </div>
+                    <div className="p-2 rounded border border-gray-200 bg-gray-50">
+                      <div className="text-xs font-medium text-gray-600">CASE 2</div>
+                      <div className="text-base font-semibold text-gray-900">
+                        {(case2PH != null && case2Version != null && measurementVersion >= case2Version) ? `${case2PH.toFixed(2)} (${case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})` : 'Awaiting data'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {showToast && <p className="text-xs text-blue-700 mt-2">{showToast}</p>}
             </div>
           </div>
         </div>
@@ -768,14 +817,16 @@ const stepsProgress = (
                 <div className="text-xs font-bold uppercase tracking-wider text-red-700 mb-1">Initial Solution</div>
                 <div className="text-sm font-medium text-gray-700 mb-2">0.1 M Ethanoic Acid</div>
                 <div className="text-3xl font-bold text-red-600">{initialAcidPH != null ? `${initialAcidPH.toFixed(2)}` : '—'}</div>
-                <div className="text-xs text-red-600 font-semibold mt-1">(Acidic)</div>
+                <div className="text-xs text-red-600 font-semibold mt-1">
+                  {initialAcidPH != null ? (initialAcidPH < 7 ? 'Acidic' : initialAcidPH > 7 ? 'Basic' : 'Neutral') : 'Awaiting measurement'}
+                </div>
               </div>
               <div className="p-5 border-2 border-green-400 rounded-lg bg-gradient-to-br from-green-50 to-green-100 shadow-md hover:shadow-lg transition-shadow">
                 <div className="text-xs font-bold uppercase tracking-wider text-green-700 mb-1">After Addition</div>
                 <div className="text-sm font-medium text-gray-700 mb-2">0.1 M Sodium Ethanoate</div>
                 <div className="text-3xl font-bold text-green-600">{case2PH != null ? `${case2PH.toFixed(2)}` : '—'}</div>
                 <div className="text-xs font-semibold mt-1" style={{color: case2PH != null ? (case2PH < 7 ? '#dc2626' : case2PH > 7 ? '#2563eb' : '#7c3aed') : '#666'}}>
-                  ({case2PH != null ? (case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral') : 'N/A'})
+                  {case2PH != null ? `(${case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})` : 'Awaiting sodium additions'}
                 </div>
               </div>
             </div>
@@ -799,15 +850,17 @@ const stepsProgress = (
                 {initialAcidPH == null && <p className="text-xs text-gray-500">No measurement yet</p>}
               </div>
 
-              {case2PH != null && (
-                <div className="p-4 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg border-2 border-cyan-300 shadow-sm">
-                  <h5 className="text-base font-bold text-cyan-900 mb-4 flex items-center">
-                    <span className="inline-block w-3 h-3 rounded-full bg-cyan-500 mr-2"></span>
-                    pH After Adding Sodium Ethanoate
-                  </h5>
+              <div className="p-4 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg border-2 border-cyan-300 shadow-sm">
+                <h5 className="text-base font-bold text-cyan-900 mb-4 flex items-center">
+                  <span className="inline-block w-3 h-3 rounded-full bg-cyan-500 mr-2"></span>
+                  pH After Adding Sodium Ethanoate
+                </h5>
+                {case2PH != null ? (
                   <PHScale value={case2PH} />
-                </div>
-              )}
+                ) : (
+                  <p className="text-xs text-gray-500">Add sodium ethanoate additions and measure the pH to visualize the change.</p>
+                )}
+              </div>
             </div>
 
             {/* Henderson–Hasselbalch calculation details */}
@@ -852,43 +905,6 @@ const stepsProgress = (
               )}
             </div>
 
-            {/* Action Timeline */}
-            <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-5 rounded-lg border-2 border-indigo-300">
-              <h5 className="text-base font-bold text-indigo-900 mb-4 flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full bg-indigo-500 mr-2"></span>
-                Action Timeline
-              </h5>
-              <ol className="space-y-2 text-sm">
-                <li className="flex items-start p-2 bg-white rounded border border-indigo-200">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-indigo-500 text-white text-xs font-bold rounded-full mr-3 flex-shrink-0">1</span>
-                  <span>Added <span className="font-semibold">ethanoic acid</span> — initial pH recorded <span className="text-indigo-700 font-bold">{initialAcidPH != null ? `(${initialAcidPH.toFixed(2)})` : ''}</span></span>
-                </li>
-                <li className="flex items-start p-2 bg-white rounded border border-indigo-200">
-                  <span className="inline-flex items-center justify-center w-6 h-6 bg-indigo-500 text-white text-xs font-bold rounded-full mr-3 flex-shrink-0">2</span>
-                  <span>Added <span className="font-semibold">sodium ethanoate</span> — stored CASE values {case1PH != null ? <span className="text-indigo-700 font-bold">CASE1: {case1PH.toFixed(2)}</span> : ''} {case2PH != null ? <span className="text-indigo-700 font-bold">CASE2: {case2PH.toFixed(2)}</span> : ''}</span>
-                </li>
-              </ol>
-            </div>
-
-            {/* Final Experimental State */}
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-5 rounded-lg border-2 border-emerald-400">
-              <h5 className="text-base font-bold text-emerald-900 mb-4 flex items-center">
-                <span className="inline-block w-3 h-3 rounded-full bg-emerald-500 mr-2"></span>
-                Final Experimental State
-              </h5>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-white rounded-lg border-2 border-emerald-300 shadow-sm">
-                  <div className="text-xs font-bold uppercase text-emerald-700 mb-2">Solution pH</div>
-                  <div className="text-2xl font-bold text-emerald-600">{case2PH != null ? case2PH.toFixed(2) : 'N/A'}</div>
-                  <div className="text-xs text-emerald-600 font-semibold mt-1">Final measurement</div>
-                </div>
-                <div className="p-4 bg-white rounded-lg border-2 border-teal-300 shadow-sm">
-                  <div className="text-xs font-bold uppercase text-teal-700 mb-2">Key Result</div>
-                  <div className="text-sm font-bold text-teal-700">Buffer formed:</div>
-                  <div className="text-sm font-semibold text-gray-700 mt-1">CH₃COOH/CH₃COO⁻</div>
-                </div>
-              </div>
-            </div>
           </div>
 
           <DialogFooter>
