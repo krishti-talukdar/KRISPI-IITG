@@ -789,34 +789,38 @@ function ChemicalEquilibriumVirtualLab({
             </div>
           </div>
 
-          {/* Reagents Bar - Bottom Horizontal */}
-          <div className="bg-white/90 backdrop-blur-sm border-t border-gray-200 p-3">
-            <h4 className="font-semibold text-gray-800 text-sm flex items-center mb-2">
-              <BookOpen className="w-4 h-4 mr-2 text-blue-600" />
-              Chemical Reagents
-            </h4>
-            <div className="flex items-center space-x-3 overflow-x-auto pb-2">
-              {chemicalsList.map((chemical) => (
-                <div key={chemical.id} className="flex-shrink-0">
-                  <Chemical
-                    id={chemical.id}
-                    name={chemical.name}
-                    formula={chemical.formula}
-                    color={chemical.color}
-                    concentration={chemical.concentration}
-                    volume={chemical.volume}
-                    onSelect={
-                      experimentStarted ? handleChemicalSelect : () => {}
-                    }
-                    selected={
-                      experimentStarted && selectedChemical === chemical.id
-                    }
-                    disabled={!experimentStarted}
-                  />
+          {!isDryTestExperiment && (
+            <>
+              {/* Reagents Bar - Bottom Horizontal */}
+              <div className="bg-white/90 backdrop-blur-sm border-t border-gray-200 p-3">
+                <h4 className="font-semibold text-gray-800 text-sm flex items-center mb-2">
+                  <BookOpen className="w-4 h-4 mr-2 text-blue-600" />
+                  Chemical Reagents
+                </h4>
+                <div className="flex items-center space-x-3 overflow-x-auto pb-2">
+                  {chemicalsList.map((chemical) => (
+                    <div key={chemical.id} className="flex-shrink-0">
+                      <Chemical
+                        id={chemical.id}
+                        name={chemical.name}
+                        formula={chemical.formula}
+                        color={chemical.color}
+                        concentration={chemical.concentration}
+                        volume={chemical.volume}
+                        onSelect={
+                          experimentStarted ? handleChemicalSelect : () => {}
+                        }
+                        selected={
+                          experimentStarted && selectedChemical === chemical.id
+                        }
+                        disabled={!experimentStarted}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Toast Notification */}
