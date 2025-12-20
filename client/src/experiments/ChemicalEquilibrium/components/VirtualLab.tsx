@@ -485,6 +485,17 @@ function ChemicalEquilibriumVirtualLab({
     if (onResetExperiment) onResetExperiment();
   };
 
+  const handleUndoStep = () => {
+    setCurrentStep((prev) => Math.max(1, prev - 1));
+    setToastMessage("Reverted to previous step");
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
+  const handleViewResults = () => {
+    setToastMessage("Results & analysis will appear after completing the steps.");
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
   return (
     <TooltipProvider>
       {usePhStyleLayout ? (
@@ -557,6 +568,23 @@ function ChemicalEquilibriumVirtualLab({
             </div>
 
             <div className="mt-4 text-xs text-gray-500">Tip: Drag equipment from the left panel to the workbench.</div>
+
+            {isDryTestExperiment && (
+              <div className="mt-4 space-y-2">
+                <button
+                  onClick={handleUndoStep}
+                  className="w-full px-3 py-2 bg-white border border-gray-200 text-gray-700 rounded shadow-sm hover:bg-gray-50 transition"
+                >
+                  Undo
+                </button>
+                <button
+                  onClick={handleViewResults}
+                  className="w-full px-3 py-2 bg-blue-600 text-white rounded shadow-sm hover:bg-blue-700 transition"
+                >
+                  View Results &amp; Analysis
+                </button>
+              </div>
+            )}
 
             <div className="mt-4">
               <button onClick={handleReset} className="w-full px-3 py-2 bg-red-50 text-red-600 rounded">Reset Experiment</button>
