@@ -1,10 +1,10 @@
-# Chemical Equilibrium Experiment Module
+# Dry Tests for Acid Radicals Experiment Module
 
-A complete, self-contained Chemical Equilibrium experiment module that can be easily imported into any React application.
+A complete, self-contained Dry Tests for Acid Radicals experiment module that can be easily imported into any React application.
 
 ## Overview
 
-This module contains everything needed to run the Chemical Equilibrium experiment, including:
+This module contains everything needed to run the Dry Tests for Acid Radicals experiment, including:
 
 - 🧪 Complete experiment data and step definitions
 - ⚗️ All necessary laboratory equipment components
@@ -47,7 +47,7 @@ function MyCustomLab() {
       isActive={true}
       stepNumber={1}
       totalSteps={6}
-      experimentTitle="Chemical Equilibrium"
+      experimentTitle="Dry Tests for Acid Radicals"
       allSteps={ChemicalEquilibriumData.stepDetails}
       experimentStarted={true}
       onStartExperiment={() => console.log('Started')}
