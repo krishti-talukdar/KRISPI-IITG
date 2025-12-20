@@ -3,7 +3,7 @@ import { Equipment } from "./Equipment";
 import { WorkBench } from "./WorkBench";
 import { Chemical } from "./Chemical";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { FlaskConical, Atom, BookOpen, List, Play, Pause } from "lucide-react";
+import { FlaskConical, Atom, BookOpen, List, Play, Pause, TestTube, Droplet, Beaker } from "lucide-react";
 import {
   CHEMICAL_EQUILIBRIUM_CHEMICALS,
   CHEMICAL_EQUILIBRIUM_EQUIPMENT,
@@ -11,8 +11,10 @@ import {
   PH_HCL_CHEMICALS,
   PH_HCL_EQUIPMENT,
 } from "../constants";
-import { PHHClExperiment } from "../data";
+import ChemicalEquilibriumData, { PHHClExperiment } from "../data";
 import type {
+  Chemical as ChemicalDefinition,
+  Equipment as EquipmentDefinition,
   EquipmentPosition,
   CobaltReactionState,
   Measurements,
