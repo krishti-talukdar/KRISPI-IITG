@@ -31,7 +31,7 @@ export default function ChemicalEquilibriumApp({
     try {
       const params = new URLSearchParams(window.location.search);
       const auto = params.get("autostart");
-      if (auto === "1" && experimentId === PHHClExperiment.id) {
+      if (auto === "1") {
         setExperimentStarted(true);
         setIsRunning(true);
       }
@@ -246,6 +246,7 @@ export default function ChemicalEquilibriumApp({
                 stepNumber={currentStep + 1}
                 totalSteps={experiment.stepDetails.length}
                 experimentTitle={experiment.title}
+                experiment={experiment}
                 allSteps={experiment.stepDetails}
                 experimentStarted={experimentStarted}
                 onStartExperiment={handleStartExperiment}

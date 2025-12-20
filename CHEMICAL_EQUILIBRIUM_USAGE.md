@@ -1,6 +1,6 @@
-# Chemical Equilibrium Module - Usage Guide
+# Dry tests for acid radicals Module - Usage Guide
 
-The Chemical Equilibrium experiment has been successfully extracted into a complete, modular package located at `client/src/experiments/ChemicalEquilibrium/`.
+The Dry tests for acid radicals experiment has been successfully extracted into a complete, modular package located at `client/src/experiments/ChemicalEquilibrium/`.
 
 ## 🎯 What Was Accomplished
 
@@ -8,7 +8,7 @@ The Chemical Equilibrium experiment has been successfully extracted into a compl
 
 - **All experiment data** extracted from `data/experiments.json`
 - **All components and logic** extracted from the main VirtualLab
-- **Chemical Equilibrium specific features** isolated and modularized
+- **Dry tests for acid radicals specific features** isolated and modularized
 - **Other experiments removed** from the codebase to keep it focused
 
 ### ✅ Modular Structure
@@ -72,7 +72,7 @@ function MyCustomLab() {
       isActive={true}
       stepNumber={currentStep + 1}
       totalSteps={6}
-      experimentTitle="Chemical Equilibrium"
+      experimentTitle="Dry tests for acid radicals"
       allSteps={ChemicalEquilibriumData.stepDetails}
       experimentStarted={true}
       onStartExperiment={() => console.log('Started')}
@@ -221,4 +221,4 @@ Complete documentation is available in:
 6. **Type-safe** - Full TypeScript support
 7. **Accessible** - Proper ARIA labels and keyboard navigation
 
-You now have a complete, professional-grade Chemical Equilibrium experiment that can be easily integrated into any React-based chemistry education platform!
+You now have a complete, professional-grade Dry tests for acid radicals experiment that can be easily integrated into any React-based chemistry education platform!

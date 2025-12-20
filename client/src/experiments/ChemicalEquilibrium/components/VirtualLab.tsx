@@ -3,7 +3,7 @@ import { Equipment } from "./Equipment";
 import { WorkBench } from "./WorkBench";
 import { Chemical } from "./Chemical";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { FlaskConical, Atom, BookOpen, List, Play, Pause } from "lucide-react";
+import { FlaskConical, Atom, BookOpen, List, Play, Pause, TestTube, Droplet, Beaker } from "lucide-react";
 import {
   CHEMICAL_EQUILIBRIUM_CHEMICALS,
   CHEMICAL_EQUILIBRIUM_EQUIPMENT,
@@ -11,13 +11,16 @@ import {
   PH_HCL_CHEMICALS,
   PH_HCL_EQUIPMENT,
 } from "../constants";
-import { PHHClExperiment } from "../data";
+import ChemicalEquilibriumData, { PHHClExperiment } from "../data";
 import type {
+  Chemical as ChemicalDefinition,
+  Equipment as EquipmentDefinition,
   EquipmentPosition,
   CobaltReactionState,
   Measurements,
   Result,
   ExperimentStep,
+  ChemicalEquilibriumExperiment,
 } from "../types";
 
 interface ChemicalEquilibriumVirtualLabProps {
@@ -27,6 +30,7 @@ interface ChemicalEquilibriumVirtualLabProps {
   stepNumber: number;
   totalSteps: number;
   experimentTitle: string;
+  experiment: ChemicalEquilibriumExperiment;
   allSteps: ExperimentStep[];
   experimentStarted: boolean;
   onStartExperiment: () => void;
@@ -38,6 +42,56 @@ interface ChemicalEquilibriumVirtualLabProps {
   toggleTimer?: () => void;
 }
 
+const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
+  {
+    id: "ethanoic-acid-solution",
+    name: "Ethanoic acid solution (CH₃COOH, 0.1 M)",
+    formula: "CH₃COOH",
+    color: "#FECACA",
+    concentration: "0.1 M",
+    volume: 30,
+  },
+  {
+    id: "sodium-ethanoate-solution",
+    name: "Sodium ethanoate solution (CH₃COONa, 0.1 M)",
+    formula: "CH₃COONa",
+    color: "#C4F1F9",
+    concentration: "0.1 M",
+    volume: 30,
+  },
+  {
+    id: "universal-indicator",
+    name: "Universal Indicator Solution",
+    formula: "Indicator mix",
+    color: "#C8E6C9",
+    concentration: "Indicator",
+    volume: 25,
+  },
+];
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+const getEquipmentIcon = (name: string) => {
+  const key = name.toLowerCase();
+  if (key.includes("test tube")) return <TestTube size={36} className="text-blue-600" />;
+  if (key.includes("beaker")) return <Beaker size={36} className="text-cyan-600" />;
+  if (key.includes("pipette") || key.includes("dropper")) return <Droplet size={36} className="text-amber-500" />;
+  if (key.includes("stirrer")) return <Atom size={36} className="text-purple-600" />;
+  if (key.includes("ph") || key.includes("indicator") || key.includes("meter")) return <FlaskConical size={36} className="text-emerald-600" />;
+  return <Atom size={36} className="text-slate-500" />;
+};
+
+const mapDryTestEquipment = (names: string[] = []): EquipmentDefinition[] =>
+  names.map((name, index) => ({
+    id: `${slugify(name)}-${index}`,
+    name,
+    icon: getEquipmentIcon(name),
+  }));
+
 function ChemicalEquilibriumVirtualLab({
   step,
   onStepComplete,
@@ -45,6 +99,7 @@ function ChemicalEquilibriumVirtualLab({
   stepNumber,
   totalSteps,
   experimentTitle,
+  experiment,
   allSteps,
   experimentStarted,
   onStartExperiment,
@@ -70,8 +125,18 @@ function ChemicalEquilibriumVirtualLab({
 
   // Choose chemicals and equipment based on experiment
   const isPHExperiment = experimentTitle === PHHClExperiment.title;
-  const chemicalsList = isPHExperiment ? PH_HCL_CHEMICALS : CHEMICAL_EQUILIBRIUM_CHEMICALS;
-  const equipmentList = isPHExperiment ? PH_HCL_EQUIPMENT : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
+  const isDryTestExperiment = experimentTitle === ChemicalEquilibriumData.title;
+  const usePhStyleLayout = isPHExperiment || isDryTestExperiment;
+  const chemicalsList = isPHExperiment
+    ? PH_HCL_CHEMICALS
+    : isDryTestExperiment
+      ? DRY_TESTS_CHEMICALS
+      : CHEMICAL_EQUILIBRIUM_CHEMICALS;
+  const equipmentList = usePhStyleLayout
+    ? isPHExperiment
+      ? PH_HCL_EQUIPMENT
+      : mapDryTestEquipment(experiment.equipment)
+    : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
 
@@ -420,7 +485,7 @@ function ChemicalEquilibriumVirtualLab({
 
   return (
     <TooltipProvider>
-      {isPHExperiment ? (
+      {usePhStyleLayout ? (
         <div className="w-full flex gap-6" style={{ minHeight: '75vh' }}>
           {/* Left Equipment Column */}
           <aside className="w-72 bg-white/90 border border-gray-200 rounded-lg p-4 flex flex-col">
@@ -724,34 +789,38 @@ function ChemicalEquilibriumVirtualLab({
             </div>
           </div>
 
-          {/* Reagents Bar - Bottom Horizontal */}
-          <div className="bg-white/90 backdrop-blur-sm border-t border-gray-200 p-3">
-            <h4 className="font-semibold text-gray-800 text-sm flex items-center mb-2">
-              <BookOpen className="w-4 h-4 mr-2 text-blue-600" />
-              Chemical Reagents
-            </h4>
-            <div className="flex items-center space-x-3 overflow-x-auto pb-2">
-              {chemicalsList.map((chemical) => (
-                <div key={chemical.id} className="flex-shrink-0">
-                  <Chemical
-                    id={chemical.id}
-                    name={chemical.name}
-                    formula={chemical.formula}
-                    color={chemical.color}
-                    concentration={chemical.concentration}
-                    volume={chemical.volume}
-                    onSelect={
-                      experimentStarted ? handleChemicalSelect : () => {}
-                    }
-                    selected={
-                      experimentStarted && selectedChemical === chemical.id
-                    }
-                    disabled={!experimentStarted}
-                  />
+          {!isDryTestExperiment && (
+            <>
+              {/* Reagents Bar - Bottom Horizontal */}
+              <div className="bg-white/90 backdrop-blur-sm border-t border-gray-200 p-3">
+                <h4 className="font-semibold text-gray-800 text-sm flex items-center mb-2">
+                  <BookOpen className="w-4 h-4 mr-2 text-blue-600" />
+                  Chemical Reagents
+                </h4>
+                <div className="flex items-center space-x-3 overflow-x-auto pb-2">
+                  {chemicalsList.map((chemical) => (
+                    <div key={chemical.id} className="flex-shrink-0">
+                      <Chemical
+                        id={chemical.id}
+                        name={chemical.name}
+                        formula={chemical.formula}
+                        color={chemical.color}
+                        concentration={chemical.concentration}
+                        volume={chemical.volume}
+                        onSelect={
+                          experimentStarted ? handleChemicalSelect : () => {}
+                        }
+                        selected={
+                          experimentStarted && selectedChemical === chemical.id
+                        }
+                        disabled={!experimentStarted}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Toast Notification */}
