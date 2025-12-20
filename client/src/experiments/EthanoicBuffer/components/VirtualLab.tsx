@@ -485,7 +485,15 @@ const stepsProgress = (
               </h3>
               <div className="space-y-3">
                 {items.map((eq) => (
-                  <PHEquipment key={eq.id} id={eq.id} name={eq.id === 'test-tube' ? '25ml Test Tube' : eq.name} icon={eq.icon} disabled={!experimentStarted} onInteract={handleInteract} />
+                  <PHEquipment
+                    key={eq.id}
+                    id={eq.id}
+                    name={eq.id === 'test-tube' ? '25ml Test Tube' : eq.name}
+                    icon={eq.icon}
+                    disabled={!experimentStarted}
+                    toolbarLayout="card"
+                    onInteract={handleInteract}
+                  />
                 ))}
               </div>
               <div className="mt-4 p-3 bg-blue-50 rounded-lg">
@@ -493,16 +501,34 @@ const stepsProgress = (
               </div>
             </div>
             <div className="space-y-2">
-              <Button onClick={() => { if (equipmentOnBench.length) { handleRemove(equipmentOnBench[equipmentOnBench.length-1].id); } }} variant="outline" className="w-full bg-white border-gray-200 text-gray-700 hover:bg-gray-100 flex items-center justify-center">
+              <Button
+                onClick={() => {
+                  if (equipmentOnBench.length) {
+                    handleRemove(equipmentOnBench[equipmentOnBench.length - 1].id);
+                  }
+                }}
+                variant="outline"
+                disabled={equipmentOnBench.length === 0}
+                className="w-full bg-white border-gray-200 text-gray-700 hover:bg-gray-100 flex items-center justify-center"
+              >
                 <Undo2 className="w-4 h-4 mr-2" /> UNDO
               </Button>
 
-              {/* Quick access to results when CASE 2 is available */}
-              {(case2PH != null && case2Version != null && measurementVersion >= case2Version) && (
-                <Button onClick={() => setShowResultsModal(true)} className="w-full bg-blue-500 hover:bg-blue-600 text-white">View Results & Analysis</Button>
-              )}
+              <Button
+                onClick={handleViewResults}
+                className={`w-full flex items-center justify-center text-white rounded-md transition ${resultsReady ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-400 hover:bg-blue-500 opacity-90'}`}
+              >
+                <CheckCircle className="w-4 h-4 mr-2" />
+                View Results & Analysis
+              </Button>
 
-              <Button onClick={() => { setEquipmentOnBench([]); onReset(); }} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100">Reset Experiment</Button>
+              <Button
+                onClick={() => { setEquipmentOnBench([]); onReset(); }}
+                variant="destructive"
+                className="w-full"
+              >
+                Reset Experiment
+              </Button>
             </div>
           </div>
 
