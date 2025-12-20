@@ -137,6 +137,8 @@ function ChemicalEquilibriumVirtualLab({
       ? PH_HCL_EQUIPMENT
       : mapDryTestEquipment(experiment.equipment)
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
+  const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
+  const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
 
