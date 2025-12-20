@@ -69,6 +69,9 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       experimentTitle.toLowerCase().includes("ph ")
     : false;
 
+  const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
+  const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
+
   // PH-specific classes
   const phRootClass =
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
@@ -80,8 +83,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
           : ""
       }`;
-  const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
-  const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
 
   return (
     <div
