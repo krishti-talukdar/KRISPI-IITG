@@ -136,8 +136,8 @@ export default function ChemicalEquilibriumApp({
           </h1>
           <p className="text-gray-600 mb-4">{experiment.description}</p>
 
-          {/* Progress Bar - hidden for PH HCl experiment (we show per-panel progress) */}
-          {experiment.id !== PHHClExperiment.id && (
+          {/* Progress Bar - hidden for PH HCl experiment and dry tests (we show per-panel progress) */}
+          {experiment.id !== PHHClExperiment.id && !isDryTestExperiment && (
             <>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-gray-700">Overall Progress</span>
