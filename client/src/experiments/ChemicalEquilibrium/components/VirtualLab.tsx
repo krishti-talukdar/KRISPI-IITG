@@ -40,6 +40,56 @@ interface ChemicalEquilibriumVirtualLabProps {
   toggleTimer?: () => void;
 }
 
+const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
+  {
+    id: "ethanoic-acid-solution",
+    name: "Ethanoic acid solution (CH₃COOH, 0.1 M)",
+    formula: "CH₃COOH",
+    color: "#FECACA",
+    concentration: "0.1 M",
+    volume: 30,
+  },
+  {
+    id: "sodium-ethanoate-solution",
+    name: "Sodium ethanoate solution (CH₃COONa, 0.1 M)",
+    formula: "CH₃COONa",
+    color: "#C4F1F9",
+    concentration: "0.1 M",
+    volume: 30,
+  },
+  {
+    id: "universal-indicator",
+    name: "Universal Indicator Solution",
+    formula: "Indicator mix",
+    color: "#C8E6C9",
+    concentration: "Indicator",
+    volume: 25,
+  },
+];
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+const getEquipmentIcon = (name: string) => {
+  const key = name.toLowerCase();
+  if (key.includes("test tube")) return <TestTube size={36} className="text-blue-600" />;
+  if (key.includes("beaker")) return <Beaker size={36} className="text-cyan-600" />;
+  if (key.includes("pipette") || key.includes("dropper")) return <Droplet size={36} className="text-amber-500" />;
+  if (key.includes("stirrer")) return <Atom size={36} className="text-purple-600" />;
+  if (key.includes("ph") || key.includes("indicator") || key.includes("meter")) return <FlaskConical size={36} className="text-emerald-600" />;
+  return <Atom size={36} className="text-slate-500" />;
+};
+
+const mapDryTestEquipment = (names: string[] = []): EquipmentDefinition[] =>
+  names.map((name, index) => ({
+    id: `${slugify(name)}-${index}`,
+    name,
+    icon: getEquipmentIcon(name),
+  }));
+
 function ChemicalEquilibriumVirtualLab({
   step,
   onStepComplete,
