@@ -246,6 +246,7 @@ export default function ChemicalEquilibriumApp({
                 stepNumber={currentStep + 1}
                 totalSteps={experiment.stepDetails.length}
                 experimentTitle={experiment.title}
+                experiment={experiment}
                 allSteps={experiment.stepDetails}
                 experimentStarted={experimentStarted}
                 onStartExperiment={handleStartExperiment}
