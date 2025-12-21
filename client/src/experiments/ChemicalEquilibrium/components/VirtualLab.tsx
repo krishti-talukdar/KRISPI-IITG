@@ -78,8 +78,9 @@ const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
   },
 ];
 
-const DRY_WORKBENCH_SALT_POSITION = { xPercent: 0.82, yPercent: 0.15 };
-const DRY_WORKBENCH_VERTICAL_SPACING = 0.24;
+const DRY_WORKBENCH_SALT_POSITION = { xPercent: 0.88, yPercent: 0.18 };
+const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
+const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.28, yPercent: 0.42 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
@@ -92,6 +93,7 @@ const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: 
     yPercent:
       DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING * 2,
   },
+  "test_tubes": DRY_WORKBENCH_TEST_TUBE_POSITION,
 };
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
