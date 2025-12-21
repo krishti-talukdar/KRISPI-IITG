@@ -27,6 +27,7 @@ interface EquipmentProps {
     amount: number,
   ) => void;
   onRemove?: (id: string) => void;
+  onInteract?: (id: string) => void;
   cobaltReactionState?: CobaltReactionState;
   allEquipmentPositions?: EquipmentPosition[];
   currentStep?: number;
@@ -332,7 +333,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     return Math.min(85, (totalVolume / 100) * 85);
   };
 
-  const renderSaltSampleBottle = () => (
+  const renderSaltSampleBottle = (interact?: () => void) => (
     <div
       className={`flex flex-col items-center gap-1 transition-all duration-300 ${
         isDragging ? "scale-105" : "scale-100"
@@ -350,6 +351,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
         <Droplet className="w-3 h-3 text-amber-500" />
         <span>Dry Test</span>
       </div>
+      <button
+        type="button"
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          if (isDragging || disabled) return;
+          interact?.();
+        }}
+        className="mt-2 rounded-md bg-amber-400 px-3 py-1 text-[10px] font-semibold text-slate-800 transition hover:bg-amber-500"
+      >
+        Add to test tube
+      </button>
     </div>
   );
 
@@ -359,7 +372,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isSaltSampleEquipment) {
-      return renderSaltSampleBottle();
+      return renderSaltSampleBottle(() => onInteract?.(id));
     }
 
     if (id === "test_tubes") {
