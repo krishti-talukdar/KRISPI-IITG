@@ -949,6 +949,49 @@ function ChemicalEquilibriumVirtualLab({
         )}
       </div>
       )}
+
+      {isDryTestExperiment && (
+        <Dialog open={saltDialogOpen} onOpenChange={(open) => !open && handleSaltDialogClose()}>
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Mass</DialogTitle>
+              <DialogDescription>
+                Enter the mass of the Salt Sample to add to the test tube.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Mass (g)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                type="number"
+                min="0"
+                step="0.01"
+                value={saltMass}
+                onChange={(event) => setSaltMass(event.target.value)}
+                placeholder="0.05"
+              />
+              <p className="text-[11px] text-slate-500">Recommended range: 0.05 - 0.20 g.</p>
+              {saltDialogError && (
+                <p className="text-[11px] text-red-500">{saltDialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleSaltDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddSaltToTestTube}>
+                  Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </TooltipProvider>
   );
 }
