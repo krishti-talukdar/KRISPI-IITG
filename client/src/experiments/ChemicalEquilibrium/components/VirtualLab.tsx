@@ -481,6 +481,62 @@ function ChemicalEquilibriumVirtualLab({
     setSelectedChemical(null);
   };
 
+  const handleSaltDialogOpen = () => {
+    setSaltMass("0.05");
+    setSaltDialogError(null);
+    setSaltDialogOpen(true);
+  };
+
+  const handleSaltDialogClose = () => {
+    setSaltDialogOpen(false);
+    setSaltDialogError(null);
+  };
+
+  const handleAddSaltToTestTube = () => {
+    const mass = parseFloat(saltMass);
+    if (Number.isNaN(mass) || mass <= 0) {
+      setSaltDialogError("Enter a valid positive amount.");
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
+      setSaltDialogError("Place the test tube on the workbench first.");
+      return;
+    }
+
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find((c) => c.id === "salt_sample");
+        const updatedChemicals = existing
+          ? pos.chemicals.map((c) =>
+              c.id === "salt_sample"
+                ? { ...c, amount: c.amount + mass }
+                : c,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: "salt_sample",
+                name: "Salt Sample",
+                color: "#fbbf24",
+                amount: mass,
+                concentration: "Dry",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`);
+    setTimeout(() => setToastMessage(null), 3000);
+    handleSaltDialogClose();
+  };
+
   const handleStartExperiment = () => {
     onStartExperiment();
   };
