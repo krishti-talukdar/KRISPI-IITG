@@ -610,6 +610,51 @@ function ChemicalEquilibriumVirtualLab({
     handleAcidDialogClose();
   };
 
+  const handleAddAmmoniumToTestTube = () => {
+    const volume = parseFloat(ammoniumVolume);
+    if (Number.isNaN(volume) || volume <= 0) {
+      setAmmoniumDialogError("Enter a valid positive volume.");
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
+      setAmmoniumDialogError("Place the test tube on the workbench first.");
+      return;
+    }
+
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find((c) => c.id === "nh4oh");
+        const updatedChemicals = existing
+          ? pos.chemicals.map((c) =>
+              c.id === "nh4oh"
+                ? { ...c, amount: c.amount + volume }
+                : c,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: "nh4oh",
+                name: "Ammonium hydroxide",
+                color: "#4ade80",
+                amount: volume,
+                concentration: "Dilute",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${volume.toFixed(1)} mL of Ammonium hydroxide to the test tube.`);
+    setTimeout(() => setToastMessage(null), 3000);
+    handleAmmoniumDialogClose();
+  };
+
   const handleStartExperiment = () => {
     onStartExperiment();
   };
