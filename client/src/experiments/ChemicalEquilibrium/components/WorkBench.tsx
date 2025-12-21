@@ -155,20 +155,21 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       ) : (
         // Default (original) workbench layout preserved for other experiments
         <>
-          {/* Laboratory surface pattern */}
-          <div
-            className="absolute inset-0 opacity-30"
-            style={{
-              backgroundImage: `
-            linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
-            linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
-            linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
-            linear-gradient(-45deg, transparent 75%, #e2e8f0 75%)
-          `,
-              backgroundSize: "20px 20px",
-              backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
-            }}
-          />
+          {!isDryTestWorkbench && (
+            <div
+              className="absolute inset-0 opacity-30"
+              style={{
+                backgroundImage: `
+              linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+              linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+              linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+              linear-gradient(-45deg, transparent 75%, #e2e8f0 75%)
+            `,
+                backgroundSize: "20px 20px",
+                backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
+              }}
+            />
+          )}
 
           {/* Ambient laboratory indicators */}
           {!isDryTestWorkbench && (
@@ -242,29 +243,33 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           {/* Equipment positions and children */}
           <div className="absolute inset-0 transform -translate-y-8">{children}</div>
 
-          {/* Grid lines for precise positioning (subtle) */}
-          <div
-            className="absolute inset-0 opacity-5 pointer-events-none"
-            style={{
-              backgroundImage: `
-            linear-gradient(rgba(59, 130, 246, 0.3) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
-          `,
-              backgroundSize: "50px 50px",
-            }}
-          />
+          {!isDryTestWorkbench && (
+            <>
+              {/* Grid lines for precise positioning (subtle) */}
+              <div
+                className="absolute inset-0 opacity-5 pointer-events-none"
+                style={{
+                  backgroundImage: `
+                linear-gradient(rgba(59, 130, 246, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
+              `,
+                  backgroundSize: "50px 50px",
+                }}
+              />
 
-          {/* Ambient light effect */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `
-            radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)
-          `,
-            }}
-          />
+              {/* Ambient light effect */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `
+                radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)
+              `,
+                }}
+              />
+            </>
+          )}
         </>
       )}
     </div>
