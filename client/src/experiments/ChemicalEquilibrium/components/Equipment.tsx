@@ -379,7 +379,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
             }}
             className="mt-1 w-full rounded border border-slate-200 px-2 py-1 text-[10px] font-semibold text-slate-700 hover:border-slate-400"
           >
-            Add to test tube
+            ADD
           </button>
         )}
       </div>
