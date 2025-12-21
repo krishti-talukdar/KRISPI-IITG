@@ -15,7 +15,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     "https://images.unsplash.com/photo-1576086213369-97a306d36557?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=400",
   equipment: [
     "Salt Sample",
-    "Concave Watch Glass",
+    "Concentrated H₂SO₄",
     "Test Tubes",
     "Ceramic Tile",
     "Bunsen Burner (virtual heat source)",
