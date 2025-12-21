@@ -357,7 +357,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
     return (
       <div
-        className={`flex flex-col items-center gap-1 rounded-xl bg-white shadow-[0_20px_35px_rgba(15,23,42,0.15)] py-3 px-4 transition-all duration-300 ${
+        className={`flex flex-col items-center gap-1 rounded-xl bg-white shadow-[0_20px_35px_rgba(15,23,42,0.15)] py-3 px-4 transition-all duration-300 w-28 min-h-[165px] ${
           isDragging ? "scale-105" : "scale-100"
         }`}
       >
