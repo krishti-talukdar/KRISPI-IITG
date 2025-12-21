@@ -1056,6 +1056,49 @@ function ChemicalEquilibriumVirtualLab({
           </DialogContent>
         </Dialog>
       )}
+
+      {isDryTestExperiment && (
+        <Dialog open={acidDialogOpen} onOpenChange={(open) => !open && handleAcidDialogClose()}>
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Volume</DialogTitle>
+              <DialogDescription>
+                Enter the volume of concentrated H₂SO₄ to add to the test tube.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Volume (mL)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                type="number"
+                min="0"
+                step="0.1"
+                value={acidVolume}
+                onChange={(event) => setAcidVolume(event.target.value)}
+                placeholder="10.0"
+              />
+              <p className="text-[11px] text-slate-500">Recommended range: 5.0 - 15.0 mL.</p>
+              {acidDialogError && (
+                <p className="text-[11px] text-red-500">{acidDialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleAcidDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddAcidToTestTube}>
+                  Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </TooltipProvider>
   );
 }
