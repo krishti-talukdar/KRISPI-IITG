@@ -71,6 +71,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
+  const dryStepLabel = `Step ${currentGuidedStep}${totalGuidedSteps ? ` of ${totalGuidedSteps}` : ""}`;
 
   // PH-specific classes
   const phRootClass =
@@ -231,13 +232,25 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
             </div>
           )}
 
-          {isDryTestWorkbench ? (<></>) : (
+          {!isDryTestWorkbench && (
             <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
                 <span className="text-sm font-medium text-gray-700">Chemical Equilibrium</span>
               </div>
             </div>
+          )}
+
+          {isDryTestWorkbench && (
+            <>
+              <div className="absolute top-4 left-4 flex items-center gap-2 rounded-full px-3 py-1 bg-white/90 border border-gray-200 shadow-sm text-xs font-semibold text-gray-700">
+                <span className="inline-flex w-2 h-2 bg-blue-500 rounded-full"></span>
+                <span>{dryStepLabel}</span>
+              </div>
+              <div className="absolute top-4 right-4 rounded-full px-3 py-1 bg-white/90 border border-gray-200 shadow-sm text-xs font-semibold text-gray-700">
+                Laboratory Workbench
+              </div>
+            </>
           )}
 
           {/* Equipment positions and children */}
