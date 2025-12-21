@@ -3,6 +3,15 @@ import { Equipment } from "./Equipment";
 import { WorkBench } from "./WorkBench";
 import { Chemical } from "./Chemical";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { FlaskConical, Atom, BookOpen, List, Play, Pause, TestTube, Droplet, Beaker } from "lucide-react";
 import {
   CHEMICAL_EQUILIBRIUM_CHEMICALS,
