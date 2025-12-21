@@ -1155,6 +1155,49 @@ function ChemicalEquilibriumVirtualLab({
           </DialogContent>
         </Dialog>
       )}
+
+      {isDryTestExperiment && (
+        <Dialog open={ammoniumDialogOpen} onOpenChange={(open) => !open && handleAmmoniumDialogClose()}>
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Volume</DialogTitle>
+              <DialogDescription>
+                Enter the volume of Ammonium hydroxide (NH₄OH) to add to the test tube.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Volume (mL)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                type="number"
+                min="0"
+                step="0.1"
+                value={ammoniumVolume}
+                onChange={(event) => setAmmoniumVolume(event.target.value)}
+                placeholder="1.0"
+              />
+              <p className="text-[11px] text-slate-500">Recommended range: 0.5 - 2.0 mL.</p>
+              {ammoniumDialogError && (
+                <p className="text-[11px] text-red-500">{ammoniumDialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleAmmoniumDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddAmmoniumToTestTube}>
+                  Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </TooltipProvider>
   );
 }
