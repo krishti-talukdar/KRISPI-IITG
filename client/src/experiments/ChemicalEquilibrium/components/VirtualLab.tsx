@@ -78,6 +78,41 @@ const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
   },
 ];
 
+const DRY_WORKBENCH_SALT_POSITION = { xPercent: 0.88, yPercent: 0.18 };
+const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
+const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.28, yPercent: 0.42 };
+
+const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
+  "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
+  "concentrated-h-so-2": {
+    xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
+    yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING,
+  },
+  "ammonium-hydroxide-nh-oh-3": {
+    xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
+    yPercent:
+      DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING * 2,
+  },
+  "test_tubes": DRY_WORKBENCH_TEST_TUBE_POSITION,
+};
+
+const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
+  if (!rect) return null;
+  const layout = DRY_WORKBENCH_BOTTLE_LAYOUT[id];
+  if (!layout) return null;
+
+  const margin = 48;
+  const maxX = Math.max(margin, rect.width - margin);
+  const maxY = Math.max(margin, rect.height - margin);
+  const targetX = rect.width * layout.xPercent;
+  const targetY = rect.height * layout.yPercent;
+
+  return {
+    x: Math.round(Math.max(margin, Math.min(maxX, targetX))),
+    y: Math.round(Math.max(margin, Math.min(maxY, targetY))),
+  };
+};
+
 const slugify = (value: string) =>
   value
     .toLowerCase()
@@ -212,8 +247,20 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleEquipmentDrop = useCallback(
-    (id: string, x: number, y: number) => {
-      setEquipmentPositions((prev) => {
+  (id: string, x: number, y: number) => {
+    const workbenchRect =
+      typeof document !== "undefined"
+        ? document
+            .querySelector('[data-workbench="true"]')
+            ?.getBoundingClientRect() ?? null
+        : null;
+    const layoutPosition = isDryTestExperiment
+      ? getDryTestWorkbenchPosition(workbenchRect, id)
+      : null;
+    const dropX = layoutPosition?.x ?? x;
+    const dropY = layoutPosition?.y ?? y;
+
+    setEquipmentPositions((prev) => {
         const existing = prev.find((pos) => pos.id === id);
         if (existing) {
           // Auto-alignment logic for Chemical Equilibrium
@@ -324,11 +371,11 @@ function ChemicalEquilibriumVirtualLab({
           }, 1000);
         }
 
-        return [...prev, { id, x, y, chemicals: [] }];
+        return [...prev, { id, x: dropX, y: dropY, chemicals: [] }];
       });
     },
-    [currentStep, distilledWaterAdded, onStepComplete],
-  );
+    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment],
+);
 
   const handleEquipmentRemove = useCallback((id: string) => {
     setEquipmentPositions((prev) => prev.filter((pos) => pos.id !== id));
