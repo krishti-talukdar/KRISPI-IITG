@@ -79,9 +79,9 @@ const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
 ];
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
-  "salt-sample-1": { xPercent: 0.78, yPercent: 0.25 },
-  "concentrated-h-so-2": { xPercent: 0.78, yPercent: 0.45 },
-  "ammonium-hydroxide-nh-oh-3": { xPercent: 0.78, yPercent: 0.65 },
+  "salt-sample-1": { xPercent: 0.82, yPercent: 0.2 },
+  "concentrated-h-so-2": { xPercent: 0.82, yPercent: 0.5 },
+  "ammonium-hydroxide-nh-oh-3": { xPercent: 0.82, yPercent: 0.8 },
 };
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
