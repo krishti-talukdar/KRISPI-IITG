@@ -495,6 +495,17 @@ function ChemicalEquilibriumVirtualLab({
     setSaltDialogError(null);
   };
 
+  const handleAcidDialogOpen = () => {
+    setAcidVolume("10.0");
+    setAcidDialogError(null);
+    setAcidDialogOpen(true);
+  };
+
+  const handleAcidDialogClose = () => {
+    setAcidDialogOpen(false);
+    setAcidDialogError(null);
+  };
+
   const handleAddSaltToTestTube = () => {
     const mass = parseFloat(saltMass);
     if (Number.isNaN(mass) || mass <= 0) {
