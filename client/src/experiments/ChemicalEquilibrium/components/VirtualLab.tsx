@@ -686,14 +686,6 @@ function ChemicalEquilibriumVirtualLab({
                       </div>
                       <div className="text-sm font-medium text-gray-700">{equipment.name}</div>
                     </div>
-                    <div>
-                      <button
-                        onClick={() => handleEquipmentDrop(equipment.id, 200, 200)}
-                        className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded"
-                      >
-                        Place
-                      </button>
-                    </div>
                   </div>
                 ))}
               </div>
