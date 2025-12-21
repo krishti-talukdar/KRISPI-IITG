@@ -372,6 +372,27 @@ export const Equipment: React.FC<EquipmentProps> = ({
     </div>
   );
 
+  const renderHotAcidBottle = () => (
+    <div
+      className={`flex flex-col items-center gap-1 transition-all duration-300 ${
+        isDragging ? "scale-105" : "scale-100"
+      }`}
+    >
+      <div className="relative w-24 h-32">
+        <div className="absolute inset-0 bg-white border border-slate-200 rounded-[28px] shadow-[0_20px_45px_rgba(15,23,42,0.3)] overflow-hidden">
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-5 rounded-full bg-slate-100 border border-slate-300" />
+          <div className="absolute inset-x-[22%] bottom-10 h-16 bg-gradient-to-t from-red-600 via-amber-500 to-amber-200 rounded-[16px] border border-red-300" />
+          <div className="absolute inset-x-7 bottom-4 h-2 bg-white/90 rounded-full" />
+        </div>
+      </div>
+      <div className="text-[11px] font-semibold text-slate-700">Conc. H₂SO₄</div>
+      <div className="flex items-center gap-1 text-[10px] uppercase tracking-[0.2em] text-red-500 opacity-90">
+        <Droplet className="w-3 h-3 text-red-500" />
+        <span>Corrosive</span>
+      </div>
+    </div>
+  );
+
   const getEquipmentSpecificRendering = () => {
     if (!isOnWorkbench) {
       return icon;
