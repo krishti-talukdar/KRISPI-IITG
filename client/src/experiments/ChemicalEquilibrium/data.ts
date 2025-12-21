@@ -17,7 +17,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     "Salt Sample",
     "Concentrated H₂SO₄",
     "Test Tubes",
-    "Ceramic Tile",
+    "MnO₂",
     "Bunsen Burner (virtual heat source)",
     "Dilute Acids and Reagents",
   ],
