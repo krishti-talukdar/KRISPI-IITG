@@ -402,6 +402,10 @@ export const Equipment: React.FC<EquipmentProps> = ({
       return renderSaltSampleBottle(() => onInteract?.(id));
     }
 
+    if (isAcidEquipment) {
+      return renderHotAcidBottle();
+    }
+
     if (id === "test_tubes") {
       const isBeingHeated = () => {
         if (!position) return false;
