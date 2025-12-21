@@ -86,11 +86,15 @@ const getEquipmentIcon = (name: string) => {
 };
 
 const mapDryTestEquipment = (names: string[] = []): EquipmentDefinition[] =>
-  names.map((name, index) => ({
-    id: `${slugify(name)}-${index}`,
-    name,
-    icon: getEquipmentIcon(name),
-  }));
+  names.map((name, index) => {
+    const normalized = name.toLowerCase();
+    const isTestTube = normalized.includes("test tube");
+    return {
+      id: isTestTube ? "test_tubes" : `${slugify(name)}-${index}`,
+      name,
+      icon: getEquipmentIcon(name),
+    };
+  });
 
 function ChemicalEquilibriumVirtualLab({
   step,
