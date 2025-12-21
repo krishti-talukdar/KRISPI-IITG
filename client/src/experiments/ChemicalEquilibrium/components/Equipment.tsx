@@ -339,59 +339,37 @@ export const Equipment: React.FC<EquipmentProps> = ({
     return Math.min(85, (totalVolume / 100) * 85);
   };
 
-  const renderSaltSampleBottle = (interact?: () => void) => (
+  const renderLabelBottle = (label: string, tag: string, color: string, interact?: () => void) => (
     <div
-      className={`flex flex-col items-center gap-1 transition-all duration-300 ${
+      className={`flex flex-col items-center gap-1 rounded-xl bg-white shadow-[0_20px_35px_rgba(15,23,42,0.15)] py-3 px-4 transition-all duration-300 ${
         isDragging ? "scale-105" : "scale-100"
       }`}
     >
-      <div className="relative w-24 h-32">
-        <div className="absolute inset-0 bg-white border border-slate-200 rounded-[30px] shadow-[0_18px_40px_rgba(15,23,42,0.25)] overflow-hidden">
-          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-5 rounded-full bg-slate-200 border border-slate-300" />
-          <div className="absolute inset-x-[18%] bottom-10 h-16 bg-gradient-to-t from-amber-500 to-amber-200 rounded-[18px] border border-orange-200" />
-          <div className="absolute inset-x-7 bottom-4 h-2 bg-white/80 rounded-full" />
-        </div>
+      <div className={`w-11 h-11 rounded-lg border border-gray-200 bg-gradient-to-br from-${color}-100 to-${color}-50 flex items-center justify-center`}>
+        <Droplet className={`w-5 h-5 text-${color}-600`} />
       </div>
-      <div className="text-[11px] font-semibold text-slate-700">Salt Sample</div>
-      <div className="flex items-center gap-1 text-[10px] uppercase tracking-[0.2em] text-slate-500 opacity-90">
-        <Droplet className="w-3 h-3 text-amber-500" />
-        <span>Dry Test</span>
-      </div>
-      <button
-        type="button"
-        onClick={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          if (isDragging || disabled) return;
-          interact?.();
-        }}
-        className="mt-2 rounded-md bg-amber-400 px-3 py-1 text-[10px] font-semibold text-slate-800 transition hover:bg-amber-500"
-      >
-        Add to test tube
-      </button>
+      <div className="text-center text-[11px] font-semibold text-slate-800">{label}</div>
+      <div className="text-[9px] uppercase tracking-[0.3em] text-slate-500">{tag}</div>
+      {interact && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (isDragging || disabled) return;
+            interact();
+          }}
+          className="mt-1 w-full rounded border border-slate-200 px-2 py-1 text-[10px] font-semibold text-slate-700 hover:border-slate-400"
+        >
+          Add to test tube
+        </button>
+      )}
     </div>
   );
 
-  const renderHotAcidBottle = () => (
-    <div
-      className={`flex flex-col items-center gap-1 transition-all duration-300 ${
-        isDragging ? "scale-105" : "scale-100"
-      }`}
-    >
-      <div className="relative w-24 h-32">
-        <div className="absolute inset-0 bg-white border border-slate-200 rounded-[28px] shadow-[0_20px_45px_rgba(15,23,42,0.3)] overflow-hidden">
-          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-5 rounded-full bg-slate-100 border border-slate-300" />
-          <div className="absolute inset-x-[22%] bottom-10 h-16 bg-gradient-to-t from-red-600 via-amber-500 to-amber-200 rounded-[16px] border border-red-300" />
-          <div className="absolute inset-x-7 bottom-4 h-2 bg-white/90 rounded-full" />
-        </div>
-      </div>
-      <div className="text-[11px] font-semibold text-slate-700">Conc. H₂SO₄</div>
-      <div className="flex items-center gap-1 text-[10px] uppercase tracking-[0.2em] text-red-500 opacity-90">
-        <Droplet className="w-3 h-3 text-red-500" />
-        <span>Corrosive</span>
-      </div>
-    </div>
-  );
+  const renderSaltSampleBottle = () =>
+    renderLabelBottle("Salt Sample", "Dry Test", "amber", () => onInteract?.("salt-sample"));
+  const renderHotAcidBottle = () => renderLabelBottle("Conc. H₂SO₄", "Corrosive", "red");
 
   const getEquipmentSpecificRendering = () => {
     if (!isOnWorkbench) {
