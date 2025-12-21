@@ -19,7 +19,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     "Test Tubes",
     "MnO₂",
     "Bunsen Burner (virtual heat source)",
-    "Dilute Acids and Reagents",
+    "K₂Cr₂O₇",
   ],
   stepDetails: [
     {
