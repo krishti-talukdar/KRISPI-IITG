@@ -54,6 +54,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
     normalizedName.includes("h2so4") ||
     normalizedName.includes("h₂so₄") ||
     normalizedName.includes("sulfuric");
+  const isAmmoniumEquipment = normalizedName.includes("ammonium hydroxide") ||
+    normalizedName.includes("nh₄oh") ||
+    normalizedName.includes("nh4oh");
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -350,6 +353,11 @@ export const Equipment: React.FC<EquipmentProps> = ({
       to: "to-red-50",
       icon: "text-red-600",
     },
+    emerald: {
+      from: "from-emerald-100",
+      to: "to-emerald-50",
+      icon: "text-emerald-600",
+    },
   };
 
   const renderLabelBottle = (label: string, tag: string, colorKey: keyof typeof BOTTLE_COLORS, interact?: () => void) => {
@@ -387,6 +395,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   };
 
   const renderSaltSampleBottle = () => renderLabelBottle("Salt Sample", "Dry Test", "amber", () => onInteract?.(id));
+  const renderAmmoniumBottle = () => renderLabelBottle("Ammonium hydroxide", "NH₄OH", "emerald");
   const renderHotAcidBottle = (interact?: () => void) => renderLabelBottle("Conc. H₂SO₄", "Corrosive", "red", interact);
 
   const getEquipmentSpecificRendering = () => {
@@ -396,6 +405,10 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
     if (isSaltSampleEquipment) {
       return renderSaltSampleBottle(() => onInteract?.(id));
+    }
+
+    if (isAmmoniumEquipment) {
+      return renderAmmoniumBottle();
     }
 
     if (isAcidEquipment) {
