@@ -149,38 +149,28 @@ export default function ChemicalEquilibriumApp({
         </div>
         {isDryTestExperiment && (
           <div className="mb-6">
-            <div className="rounded-lg bg-white border border-gray-200 shadow-sm">
-              <div className="px-5 py-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Experiment Progress</p>
-                    <h3 className="text-lg font-semibold text-gray-900">{experiment.title}</h3>
-                    <p className="text-xs text-gray-500">Follow the guided steps below to complete the dry tests.</p>
+            <div className="rounded-xl border border-gray-200 bg-gradient-to-b from-white via-slate-50 to-slate-100 shadow-sm">
+              <div className="px-6 py-5 space-y-4">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold uppercase tracking-[2px] text-blue-600">Experiment Progress</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mt-1">{currentStepData?.title ?? experiment.title}</h3>
+                    <p className="text-xs text-gray-500 mt-1">Follow the guided steps below to complete the dry tests.</p>
                   </div>
-                  <div className="text-xs font-semibold text-gray-600">Step {currentStep + 1} of {experiment.stepDetails.length}</div>
+                  <div className="flex flex-col items-start md:items-end gap-2">
+                    <span className="text-xs text-gray-500">Step {currentStep + 1} of {experiment.stepDetails.length}</span>
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500 text-white text-xs font-bold">
+                      <div className="w-2 h-2 bg-white rounded-full" />
+                      <span>STEP {currentStep + 1}</span>
+                    </div>
+                  </div>
                 </div>
                 <div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="h-3 rounded-full bg-slate-200 overflow-hidden">
                     <div
-                      className="h-2 rounded-full bg-blue-500 transition-all duration-300"
-                      style={{ width: `${Math.round(((currentStep + 1) / experiment.stepDetails.length) * 100)}%` }}
+                      className="h-full bg-gradient-to-r from-blue-600 to-cyan-500 transition-all duration-300"
+                      style={{ width: `${progressPercentage}%` }}
                     />
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {Array.from({ length: experiment.stepDetails.length }).map((_, i) => {
-                      const stepIndex = i + 1;
-                      const active = stepIndex <= currentStep + 1;
-                      return (
-                        <div
-                          key={stepIndex}
-                          className={`flex items-center justify-center w-9 h-9 rounded-full border ${
-                            active ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-gray-200 text-gray-600'
-                          }`}
-                        >
-                          <span className="text-xs font-semibold">{stepIndex}</span>
-                        </div>
-                      );
-                    })}
                   </div>
                 </div>
               </div>
