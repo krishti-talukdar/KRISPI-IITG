@@ -816,6 +816,7 @@ function ChemicalEquilibriumVirtualLab({
                           ? equipment.name.toLowerCase().includes("salt sample")
                             ? handleSaltDialogOpen
                             : equipment.name.toLowerCase().includes("h2so4") ||
+                              equipment.name.toLowerCase().includes("h₂so₄") ||
                               equipment.name.toLowerCase().includes("sulfuric")
                             ? handleAcidDialogOpen
                             : undefined
