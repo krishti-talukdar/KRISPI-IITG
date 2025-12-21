@@ -49,6 +49,11 @@ export const Equipment: React.FC<EquipmentProps> = ({
   currentStep = 1,
   disabled = false,
 }) => {
+  const normalizedName = name.toLowerCase();
+  const isAcidEquipment =
+    normalizedName.includes("h2so4") ||
+    normalizedName.includes("h₂so₄") ||
+    normalizedName.includes("sulfuric");
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
