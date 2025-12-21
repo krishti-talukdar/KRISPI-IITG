@@ -752,6 +752,11 @@ function ChemicalEquilibriumVirtualLab({
                       chemicals={pos.chemicals}
                       onChemicalDrop={experimentStarted ? handleChemicalDrop : () => {}}
                       onRemove={experimentStarted ? handleEquipmentRemove : () => {}}
+                      onInteract={
+                        experimentStarted && equipment.name.toLowerCase().includes("salt sample")
+                          ? handleSaltDialogOpen
+                          : undefined
+                      }
                       cobaltReactionState={cobaltReactionState}
                       allEquipmentPositions={equipmentPositions}
                       currentStep={currentStep}
