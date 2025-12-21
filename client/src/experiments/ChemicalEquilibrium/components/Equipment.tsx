@@ -339,36 +339,54 @@ export const Equipment: React.FC<EquipmentProps> = ({
     return Math.min(85, (totalVolume / 100) * 85);
   };
 
-  const renderLabelBottle = (label: string, tag: string, color: string, interact?: () => void) => (
-    <div
-      className={`flex flex-col items-center gap-1 rounded-xl bg-white shadow-[0_20px_35px_rgba(15,23,42,0.15)] py-3 px-4 transition-all duration-300 ${
-        isDragging ? "scale-105" : "scale-100"
-      }`}
-    >
-      <div className={`w-11 h-11 rounded-lg border border-gray-200 bg-gradient-to-br from-${color}-100 to-${color}-50 flex items-center justify-center`}>
-        <Droplet className={`w-5 h-5 text-${color}-600`} />
-      </div>
-      <div className="text-center text-[11px] font-semibold text-slate-800">{label}</div>
-      <div className="text-[9px] uppercase tracking-[0.3em] text-slate-500">{tag}</div>
-      {interact && (
-        <button
-          type="button"
-          onClick={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            if (isDragging || disabled) return;
-            interact();
-          }}
-          className="mt-1 w-full rounded border border-slate-200 px-2 py-1 text-[10px] font-semibold text-slate-700 hover:border-slate-400"
-        >
-          Add to test tube
-        </button>
-      )}
-    </div>
-  );
+  const BOTTLE_COLORS: Record<string, { from: string; to: string; icon: string }> = {
+    amber: {
+      from: "from-amber-100",
+      to: "to-amber-50",
+      icon: "text-amber-600",
+    },
+    red: {
+      from: "from-red-100",
+      to: "to-red-50",
+      icon: "text-red-600",
+    },
+  };
 
-  const renderSaltSampleBottle = () =>
-    renderLabelBottle("Salt Sample", "Dry Test", "amber", () => onInteract?.(id));
+  const renderLabelBottle = (label: string, tag: string, colorKey: keyof typeof BOTTLE_COLORS, interact?: () => void) => {
+    const colors = BOTTLE_COLORS[colorKey];
+
+    return (
+      <div
+        className={`flex flex-col items-center gap-1 rounded-xl bg-white shadow-[0_20px_35px_rgba(15,23,42,0.15)] py-3 px-4 transition-all duration-300 ${
+          isDragging ? "scale-105" : "scale-100"
+        }`}
+      >
+        <div
+          className={`w-11 h-11 rounded-lg border border-gray-200 bg-gradient-to-br ${colors.from} ${colors.to} flex items-center justify-center`}
+        >
+          <Droplet className={`w-5 h-5 ${colors.icon}`} />
+        </div>
+        <div className="text-center text-[11px] font-semibold text-slate-800">{label}</div>
+        <div className="text-[9px] uppercase tracking-[0.3em] text-slate-500">{tag}</div>
+        {interact && (
+          <button
+            type="button"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              if (isDragging || disabled) return;
+              interact();
+            }}
+            className="mt-1 w-full rounded border border-slate-200 px-2 py-1 text-[10px] font-semibold text-slate-700 hover:border-slate-400"
+          >
+            Add to test tube
+          </button>
+        )}
+      </div>
+    );
+  };
+
+  const renderSaltSampleBottle = () => renderLabelBottle("Salt Sample", "Dry Test", "amber", () => onInteract?.(id));
   const renderHotAcidBottle = () => renderLabelBottle("Conc. H₂SO₄", "Corrosive", "red");
 
   const getEquipmentSpecificRendering = () => {
