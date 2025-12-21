@@ -78,10 +78,20 @@ const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
   },
 ];
 
+const DRY_WORKBENCH_SALT_POSITION = { xPercent: 0.82, yPercent: 0.15 };
+const DRY_WORKBENCH_VERTICAL_SPACING = 0.24;
+
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
-  "salt-sample-1": { xPercent: 0.82, yPercent: 0.35 },
-  "concentrated-h-so-2": { xPercent: 0.82, yPercent: 0.55 },
-  "ammonium-hydroxide-nh-oh-3": { xPercent: 0.82, yPercent: 0.75 },
+  "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
+  "concentrated-h-so-2": {
+    xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
+    yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING,
+  },
+  "ammonium-hydroxide-nh-oh-3": {
+    xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
+    yPercent:
+      DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING * 2,
+  },
 };
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
