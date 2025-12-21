@@ -154,6 +154,9 @@ function ChemicalEquilibriumVirtualLab({
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [saltDialogOpen, setSaltDialogOpen] = useState(false);
+  const [saltMass, setSaltMass] = useState("0.05");
+  const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
 
   // Chemical Equilibrium specific states
