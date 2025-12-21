@@ -157,6 +157,9 @@ function ChemicalEquilibriumVirtualLab({
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
   const [saltMass, setSaltMass] = useState("0.05");
   const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
+  const [acidDialogOpen, setAcidDialogOpen] = useState(false);
+  const [acidVolume, setAcidVolume] = useState("10.0");
+  const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
 
   // Chemical Equilibrium specific states
