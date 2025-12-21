@@ -160,6 +160,9 @@ function ChemicalEquilibriumVirtualLab({
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
   const [acidVolume, setAcidVolume] = useState("10.0");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
+  const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
+  const [ammoniumVolume, setAmmoniumVolume] = useState("1.0");
+  const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
 
   // Chemical Equilibrium specific states
