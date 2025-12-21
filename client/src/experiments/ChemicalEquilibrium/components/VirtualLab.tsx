@@ -551,6 +551,51 @@ function ChemicalEquilibriumVirtualLab({
     handleSaltDialogClose();
   };
 
+  const handleAddAcidToTestTube = () => {
+    const volume = parseFloat(acidVolume);
+    if (Number.isNaN(volume) || volume <= 0) {
+      setAcidDialogError("Enter a valid positive volume.");
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
+      setAcidDialogError("Place the test tube on the workbench first.");
+      return;
+    }
+
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find((c) => c.id === "conc_h2so4");
+        const updatedChemicals = existing
+          ? pos.chemicals.map((c) =>
+              c.id === "conc_h2so4"
+                ? { ...c, amount: c.amount + volume }
+                : c,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: "conc_h2so4",
+                name: "Conc. H₂SO₄",
+                color: "#fb7185",
+                amount: volume,
+                concentration: "Concentrated",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${volume.toFixed(1)} mL of Conc. H₂SO₄ to the test tube.`);
+    setTimeout(() => setToastMessage(null), 3000);
+    handleAcidDialogClose();
+  };
+
   const handleStartExperiment = () => {
     onStartExperiment();
   };
