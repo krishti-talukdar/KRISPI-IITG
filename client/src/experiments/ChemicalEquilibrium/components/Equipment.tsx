@@ -27,6 +27,7 @@ interface EquipmentProps {
     amount: number,
   ) => void;
   onRemove?: (id: string) => void;
+  onInteract?: (id: string) => void;
   cobaltReactionState?: CobaltReactionState;
   allEquipmentPositions?: EquipmentPosition[];
   currentStep?: number;
@@ -42,11 +43,20 @@ export const Equipment: React.FC<EquipmentProps> = ({
   chemicals = [],
   onChemicalDrop,
   onRemove,
+  onInteract,
   cobaltReactionState,
   allEquipmentPositions = [],
   currentStep = 1,
   disabled = false,
 }) => {
+  const normalizedName = name.toLowerCase();
+  const isAcidEquipment =
+    normalizedName.includes("h2so4") ||
+    normalizedName.includes("h₂so₄") ||
+    normalizedName.includes("sulfuric");
+  const isAmmoniumEquipment = normalizedName.includes("ammonium hydroxide") ||
+    normalizedName.includes("nh₄oh") ||
+    normalizedName.includes("nh4oh");
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -278,6 +288,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   };
 
   const isOnWorkbench = position && (position.x !== 0 || position.y !== 0);
+  const isSaltSampleEquipment = id.toLowerCase().startsWith("salt-sample");
   const isContainer = [
     "beaker",
     "flask",
@@ -331,9 +342,77 @@ export const Equipment: React.FC<EquipmentProps> = ({
     return Math.min(85, (totalVolume / 100) * 85);
   };
 
+  const BOTTLE_COLORS: Record<string, { from: string; to: string; icon: string }> = {
+    amber: {
+      from: "from-amber-100",
+      to: "to-amber-50",
+      icon: "text-amber-600",
+    },
+    red: {
+      from: "from-red-100",
+      to: "to-red-50",
+      icon: "text-red-600",
+    },
+    emerald: {
+      from: "from-emerald-100",
+      to: "to-emerald-50",
+      icon: "text-emerald-600",
+    },
+  };
+
+  const renderLabelBottle = (label: string, tag: string, colorKey: keyof typeof BOTTLE_COLORS, interact?: () => void) => {
+    const colors = BOTTLE_COLORS[colorKey];
+
+    return (
+      <div
+        className={`flex flex-col items-center gap-1 rounded-xl bg-white shadow-[0_20px_35px_rgba(15,23,42,0.15)] py-3 px-4 transition-all duration-300 w-28 min-h-[165px] ${
+          isDragging ? "scale-105" : "scale-100"
+        }`}
+      >
+        <div
+          className={`w-11 h-11 rounded-lg border border-gray-200 bg-gradient-to-br ${colors.from} ${colors.to} flex items-center justify-center`}
+        >
+          <Droplet className={`w-5 h-5 ${colors.icon}`} />
+        </div>
+        <div className="text-center text-[11px] font-semibold text-slate-800">{label}</div>
+        <div className="text-[9px] uppercase tracking-[0.3em] text-slate-500">{tag}</div>
+        {interact && (
+          <button
+            type="button"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              if (isDragging || disabled) return;
+              interact();
+            }}
+            className="mt-1 w-full rounded border border-slate-200 px-2 py-1 text-[10px] font-semibold text-slate-700 hover:border-slate-400"
+          >
+            ADD
+          </button>
+        )}
+      </div>
+    );
+  };
+
+  const renderSaltSampleBottle = () => renderLabelBottle("Salt Sample", "Dry Test", "amber", () => onInteract?.(id));
+  const renderAmmoniumBottle = (interact?: () => void) => renderLabelBottle("Ammonium hydroxide", "NH₄OH", "emerald", interact);
+  const renderHotAcidBottle = (interact?: () => void) => renderLabelBottle("Conc. H₂SO₄", "Corrosive", "red", interact);
+
   const getEquipmentSpecificRendering = () => {
     if (!isOnWorkbench) {
       return icon;
+    }
+
+    if (isSaltSampleEquipment) {
+      return renderSaltSampleBottle(() => onInteract?.(id));
+    }
+
+    if (isAmmoniumEquipment) {
+      return renderAmmoniumBottle(() => onInteract?.(id));
+    }
+
+    if (isAcidEquipment) {
+      return renderHotAcidBottle(() => onInteract?.(id));
     }
 
     if (id === "test_tubes") {

@@ -3,6 +3,15 @@ import { Equipment } from "./Equipment";
 import { WorkBench } from "./WorkBench";
 import { Chemical } from "./Chemical";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { FlaskConical, Atom, BookOpen, List, Play, Pause, TestTube, Droplet, Beaker } from "lucide-react";
 import {
   CHEMICAL_EQUILIBRIUM_CHEMICALS,
@@ -145,6 +154,15 @@ function ChemicalEquilibriumVirtualLab({
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [saltDialogOpen, setSaltDialogOpen] = useState(false);
+  const [saltMass, setSaltMass] = useState("0.05");
+  const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
+  const [acidDialogOpen, setAcidDialogOpen] = useState(false);
+  const [acidVolume, setAcidVolume] = useState("10.0");
+  const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
+  const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
+  const [ammoniumVolume, setAmmoniumVolume] = useState("1.0");
+  const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
 
   // Chemical Equilibrium specific states
@@ -469,6 +487,174 @@ function ChemicalEquilibriumVirtualLab({
     setSelectedChemical(null);
   };
 
+  const handleSaltDialogOpen = () => {
+    setSaltMass("0.05");
+    setSaltDialogError(null);
+    setSaltDialogOpen(true);
+  };
+
+  const handleSaltDialogClose = () => {
+    setSaltDialogOpen(false);
+    setSaltDialogError(null);
+  };
+
+  const handleAcidDialogOpen = () => {
+    setAcidVolume("10.0");
+    setAcidDialogError(null);
+    setAcidDialogOpen(true);
+  };
+
+  const handleAcidDialogClose = () => {
+    setAcidDialogOpen(false);
+    setAcidDialogError(null);
+  };
+
+  const handleAmmoniumDialogOpen = () => {
+    setAmmoniumVolume("1.0");
+    setAmmoniumDialogError(null);
+    setAmmoniumDialogOpen(true);
+  };
+
+  const handleAmmoniumDialogClose = () => {
+    setAmmoniumDialogOpen(false);
+    setAmmoniumDialogError(null);
+  };
+
+  const handleAddSaltToTestTube = () => {
+    const mass = parseFloat(saltMass);
+    if (Number.isNaN(mass) || mass <= 0) {
+      setSaltDialogError("Enter a valid positive amount.");
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
+      setSaltDialogError("Place the test tube on the workbench first.");
+      return;
+    }
+
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find((c) => c.id === "salt_sample");
+        const updatedChemicals = existing
+          ? pos.chemicals.map((c) =>
+              c.id === "salt_sample"
+                ? { ...c, amount: c.amount + mass }
+                : c,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: "salt_sample",
+                name: "Salt Sample",
+                color: "#fbbf24",
+                amount: mass,
+                concentration: "Dry",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`);
+    setTimeout(() => setToastMessage(null), 3000);
+    handleSaltDialogClose();
+  };
+
+  const handleAddAcidToTestTube = () => {
+    const volume = parseFloat(acidVolume);
+    if (Number.isNaN(volume) || volume <= 0) {
+      setAcidDialogError("Enter a valid positive volume.");
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
+      setAcidDialogError("Place the test tube on the workbench first.");
+      return;
+    }
+
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find((c) => c.id === "conc_h2so4");
+        const updatedChemicals = existing
+          ? pos.chemicals.map((c) =>
+              c.id === "conc_h2so4"
+                ? { ...c, amount: c.amount + volume }
+                : c,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: "conc_h2so4",
+                name: "Conc. H₂SO₄",
+                color: "#fb7185",
+                amount: volume,
+                concentration: "Concentrated",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${volume.toFixed(1)} mL of Conc. H₂SO₄ to the test tube.`);
+    setTimeout(() => setToastMessage(null), 3000);
+    handleAcidDialogClose();
+  };
+
+  const handleAddAmmoniumToTestTube = () => {
+    const volume = parseFloat(ammoniumVolume);
+    if (Number.isNaN(volume) || volume <= 0) {
+      setAmmoniumDialogError("Enter a valid positive volume.");
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
+      setAmmoniumDialogError("Place the test tube on the workbench first.");
+      return;
+    }
+
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find((c) => c.id === "nh4oh");
+        const updatedChemicals = existing
+          ? pos.chemicals.map((c) =>
+              c.id === "nh4oh"
+                ? { ...c, amount: c.amount + volume }
+                : c,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: "nh4oh",
+                name: "Ammonium hydroxide",
+                color: "#4ade80",
+                amount: volume,
+                concentration: "Dilute",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${volume.toFixed(1)} mL of Ammonium hydroxide to the test tube.`);
+    setTimeout(() => setToastMessage(null), 3000);
+    handleAmmoniumDialogClose();
+  };
+
   const handleStartExperiment = () => {
     onStartExperiment();
   };
@@ -504,9 +690,9 @@ function ChemicalEquilibriumVirtualLab({
   return (
     <TooltipProvider>
       {usePhStyleLayout ? (
-        <div className="w-full flex gap-6" style={{ minHeight: '75vh' }}>
+        <div className="w-full flex gap-4" style={{ minHeight: '75vh' }}>
           {/* Left Equipment Column */}
-          <aside className="w-72 bg-white/90 border border-gray-200 rounded-lg p-4 flex flex-col">
+          <aside className="w-56 flex-shrink-0 bg-white/90 border border-gray-200 rounded-lg p-4 flex flex-col">
             <h4 className="text-sm font-semibold mb-3">Equipment</h4>
 
             {/* Experiment progress above equipment (PH experiment) */}
@@ -559,14 +745,6 @@ function ChemicalEquilibriumVirtualLab({
                       </div>
                       <div className="text-sm font-medium text-gray-700">{equipment.name}</div>
                     </div>
-                    <div>
-                      <button
-                        onClick={() => handleEquipmentDrop(equipment.id, 200, 200)}
-                        className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded"
-                      >
-                        Place
-                      </button>
-                    </div>
                   </div>
                 ))}
               </div>
@@ -597,7 +775,7 @@ function ChemicalEquilibriumVirtualLab({
           </aside>
 
           {/* Center Workbench Area */}
-          <main className="flex-1 flex flex-col">
+          <main className="flex-[2] flex flex-col">
           {!isDryTestWorkbench && (
             <div className="mb-4">
               <div className="rounded-lg bg-gradient-to-b from-yellow-50 to-white border p-4">
@@ -684,6 +862,21 @@ function ChemicalEquilibriumVirtualLab({
                       chemicals={pos.chemicals}
                       onChemicalDrop={experimentStarted ? handleChemicalDrop : () => {}}
                       onRemove={experimentStarted ? handleEquipmentRemove : () => {}}
+                      onInteract={
+                        experimentStarted
+                          ? equipment.name.toLowerCase().includes("salt sample")
+                            ? handleSaltDialogOpen
+                            : equipment.name.toLowerCase().includes("ammonium") ||
+                              equipment.name.toLowerCase().includes("nh₄oh") ||
+                              equipment.name.toLowerCase().includes("nh4oh")
+                            ? handleAmmoniumDialogOpen
+                            : equipment.name.toLowerCase().includes("h2so4") ||
+                              equipment.name.toLowerCase().includes("h₂so₄") ||
+                              equipment.name.toLowerCase().includes("sulfuric")
+                            ? handleAcidDialogOpen
+                            : undefined
+                          : undefined
+                      }
                       cobaltReactionState={cobaltReactionState}
                       allEquipmentPositions={equipmentPositions}
                       currentStep={currentStep}
@@ -701,7 +894,7 @@ function ChemicalEquilibriumVirtualLab({
           </main>
 
           {/* Right Live Analysis Column */}
-          <aside className="w-72 bg-white/90 border border-gray-200 rounded-lg p-4">
+          <aside className="w-56 flex-shrink-0 bg-white/90 border border-gray-200 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-sm font-semibold">Live Analysis</h4>
               <div className="text-xs text-gray-500">Step {currentStep} of {totalSteps}</div>
@@ -875,6 +1068,135 @@ function ChemicalEquilibriumVirtualLab({
           </div>
         )}
       </div>
+      )}
+
+      {isDryTestExperiment && (
+        <Dialog open={saltDialogOpen} onOpenChange={(open) => !open && handleSaltDialogClose()}>
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Mass</DialogTitle>
+              <DialogDescription>
+                Enter the mass of the Salt Sample to add to the test tube.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Mass (g)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                type="number"
+                min="0"
+                step="0.01"
+                value={saltMass}
+                onChange={(event) => setSaltMass(event.target.value)}
+                placeholder="0.05"
+              />
+              <p className="text-[11px] text-slate-500">Recommended range: 0.05 - 0.20 g.</p>
+              {saltDialogError && (
+                <p className="text-[11px] text-red-500">{saltDialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleSaltDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddSaltToTestTube}>
+                  Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {isDryTestExperiment && (
+        <Dialog open={acidDialogOpen} onOpenChange={(open) => !open && handleAcidDialogClose()}>
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Volume</DialogTitle>
+              <DialogDescription>
+                Enter the volume of concentrated H₂SO₄ to add to the test tube.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Volume (mL)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                type="number"
+                min="0"
+                step="0.1"
+                value={acidVolume}
+                onChange={(event) => setAcidVolume(event.target.value)}
+                placeholder="10.0"
+              />
+              <p className="text-[11px] text-slate-500">Recommended range: 5.0 - 15.0 mL.</p>
+              {acidDialogError && (
+                <p className="text-[11px] text-red-500">{acidDialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleAcidDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddAcidToTestTube}>
+                  Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {isDryTestExperiment && (
+        <Dialog open={ammoniumDialogOpen} onOpenChange={(open) => !open && handleAmmoniumDialogClose()}>
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Volume</DialogTitle>
+              <DialogDescription>
+                Enter the volume of Ammonium hydroxide (NH₄OH) to add to the test tube.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Volume (mL)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                type="number"
+                min="0"
+                step="0.1"
+                value={ammoniumVolume}
+                onChange={(event) => setAmmoniumVolume(event.target.value)}
+                placeholder="1.0"
+              />
+              <p className="text-[11px] text-slate-500">Recommended range: 0.5 - 2.0 mL.</p>
+              {ammoniumDialogError && (
+                <p className="text-[11px] text-red-500">{ammoniumDialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleAmmoniumDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddAmmoniumToTestTube}>
+                  Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </TooltipProvider>
   );
