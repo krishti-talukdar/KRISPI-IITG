@@ -17,6 +17,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     "Test Tubes",
     "Salt Sample",
     "Concentrated H₂SO₄",
+    "Ammonium hydroxide (NH₄OH)",
     "MnO₂",
     "Bunsen Burner (virtual heat source)",
     "K₂Cr₂O₇",
