@@ -399,7 +399,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isAcidEquipment) {
-      return renderHotAcidBottle();
+      return renderHotAcidBottle(() => onInteract?.(id));
     }
 
     if (id === "test_tubes") {
