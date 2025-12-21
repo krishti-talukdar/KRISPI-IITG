@@ -43,6 +43,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   chemicals = [],
   onChemicalDrop,
   onRemove,
+  onInteract,
   cobaltReactionState,
   allEquipmentPositions = [],
   currentStep = 1,
