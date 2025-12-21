@@ -631,9 +631,9 @@ function ChemicalEquilibriumVirtualLab({
   return (
     <TooltipProvider>
       {usePhStyleLayout ? (
-        <div className="w-full flex gap-6" style={{ minHeight: '75vh' }}>
+        <div className="w-full flex gap-4" style={{ minHeight: '75vh' }}>
           {/* Left Equipment Column */}
-          <aside className="w-72 bg-white/90 border border-gray-200 rounded-lg p-4 flex flex-col">
+          <aside className="w-56 flex-shrink-0 bg-white/90 border border-gray-200 rounded-lg p-4 flex flex-col">
             <h4 className="text-sm font-semibold mb-3">Equipment</h4>
 
             {/* Experiment progress above equipment (PH experiment) */}
@@ -724,7 +724,7 @@ function ChemicalEquilibriumVirtualLab({
           </aside>
 
           {/* Center Workbench Area */}
-          <main className="flex-1 flex flex-col">
+          <main className="flex-[2] flex flex-col">
           {!isDryTestWorkbench && (
             <div className="mb-4">
               <div className="rounded-lg bg-gradient-to-b from-yellow-50 to-white border p-4">
@@ -839,7 +839,7 @@ function ChemicalEquilibriumVirtualLab({
           </main>
 
           {/* Right Live Analysis Column */}
-          <aside className="w-72 bg-white/90 border border-gray-200 rounded-lg p-4">
+          <aside className="w-56 flex-shrink-0 bg-white/90 border border-gray-200 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-sm font-semibold">Live Analysis</h4>
               <div className="text-xs text-gray-500">Step {currentStep} of {totalSteps}</div>
