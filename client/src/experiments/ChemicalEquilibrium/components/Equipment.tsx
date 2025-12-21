@@ -278,6 +278,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   };
 
   const isOnWorkbench = position && (position.x !== 0 || position.y !== 0);
+  const isSaltSampleEquipment = id.toLowerCase().startsWith("salt-sample");
   const isContainer = [
     "beaker",
     "flask",
@@ -331,9 +332,34 @@ export const Equipment: React.FC<EquipmentProps> = ({
     return Math.min(85, (totalVolume / 100) * 85);
   };
 
+  const renderSaltSampleBottle = () => (
+    <div
+      className={`flex flex-col items-center gap-1 transition-all duration-300 ${
+        isDragging ? "scale-105" : "scale-100"
+      }`}
+    >
+      <div className="relative w-24 h-32">
+        <div className="absolute inset-0 bg-white border border-slate-200 rounded-[30px] shadow-[0_18px_40px_rgba(15,23,42,0.25)] overflow-hidden">
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-5 rounded-full bg-slate-200 border border-slate-300" />
+          <div className="absolute inset-x-[18%] bottom-10 h-16 bg-gradient-to-t from-amber-500 to-amber-200 rounded-[18px] border border-orange-200" />
+          <div className="absolute inset-x-7 bottom-4 h-2 bg-white/80 rounded-full" />
+        </div>
+      </div>
+      <div className="text-[11px] font-semibold text-slate-700">Salt Sample</div>
+      <div className="flex items-center gap-1 text-[10px] uppercase tracking-[0.2em] text-slate-500 opacity-90">
+        <Droplet className="w-3 h-3 text-amber-500" />
+        <span>Dry Test</span>
+      </div>
+    </div>
+  );
+
   const getEquipmentSpecificRendering = () => {
     if (!isOnWorkbench) {
       return icon;
+    }
+
+    if (isSaltSampleEquipment) {
+      return renderSaltSampleBottle();
     }
 
     if (id === "test_tubes") {
