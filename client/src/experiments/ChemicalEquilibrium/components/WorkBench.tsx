@@ -76,13 +76,20 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const phRootClass =
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
 
+  const dryTestWorkbenchClass = `relative w-full h-full min-h-[500px] rounded-lg overflow-hidden transition-all duration-300 shadow-sm ${
+    isDragOver
+      ? "bg-[#d1d5db] border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
+      : "bg-[#d3d3d3] border border-[#bcbcbc]"
+  }`;
+
   const defaultRootClass = isDryTestWorkbench
-    ? "relative w-full h-full min-h-[500px] bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg overflow-hidden transition-all duration-300 border border-gray-200 shadow-sm"
+    ? dryTestWorkbenchClass
     : `relative w-full h-full min-h-[500px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-gray-400 ${
         isDragOver
           ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
           : ""
       }`;
+
 
   return (
     <div
