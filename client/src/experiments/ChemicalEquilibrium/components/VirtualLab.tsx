@@ -883,8 +883,14 @@ function ChemicalEquilibriumVirtualLab({
             {isDryTestExperiment && (
               <div className="mt-4 space-y-2">
                 <button
+                  type="button"
                   onClick={handleUndoStep}
-                  className="w-full px-3 py-2 bg-white border border-gray-200 text-gray-700 rounded shadow-sm hover:bg-gray-50 transition"
+                  disabled={undoStackLength === 0}
+                  className={`w-full px-3 py-2 rounded shadow-sm transition ${
+                    undoStackLength === 0
+                      ? "bg-white border border-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
+                  }`}
                 >
                   Undo
                 </button>
