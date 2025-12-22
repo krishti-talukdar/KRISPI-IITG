@@ -514,9 +514,11 @@ export const Equipment: React.FC<EquipmentProps> = ({
                 )}
               </div>
             </div>
-            <div className="text-[11px] uppercase tracking-[0.2em] font-semibold text-center mt-2 text-gray-700">
-              {displayLabel}
-            </div>
+            {!isDryTest && (
+              <div className="text-[11px] uppercase tracking-[0.2em] font-semibold text-center mt-2 text-gray-700">
+                {displayLabel}
+              </div>
+            )}
           </div>
         );
       }
