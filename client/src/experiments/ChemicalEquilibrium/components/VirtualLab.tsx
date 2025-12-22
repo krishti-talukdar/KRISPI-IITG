@@ -777,8 +777,36 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleUndoStep = () => {
-    setCurrentStep((prev) => Math.max(1, prev - 1));
-    setToastMessage("Reverted to previous step");
+    if (historyRef.current.length === 0) {
+      setToastMessage("No operations to undo yet.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    const lastSnapshot = historyRef.current.pop();
+    if (!lastSnapshot) {
+      setUndoStackLength(historyRef.current.length);
+      return;
+    }
+
+    setUndoStackLength(historyRef.current.length);
+
+    setEquipmentPositions(
+      lastSnapshot.equipmentPositions.map((pos) => ({
+        ...pos,
+        chemicals: pos.chemicals.map((chem) => ({ ...chem })),
+      })),
+    );
+    setCurrentStep(lastSnapshot.currentStep);
+    setSelectedChemical(lastSnapshot.selectedChemical);
+    setCobaltChlorideAdded(lastSnapshot.cobaltChlorideAdded);
+    setDistilledWaterAdded(lastSnapshot.distilledWaterAdded);
+    setStirrerActive(lastSnapshot.stirrerActive);
+    setColorTransition(lastSnapshot.colorTransition);
+    setStep3WaterAdded(lastSnapshot.step3WaterAdded);
+    setMeasurements({ ...lastSnapshot.measurements });
+
+    setToastMessage("Reverted the last operation.");
     setTimeout(() => setToastMessage(null), 2500);
   };
 
