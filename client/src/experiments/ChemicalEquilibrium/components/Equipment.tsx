@@ -406,7 +406,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isSaltSampleEquipment) {
-      return renderSaltSampleBottle(() => onInteract?.(id));
+      return renderSaltSampleBottle();
     }
 
     if (isAmmoniumEquipment) {
