@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Equipment } from "./Equipment";
 import { WorkBench } from "./WorkBench";
 import { Chemical } from "./Chemical";
@@ -50,6 +50,20 @@ interface ChemicalEquilibriumVirtualLabProps {
   timer?: number;
   toggleTimer?: () => void;
 }
+
+type LabSnapshot = {
+  equipmentPositions: EquipmentPosition[];
+  currentStep: number;
+  cobaltChlorideAdded: boolean;
+  distilledWaterAdded: boolean;
+  stirrerActive: boolean;
+  colorTransition: "blue" | "transitioning" | "pink";
+  step3WaterAdded: boolean;
+  measurements: Measurements;
+  selectedChemical: string | null;
+};
+
+const MAX_HISTORY_ENTRIES = 25;
 
 const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
   {
@@ -170,6 +184,8 @@ function ChemicalEquilibriumVirtualLab({
   const [results, setResults] = useState<Result[]>([]);
   const [measurements, setMeasurements] =
     useState<Measurements>(DEFAULT_MEASUREMENTS);
+  const historyRef = useRef<LabSnapshot[]>([]);
+  const [undoStackLength, setUndoStackLength] = useState(0);
 
   // Choose chemicals and equipment based on experiment
   const isPHExperiment = experimentTitle === PHHClExperiment.title;
@@ -246,6 +262,32 @@ function ChemicalEquilibriumVirtualLab({
     step3WaterAdded,
   };
 
+  const captureLabSnapshot = () => ({
+    equipmentPositions: equipmentPositions.map((pos) => ({
+      ...pos,
+      chemicals: pos.chemicals.map((chem) => ({ ...chem })),
+    })),
+    currentStep,
+    cobaltChlorideAdded,
+    distilledWaterAdded,
+    stirrerActive,
+    colorTransition,
+    step3WaterAdded,
+    measurements: { ...measurements },
+    selectedChemical,
+  });
+
+  const pushHistorySnapshot = () => {
+    if (!isDryTestExperiment) return;
+    const snapshot = captureLabSnapshot();
+    const updatedHistory = [...historyRef.current, snapshot];
+    if (updatedHistory.length > MAX_HISTORY_ENTRIES) {
+      updatedHistory.shift();
+    }
+    historyRef.current = updatedHistory;
+    setUndoStackLength(updatedHistory.length);
+  };
+
   const handleEquipmentDrop = useCallback(
   (id: string, x: number, y: number) => {
     const workbenchRect =
@@ -260,6 +302,7 @@ function ChemicalEquilibriumVirtualLab({
     const dropX = layoutPosition?.x ?? x;
     const dropY = layoutPosition?.y ?? y;
 
+    pushHistorySnapshot();
     setEquipmentPositions((prev) => {
         const existing = prev.find((pos) => pos.id === id);
         if (existing) {
@@ -374,14 +417,15 @@ function ChemicalEquilibriumVirtualLab({
         return [...prev, { id, x: dropX, y: dropY, chemicals: [] }];
       });
     },
-    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment],
-);
+    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment, pushHistorySnapshot],
+  );
 
   const handleEquipmentRemove = useCallback((id: string) => {
+    pushHistorySnapshot();
     setEquipmentPositions((prev) => prev.filter((pos) => pos.id !== id));
     setToastMessage("Equipment removed from workbench");
     setTimeout(() => setToastMessage(null), 2000);
-  }, []);
+  }, [pushHistorySnapshot]);
 
   const handleChemicalSelect = (id: string) => {
     setSelectedChemical(selectedChemical === id ? null : id);
@@ -396,6 +440,8 @@ function ChemicalEquilibriumVirtualLab({
       (c) => c.id === chemicalId,
     );
     if (!chemical) return;
+
+    pushHistorySnapshot();
 
     // helper: map known hcl ids to numeric concentrations
     const HCL_CONC_MAP: Record<string, number> = {
@@ -579,6 +625,8 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
+    pushHistorySnapshot();
+
     setEquipmentPositions((prev) =>
       prev.map((pos) => {
         if (pos.id !== "test_tubes") {
@@ -624,6 +672,8 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
+    pushHistorySnapshot();
+
     setEquipmentPositions((prev) =>
       prev.map((pos) => {
         if (pos.id !== "test_tubes") {
@@ -668,6 +718,8 @@ function ChemicalEquilibriumVirtualLab({
       setAmmoniumDialogError("Place the test tube on the workbench first.");
       return;
     }
+
+    pushHistorySnapshot();
 
     setEquipmentPositions((prev) =>
       prev.map((pos) => {
@@ -719,13 +771,43 @@ function ChemicalEquilibriumVirtualLab({
     setStirrerActive(false);
     setColorTransition("pink");
     setStep3WaterAdded(false);
+    historyRef.current = [];
+    setUndoStackLength(0);
     onResetTimer();
     if (onResetExperiment) onResetExperiment();
   };
 
   const handleUndoStep = () => {
-    setCurrentStep((prev) => Math.max(1, prev - 1));
-    setToastMessage("Reverted to previous step");
+    if (historyRef.current.length === 0) {
+      setToastMessage("No operations to undo yet.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    const lastSnapshot = historyRef.current.pop();
+    if (!lastSnapshot) {
+      setUndoStackLength(historyRef.current.length);
+      return;
+    }
+
+    setUndoStackLength(historyRef.current.length);
+
+    setEquipmentPositions(
+      lastSnapshot.equipmentPositions.map((pos) => ({
+        ...pos,
+        chemicals: pos.chemicals.map((chem) => ({ ...chem })),
+      })),
+    );
+    setCurrentStep(lastSnapshot.currentStep);
+    setSelectedChemical(lastSnapshot.selectedChemical);
+    setCobaltChlorideAdded(lastSnapshot.cobaltChlorideAdded);
+    setDistilledWaterAdded(lastSnapshot.distilledWaterAdded);
+    setStirrerActive(lastSnapshot.stirrerActive);
+    setColorTransition(lastSnapshot.colorTransition);
+    setStep3WaterAdded(lastSnapshot.step3WaterAdded);
+    setMeasurements({ ...lastSnapshot.measurements });
+
+    setToastMessage("Reverted the last operation.");
     setTimeout(() => setToastMessage(null), 2500);
   };
 
@@ -802,8 +884,14 @@ function ChemicalEquilibriumVirtualLab({
             {isDryTestExperiment && (
               <div className="mt-4 space-y-2">
                 <button
+                  type="button"
                   onClick={handleUndoStep}
-                  className="w-full px-3 py-2 bg-white border border-gray-200 text-gray-700 rounded shadow-sm hover:bg-gray-50 transition"
+                  disabled={undoStackLength === 0}
+                  className={`w-full px-3 py-2 rounded shadow-sm transition ${
+                    undoStackLength === 0
+                      ? "bg-white border border-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
+                  }`}
                 >
                   Undo
                 </button>
