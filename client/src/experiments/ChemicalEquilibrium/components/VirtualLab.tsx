@@ -417,8 +417,8 @@ function ChemicalEquilibriumVirtualLab({
         return [...prev, { id, x: dropX, y: dropY, chemicals: [] }];
       });
     },
-    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment],
-);
+    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment, pushHistorySnapshot],
+  );
 
   const handleEquipmentRemove = useCallback((id: string) => {
     pushHistorySnapshot();
