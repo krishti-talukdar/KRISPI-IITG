@@ -928,6 +928,7 @@ function ChemicalEquilibriumVirtualLab({
                       allEquipmentPositions={equipmentPositions}
                       currentStep={currentStep}
                       disabled={!experimentStarted}
+                      isDryTest={isDryTestExperiment}
                     />
                   ) : null;
                 })}
@@ -1022,6 +1023,7 @@ function ChemicalEquilibriumVirtualLab({
                     allEquipmentPositions={equipmentPositions}
                     currentStep={currentStep}
                     disabled={!experimentStarted}
+                    isDryTest={isDryTestExperiment}
                   />
                 </div>
               ))}
@@ -1064,6 +1066,7 @@ function ChemicalEquilibriumVirtualLab({
                       allEquipmentPositions={equipmentPositions}
                       currentStep={currentStep}
                       disabled={!experimentStarted}
+                      isDryTest={isDryTestExperiment}
                     />
                   ) : null;
                 })}

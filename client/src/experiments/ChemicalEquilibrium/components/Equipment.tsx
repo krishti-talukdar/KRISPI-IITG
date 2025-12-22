@@ -31,6 +31,7 @@ interface EquipmentProps {
   cobaltReactionState?: CobaltReactionState;
   allEquipmentPositions?: EquipmentPosition[];
   currentStep?: number;
+  isDryTest?: boolean;
   disabled?: boolean;
 }
 
@@ -47,6 +48,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   cobaltReactionState,
   allEquipmentPositions = [],
   currentStep = 1,
+  isDryTest = false,
   disabled = false,
 }) => {
   const normalizedName = name.toLowerCase();
@@ -404,7 +406,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isSaltSampleEquipment) {
-      return renderSaltSampleBottle(() => onInteract?.(id));
+      return renderSaltSampleBottle();
     }
 
     if (isAmmoniumEquipment) {
@@ -416,6 +418,103 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (id === "test_tubes") {
+      if (isDryTest) {
+        const totalChemicalsAmount = chemicals.reduce(
+        (sum, chemical) => sum + (chemical.amount || 0),
+        0,
+      );
+      const volumeLabel =
+        totalChemicalsAmount > 0
+          ? `${totalChemicalsAmount.toFixed(1)} mL`
+          : "Empty";
+      const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
+      const overlayColor = hasSaltSample
+        ? "rgba(255, 255, 255, 0.95)"
+        : getMixedColor();
+      const overlayHeight = Math.min(
+        150,
+        (Math.min(totalChemicalsAmount, 25) / 25) * 150,
+      );
+      const saltOverlayHeight = Math.min(160, overlayHeight + 20);
+      const showOverlay =
+        overlayColor !== "transparent" && totalChemicalsAmount > 0;
+      const displayLabel = name.toLowerCase().includes("test tube")
+        ? "25ml Test Tube"
+        : name;
+      return (
+          <div className="relative flex flex-col items-center">
+            <div className="relative">
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-200 shadow-sm text-[10px] font-semibold text-gray-700">
+                {volumeLabel}
+              </div>
+              <div className="relative w-32 h-[18rem]">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F5b489eed84cd44f89c5431dbe9fd14d3%2F3f3b9fb2343b4e74a0b66661affefadb?format=webp&width=800"
+                  alt="25ml Test Tube"
+                  className="w-full h-full object-contain"
+                />
+                {showOverlay && (
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 transition-all duration-500"
+                    style={{
+                      bottom: "28px",
+                      width: "28px",
+                      height: `${Math.max(10, overlayHeight)}px`,
+                      backgroundColor: overlayColor,
+                      boxShadow:
+                        "inset 0 0 6px rgba(0,0,0,0.25), 0 0 3px rgba(0,0,0,0.1)",
+                      opacity: 0.9,
+                      borderRadius: "0 0 14px 14px",
+                    }}
+                  />
+                )}
+                {hasSaltSample && (
+                  <>
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2 transition-all duration-500"
+                      style={{
+                        bottom: "26px",
+                        width: "30px",
+                        height: `${Math.max(overlayHeight, 40)}px`,
+                        background: "rgba(255,255,255,0.92)",
+                        borderRadius: "999px 999px 80px 80px",
+                        boxShadow: "0 0 20px rgba(255,255,255,0.85)",
+                        opacity: 0.95,
+                      }}
+                    />
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2"
+                      style={{
+                        bottom: "12px",
+                        width: "14px",
+                        height: "8px",
+                        background: "rgba(255,255,255,0.95)",
+                        borderRadius: "999px",
+                        filter: "blur(0.4px)",
+                      }}
+                    />
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2"
+                      style={{
+                        bottom: `${12 + Math.min(5, saltOverlayHeight / 30)}px`,
+                        width: "6px",
+                        height: "4px",
+                        background: "rgba(255,255,255,0.95)",
+                        borderRadius: "999px",
+                        opacity: 0.6,
+                      }}
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="text-[11px] uppercase tracking-[0.2em] font-semibold text-center mt-2 text-gray-700">
+              {displayLabel}
+            </div>
+          </div>
+        );
+      }
+
       const isBeingHeated = () => {
         if (!position) return false;
 
