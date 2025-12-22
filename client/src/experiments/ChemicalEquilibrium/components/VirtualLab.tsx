@@ -619,7 +619,12 @@ function ChemicalEquilibriumVirtualLab({
   const handleAddSaltToTestTube = () => {
     const mass = parseFloat(saltMass);
     if (Number.isNaN(mass) || mass <= 0) {
-      setSaltDialogError("Enter a valid positive amount.");
+      setSaltDialogError("Enter a valid amount.");
+      return;
+    }
+
+    if (mass < MIN_SALT_MASS || mass > MAX_SALT_MASS) {
+      setSaltDialogError(`Salt mass must stay within ${SALT_RANGE_LABEL}.`);
       return;
     }
 
