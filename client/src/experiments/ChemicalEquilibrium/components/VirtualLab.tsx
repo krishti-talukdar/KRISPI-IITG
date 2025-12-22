@@ -1023,6 +1023,7 @@ function ChemicalEquilibriumVirtualLab({
                     allEquipmentPositions={equipmentPositions}
                     currentStep={currentStep}
                     disabled={!experimentStarted}
+                    isDryTest={isDryTestExperiment}
                   />
                 </div>
               ))}
