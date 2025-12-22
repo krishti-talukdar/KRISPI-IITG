@@ -8,6 +8,9 @@ import {
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState } from "../types";
 
+const GLASS_ROD_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3bdedfd838454c6b8a3cc44b25ecfdc0?format=webp&width=800";
+const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
+
 interface EquipmentProps {
   id: string;
   name: string;
@@ -59,6 +62,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
   const isAmmoniumEquipment = normalizedName.includes("ammonium hydroxide") ||
     normalizedName.includes("nh₄oh") ||
     normalizedName.includes("nh4oh");
+  const isGlassRodEquipment = normalizedName.includes("glass rod");
+  const isBunsenBurnerEquipment = normalizedName.includes("bunsen");
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -252,6 +257,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
       burette: `<svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M11 2h2v18l-1 2-1-2V2zm0 3h2v13h-2V5z"/></svg>`,
       thermometer: `<svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M17 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0-2c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM8 14V4c0-1.66 1.34-3 3-3s3 1.34 3 3v10c1.21.91 2 2.37 2 4 0 2.76-2.24 5-5 5s-5-2.24-5-5c0-1.63.79-3.09 2-4z"/></svg>`,
     };
+    if (equipmentId.includes("glass-rod")) {
+      return `<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="6" y="21" width="36" height="4" rx="2" fill="currentColor"/><rect x="10" y="19" width="1" height="8" rx="0.5" fill="currentColor" fill-opacity="0.7"/><rect x="37" y="19" width="1" height="8" rx="0.5" fill="currentColor" fill-opacity="0.7"/></svg>`;
+    }
     return svgMap[equipmentId] || svgMap.beaker;
   };
 
@@ -405,6 +413,38 @@ export const Equipment: React.FC<EquipmentProps> = ({
       return icon;
     }
 
+    if (isGlassRodEquipment) {
+      return (
+        <div
+          className="relative flex flex-col items-center pointer-events-none"
+          style={{ marginTop: "28px" }}
+        >
+          <div
+            className="w-28 h-6 -rotate-12"
+            style={{ transform: "scale(5)", transformOrigin: "center" }}
+          >
+            <img
+              src={GLASS_ROD_IMAGE_URL}
+              alt="Glass Rod"
+              className="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (isBunsenBurnerEquipment) {
+      return (
+        <div className="relative flex flex-col items-center pointer-events-none">
+          <img
+            src={BUNSEN_BURNER_IMAGE_URL}
+            alt="Bunsen Burner"
+            className="max-w-[240px] max-h-[240px] object-contain drop-shadow-lg"
+          />
+        </div>
+      );
+    }
+
     if (isSaltSampleEquipment) {
       return renderSaltSampleBottle();
     }
@@ -426,16 +466,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
       const volumeLabel =
         totalChemicalsAmount > 0
           ? `${totalChemicalsAmount.toFixed(1)} mL`
-          : "Empty";
+          : null;
       const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
-      const overlayColor = hasSaltSample
-        ? "rgba(255, 255, 255, 0.95)"
-        : getMixedColor();
-      const overlayHeight = Math.min(
+      const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
+      const hasSaltOnly = hasSaltSample && !hasAcidSample;
+      const baseOverlayHeight = Math.min(
         150,
         (Math.min(totalChemicalsAmount, 25) / 25) * 150,
       );
-      const saltOverlayHeight = Math.min(160, overlayHeight + 20);
+      const overlayHeight = Math.max(baseOverlayHeight, hasSaltOnly ? 60 : 0);
+      const overlayColor = hasSaltOnly
+        ? "rgba(255, 255, 255, 0.95)"
+        : getMixedColor();
       const showOverlay =
         overlayColor !== "transparent" && totalChemicalsAmount > 0;
       const displayLabel = name.toLowerCase().includes("test tube")
@@ -444,9 +486,11 @@ export const Equipment: React.FC<EquipmentProps> = ({
       return (
           <div className="relative flex flex-col items-center">
             <div className="relative">
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-200 shadow-sm text-[10px] font-semibold text-gray-700">
-                {volumeLabel}
-              </div>
+              {volumeLabel && (
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-200 shadow-sm text-[10px] font-semibold text-gray-700">
+                  {volumeLabel}
+                </div>
+              )}
               <div className="relative w-32 h-[18rem]">
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2F5b489eed84cd44f89c5431dbe9fd14d3%2F3f3b9fb2343b4e74a0b66661affefadb?format=webp&width=800"
@@ -468,49 +512,13 @@ export const Equipment: React.FC<EquipmentProps> = ({
                     }}
                   />
                 )}
-                {hasSaltSample && (
-                  <>
-                    <div
-                      className="absolute left-1/2 -translate-x-1/2 transition-all duration-500"
-                      style={{
-                        bottom: "26px",
-                        width: "30px",
-                        height: `${Math.max(overlayHeight, 40)}px`,
-                        background: "rgba(255,255,255,0.92)",
-                        borderRadius: "999px 999px 80px 80px",
-                        boxShadow: "0 0 20px rgba(255,255,255,0.85)",
-                        opacity: 0.95,
-                      }}
-                    />
-                    <div
-                      className="absolute left-1/2 -translate-x-1/2"
-                      style={{
-                        bottom: "12px",
-                        width: "14px",
-                        height: "8px",
-                        background: "rgba(255,255,255,0.95)",
-                        borderRadius: "999px",
-                        filter: "blur(0.4px)",
-                      }}
-                    />
-                    <div
-                      className="absolute left-1/2 -translate-x-1/2"
-                      style={{
-                        bottom: `${12 + Math.min(5, saltOverlayHeight / 30)}px`,
-                        width: "6px",
-                        height: "4px",
-                        background: "rgba(255,255,255,0.95)",
-                        borderRadius: "999px",
-                        opacity: 0.6,
-                      }}
-                    />
-                  </>
-                )}
               </div>
             </div>
-            <div className="text-[11px] uppercase tracking-[0.2em] font-semibold text-center mt-2 text-gray-700">
-              {displayLabel}
-            </div>
+            {!isDryTest && (
+              <div className="text-[11px] uppercase tracking-[0.2em] font-semibold text-center mt-2 text-gray-700">
+                {displayLabel}
+              </div>
+            )}
           </div>
         );
       }

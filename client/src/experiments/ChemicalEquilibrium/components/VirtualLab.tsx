@@ -94,20 +94,24 @@ const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
 
 const DRY_WORKBENCH_SALT_POSITION = { xPercent: 0.88, yPercent: 0.18 };
 const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
-const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.28, yPercent: 0.42 };
+const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.45, yPercent: 0.42 };
+const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.55, yPercent: 0.22 };
+const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.45, yPercent: 0.82 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
-  "concentrated-h-so-2": {
+  "concentrated-h-so-3": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
     yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING,
   },
-  "ammonium-hydroxide-nh-oh-3": {
+  "ammonium-hydroxide-nh-oh-4": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
     yPercent:
       DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING * 2,
   },
   "test_tubes": DRY_WORKBENCH_TEST_TUBE_POSITION,
+  "glass-rod-5": DRY_WORKBENCH_GLASS_ROD_POSITION,
+  "bunsen-burner-virtual-heat-source-3": DRY_WORKBENCH_BUNSEN_POSITION,
 };
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
@@ -206,11 +210,17 @@ function ChemicalEquilibriumVirtualLab({
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
-  const [saltMass, setSaltMass] = useState("0.05");
+  const [saltMass, setSaltMass] = useState("2.0");
   const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
+  const MIN_SALT_MASS = 2;
+  const MAX_SALT_MASS = 3;
+  const SALT_RANGE_LABEL = "2gm-3gm";
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
-  const [acidVolume, setAcidVolume] = useState("10.0");
+  const [acidVolume, setAcidVolume] = useState("4");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
+  const MIN_ACID_DROPS = 3;
+  const MAX_ACID_DROPS = 5;
+  const ACID_RANGE_LABEL = "3-5 drops";
   const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
   const [ammoniumVolume, setAmmoniumVolume] = useState("1.0");
   const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
@@ -592,7 +602,7 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleAcidDialogOpen = () => {
-    setAcidVolume("10.0");
+    setAcidVolume("4");
     setAcidDialogError(null);
     setAcidDialogOpen(true);
   };
@@ -616,7 +626,12 @@ function ChemicalEquilibriumVirtualLab({
   const handleAddSaltToTestTube = () => {
     const mass = parseFloat(saltMass);
     if (Number.isNaN(mass) || mass <= 0) {
-      setSaltDialogError("Enter a valid positive amount.");
+      setSaltDialogError("Enter a valid amount.");
+      return;
+    }
+
+    if (mass < MIN_SALT_MASS || mass > MAX_SALT_MASS) {
+      setSaltDialogError(`Salt mass must stay within ${SALT_RANGE_LABEL}.`);
       return;
     }
 
@@ -661,9 +676,14 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleAddAcidToTestTube = () => {
-    const volume = parseFloat(acidVolume);
-    if (Number.isNaN(volume) || volume <= 0) {
-      setAcidDialogError("Enter a valid positive volume.");
+    const drops = Number(acidVolume);
+    if (Number.isNaN(drops) || !Number.isInteger(drops) || drops <= 0) {
+      setAcidDialogError("Enter a valid whole number of drops.");
+      return;
+    }
+
+    if (drops < MIN_ACID_DROPS || drops > MAX_ACID_DROPS) {
+      setAcidDialogError(`Use between ${ACID_RANGE_LABEL}.`);
       return;
     }
 
@@ -684,7 +704,7 @@ function ChemicalEquilibriumVirtualLab({
         const updatedChemicals = existing
           ? pos.chemicals.map((c) =>
               c.id === "conc_h2so4"
-                ? { ...c, amount: c.amount + volume }
+                ? { ...c, amount: c.amount + drops }
                 : c,
             )
           : [
@@ -693,7 +713,7 @@ function ChemicalEquilibriumVirtualLab({
                 id: "conc_h2so4",
                 name: "Conc. H₂SO₄",
                 color: "#fb7185",
-                amount: volume,
+                amount: drops,
                 concentration: "Concentrated",
               },
             ];
@@ -702,7 +722,7 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${volume.toFixed(1)} mL of Conc. H₂SO₄ to the test tube.`);
+    setToastMessage(`Added ${drops} drops of Conc. H₂SO₄ to the test tube.`);
     setTimeout(() => setToastMessage(null), 3000);
     handleAcidDialogClose();
   };
@@ -1225,13 +1245,14 @@ function ChemicalEquilibriumVirtualLab({
               <input
                 className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                 type="number"
-                min="0"
-                step="0.01"
+                min="2"
+                max="3"
+                step="0.1"
                 value={saltMass}
                 onChange={(event) => setSaltMass(event.target.value)}
-                placeholder="0.05"
+                placeholder="2.5"
               />
-              <p className="text-[11px] text-slate-500">Recommended range: 0.05 - 0.20 g.</p>
+              <p className="text-[11px] text-slate-500">Recommended range: 2gm-3gm.</p>
               {saltDialogError && (
                 <p className="text-[11px] text-red-500">{saltDialogError}</p>
               )}
@@ -1268,13 +1289,14 @@ function ChemicalEquilibriumVirtualLab({
               <input
                 className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
                 type="number"
-                min="0"
-                step="0.1"
+                min="3"
+                max="5"
+                step="1"
                 value={acidVolume}
                 onChange={(event) => setAcidVolume(event.target.value)}
-                placeholder="10.0"
+                placeholder="4"
               />
-              <p className="text-[11px] text-slate-500">Recommended range: 5.0 - 15.0 mL.</p>
+              <p className="text-[11px] text-slate-500">Recommended range: 3-5 drops.</p>
               {acidDialogError && (
                 <p className="text-[11px] text-red-500">{acidDialogError}</p>
               )}
