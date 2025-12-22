@@ -63,6 +63,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     normalizedName.includes("nh₄oh") ||
     normalizedName.includes("nh4oh");
   const isGlassRodEquipment = normalizedName.includes("glass rod");
+  const isBunsenBurnerEquipment = normalizedName.includes("bunsen");
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
