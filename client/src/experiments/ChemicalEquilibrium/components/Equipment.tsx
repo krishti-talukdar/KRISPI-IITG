@@ -414,7 +414,10 @@ export const Equipment: React.FC<EquipmentProps> = ({
     if (isGlassRodEquipment) {
       return (
         <div className="relative flex flex-col items-center pointer-events-none">
-          <div className="w-28 h-6 -rotate-12">
+          <div
+            className="w-28 h-6 -rotate-12"
+            style={{ transform: "scale(5)", transformOrigin: "center" }}
+          >
             <img
               src={GLASS_ROD_IMAGE_URL}
               alt="Glass Rod"
