@@ -440,6 +440,8 @@ function ChemicalEquilibriumVirtualLab({
     );
     if (!chemical) return;
 
+    pushHistorySnapshot();
+
     // helper: map known hcl ids to numeric concentrations
     const HCL_CONC_MAP: Record<string, number> = {
       hcl_0_1: 0.1,
