@@ -624,6 +624,8 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
+    pushHistorySnapshot();
+
     setEquipmentPositions((prev) =>
       prev.map((pos) => {
         if (pos.id !== "test_tubes") {
@@ -669,6 +671,8 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
+    pushHistorySnapshot();
+
     setEquipmentPositions((prev) =>
       prev.map((pos) => {
         if (pos.id !== "test_tubes") {
@@ -713,6 +717,8 @@ function ChemicalEquilibriumVirtualLab({
       setAmmoniumDialogError("Place the test tube on the workbench first.");
       return;
     }
+
+    pushHistorySnapshot();
 
     setEquipmentPositions((prev) =>
       prev.map((pos) => {
