@@ -16,11 +16,11 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   equipment: [
     "Test Tubes",
     "Salt Sample",
-    "Glass Rod",
     "Concentrated H₂SO₄",
-    "Ammonium hydroxide (NH₄OH)",
-    "MnO₂",
     "Bunsen Burner (virtual heat source)",
+    "Ammonium hydroxide (NH₄OH)",
+    "Glass Rod",
+    "MnO₂",
     "K₂Cr₂O₇",
   ],
   stepDetails: [
