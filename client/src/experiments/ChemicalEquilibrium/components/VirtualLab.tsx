@@ -184,6 +184,8 @@ function ChemicalEquilibriumVirtualLab({
   const [results, setResults] = useState<Result[]>([]);
   const [measurements, setMeasurements] =
     useState<Measurements>(DEFAULT_MEASUREMENTS);
+  const historyRef = useRef<LabSnapshot[]>([]);
+  const [undoStackLength, setUndoStackLength] = useState(0);
 
   // Choose chemicals and equipment based on experiment
   const isPHExperiment = experimentTitle === PHHClExperiment.title;
