@@ -16,6 +16,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   equipment: [
     "Test Tubes",
     "Salt Sample",
+    "Glass Rod",
     "Concentrated H₂SO₄",
     "Ammonium hydroxide (NH₄OH)",
     "MnO₂",
