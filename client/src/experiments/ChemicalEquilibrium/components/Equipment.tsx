@@ -435,6 +435,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
         150,
         (Math.min(totalChemicalsAmount, 25) / 25) * 150,
       );
+      const saltOverlayHeight = Math.min(160, overlayHeight + 20);
       const showOverlay =
         overlayColor !== "transparent" && totalChemicalsAmount > 0;
       const displayLabel = name.toLowerCase().includes("test tube")
@@ -470,26 +471,37 @@ export const Equipment: React.FC<EquipmentProps> = ({
                 {hasSaltSample && (
                   <>
                     <div
-                      className="absolute left-1/2 -translate-x-1/2"
+                      className="absolute left-1/2 -translate-x-1/2 transition-all duration-500"
                       style={{
-                        bottom: "18px",
-                        width: "40px",
-                        height: "18px",
-                        background: "rgba(255,255,255,0.85)",
-                        borderRadius: "999px",
-                        boxShadow: "0 0 10px rgba(255,255,255,0.8)",
-                        filter: "blur(0.5px)",
+                        bottom: "26px",
+                        width: "30px",
+                        height: `${Math.max(overlayHeight, 40)}px`,
+                        background: "rgba(255,255,255,0.92)",
+                        borderRadius: "999px 999px 80px 80px",
+                        boxShadow: "0 0 20px rgba(255,255,255,0.85)",
+                        opacity: 0.95,
                       }}
                     />
                     <div
                       className="absolute left-1/2 -translate-x-1/2"
                       style={{
-                        bottom: "10px",
-                        width: "16px",
+                        bottom: "12px",
+                        width: "14px",
                         height: "8px",
-                        background: "rgba(255,255,255,0.9)",
+                        background: "rgba(255,255,255,0.95)",
                         borderRadius: "999px",
-                        filter: "blur(0.5px)",
+                        filter: "blur(0.4px)",
+                      }}
+                    />
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2"
+                      style={{
+                        bottom: `${12 + Math.min(5, saltOverlayHeight / 30)}px`,
+                        width: "6px",
+                        height: "4px",
+                        background: "rgba(255,255,255,0.95)",
+                        borderRadius: "999px",
+                        opacity: 0.6,
                       }}
                     />
                   </>
