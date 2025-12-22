@@ -53,6 +53,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   id,
   name,
   icon,
+  imageSrc,
   onDrag,
   position,
   chemicals = [],
