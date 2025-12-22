@@ -206,8 +206,11 @@ function ChemicalEquilibriumVirtualLab({
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
-  const [saltMass, setSaltMass] = useState("0.05");
+  const [saltMass, setSaltMass] = useState("2.0");
   const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
+  const MIN_SALT_MASS = 2;
+  const MAX_SALT_MASS = 3;
+  const SALT_RANGE_LABEL = "2gm-3gm";
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
   const [acidVolume, setAcidVolume] = useState("10.0");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
