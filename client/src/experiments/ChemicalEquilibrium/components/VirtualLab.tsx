@@ -421,10 +421,11 @@ function ChemicalEquilibriumVirtualLab({
 );
 
   const handleEquipmentRemove = useCallback((id: string) => {
+    pushHistorySnapshot();
     setEquipmentPositions((prev) => prev.filter((pos) => pos.id !== id));
     setToastMessage("Equipment removed from workbench");
     setTimeout(() => setToastMessage(null), 2000);
-  }, []);
+  }, [pushHistorySnapshot]);
 
   const handleChemicalSelect = (id: string) => {
     setSelectedChemical(selectedChemical === id ? null : id);
