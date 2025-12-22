@@ -413,7 +413,10 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
     if (isGlassRodEquipment) {
       return (
-        <div className="relative flex flex-col items-center pointer-events-none">
+        <div
+          className="relative flex flex-col items-center pointer-events-none"
+          style={{ marginTop: "28px" }}
+        >
           <div
             className="w-28 h-6 -rotate-12"
             style={{ transform: "scale(5)", transformOrigin: "center" }}
@@ -424,7 +427,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
               className="w-full h-full object-contain"
             />
           </div>
-          </div>
+        </div>
       );
     }
 
