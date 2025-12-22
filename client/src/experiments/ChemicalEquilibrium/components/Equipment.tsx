@@ -439,7 +439,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
           <img
             src={BUNSEN_BURNER_IMAGE_URL}
             alt="Bunsen Burner"
-            className="max-w-[120px] max-h-[120px] object-contain drop-shadow-lg"
+            className="max-w-[240px] max-h-[240px] object-contain drop-shadow-lg"
           />
         </div>
       );
