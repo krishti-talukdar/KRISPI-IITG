@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState } from "../types";
 
+const GLASS_ROD_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3bdedfd838454c6b8a3cc44b25ecfdc0?format=webp&width=800";
+
 interface EquipmentProps {
   id: string;
   name: string;
@@ -59,6 +61,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   const isAmmoniumEquipment = normalizedName.includes("ammonium hydroxide") ||
     normalizedName.includes("nh₄oh") ||
     normalizedName.includes("nh4oh");
+  const isGlassRodEquipment = normalizedName.includes("glass rod");
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -252,6 +255,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
       burette: `<svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M11 2h2v18l-1 2-1-2V2zm0 3h2v13h-2V5z"/></svg>`,
       thermometer: `<svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M17 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0-2c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM8 14V4c0-1.66 1.34-3 3-3s3 1.34 3 3v10c1.21.91 2 2.37 2 4 0 2.76-2.24 5-5 5s-5-2.24-5-5c0-1.63.79-3.09 2-4z"/></svg>`,
     };
+    if (equipmentId.includes("glass-rod")) {
+      return `<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="6" y="21" width="36" height="4" rx="2" fill="currentColor"/><rect x="10" y="19" width="1" height="8" rx="0.5" fill="currentColor" fill-opacity="0.7"/><rect x="37" y="19" width="1" height="8" rx="0.5" fill="currentColor" fill-opacity="0.7"/></svg>`;
+    }
     return svgMap[equipmentId] || svgMap.beaker;
   };
 
@@ -403,6 +409,23 @@ export const Equipment: React.FC<EquipmentProps> = ({
   const getEquipmentSpecificRendering = () => {
     if (!isOnWorkbench) {
       return icon;
+    }
+
+    if (isGlassRodEquipment) {
+      return (
+        <div className="relative flex flex-col items-center pointer-events-none">
+          <div className="w-28 h-6 -rotate-12">
+            <img
+              src={GLASS_ROD_IMAGE_URL}
+              alt="Glass Rod"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="text-[11px] uppercase tracking-[0.2em] font-semibold text-center mt-2 text-gray-700">
+            Glass Rod
+          </div>
+        </div>
+      );
     }
 
     if (isSaltSampleEquipment) {
