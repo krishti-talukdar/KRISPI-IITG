@@ -262,6 +262,32 @@ function ChemicalEquilibriumVirtualLab({
     step3WaterAdded,
   };
 
+  const captureLabSnapshot = () => ({
+    equipmentPositions: equipmentPositions.map((pos) => ({
+      ...pos,
+      chemicals: pos.chemicals.map((chem) => ({ ...chem })),
+    })),
+    currentStep,
+    cobaltChlorideAdded,
+    distilledWaterAdded,
+    stirrerActive,
+    colorTransition,
+    step3WaterAdded,
+    measurements: { ...measurements },
+    selectedChemical,
+  });
+
+  const pushHistorySnapshot = () => {
+    if (!isDryTestExperiment) return;
+    const snapshot = captureLabSnapshot();
+    const updatedHistory = [...historyRef.current, snapshot];
+    if (updatedHistory.length > MAX_HISTORY_ENTRIES) {
+      updatedHistory.shift();
+    }
+    historyRef.current = updatedHistory;
+    setUndoStackLength(updatedHistory.length);
+  };
+
   const handleEquipmentDrop = useCallback(
   (id: string, x: number, y: number) => {
     const workbenchRect =
