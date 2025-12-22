@@ -433,6 +433,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
       );
     }
 
+    if (isBunsenBurnerEquipment) {
+      return (
+        <div className="relative flex flex-col items-center pointer-events-none">
+          <img
+            src={BUNSEN_BURNER_IMAGE_URL}
+            alt="Bunsen Burner"
+            className="max-w-[120px] max-h-[120px] object-contain drop-shadow-lg"
+          />
+        </div>
+      );
+    }
+
     if (isSaltSampleEquipment) {
       return renderSaltSampleBottle();
     }
