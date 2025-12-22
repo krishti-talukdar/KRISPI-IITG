@@ -1233,13 +1233,14 @@ function ChemicalEquilibriumVirtualLab({
               <input
                 className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                 type="number"
-                min="0"
-                step="0.01"
+                min="2"
+                max="3"
+                step="0.1"
                 value={saltMass}
                 onChange={(event) => setSaltMass(event.target.value)}
-                placeholder="0.05"
+                placeholder="2.5"
               />
-              <p className="text-[11px] text-slate-500">Recommended range: 0.05 - 0.20 g.</p>
+              <p className="text-[11px] text-slate-500">Recommended range: 2gm-3gm.</p>
               {saltDialogError && (
                 <p className="text-[11px] text-red-500">{saltDialogError}</p>
               )}
