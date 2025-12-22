@@ -428,14 +428,16 @@ export const Equipment: React.FC<EquipmentProps> = ({
           ? `${totalChemicalsAmount.toFixed(1)} mL`
           : "Empty";
       const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
-      const overlayColor = hasSaltSample
-        ? "rgba(255, 255, 255, 0.95)"
-        : getMixedColor();
-      const overlayHeight = Math.min(
+      const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
+      const hasSaltOnly = hasSaltSample && !hasAcidSample;
+      const baseOverlayHeight = Math.min(
         150,
         (Math.min(totalChemicalsAmount, 25) / 25) * 150,
       );
-      const saltOverlayHeight = Math.min(160, overlayHeight + 20);
+      const overlayHeight = Math.max(baseOverlayHeight, hasSaltOnly ? 60 : 0);
+      const overlayColor = hasSaltOnly
+        ? "rgba(255, 255, 255, 0.95)"
+        : getMixedColor();
       const showOverlay =
         overlayColor !== "transparent" && totalChemicalsAmount > 0;
       const displayLabel = name.toLowerCase().includes("test tube")
@@ -467,44 +469,6 @@ export const Equipment: React.FC<EquipmentProps> = ({
                       borderRadius: "0 0 14px 14px",
                     }}
                   />
-                )}
-                {hasSaltSample && (
-                  <>
-                    <div
-                      className="absolute left-1/2 -translate-x-1/2 transition-all duration-500"
-                      style={{
-                        bottom: "26px",
-                        width: "30px",
-                        height: `${Math.max(overlayHeight, 40)}px`,
-                        background: "rgba(255,255,255,0.92)",
-                        borderRadius: "999px 999px 80px 80px",
-                        boxShadow: "0 0 20px rgba(255,255,255,0.85)",
-                        opacity: 0.95,
-                      }}
-                    />
-                    <div
-                      className="absolute left-1/2 -translate-x-1/2"
-                      style={{
-                        bottom: "12px",
-                        width: "14px",
-                        height: "8px",
-                        background: "rgba(255,255,255,0.95)",
-                        borderRadius: "999px",
-                        filter: "blur(0.4px)",
-                      }}
-                    />
-                    <div
-                      className="absolute left-1/2 -translate-x-1/2"
-                      style={{
-                        bottom: `${12 + Math.min(5, saltOverlayHeight / 30)}px`,
-                        width: "6px",
-                        height: "4px",
-                        background: "rgba(255,255,255,0.95)",
-                        borderRadius: "999px",
-                        opacity: 0.6,
-                      }}
-                    />
-                  </>
                 )}
               </div>
             </div>
