@@ -424,10 +424,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
               className="w-full h-full object-contain"
             />
           </div>
-          <div className="text-[11px] uppercase tracking-[0.2em] font-semibold text-center mt-2 text-gray-700">
-            Glass Rod
           </div>
-        </div>
       );
     }
 
