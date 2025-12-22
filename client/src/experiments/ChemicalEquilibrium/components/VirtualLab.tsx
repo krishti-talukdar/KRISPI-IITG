@@ -770,6 +770,8 @@ function ChemicalEquilibriumVirtualLab({
     setStirrerActive(false);
     setColorTransition("pink");
     setStep3WaterAdded(false);
+    historyRef.current = [];
+    setUndoStackLength(0);
     onResetTimer();
     if (onResetExperiment) onResetExperiment();
   };
