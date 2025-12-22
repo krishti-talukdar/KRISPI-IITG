@@ -302,6 +302,7 @@ function ChemicalEquilibriumVirtualLab({
     const dropX = layoutPosition?.x ?? x;
     const dropY = layoutPosition?.y ?? y;
 
+    pushHistorySnapshot();
     setEquipmentPositions((prev) => {
         const existing = prev.find((pos) => pos.id === id);
         if (existing) {
