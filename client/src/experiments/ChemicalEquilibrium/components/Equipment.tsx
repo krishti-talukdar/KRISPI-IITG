@@ -420,24 +420,27 @@ export const Equipment: React.FC<EquipmentProps> = ({
     if (id === "test_tubes") {
       if (isDryTest) {
         const totalChemicalsAmount = chemicals.reduce(
-          (sum, chemical) => sum + (chemical.amount || 0),
-          0,
-        );
-        const volumeLabel =
-          totalChemicalsAmount > 0
-            ? `${totalChemicalsAmount.toFixed(1)} mL`
-            : "Empty";
-        const overlayColor = getMixedColor();
-        const overlayHeight = Math.min(
-          150,
-          (Math.min(totalChemicalsAmount, 25) / 25) * 150,
-        );
-        const showOverlay =
-          overlayColor !== "transparent" && totalChemicalsAmount > 0;
-        const displayLabel = name.toLowerCase().includes("test tube")
-          ? "25ml Test Tube"
-          : name;
-        return (
+        (sum, chemical) => sum + (chemical.amount || 0),
+        0,
+      );
+      const volumeLabel =
+        totalChemicalsAmount > 0
+          ? `${totalChemicalsAmount.toFixed(1)} mL`
+          : "Empty";
+      const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
+      const overlayColor = hasSaltSample
+        ? "rgba(255, 255, 255, 0.95)"
+        : getMixedColor();
+      const overlayHeight = Math.min(
+        150,
+        (Math.min(totalChemicalsAmount, 25) / 25) * 150,
+      );
+      const showOverlay =
+        overlayColor !== "transparent" && totalChemicalsAmount > 0;
+      const displayLabel = name.toLowerCase().includes("test tube")
+        ? "25ml Test Tube"
+        : name;
+      return (
           <div className="relative flex flex-col items-center">
             <div className="relative">
               <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-200 shadow-sm text-[10px] font-semibold text-gray-700">
@@ -463,6 +466,33 @@ export const Equipment: React.FC<EquipmentProps> = ({
                       borderRadius: "0 0 14px 14px",
                     }}
                   />
+                )}
+                {hasSaltSample && (
+                  <>
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2"
+                      style={{
+                        bottom: "18px",
+                        width: "40px",
+                        height: "18px",
+                        background: "rgba(255,255,255,0.85)",
+                        borderRadius: "999px",
+                        boxShadow: "0 0 10px rgba(255,255,255,0.8)",
+                        filter: "blur(0.5px)",
+                      }}
+                    />
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2"
+                      style={{
+                        bottom: "10px",
+                        width: "16px",
+                        height: "8px",
+                        background: "rgba(255,255,255,0.9)",
+                        borderRadius: "999px",
+                        filter: "blur(0.5px)",
+                      }}
+                    />
+                  </>
                 )}
               </div>
             </div>
