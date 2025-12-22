@@ -51,6 +51,20 @@ interface ChemicalEquilibriumVirtualLabProps {
   toggleTimer?: () => void;
 }
 
+type LabSnapshot = {
+  equipmentPositions: EquipmentPosition[];
+  currentStep: number;
+  cobaltChlorideAdded: boolean;
+  distilledWaterAdded: boolean;
+  stirrerActive: boolean;
+  colorTransition: "blue" | "transitioning" | "pink";
+  step3WaterAdded: boolean;
+  measurements: Measurements;
+  selectedChemical: string | null;
+};
+
+const MAX_HISTORY_ENTRIES = 25;
+
 const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
   {
     id: "ethanoic-acid-solution",
