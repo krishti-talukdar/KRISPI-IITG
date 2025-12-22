@@ -94,7 +94,9 @@ const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
 
 const DRY_WORKBENCH_SALT_POSITION = { xPercent: 0.88, yPercent: 0.18 };
 const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
-const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.28, yPercent: 0.42 };
+const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.45, yPercent: 0.42 };
+const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.55, yPercent: 0.22 };
+const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.45, yPercent: 0.82 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
@@ -108,6 +110,8 @@ const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: 
       DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING * 2,
   },
   "test_tubes": DRY_WORKBENCH_TEST_TUBE_POSITION,
+  "glass-rod-5": DRY_WORKBENCH_GLASS_ROD_POSITION,
+  "bunsen-burner-virtual-heat-source-3": DRY_WORKBENCH_BUNSEN_POSITION,
 };
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
