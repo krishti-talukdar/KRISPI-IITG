@@ -112,6 +112,29 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     setHeatButtonCoords({ left: clampedLeft, top: clampedTop });
   }, [bunsenPosition, isDryTestWorkbench]);
 
+  const updateFlamePosition = useCallback(() => {
+    if (!isDryTestWorkbench || !workbenchRef.current) {
+      setFlameAnchorCoords(null);
+      return;
+    }
+
+    const bunsenElement = workbenchRef.current.querySelector<HTMLDivElement>(
+      `[data-equipment-id="${bunsenBurnerId}"]`,
+    );
+    if (!bunsenElement) {
+      setFlameAnchorCoords(null);
+      return;
+    }
+
+    const workbenchRect = workbenchRef.current.getBoundingClientRect();
+    const bunsenRect = bunsenElement.getBoundingClientRect();
+    const flameLeft =
+      bunsenRect.left + bunsenRect.width / 2 - workbenchRect.left;
+    const flameTop = bunsenRect.top - workbenchRect.top - 16;
+
+    setFlameAnchorCoords({ left: flameLeft, top: flameTop });
+  }, [isDryTestWorkbench, bunsenBurnerId]);
+
   // PH-specific classes
   const phRootClass =
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
