@@ -300,6 +300,14 @@ function ChemicalEquilibriumVirtualLab({
     };
   }, [currentStep, onStepComplete]);
 
+  useEffect(() => {
+    return () => {
+      if (rinseTimerRef.current) {
+        window.clearTimeout(rinseTimerRef.current);
+      }
+    };
+  }, []);
+
   const cobaltReactionState: CobaltReactionState = {
     cobaltChlorideAdded,
     distilledWaterAdded,
