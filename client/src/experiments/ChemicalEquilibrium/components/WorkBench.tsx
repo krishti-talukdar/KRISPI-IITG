@@ -49,6 +49,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
+  const [rinseLayout, setRinseLayout] = useState<RinseLayout | null>(null);
 
   useEffect(() => {
     if (isRunning) {
