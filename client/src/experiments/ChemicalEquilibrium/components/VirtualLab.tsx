@@ -855,6 +855,23 @@ function ChemicalEquilibriumVirtualLab({
     handleAmmoniumDialogClose();
   };
 
+  const handleRinseAction = () => {
+    if (!hasAmmoniumInGlassContainer || isRinsing) return;
+    setIsRinsing(true);
+    setShowRinseAnimation(true);
+    setToastMessage("Rinsing the glass rod with NH₄OH...");
+    if (rinseTimerRef.current) {
+      window.clearTimeout(rinseTimerRef.current);
+    }
+    rinseTimerRef.current = window.setTimeout(() => {
+      setIsRinsing(false);
+      setShowRinseAnimation(false);
+      setToastMessage("Rinsing complete.");
+      rinseTimerRef.current = null;
+      setTimeout(() => setToastMessage(null), 2000);
+    }, 2200);
+  };
+
   const handleStartExperiment = () => {
     onStartExperiment();
   };
