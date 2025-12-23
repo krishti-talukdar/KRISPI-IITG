@@ -372,6 +372,52 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           {/* Equipment positions and children */}
           <div className="absolute inset-0 transform -translate-y-8">{children}</div>
 
+          {isDryTestWorkbench && bunsenPosition && (
+            <>
+              {(isBunsenHeating || isBunsenLit) && flameCoords && (
+                <div
+                  className="heat-flame-layer"
+                  style={{
+                    "--heat-flame-left": `${flameCoords.left}px`,
+                    "--heat-flame-top": `${flameCoords.top}px`,
+                  } as React.CSSProperties}
+                />
+              )}
+              {heatButtonCoords && (
+                <div
+                  className="heat-action-wrapper"
+                  style={{
+                    "--heat-action-left": `${heatButtonCoords.left}px`,
+                    "--heat-action-top": `${heatButtonCoords.top}px`,
+                  } as React.CSSProperties}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setIsBunsenHeating((prev) => !prev)}
+                    className={`heat-control-button flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-full shadow-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                      isBunsenHeating
+                        ? "bg-amber-600 hover:bg-amber-700 text-white focus-visible:ring-amber-300"
+                        : "bg-orange-500 hover:bg-orange-600 text-white focus-visible:ring-orange-200"
+                    }`}
+                  >
+                    {isBunsenHeating ? "Stop heating" : "Start heating"}
+                  </button>
+                  <div className="heat-progress-group">
+                    <span className="heat-progress-label">
+                      {isBunsenHeating ? "Heating active" : "Ready"}
+                    </span>
+                    <div className="heat-progress-indicator">
+                      <span
+                        className="heat-progress-fill"
+                        style={{ "--heat-level": heatCharge } as React.CSSProperties}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
           {!isDryTestWorkbench && (
             <>
               {/* Grid lines for precise positioning (subtle) */}
