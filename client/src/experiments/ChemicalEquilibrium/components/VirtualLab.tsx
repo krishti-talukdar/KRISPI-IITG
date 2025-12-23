@@ -233,6 +233,8 @@ function ChemicalEquilibriumVirtualLab({
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const glassContainerEquipmentId =
     equipmentList.find((eq) => eq.name.toLowerCase().includes("glass container"))?.id ?? null;
+  const glassRodEquipmentId =
+    equipmentList.find((eq) => eq.name.toLowerCase().includes("glass rod"))?.id ?? null;
   const glassContainerState = equipmentPositions.find((pos) => pos.id === glassContainerEquipmentId);
   const ammoniumAmountInGlassContainer = glassContainerState
     ? glassContainerState.chemicals
