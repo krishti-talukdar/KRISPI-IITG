@@ -86,12 +86,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const bunsenBurnerId = "bunsen-burner-virtual-heat-source-3";
   const bunsenPosition = equipmentPositions.find((pos) => pos.id === bunsenBurnerId) ?? null;
   const [heatButtonCoords, setHeatButtonCoords] = useState<{ left: number; top: number } | null>(null);
-  const flameCoords = bunsenPosition
+  const [flameAnchorCoords, setFlameAnchorCoords] = useState<{ left: number; top: number } | null>(null);
+  const defaultFlameCoords = bunsenPosition
     ? {
         left: bunsenPosition.x + 28,
         top: bunsenPosition.y - 62,
       }
     : null;
+  const flameCoords = flameAnchorCoords ?? defaultFlameCoords;
   const updateHeatButtonCoords = useCallback(() => {
     if (!isDryTestWorkbench || !bunsenPosition || !workbenchRef.current) {
       setHeatButtonCoords(null);
@@ -108,6 +110,29 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
     setHeatButtonCoords({ left: clampedLeft, top: clampedTop });
   }, [bunsenPosition, isDryTestWorkbench]);
+
+  const updateFlamePosition = useCallback(() => {
+    if (!isDryTestWorkbench || !workbenchRef.current) {
+      setFlameAnchorCoords(null);
+      return;
+    }
+
+    const bunsenElement = workbenchRef.current.querySelector<HTMLDivElement>(
+      `[data-equipment-id="${bunsenBurnerId}"]`,
+    );
+    if (!bunsenElement) {
+      setFlameAnchorCoords(null);
+      return;
+    }
+
+    const workbenchRect = workbenchRef.current.getBoundingClientRect();
+    const bunsenRect = bunsenElement.getBoundingClientRect();
+    const flameLeft =
+      bunsenRect.left + bunsenRect.width / 2 - workbenchRect.left;
+    const flameTop = bunsenRect.top - workbenchRect.top - 16;
+
+    setFlameAnchorCoords({ left: flameLeft, top: flameTop });
+  }, [isDryTestWorkbench, bunsenBurnerId]);
 
   // PH-specific classes
   const phRootClass =
@@ -128,12 +153,17 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       }`;
 
   useEffect(() => {
-    updateHeatButtonCoords();
-    window.addEventListener("resize", updateHeatButtonCoords);
-    return () => {
-      window.removeEventListener("resize", updateHeatButtonCoords);
+    const handleResize = () => {
+      updateHeatButtonCoords();
+      updateFlamePosition();
     };
-  }, [updateHeatButtonCoords]);
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [updateHeatButtonCoords, updateFlamePosition]);
 
   useEffect(() => {
     if (!isDryTestWorkbench) {
@@ -372,20 +402,21 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           {/* Equipment positions and children */}
           <div className="absolute inset-0 transform -translate-y-8">{children}</div>
 
-          {isDryTestWorkbench && bunsenPosition && (
+          {isDryTestWorkbench && (
             <>
               {(isBunsenHeating || isBunsenLit) && flameCoords && (
                 <div
-                  className="heat-flame-layer"
+                  className={`bunsen-flame-layer ${isBunsenHeating ? "flame-burning" : "flame-embers"}`}
                   style={{
                     "--heat-flame-left": `${flameCoords.left}px`,
                     "--heat-flame-top": `${flameCoords.top}px`,
                   } as React.CSSProperties}
+                  aria-hidden="true"
                 />
               )}
               {heatButtonCoords && (
                 <div
-                  className="heat-action-wrapper"
+                  className="heat-control-panel"
                   style={{
                     "--heat-action-left": `${heatButtonCoords.left}px`,
                     "--heat-action-top": `${heatButtonCoords.top}px`,
@@ -394,7 +425,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsBunsenHeating((prev) => !prev)}
-                    className={`heat-control-button flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-full shadow-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                    className={`heat-trigger-button flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-full shadow-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                       isBunsenHeating
                         ? "bg-amber-600 hover:bg-amber-700 text-white focus-visible:ring-amber-300"
                         : "bg-orange-500 hover:bg-orange-600 text-white focus-visible:ring-orange-200"
@@ -402,11 +433,11 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   >
                     {isBunsenHeating ? "Stop heating" : "Start heating"}
                   </button>
-                  <div className="heat-progress-group">
-                    <span className="heat-progress-label">
+                  <div className="heat-progress-panel">
+                    <span className="heat-progress-status">
                       {isBunsenHeating ? "Heating active" : "Ready"}
                     </span>
-                    <div className="heat-progress-indicator">
+                    <div className="heat-progress-track">
                       <span
                         className="heat-progress-fill"
                         style={{ "--heat-level": heatCharge } as React.CSSProperties}
@@ -448,7 +479,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         </>
       )}
       <style>{`
-.heat-action-wrapper {
+.heat-control-panel {
   position: absolute;
   pointer-events: none;
   display: flex;
@@ -458,21 +489,21 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   top: var(--heat-action-top, 0);
   transform: translateY(-50%);
 }
-.heat-control-button {
+.heat-trigger-button {
   pointer-events: auto;
 }
-.heat-progress-group {
+.heat-progress-panel {
   pointer-events: none;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
-.heat-progress-label {
+.heat-progress-status {
   font-size: 11px;
   font-weight: 600;
   color: #1f2937;
 }
-.heat-progress-indicator {
+.heat-progress-track {
   width: 72px;
   height: 6px;
   border-radius: 9999px;
@@ -488,21 +519,38 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   background: linear-gradient(90deg, #fb923c, #ef4444);
   transition: width 180ms ease;
 }
-.heat-flame-layer {
+.bunsen-flame-layer {
   position: absolute;
-  width: 40px;
-  height: 96px;
+  width: 44px;
+  height: 110px;
   pointer-events: none;
   left: var(--heat-flame-left, 0);
   top: var(--heat-flame-top, 0);
   transform: translate(-50%, 0);
-  background: radial-gradient(circle at 50% 0%, rgba(251, 146, 60, 0.85), rgba(239, 68, 68, 0.6) 45%, rgba(234, 88, 12, 0) 70%);
-  filter: blur(0.5px);
+  background: radial-gradient(circle at 50% 0%, rgba(251, 146, 60, 0.9), rgba(239, 68, 68, 0.6) 45%, rgba(234, 88, 12, 0) 72%);
+  filter: blur(0.4px) drop-shadow(0 0 20px rgba(251, 146, 60, 0.6));
+  border-radius: 50% 50% 40% 40%;
   animation: bunsenFlame 0.9s ease-in-out infinite;
+  z-index: 30;
+}
+.bunsen-flame-layer::after {
+  content: "";
+  position: absolute;
+  inset: 30% 25% 0;
+  background: radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.8), rgba(251, 146, 60, 0));
+  border-radius: inherit;
+  opacity: 0.6;
+}
+.bunsen-flame-layer.flame-burning {
+  opacity: 1;
+}
+.bunsen-flame-layer.flame-embers {
+  opacity: 0.5;
+  animation-duration: 1.4s;
 }
 @keyframes bunsenFlame {
   0% { opacity: 0.85; transform: translate(-50%, 0) scaleY(1); }
-  50% { opacity: 1; transform: translate(-50%, -5px) scaleY(1.08); }
+  50% { opacity: 1; transform: translate(-50%, -6px) scaleY(1.05); }
   100% { opacity: 0.8; transform: translate(-50%, 0) scaleY(0.95); }
 }
       `}</style>
