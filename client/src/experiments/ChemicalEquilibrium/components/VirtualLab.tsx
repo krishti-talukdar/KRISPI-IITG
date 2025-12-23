@@ -893,7 +893,7 @@ function ChemicalEquilibriumVirtualLab({
       {usePhStyleLayout ? (
         <div className="w-full flex gap-4" style={{ minHeight: '75vh' }}>
           {/* Left Equipment Column */}
-          <aside className="w-56 flex-shrink-0 bg-white/90 border border-gray-200 rounded-lg p-4 flex flex-col">
+          <aside className="w-64 flex-shrink-0 bg-white/90 border border-gray-200 rounded-lg p-4 flex flex-col">
             <h4 className="text-sm font-semibold mb-3">Equipment</h4>
 
             {/* Experiment progress above equipment (PH experiment) */}
