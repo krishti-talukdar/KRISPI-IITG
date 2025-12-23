@@ -1057,6 +1057,7 @@ function ChemicalEquilibriumVirtualLab({
                       currentStep={currentStep}
                       disabled={!experimentStarted}
                       isDryTest={isDryTestExperiment}
+                      imageUrl={equipment.imageUrl}
                     />
                   ) : null;
                 })}
@@ -1195,6 +1196,7 @@ function ChemicalEquilibriumVirtualLab({
                       currentStep={currentStep}
                       disabled={!experimentStarted}
                       isDryTest={isDryTestExperiment}
+                      imageUrl={equipment.imageUrl}
                     />
                   ) : null;
                 })}
