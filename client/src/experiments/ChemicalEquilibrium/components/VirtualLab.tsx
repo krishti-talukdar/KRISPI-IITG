@@ -329,6 +329,14 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleEquipmentDrop = useCallback(
   (id: string, x: number, y: number) => {
+    if (isDryTestBottleEquipment(id)) {
+      setToastMessage(
+        "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, and NH₄OH to load the test tube.",
+      );
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
     const workbenchRect =
       typeof document !== "undefined"
         ? document
