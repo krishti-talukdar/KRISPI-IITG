@@ -226,6 +226,8 @@ function ChemicalEquilibriumVirtualLab({
       ? PH_HCL_EQUIPMENT
       : mapDryTestEquipment(experiment.equipment)
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
+  const glassContainerEquipmentId =
+    equipmentList.find((eq) => eq.name.toLowerCase().includes("glass container"))?.id ?? null;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -779,15 +781,20 @@ function ChemicalEquilibriumVirtualLab({
     handleAcidDialogClose();
   };
 
-  const handleAddAmmoniumToTestTube = () => {
+  const handleAddAmmoniumToGlassContainer = () => {
     const volume = parseFloat(ammoniumVolume);
     if (Number.isNaN(volume) || volume <= 0) {
       setAmmoniumDialogError("Enter a valid positive volume.");
       return;
     }
 
-    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
-      setAmmoniumDialogError("Place the test tube on the workbench first.");
+    if (!glassContainerEquipmentId) {
+      setAmmoniumDialogError("Glass container is not available in this layout.");
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === glassContainerEquipmentId)) {
+      setAmmoniumDialogError("Place the glass container on the workbench first.");
       return;
     }
 
@@ -795,7 +802,7 @@ function ChemicalEquilibriumVirtualLab({
 
     setEquipmentPositions((prev) =>
       prev.map((pos) => {
-        if (pos.id !== "test_tubes") {
+        if (pos.id !== glassContainerEquipmentId) {
           return pos;
         }
 
@@ -821,7 +828,9 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${volume.toFixed(1)} mL of Ammonium hydroxide to the test tube.`);
+    setToastMessage(
+      `Added ${volume.toFixed(1)} mL of Ammonium hydroxide to the glass container.`,
+    );
     setTimeout(() => setToastMessage(null), 3000);
     handleAmmoniumDialogClose();
   };
@@ -1432,8 +1441,8 @@ function ChemicalEquilibriumVirtualLab({
                 <Button variant="ghost" size="sm" onClick={handleAmmoniumDialogClose}>
                   Cancel
                 </Button>
-                <Button size="sm" onClick={handleAddAmmoniumToTestTube}>
-                  Add to test tube
+                <Button size="sm" onClick={handleAddAmmoniumToGlassContainer}>
+                  Add to glass container
                 </Button>
               </div>
             </DialogFooter>
