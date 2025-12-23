@@ -1021,6 +1021,7 @@ function ChemicalEquilibriumVirtualLab({
                 selectedChemical={experimentStarted ? selectedChemical : null}
                 isRunning={isRunning}
                 experimentTitle={experimentTitle}
+                equipmentPositions={equipmentPositions}
                 currentGuidedStep={currentStep}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
               >
