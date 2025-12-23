@@ -246,7 +246,9 @@ function ChemicalEquilibriumVirtualLab({
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
   const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
-  const [ammoniumVolume, setAmmoniumVolume] = useState("1.0");
+  const MIN_AMMONIUM_VOLUME = 5;
+  const MAX_AMMONIUM_VOLUME = 10;
+  const [ammoniumVolume, setAmmoniumVolume] = useState("5.0");
   const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
 
@@ -654,7 +656,7 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleAmmoniumDialogOpen = () => {
-    setAmmoniumVolume("1.0");
+    setAmmoniumVolume("5.0");
     setAmmoniumDialogError(null);
     setAmmoniumDialogOpen(true);
   };
@@ -785,8 +787,14 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleAddAmmoniumToGlassContainer = () => {
     const volume = parseFloat(ammoniumVolume);
-    if (Number.isNaN(volume) || volume <= 0) {
-      setAmmoniumDialogError("Enter a valid positive volume.");
+    if (Number.isNaN(volume)) {
+      setAmmoniumDialogError("Enter a valid numeric volume.");
+      return;
+    }
+    if (volume < MIN_AMMONIUM_VOLUME || volume > MAX_AMMONIUM_VOLUME) {
+      setAmmoniumDialogError(
+        `Enter a volume between ${MIN_AMMONIUM_VOLUME} mL and ${MAX_AMMONIUM_VOLUME} mL.`,
+      );
       return;
     }
 
@@ -1426,13 +1434,16 @@ function ChemicalEquilibriumVirtualLab({
               <input
                 className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 type="number"
-                min="0"
+                min={MIN_AMMONIUM_VOLUME}
+                max={MAX_AMMONIUM_VOLUME}
                 step="0.1"
                 value={ammoniumVolume}
                 onChange={(event) => setAmmoniumVolume(event.target.value)}
-                placeholder="1.0"
+                placeholder="5.0"
               />
-              <p className="text-[11px] text-slate-500">Recommended range: 0.5 - 2.0 mL.</p>
+              <p className="text-[11px] text-slate-500">
+                Recommended range: {MIN_AMMONIUM_VOLUME} - {MAX_AMMONIUM_VOLUME} mL.
+              </p>
               {ammoniumDialogError && (
                 <p className="text-[11px] text-red-500">{ammoniumDialogError}</p>
               )}
