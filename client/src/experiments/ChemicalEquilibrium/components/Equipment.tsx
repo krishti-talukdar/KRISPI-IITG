@@ -37,6 +37,7 @@ interface EquipmentProps {
   currentStep?: number;
   isDryTest?: boolean;
   disabled?: boolean;
+  imageUrl?: string;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
