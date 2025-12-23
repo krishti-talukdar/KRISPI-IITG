@@ -152,11 +152,30 @@ const mapDryTestEquipment = (names: string[] = []): EquipmentDefinition[] =>
   names.map((name, index) => {
     const normalized = name.toLowerCase();
     const isTestTube = normalized.includes("test tube");
-    return {
-      id: isTestTube ? "test_tubes" : `${slugify(name)}-${index}`,
+    const id = isTestTube ? "test_tubes" : `${slugify(name)}-${index}`;
+    const base: EquipmentDefinition = {
+      id,
       name,
       icon: getEquipmentIcon(name),
     };
+
+    if (normalized.includes("glass container")) {
+      return {
+        ...base,
+        icon: (
+          <div className="flex items-center justify-center w-20 h-20">
+            <img
+              src={GLASS_CONTAINER_IMAGE_URL}
+              alt="Glass container"
+              className="w-full h-full object-contain"
+            />
+          </div>
+        ),
+        imageUrl: GLASS_CONTAINER_IMAGE_URL,
+      };
+    }
+
+    return base;
   });
 
 function ChemicalEquilibriumVirtualLab({
