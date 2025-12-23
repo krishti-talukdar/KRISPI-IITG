@@ -43,6 +43,7 @@ interface EquipmentProps {
   isDryTest?: boolean;
   disabled?: boolean;
   imageUrl?: string;
+  isRinseActive?: boolean;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -61,6 +62,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   isDryTest = false,
   disabled = false,
   imageUrl,
+  isRinseActive = false,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
