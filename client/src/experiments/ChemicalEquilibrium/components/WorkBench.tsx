@@ -447,6 +447,65 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           )}
         </>
       )}
+      <style>{`
+.heat-action-wrapper {
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  left: var(--heat-action-left, 0);
+  top: var(--heat-action-top, 0);
+  transform: translateY(-50%);
+}
+.heat-control-button {
+  pointer-events: auto;
+}
+.heat-progress-group {
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.heat-progress-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1f2937;
+}
+.heat-progress-indicator {
+  width: 72px;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+}
+.heat-progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  width: calc(var(--heat-level, 0) * 100%);
+  background: linear-gradient(90deg, #fb923c, #ef4444);
+  transition: width 180ms ease;
+}
+.heat-flame-layer {
+  position: absolute;
+  width: 40px;
+  height: 96px;
+  pointer-events: none;
+  left: var(--heat-flame-left, 0);
+  top: var(--heat-flame-top, 0);
+  transform: translate(-50%, 0);
+  background: radial-gradient(circle at 50% 0%, rgba(251, 146, 60, 0.85), rgba(239, 68, 68, 0.6) 45%, rgba(234, 88, 12, 0) 70%);
+  filter: blur(0.5px);
+  animation: bunsenFlame 0.9s ease-in-out infinite;
+}
+@keyframes bunsenFlame {
+  0% { opacity: 0.85; transform: translate(-50%, 0) scaleY(1); }
+  50% { opacity: 1; transform: translate(-50%, -5px) scaleY(1.08); }
+  100% { opacity: 0.8; transform: translate(-50%, 0) scaleY(0.95); }
+}
+      `}</style>
     </div>
   );
 };
