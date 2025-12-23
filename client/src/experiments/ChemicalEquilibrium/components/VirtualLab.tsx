@@ -1188,6 +1188,7 @@ function ChemicalEquilibriumVirtualLab({
                         currentStep={currentStep}
                         disabled={!experimentStarted}
                         isDryTest={isDryTestExperiment}
+                        isRinseActive={pos.id === glassRodEquipmentId && showRinseAnimation}
                         imageUrl={equipment.imageUrl}
                       />
                     ) : null;
