@@ -7,6 +7,17 @@ const DRY_TEST_VAPOR_PUFFS = [
   { offsetX: 18, duration: "4.1s", delay: "0.2s", scale: 0.9 },
 ] as const;
 
+const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
+const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.7, yPercent: 0.42 };
+
+type RinseLayout = {
+  buttonLeft: number;
+  buttonTop: number;
+  rodLeft: number;
+  rodTop: number;
+  containerTop: number;
+};
+
 interface WorkBenchProps {
   onDrop: (id: string, x: number, y: number) => void;
   children: React.ReactNode;
