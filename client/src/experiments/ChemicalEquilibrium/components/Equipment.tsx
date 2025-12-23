@@ -942,6 +942,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   return (
     <div
       ref={elementRef}
+      data-equipment-id={id}
       draggable={!disabled && id !== "stirring_rod"}
       onDragStart={
         !disabled && id !== "stirring_rod" ? handleDragStart : undefined
