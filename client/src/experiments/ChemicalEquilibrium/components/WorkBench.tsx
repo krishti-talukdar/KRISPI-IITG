@@ -440,7 +440,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   >
                     {isBunsenHeating ? "Stop heating" : "Start heating"}
                   </button>
-                  <div className="heat-progress-panel">
+                  <div className="heat-status-panel">
                     <span className="heat-progress-status">
                       {isBunsenHeating ? "Heating active" : "Ready"}
                     </span>
