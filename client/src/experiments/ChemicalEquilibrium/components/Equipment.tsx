@@ -456,7 +456,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
           <img
             src={containerImage}
             alt="Glass container"
-            className="max-w-[240px] max-h-[240px] object-contain drop-shadow-lg"
+            className="max-w-[160px] max-h-[160px] object-contain drop-shadow-lg"
           />
         </div>
       );
