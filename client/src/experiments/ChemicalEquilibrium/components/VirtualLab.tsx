@@ -1077,7 +1077,9 @@ function ChemicalEquilibriumVirtualLab({
                 currentGuidedStep={currentStep}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
               >
-                {equipmentPositions.map((pos) => {
+                {equipmentPositions
+                  .filter((pos) => !isDryTestBottleEquipment(pos.id))
+                  .map((pos) => {
                   const equipment = equipmentList.find((eq) => eq.id === pos.id);
                   return equipment ? (
                     <Equipment
