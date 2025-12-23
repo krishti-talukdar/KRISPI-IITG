@@ -1152,7 +1152,6 @@ function ChemicalEquilibriumVirtualLab({
                 showRinseButton={hasAmmoniumInGlassContainer}
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
-                showRinseAnimation={showRinseAnimation}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -1305,7 +1304,6 @@ function ChemicalEquilibriumVirtualLab({
                 showRinseButton={hasAmmoniumInGlassContainer}
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
-                showRinseAnimation={showRinseAnimation}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
