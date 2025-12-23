@@ -188,6 +188,45 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     isBunsenHeating,
   ]);
 
+  const updateRinseLayout = useCallback(() => {
+    if (!isDryTestWorkbench || !workbenchRef.current) {
+      setRinseLayout(null);
+      return;
+    }
+
+    const rect = workbenchRef.current.getBoundingClientRect();
+    const clampValue = (value: number, minValue: number, maxValue: number) =>
+      Math.max(minValue, Math.min(maxValue, value));
+    const safeWidth = Math.max(32, rect.width - 32);
+    const safeHeight = Math.max(32, rect.height - 32);
+
+    const rodLeft = clampValue(
+      Math.round(rect.width * DRY_WORKBENCH_GLASS_ROD_POSITION.xPercent),
+      32,
+      safeWidth,
+    );
+    const rodTop = clampValue(
+      Math.round(rect.height * DRY_WORKBENCH_GLASS_ROD_POSITION.yPercent),
+      32,
+      safeHeight,
+    );
+    const containerTop = clampValue(
+      Math.round(rect.height * DRY_WORKBENCH_GLASS_CONTAINER_POSITION.yPercent),
+      32,
+      safeHeight,
+    );
+    const buttonLeft = clampValue(rodLeft + 58, 32, Math.max(32, rect.width - 110));
+    const buttonTop = clampValue(rodTop - 10, 12, Math.max(12, rect.height - 50));
+
+    setRinseLayout({
+      buttonLeft,
+      buttonTop,
+      rodLeft,
+      rodTop,
+      containerTop,
+    });
+  }, [isDryTestWorkbench]);
+
   // PH-specific classes
   const phRootClass =
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
