@@ -1086,8 +1086,8 @@ function ChemicalEquilibriumVirtualLab({
                   .map((pos) => {
                     const equipment = equipmentList.find((eq) => eq.id === pos.id);
                     return equipment ? (
-                    <Equipment
-                      key={pos.id}
+                      <Equipment
+                        key={pos.id}
                       id={pos.id}
                       name={equipment.name}
                       icon={equipment.icon}
