@@ -16,6 +16,10 @@ interface WorkBenchProps {
   currentGuidedStep?: number;
   totalGuidedSteps?: number;
   equipmentPositions?: EquipmentPosition[];
+  showRinseButton?: boolean;
+  onRinse?: () => void;
+  isRinsing?: boolean;
+  showRinseAnimation?: boolean;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
