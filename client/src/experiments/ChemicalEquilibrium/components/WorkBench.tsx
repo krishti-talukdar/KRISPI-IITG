@@ -611,6 +611,41 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           )}
         </>
       )}
+      {showRinseButton && rinseLayout && (
+        <button
+          type="button"
+          onClick={() => onRinse?.()}
+          disabled={isRinsing}
+          className="absolute px-3 py-1.5 text-[10px] tracking-[0.4em] uppercase rounded-full bg-slate-900 text-white shadow-2xl border border-white/40"
+          style={{
+            left: rinseLayout.buttonLeft,
+            top: rinseLayout.buttonTop,
+          }}
+        >
+          RINSE
+        </button>
+      )}
+      {showRinseAnimation && rinseLayout && (
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: rinseLayout.rodLeft - 3,
+            top: rinseLayout.rodTop + 6,
+            width: "6px",
+            height: `${rinseRodHeight}px`,
+            background: "linear-gradient(180deg, #f8fafc, #e2e8f0)",
+            borderRadius: "999px",
+            boxShadow: "0 10px 30px rgba(15,23,42,0.45)",
+            transformOrigin: "top center",
+            transform: isRinsing
+              ? `translateY(${rinseDipDistance}px)`
+              : "translateY(0)",
+            transition: "transform 1.4s ease-in-out, opacity 0.4s ease",
+            opacity: isRinsing ? 1 : 0,
+            zIndex: 50,
+          }}
+        />
+      )}
       <style>{`
 .heat-control-panel {
   position: absolute;
