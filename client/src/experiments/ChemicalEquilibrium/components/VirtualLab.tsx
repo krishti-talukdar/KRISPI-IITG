@@ -908,6 +908,13 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
+    if (rinseTimerRef.current) {
+      window.clearTimeout(rinseTimerRef.current);
+      rinseTimerRef.current = null;
+    }
+    setIsRinsing(false);
+    setShowRinseAnimation(false);
+
     const lastSnapshot = historyRef.current.pop();
     if (!lastSnapshot) {
       setUndoStackLength(historyRef.current.length);
