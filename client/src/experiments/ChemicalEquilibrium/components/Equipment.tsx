@@ -55,6 +55,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   currentStep = 1,
   isDryTest = false,
   disabled = false,
+  imageUrl,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
