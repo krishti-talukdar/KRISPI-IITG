@@ -20,6 +20,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   experimentTitle,
   currentGuidedStep = 1,
   totalGuidedSteps,
+  equipmentPositions = [],
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
