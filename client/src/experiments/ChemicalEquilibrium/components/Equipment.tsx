@@ -487,12 +487,14 @@ export const Equipment: React.FC<EquipmentProps> = ({
       const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
       const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
       const hasSaltOnly = hasSaltSample && !hasAcidSample;
+      const hasAmmoniumSample = chemicals.some((chemical) => chemical.id === "nh4oh");
       const baseOverlayHeight = Math.min(
         150,
         (Math.min(totalChemicalsAmount, 25) / 25) * 150,
       );
       const overlayHeight = Math.max(baseOverlayHeight, hasSaltOnly ? 60 : 0);
-      const overlayColor = hasSaltOnly
+      const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
+      const overlayColor = overrideWithWhite
         ? "rgba(255, 255, 255, 0.95)"
         : getMixedColor();
       const showOverlay =
