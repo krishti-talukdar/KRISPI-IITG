@@ -467,13 +467,13 @@ export const Equipment: React.FC<EquipmentProps> = ({
             <div
               className="absolute bottom-6 left-1/2 -translate-x-1/2"
               style={{
-                width: "58px",
+                width: "66px",
                 height: `${Math.max(18, overlayHeight)}px`,
-                borderRadius: "30px 30px 18px 18px / 45px 45px 12px 12px",
+                borderRadius: "8px",
                 background:
-                  "linear-gradient(180deg, rgba(224, 242, 255, 0.97), rgba(168, 214, 255, 0.85))",
+                  "linear-gradient(180deg, rgba(204, 233, 255, 0.98), rgba(184, 210, 255, 0.9))",
                 boxShadow:
-                  "inset 0 18px 35px rgba(224, 242, 255, 0.95), 0 0 30px rgba(168, 214, 255, 0.6)",
+                  "inset 0 18px 35px rgba(204, 233, 255, 0.95), 0 0 20px rgba(166, 199, 255, 0.5)",
               }}
             />
           )}
