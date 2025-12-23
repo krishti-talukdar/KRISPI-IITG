@@ -96,8 +96,9 @@ const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
 const DRY_WORKBENCH_SALT_POSITION = { xPercent: 0.88, yPercent: 0.18 };
 const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
 const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.3, yPercent: 0.35 };
-const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.3, yPercent: 0.3 };
+const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
 const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.65 };
+const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.7, yPercent: 0.42 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
@@ -113,6 +114,7 @@ const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: 
   "test_tubes": DRY_WORKBENCH_TEST_TUBE_POSITION,
   "glass-rod-5": DRY_WORKBENCH_GLASS_ROD_POSITION,
   "bunsen-burner-virtual-heat-source-3": DRY_WORKBENCH_BUNSEN_POSITION,
+  "glass-container-6": DRY_WORKBENCH_GLASS_CONTAINER_POSITION,
 };
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
@@ -210,6 +212,9 @@ function ChemicalEquilibriumVirtualLab({
     useState<Measurements>(DEFAULT_MEASUREMENTS);
   const historyRef = useRef<LabSnapshot[]>([]);
   const [undoStackLength, setUndoStackLength] = useState(0);
+  const [isRinsing, setIsRinsing] = useState(false);
+  const [showRinseAnimation, setShowRinseAnimation] = useState(false);
+  const rinseTimerRef = useRef<number | null>(null);
 
   // Choose chemicals and equipment based on experiment
   const isPHExperiment = experimentTitle === PHHClExperiment.title;
@@ -226,6 +231,17 @@ function ChemicalEquilibriumVirtualLab({
       ? PH_HCL_EQUIPMENT
       : mapDryTestEquipment(experiment.equipment)
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
+  const glassContainerEquipmentId =
+    equipmentList.find((eq) => eq.name.toLowerCase().includes("glass container"))?.id ?? null;
+  const glassRodEquipmentId =
+    equipmentList.find((eq) => eq.name.toLowerCase().includes("glass rod"))?.id ?? null;
+  const glassContainerState = equipmentPositions.find((pos) => pos.id === glassContainerEquipmentId);
+  const ammoniumAmountInGlassContainer = glassContainerState
+    ? glassContainerState.chemicals
+        .filter((chemical) => chemical.id === "nh4oh")
+        .reduce((sum, chemical) => sum + (chemical.amount || 0), 0)
+    : 0;
+  const hasAmmoniumInGlassContainer = ammoniumAmountInGlassContainer > 0;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -242,7 +258,9 @@ function ChemicalEquilibriumVirtualLab({
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
   const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
-  const [ammoniumVolume, setAmmoniumVolume] = useState("1.0");
+  const MIN_AMMONIUM_VOLUME = 5;
+  const MAX_AMMONIUM_VOLUME = 10;
+  const [ammoniumVolume, setAmmoniumVolume] = useState("5.0");
   const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
 
@@ -284,6 +302,14 @@ function ChemicalEquilibriumVirtualLab({
     };
   }, [currentStep, onStepComplete]);
 
+  useEffect(() => {
+    return () => {
+      if (rinseTimerRef.current) {
+        window.clearTimeout(rinseTimerRef.current);
+      }
+    };
+  }, []);
+
   const cobaltReactionState: CobaltReactionState = {
     cobaltChlorideAdded,
     distilledWaterAdded,
@@ -307,6 +333,15 @@ function ChemicalEquilibriumVirtualLab({
     selectedChemical,
   });
 
+  const DRY_TEST_BOTTLE_IDS = [
+    "salt-sample",
+    "concentrated-h-so",
+    "ammonium-hydroxide-nh-oh",
+  ];
+
+  const isDryTestBottleEquipment = (equipmentId: string) =>
+    DRY_TEST_BOTTLE_IDS.some((token) => equipmentId.startsWith(token));
+
   const pushHistorySnapshot = () => {
     if (!isDryTestExperiment) return;
     const snapshot = captureLabSnapshot();
@@ -320,6 +355,14 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleEquipmentDrop = useCallback(
   (id: string, x: number, y: number) => {
+    if (isDryTestBottleEquipment(id)) {
+      setToastMessage(
+        "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, and NH₄OH to load the test tube.",
+      );
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
     const workbenchRect =
       typeof document !== "undefined"
         ? document
@@ -633,7 +676,7 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleAmmoniumDialogOpen = () => {
-    setAmmoniumVolume("1.0");
+    setAmmoniumVolume("5.0");
     setAmmoniumDialogError(null);
     setAmmoniumDialogOpen(true);
   };
@@ -641,6 +684,21 @@ function ChemicalEquilibriumVirtualLab({
   const handleAmmoniumDialogClose = () => {
     setAmmoniumDialogOpen(false);
     setAmmoniumDialogError(null);
+  };
+
+  const getQuickAddAction = (equipmentId: string) => {
+    if (equipmentId.startsWith("salt-sample")) {
+      return handleSaltDialogOpen;
+    }
+    if (equipmentId.startsWith("concentrated-h-so")) {
+      return handleAcidDialogOpen;
+    }
+    if (equipmentId.startsWith("ammonium-hydroxide-nh-oh") ||
+      equipmentId.startsWith("ammonium-hydroxide")
+    ) {
+      return handleAmmoniumDialogOpen;
+    }
+    return undefined;
   };
 
   const handleAddSaltToTestTube = () => {
@@ -747,15 +805,26 @@ function ChemicalEquilibriumVirtualLab({
     handleAcidDialogClose();
   };
 
-  const handleAddAmmoniumToTestTube = () => {
+  const handleAddAmmoniumToGlassContainer = () => {
     const volume = parseFloat(ammoniumVolume);
-    if (Number.isNaN(volume) || volume <= 0) {
-      setAmmoniumDialogError("Enter a valid positive volume.");
+    if (Number.isNaN(volume)) {
+      setAmmoniumDialogError("Enter a valid numeric volume.");
+      return;
+    }
+    if (volume < MIN_AMMONIUM_VOLUME || volume > MAX_AMMONIUM_VOLUME) {
+      setAmmoniumDialogError(
+        `Enter a volume between ${MIN_AMMONIUM_VOLUME} mL and ${MAX_AMMONIUM_VOLUME} mL.`,
+      );
       return;
     }
 
-    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
-      setAmmoniumDialogError("Place the test tube on the workbench first.");
+    if (!glassContainerEquipmentId) {
+      setAmmoniumDialogError("Glass container is not available in this layout.");
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === glassContainerEquipmentId)) {
+      setAmmoniumDialogError("Place the glass container on the workbench first.");
       return;
     }
 
@@ -763,7 +832,7 @@ function ChemicalEquilibriumVirtualLab({
 
     setEquipmentPositions((prev) =>
       prev.map((pos) => {
-        if (pos.id !== "test_tubes") {
+        if (pos.id !== glassContainerEquipmentId) {
           return pos;
         }
 
@@ -789,9 +858,28 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${volume.toFixed(1)} mL of Ammonium hydroxide to the test tube.`);
+    setToastMessage(
+      `Added ${volume.toFixed(1)} mL of Ammonium hydroxide to the glass container.`,
+    );
     setTimeout(() => setToastMessage(null), 3000);
     handleAmmoniumDialogClose();
+  };
+
+  const handleRinseAction = () => {
+    if (!hasAmmoniumInGlassContainer || isRinsing) return;
+    setIsRinsing(true);
+    setShowRinseAnimation(true);
+    setToastMessage("Rinsing the glass rod with NH₄OH...");
+    if (rinseTimerRef.current) {
+      window.clearTimeout(rinseTimerRef.current);
+    }
+    rinseTimerRef.current = window.setTimeout(() => {
+      setIsRinsing(false);
+      setShowRinseAnimation(false);
+      setToastMessage("Rinsing complete.");
+      rinseTimerRef.current = null;
+      setTimeout(() => setToastMessage(null), 2000);
+    }, 2200);
   };
 
   const handleStartExperiment = () => {
@@ -813,6 +901,12 @@ function ChemicalEquilibriumVirtualLab({
     setStep3WaterAdded(false);
     historyRef.current = [];
     setUndoStackLength(0);
+    if (rinseTimerRef.current) {
+      window.clearTimeout(rinseTimerRef.current);
+      rinseTimerRef.current = null;
+    }
+    setIsRinsing(false);
+    setShowRinseAnimation(false);
     onResetTimer();
     if (onResetExperiment) onResetExperiment();
   };
@@ -823,6 +917,13 @@ function ChemicalEquilibriumVirtualLab({
       setTimeout(() => setToastMessage(null), 2500);
       return;
     }
+
+    if (rinseTimerRef.current) {
+      window.clearTimeout(rinseTimerRef.current);
+      rinseTimerRef.current = null;
+    }
+    setIsRinsing(false);
+    setShowRinseAnimation(false);
 
     const lastSnapshot = historyRef.current.pop();
     if (!lastSnapshot) {
@@ -861,7 +962,7 @@ function ChemicalEquilibriumVirtualLab({
       {usePhStyleLayout ? (
         <div className="w-full flex gap-4" style={{ minHeight: '75vh' }}>
           {/* Left Equipment Column */}
-          <aside className="w-56 flex-shrink-0 bg-white/90 border border-gray-200 rounded-lg p-4 flex flex-col">
+          <aside className="w-64 flex-shrink-0 bg-white/90 border border-gray-200 rounded-lg p-4 flex flex-col">
             <h4 className="text-sm font-semibold mb-3">Equipment</h4>
 
             {/* Experiment progress above equipment (PH experiment) */}
@@ -894,28 +995,52 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="flex-1 overflow-auto">
               <div className="space-y-3">
-                {equipmentList.map((equipment) => (
-                  <div
-                    key={equipment.id}
-                    data-testid={equipment.id}
-                    className="equipment-card justify-between"
-                    draggable
-                    onDragStart={(e) => {
-                      e.dataTransfer.setData("equipment", equipment.id);
-                      e.dataTransfer.effectAllowed = "move";
-                    }}
-                    onDoubleClick={() => handleEquipmentDrop(equipment.id, 200, 200)}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="equipment-icon">
-                        <div className="equipment-icon-inner">{equipment.icon}</div>
+                {equipmentList.map((equipment) => {
+                  const quickAddAction = getQuickAddAction(equipment.id);
+                  const isQuickAddCard = Boolean(quickAddAction);
+                  return (
+                    <div
+                      key={equipment.id}
+                      data-testid={equipment.id}
+                      className="equipment-card justify-between"
+                      draggable={!isQuickAddCard}
+                      onDragStart={(e) => {
+                        if (isQuickAddCard) return;
+                        e.dataTransfer.setData("equipment", equipment.id);
+                        e.dataTransfer.effectAllowed = "move";
+                      }}
+                      onDoubleClick={() => {
+                        if (!isQuickAddCard) {
+                          handleEquipmentDrop(equipment.id, 200, 200);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center space-x-3">
+                          <div className="equipment-icon">
+                            <div className="equipment-icon-inner">{equipment.icon}</div>
+                          </div>
+                          <div className="text-sm font-medium text-gray-700">{equipment.name}</div>
+                        </div>
+                        {isQuickAddCard && quickAddAction && (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              quickAddAction();
+                            }}
+                            className="px-3 py-1 text-xs font-semibold text-white bg-orange-500 rounded-full hover:bg-orange-600 transition"
+                          >
+                            ADD
+                          </button>
+                        )}
                       </div>
-                      <div className="text-sm font-medium text-gray-700">{equipment.name}</div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -1024,44 +1149,50 @@ function ChemicalEquilibriumVirtualLab({
                 equipmentPositions={equipmentPositions}
                 currentGuidedStep={currentStep}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
+                showRinseButton={hasAmmoniumInGlassContainer}
+                onRinse={handleRinseAction}
+                isRinsing={isRinsing}
               >
-                {equipmentPositions.map((pos) => {
-                  const equipment = equipmentList.find((eq) => eq.id === pos.id);
-                  return equipment ? (
-                    <Equipment
-                      key={pos.id}
-                      id={pos.id}
-                      name={equipment.name}
-                      icon={equipment.icon}
-                      onDrag={experimentStarted ? handleEquipmentDrop : () => {}}
-                      position={pos}
-                      chemicals={pos.chemicals}
-                      onChemicalDrop={experimentStarted ? handleChemicalDrop : () => {}}
-                      onRemove={experimentStarted ? handleEquipmentRemove : () => {}}
-                      onInteract={
-                        experimentStarted
-                          ? equipment.name.toLowerCase().includes("salt sample")
-                            ? handleSaltDialogOpen
-                            : equipment.name.toLowerCase().includes("ammonium") ||
-                              equipment.name.toLowerCase().includes("nh₄oh") ||
-                              equipment.name.toLowerCase().includes("nh4oh")
-                            ? handleAmmoniumDialogOpen
-                            : equipment.name.toLowerCase().includes("h2so4") ||
-                              equipment.name.toLowerCase().includes("h₂so₄") ||
-                              equipment.name.toLowerCase().includes("sulfuric")
-                            ? handleAcidDialogOpen
+                {equipmentPositions
+                  .filter((pos) => !isDryTestBottleEquipment(pos.id))
+                  .map((pos) => {
+                    const equipment = equipmentList.find((eq) => eq.id === pos.id);
+                    return equipment ? (
+                      <Equipment
+                        key={pos.id}
+                        id={pos.id}
+                        name={equipment.name}
+                        icon={equipment.icon}
+                        onDrag={experimentStarted ? handleEquipmentDrop : () => {}}
+                        position={pos}
+                        chemicals={pos.chemicals}
+                        onChemicalDrop={experimentStarted ? handleChemicalDrop : () => {}}
+                        onRemove={experimentStarted ? handleEquipmentRemove : () => {}}
+                        onInteract={
+                          experimentStarted
+                            ? equipment.name.toLowerCase().includes("salt sample")
+                              ? handleSaltDialogOpen
+                              : equipment.name.toLowerCase().includes("ammonium") ||
+                                equipment.name.toLowerCase().includes("nh₄oh") ||
+                                equipment.name.toLowerCase().includes("nh4oh")
+                              ? handleAmmoniumDialogOpen
+                              : equipment.name.toLowerCase().includes("h2so4") ||
+                                equipment.name.toLowerCase().includes("h₂so₄") ||
+                                equipment.name.toLowerCase().includes("sulfuric")
+                              ? handleAcidDialogOpen
+                              : undefined
                             : undefined
-                          : undefined
-                      }
-                      cobaltReactionState={cobaltReactionState}
-                      allEquipmentPositions={equipmentPositions}
-                      currentStep={currentStep}
-                      disabled={!experimentStarted}
-                      isDryTest={isDryTestExperiment}
-                      imageUrl={equipment.imageUrl}
-                    />
-                  ) : null;
-                })}
+                        }
+                        cobaltReactionState={cobaltReactionState}
+                        allEquipmentPositions={equipmentPositions}
+                        currentStep={currentStep}
+                        disabled={!experimentStarted}
+                        isDryTest={isDryTestExperiment}
+                        isRinseActive={pos.id === glassRodEquipmentId && showRinseAnimation}
+                        imageUrl={equipment.imageUrl}
+                      />
+                    ) : null;
+                  })}
               </WorkBench>
             </div>
 
@@ -1171,6 +1302,9 @@ function ChemicalEquilibriumVirtualLab({
                 equipmentPositions={equipmentPositions}
                 currentGuidedStep={currentStep}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
+                showRinseButton={hasAmmoniumInGlassContainer}
+                onRinse={handleRinseAction}
+                isRinsing={isRinsing}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
@@ -1357,13 +1491,16 @@ function ChemicalEquilibriumVirtualLab({
               <input
                 className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 type="number"
-                min="0"
+                min={MIN_AMMONIUM_VOLUME}
+                max={MAX_AMMONIUM_VOLUME}
                 step="0.1"
                 value={ammoniumVolume}
                 onChange={(event) => setAmmoniumVolume(event.target.value)}
-                placeholder="1.0"
+                placeholder="5.0"
               />
-              <p className="text-[11px] text-slate-500">Recommended range: 0.5 - 2.0 mL.</p>
+              <p className="text-[11px] text-slate-500">
+                Recommended range: {MIN_AMMONIUM_VOLUME} - {MAX_AMMONIUM_VOLUME} mL.
+              </p>
               {ammoniumDialogError && (
                 <p className="text-[11px] text-red-500">{ammoniumDialogError}</p>
               )}
@@ -1374,8 +1511,8 @@ function ChemicalEquilibriumVirtualLab({
                 <Button variant="ghost" size="sm" onClick={handleAmmoniumDialogClose}>
                   Cancel
                 </Button>
-                <Button size="sm" onClick={handleAddAmmoniumToTestTube}>
-                  Add to test tube
+                <Button size="sm" onClick={handleAddAmmoniumToGlassContainer}>
+                  Add to glass container
                 </Button>
               </div>
             </DialogFooter>

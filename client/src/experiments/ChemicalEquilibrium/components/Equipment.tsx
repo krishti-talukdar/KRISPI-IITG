@@ -11,6 +11,11 @@ import { GLASS_CONTAINER_IMAGE_URL } from "../constants";
 
 const GLASS_ROD_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3bdedfd838454c6b8a3cc44b25ecfdc0?format=webp&width=800";
 const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
+const GLASS_CONTAINER_MAX_VOLUME_ML = 12;
+const GLASS_CONTAINER_MIN_OVERLAY_HEIGHT = 16;
+const GLASS_CONTAINER_MAX_OVERLAY_HEIGHT = 94;
+const GLASS_CONTAINER_OVERLAY_WIDTH = 74;
+const GLASS_CONTAINER_OVERLAY_BOTTOM = 12;
 
 interface EquipmentProps {
   id: string;
@@ -38,6 +43,7 @@ interface EquipmentProps {
   isDryTest?: boolean;
   disabled?: boolean;
   imageUrl?: string;
+  isRinseActive?: boolean;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -56,6 +62,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   isDryTest = false,
   disabled = false,
   imageUrl,
+  isRinseActive = false,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
@@ -418,15 +425,13 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isGlassRodEquipment) {
+      const rodVisualClasses = `w-28 h-6 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`;
       return (
         <div
           className="relative flex flex-col items-center pointer-events-none"
           style={{ marginTop: "28px" }}
         >
-          <div
-            className="w-28 h-6 -rotate-12"
-            style={{ transform: "scale(5)", transformOrigin: "center" }}
-          >
+          <div className={rodVisualClasses}>
             <img
               src={GLASS_ROD_IMAGE_URL}
               alt="Glass Rod"
@@ -451,6 +456,17 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
     if (isGlassContainerEquipment) {
       const containerImage = imageUrl ?? GLASS_CONTAINER_IMAGE_URL;
+      const ammoniumAmount = chemicals
+        .filter((chemical) => chemical.id === "nh4oh")
+        .reduce((sum, chemical) => sum + (chemical.amount || 0), 0);
+      const effectiveVolume = Math.max(0, Math.min(ammoniumAmount, GLASS_CONTAINER_MAX_VOLUME_ML));
+      const fillRatio = GLASS_CONTAINER_MAX_VOLUME_ML
+        ? effectiveVolume / GLASS_CONTAINER_MAX_VOLUME_ML
+        : 0;
+      const overlayHeight =
+        GLASS_CONTAINER_MIN_OVERLAY_HEIGHT +
+        fillRatio * (GLASS_CONTAINER_MAX_OVERLAY_HEIGHT - GLASS_CONTAINER_MIN_OVERLAY_HEIGHT);
+      const showAmmoniumOverlay = ammoniumAmount > 0;
       return (
         <div className="relative flex flex-col items-center pointer-events-none">
           <img
@@ -458,6 +474,23 @@ export const Equipment: React.FC<EquipmentProps> = ({
             alt="Glass container"
             className="max-w-[160px] max-h-[160px] object-contain drop-shadow-lg"
           />
+          {showAmmoniumOverlay && (
+            <div
+              className="absolute left-1/2"
+              style={{
+                width: `${GLASS_CONTAINER_OVERLAY_WIDTH}px`,
+                height: `${Math.max(GLASS_CONTAINER_MIN_OVERLAY_HEIGHT, overlayHeight)}px`,
+                bottom: `${GLASS_CONTAINER_OVERLAY_BOTTOM}px`,
+                transform: "translateX(-50%)",
+                borderRadius: "0px 0px 14px 14px",
+                background:
+                  "linear-gradient(180deg, rgba(204, 233, 255, 0.98), rgba(184, 210, 255, 0.9))",
+                boxShadow:
+                  "inset 0 24px 38px rgba(204, 233, 255, 0.95), 0 0 25px rgba(166, 199, 255, 0.5)",
+                transition: "height 350ms ease",
+              }}
+            />
+          )}
         </div>
       );
     }
@@ -480,10 +513,6 @@ export const Equipment: React.FC<EquipmentProps> = ({
         (sum, chemical) => sum + (chemical.amount || 0),
         0,
       );
-      const volumeLabel =
-        totalChemicalsAmount > 0
-          ? `${totalChemicalsAmount.toFixed(1)} mL`
-          : null;
       const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
       const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
       const hasSaltOnly = hasSaltSample && !hasAcidSample;
@@ -505,11 +534,6 @@ export const Equipment: React.FC<EquipmentProps> = ({
       return (
           <div className="relative flex flex-col items-center">
             <div className="relative">
-              {volumeLabel && (
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-200 shadow-sm text-[10px] font-semibold text-gray-700">
-                  {volumeLabel}
-                </div>
-              )}
               <div className="relative w-32 h-[18rem]">
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2F5b489eed84cd44f89c5431dbe9fd14d3%2F3f3b9fb2343b4e74a0b66661affefadb?format=webp&width=800"

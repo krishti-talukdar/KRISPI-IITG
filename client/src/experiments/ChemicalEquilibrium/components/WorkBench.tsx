@@ -1,5 +1,22 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { EquipmentPosition } from "../types";
+
+const DRY_TEST_VAPOR_PUFFS = [
+  { offsetX: -22, duration: "3.8s", delay: "0s", scale: 0.85 },
+  { offsetX: 6, duration: "3.2s", delay: "0.4s", scale: 1.05 },
+  { offsetX: 18, duration: "4.1s", delay: "0.2s", scale: 0.9 },
+] as const;
+
+const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
+const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.7, yPercent: 0.42 };
+
+type RinseLayout = {
+  buttonLeft: number;
+  buttonTop: number;
+  rodLeft: number;
+  rodTop: number;
+  containerTop: number;
+};
 
 interface WorkBenchProps {
   onDrop: (id: string, x: number, y: number) => void;
@@ -10,6 +27,9 @@ interface WorkBenchProps {
   currentGuidedStep?: number;
   totalGuidedSteps?: number;
   equipmentPositions?: EquipmentPosition[];
+  showRinseButton?: boolean;
+  onRinse?: () => void;
+  isRinsing?: boolean;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -21,9 +41,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   currentGuidedStep = 1,
   totalGuidedSteps,
   equipmentPositions = [],
+  showRinseButton = false,
+  onRinse,
+  isRinsing = false,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
+  const [rinseLayout, setRinseLayout] = useState<RinseLayout | null>(null);
 
   useEffect(() => {
     if (isRunning) {
@@ -85,6 +109,16 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const [heatCharge, setHeatCharge] = useState(0);
   const bunsenBurnerId = "bunsen-burner-virtual-heat-source-3";
   const bunsenPosition = equipmentPositions.find((pos) => pos.id === bunsenBurnerId) ?? null;
+  const testTubePosition = useMemo(
+    () => equipmentPositions.find((pos) => pos.id === "test_tubes") ?? null,
+    [equipmentPositions],
+  );
+  const vaporAnchorCoords = testTubePosition
+    ? {
+        left: testTubePosition.x,
+        top: testTubePosition.y - 110,
+      }
+    : null;
   const [heatButtonCoords, setHeatButtonCoords] = useState<{ left: number; top: number } | null>(null);
   const [flameAnchorCoords, setFlameAnchorCoords] = useState<{ left: number; top: number } | null>(null);
   const defaultFlameCoords = bunsenPosition
@@ -129,17 +163,67 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     const bunsenRect = bunsenElement.getBoundingClientRect();
     const flameLeft =
       bunsenRect.left - workbenchRect.left + bunsenRect.width / 2;
-    const flameOffset = Math.min(60, Math.max(30, bunsenRect.height * 0.35));
-    const flameTop =
-      bunsenRect.top - workbenchRect.top - flameOffset;
+    const defaultFlameOffset = Math.min(
+      60,
+      Math.max(30, bunsenRect.height * 0.35),
+    );
+    const heatingLift = Math.min(
+      18,
+      Math.max(8, bunsenRect.height * 0.06),
+    );
+    const idleFlameTop = bunsenRect.top - workbenchRect.top - defaultFlameOffset;
+    const heatingFlameTop = idleFlameTop - heatingLift;
 
-    setFlameAnchorCoords({ left: flameLeft, top: flameTop });
+    setFlameAnchorCoords({
+      left: flameLeft,
+      top: isBunsenHeating ? heatingFlameTop : idleFlameTop,
+    });
   }, [
     bunsenBurnerId,
     bunsenPosition?.x,
     bunsenPosition?.y,
     isDryTestWorkbench,
+    isBunsenHeating,
   ]);
+
+  const updateRinseLayout = useCallback(() => {
+    if (!isDryTestWorkbench || !workbenchRef.current) {
+      setRinseLayout(null);
+      return;
+    }
+
+    const rect = workbenchRef.current.getBoundingClientRect();
+    const clampValue = (value: number, minValue: number, maxValue: number) =>
+      Math.max(minValue, Math.min(maxValue, value));
+    const safeWidth = Math.max(32, rect.width - 32);
+    const safeHeight = Math.max(32, rect.height - 32);
+
+    const rodLeft = clampValue(
+      Math.round(rect.width * DRY_WORKBENCH_GLASS_ROD_POSITION.xPercent),
+      32,
+      safeWidth,
+    );
+    const rodTop = clampValue(
+      Math.round(rect.height * DRY_WORKBENCH_GLASS_ROD_POSITION.yPercent),
+      32,
+      safeHeight,
+    );
+    const containerTop = clampValue(
+      Math.round(rect.height * DRY_WORKBENCH_GLASS_CONTAINER_POSITION.yPercent),
+      32,
+      safeHeight,
+    );
+    const buttonLeft = clampValue(rodLeft + 58, 32, Math.max(32, rect.width - 110));
+    const buttonTop = clampValue(rodTop - 10, 12, Math.max(12, rect.height - 50));
+
+    setRinseLayout({
+      buttonLeft,
+      buttonTop,
+      rodLeft,
+      rodTop,
+      containerTop,
+    });
+  }, [isDryTestWorkbench]);
 
   // PH-specific classes
   const phRootClass =
@@ -163,6 +247,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     const handleResize = () => {
       updateHeatButtonCoords();
       updateFlamePosition();
+      updateRinseLayout();
     };
 
     handleResize();
@@ -170,17 +255,27 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [updateHeatButtonCoords, updateFlamePosition]);
+  }, [updateHeatButtonCoords, updateFlamePosition, updateRinseLayout]);
 
   useEffect(() => {
     if (!isDryTestWorkbench) {
+      setRinseLayout(null);
       return;
     }
 
-    if (isBunsenHeating) {
-      if (heatIntervalRef.current) {
-        clearInterval(heatIntervalRef.current);
-      }
+    updateHeatButtonCoords();
+    updateFlamePosition();
+    updateRinseLayout();
+  }, [
+    isDryTestWorkbench,
+    isBunsenHeating,
+    updateHeatButtonCoords,
+    updateFlamePosition,
+    updateRinseLayout,
+  ]);
+
+  useEffect(() => {
+    if (!isDryTestWorkbench) {
       heatIntervalRef.current = window.setInterval(() => {
         setHeatCharge((prev) => Math.min(prev + 0.05, 1));
       }, 120);
@@ -421,6 +516,29 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   aria-hidden="true"
                 />
               )}
+              {isBunsenHeating && vaporAnchorCoords && (
+                <div
+                  className="dry-test-vapor-cloud"
+                  style={{
+                    "--vap-anchor-left": `${vaporAnchorCoords.left}px`,
+                    "--vap-anchor-top": `${vaporAnchorCoords.top}px`,
+                  } as React.CSSProperties}
+                  aria-hidden="true"
+                >
+                  {DRY_TEST_VAPOR_PUFFS.map((puff, index) => (
+                    <span
+                      key={`${index}-${puff.delay}`}
+                      className="dry-test-vapor-puff"
+                      style={{
+                        "--vap-offset-x": `${puff.offsetX}px`,
+                        "--vap-duration": puff.duration,
+                        "--vap-delay": puff.delay,
+                        "--vap-scale": puff.scale,
+                      } as React.CSSProperties}
+                    />
+                  ))}
+                </div>
+              )}
               {heatButtonCoords && (
                 <div
                   className="heat-control-panel"
@@ -484,6 +602,20 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
             </>
           )}
         </>
+      )}
+      {showRinseButton && rinseLayout && (
+        <button
+          type="button"
+          onClick={() => onRinse?.()}
+          disabled={isRinsing}
+          className="absolute px-3 py-1.5 text-[10px] tracking-[0.4em] uppercase rounded-full bg-slate-900 text-white shadow-2xl border border-white/40"
+          style={{
+            left: rinseLayout.buttonLeft,
+            top: rinseLayout.buttonTop,
+          }}
+        >
+          RINSE
+        </button>
       )}
       <style>{`
 .heat-control-panel {
@@ -557,10 +689,80 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   opacity: 0.5;
   animation-duration: 1.4s;
 }
+.dry-test-vapor-cloud {
+  position: absolute;
+  pointer-events: none;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  left: var(--vap-anchor-left, 0);
+  top: var(--vap-anchor-top, 0);
+  transform: translate(-50%, -100%);
+}
+.dry-test-vapor-puff {
+  position: absolute;
+  bottom: 0;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.8);
+  filter: blur(0.5px);
+  transform: translate(var(--vap-offset-x, 0), 0) scale(var(--vap-scale, 1));
+  animation: dryTestVaporRise var(--vap-duration, 3.5s) var(--vap-delay, 0s) infinite;
+  opacity: 0;
+}
+@keyframes dryTestVaporRise {
+  0% {
+    opacity: 0;
+    transform: translate(var(--vap-offset-x, 0), 0) scale(var(--vap-scale, 1));
+  }
+  20% {
+    opacity: 0.35;
+  }
+  60% {
+    opacity: 0.9;
+    transform: translate(calc(var(--vap-offset-x, 0) + 4px), -58px) scale(calc(var(--vap-scale, 1) * 1.15));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--vap-offset-x, 0) + 10px), -120px) scale(calc(var(--vap-scale, 1) * 1.4));
+  }
+}
 @keyframes bunsenFlame {
   0% { opacity: 0.85; transform: translate(-50%, 0) scaleY(1); }
   50% { opacity: 1; transform: translate(-50%, -6px) scaleY(1.05); }
   100% { opacity: 0.8; transform: translate(-50%, 0) scaleY(0.95); }
+}
+.rod-visual {
+  transform-origin: center;
+  transform: scale(5) rotate(-12deg);
+  will-change: transform;
+}
+.rod-visual--rinsing {
+  animation: rodRinseDip 2.2s ease-in-out both;
+}
+@keyframes rodRinseDip {
+  0% {
+    transform: scale(5) rotate(-12deg) translate(0, 0);
+  }
+  25% {
+    transform: scale(5) rotate(-14deg) translate(-6px, 20px);
+  }
+  45% {
+    transform: scale(5) rotate(-18deg) translate(8px, 42px);
+  }
+  65% {
+    transform: scale(5) rotate(-16deg) translate(-4px, 34px);
+  }
+  85% {
+    transform: scale(5) rotate(-13deg) translate(5px, 28px);
+  }
+  100% {
+    transform: scale(5) rotate(-12deg) translate(0, 0);
+  }
 }
       `}</style>
     </div>
