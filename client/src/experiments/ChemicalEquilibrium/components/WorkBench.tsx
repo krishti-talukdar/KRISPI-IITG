@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import type { EquipmentPosition } from "../types";
 
 interface WorkBenchProps {
   onDrop: (id: string, x: number, y: number) => void;
@@ -8,6 +9,7 @@ interface WorkBenchProps {
   experimentTitle: string;
   currentGuidedStep?: number;
   totalGuidedSteps?: number;
+  equipmentPositions?: EquipmentPosition[];
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
