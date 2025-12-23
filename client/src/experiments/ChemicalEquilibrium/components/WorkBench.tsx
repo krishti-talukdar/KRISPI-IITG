@@ -129,9 +129,18 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     const bunsenRect = bunsenElement.getBoundingClientRect();
     const flameLeft =
       bunsenRect.left - workbenchRect.left + bunsenRect.width / 2;
-    const flameOffset = Math.min(60, Math.max(30, bunsenRect.height * 0.35));
+    const defaultFlameOffset = Math.min(
+      60,
+      Math.max(30, bunsenRect.height * 0.35),
+    );
+    const heatingTipOffset = Math.min(
+      12,
+      Math.max(4, bunsenRect.height * 0.03),
+    );
     const flameTop =
-      bunsenRect.top - workbenchRect.top - flameOffset;
+      bunsenRect.top -
+      workbenchRect.top +
+      (isBunsenHeating ? heatingTipOffset : -defaultFlameOffset);
 
     setFlameAnchorCoords({ left: flameLeft, top: flameTop });
   }, [
@@ -139,6 +148,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     bunsenPosition?.x,
     bunsenPosition?.y,
     isDryTestWorkbench,
+    isBunsenHeating,
   ]);
 
   // PH-specific classes
@@ -177,10 +187,17 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       return;
     }
 
-    if (isBunsenHeating) {
-      if (heatIntervalRef.current) {
-        clearInterval(heatIntervalRef.current);
-      }
+    updateHeatButtonCoords();
+    updateFlamePosition();
+  }, [
+    isDryTestWorkbench,
+    isBunsenHeating,
+    updateHeatButtonCoords,
+    updateFlamePosition,
+  ]);
+
+  useEffect(() => {
+    if (!isDryTestWorkbench) {
       heatIntervalRef.current = window.setInterval(() => {
         setHeatCharge((prev) => Math.min(prev + 0.05, 1));
       }, 120);
