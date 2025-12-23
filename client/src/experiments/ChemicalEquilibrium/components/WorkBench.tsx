@@ -480,7 +480,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         </>
       )}
       <style>{`
-.heat-action-wrapper {
+.heat-control-panel {
   position: absolute;
   pointer-events: none;
   display: flex;
@@ -490,21 +490,21 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   top: var(--heat-action-top, 0);
   transform: translateY(-50%);
 }
-.heat-control-button {
+.heat-trigger-button {
   pointer-events: auto;
 }
-.heat-progress-group {
+.heat-progress-panel {
   pointer-events: none;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
-.heat-progress-label {
+.heat-progress-status {
   font-size: 11px;
   font-weight: 600;
   color: #1f2937;
 }
-.heat-progress-indicator {
+.heat-progress-track {
   width: 72px;
   height: 6px;
   border-radius: 9999px;
@@ -520,21 +520,38 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   background: linear-gradient(90deg, #fb923c, #ef4444);
   transition: width 180ms ease;
 }
-.heat-flame-layer {
+.bunsen-flame-layer {
   position: absolute;
-  width: 40px;
-  height: 96px;
+  width: 44px;
+  height: 110px;
   pointer-events: none;
   left: var(--heat-flame-left, 0);
   top: var(--heat-flame-top, 0);
   transform: translate(-50%, 0);
-  background: radial-gradient(circle at 50% 0%, rgba(251, 146, 60, 0.85), rgba(239, 68, 68, 0.6) 45%, rgba(234, 88, 12, 0) 70%);
-  filter: blur(0.5px);
+  background: radial-gradient(circle at 50% 0%, rgba(251, 146, 60, 0.9), rgba(239, 68, 68, 0.6) 45%, rgba(234, 88, 12, 0) 72%);
+  filter: blur(0.4px) drop-shadow(0 0 20px rgba(251, 146, 60, 0.6));
+  border-radius: 50% 50% 40% 40%;
   animation: bunsenFlame 0.9s ease-in-out infinite;
+  z-index: 30;
+}
+.bunsen-flame-layer::after {
+  content: "";
+  position: absolute;
+  inset: 30% 25% 0;
+  background: radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.8), rgba(251, 146, 60, 0));
+  border-radius: inherit;
+  opacity: 0.6;
+}
+.bunsen-flame-layer.flame-burning {
+  opacity: 1;
+}
+.bunsen-flame-layer.flame-embers {
+  opacity: 0.5;
+  animation-duration: 1.4s;
 }
 @keyframes bunsenFlame {
   0% { opacity: 0.85; transform: translate(-50%, 0) scaleY(1); }
-  50% { opacity: 1; transform: translate(-50%, -5px) scaleY(1.08); }
+  50% { opacity: 1; transform: translate(-50%, -6px) scaleY(1.05); }
   100% { opacity: 0.8; transform: translate(-50%, 0) scaleY(0.95); }
 }
       `}</style>
