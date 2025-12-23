@@ -100,7 +100,7 @@ const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.45, yPercent: 0.82 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
-  "concentrated-h-so-3": {
+  "concentrated-h-so-2": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
     yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING,
   },
