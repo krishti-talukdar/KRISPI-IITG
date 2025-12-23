@@ -482,7 +482,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
                 height: `${Math.max(GLASS_CONTAINER_MIN_OVERLAY_HEIGHT, overlayHeight)}px`,
                 bottom: `${GLASS_CONTAINER_OVERLAY_BOTTOM}px`,
                 transform: "translateX(-50%)",
-                borderRadius: "0px",
+                borderRadius: "0px 0px 14px 14px",
                 background:
                   "linear-gradient(180deg, rgba(204, 233, 255, 0.98), rgba(184, 210, 255, 0.9))",
                 boxShadow:
