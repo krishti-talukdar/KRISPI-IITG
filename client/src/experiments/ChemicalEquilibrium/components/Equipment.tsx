@@ -451,6 +451,11 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
     if (isGlassContainerEquipment) {
       const containerImage = imageUrl ?? GLASS_CONTAINER_IMAGE_URL;
+      const ammoniumAmount = chemicals
+        .filter((chemical) => chemical.id === "nh4oh")
+        .reduce((sum, chemical) => sum + (chemical.amount || 0), 0);
+      const overlayHeight = Math.min(90, (Math.min(ammoniumAmount, 5) / 5) * 90);
+      const showAmmoniumOverlay = ammoniumAmount > 0;
       return (
         <div className="relative flex flex-col items-center pointer-events-none">
           <img
@@ -458,6 +463,16 @@ export const Equipment: React.FC<EquipmentProps> = ({
             alt="Glass container"
             className="max-w-[160px] max-h-[160px] object-contain drop-shadow-lg"
           />
+          {showAmmoniumOverlay && (
+            <div
+              className="absolute bottom-6 left-1/2 -translate-x-1/2 w-14 rounded-full bg-white/80"
+              style={{
+                height: `${Math.max(18, overlayHeight)}px`,
+                boxShadow:
+                  "inset 0 16px 30px rgba(255,255,255,0.8), 0 0 25px rgba(255,255,255,0.45)",
+              }}
+            />
+          )}
         </div>
       );
     }
