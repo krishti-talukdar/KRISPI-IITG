@@ -88,11 +88,11 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const [heatButtonCoords, setHeatButtonCoords] = useState<{ left: number; top: number } | null>(null);
   const [flameAnchorCoords, setFlameAnchorCoords] = useState<{ left: number; top: number } | null>(null);
   const defaultFlameCoords = bunsenPosition
-    ? {
-        left: bunsenPosition.x + 28,
-        top: bunsenPosition.y - 62,
-      }
-    : null;
+  ? {
+      left: bunsenPosition.x + 32,
+      top: bunsenPosition.y - 96,
+    }
+  : null;
   const flameCoords = flameAnchorCoords ?? defaultFlameCoords;
   const updateHeatButtonCoords = useCallback(() => {
     if (!isDryTestWorkbench || !bunsenPosition || !workbenchRef.current) {
@@ -128,11 +128,18 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     const workbenchRect = workbenchRef.current.getBoundingClientRect();
     const bunsenRect = bunsenElement.getBoundingClientRect();
     const flameLeft =
-      bunsenRect.left + bunsenRect.width / 2 - workbenchRect.left;
-    const flameTop = bunsenRect.top - workbenchRect.top - 16;
+      bunsenRect.left - workbenchRect.left + bunsenRect.width / 2;
+    const flameOffset = Math.min(60, Math.max(30, bunsenRect.height * 0.35));
+    const flameTop =
+      bunsenRect.top - workbenchRect.top - flameOffset;
 
     setFlameAnchorCoords({ left: flameLeft, top: flameTop });
-  }, [isDryTestWorkbench, bunsenBurnerId]);
+  }, [
+    bunsenBurnerId,
+    bunsenPosition?.x,
+    bunsenPosition?.y,
+    isDryTestWorkbench,
+  ]);
 
   // PH-specific classes
   const phRootClass =
