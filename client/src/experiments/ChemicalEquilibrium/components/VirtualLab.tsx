@@ -307,6 +307,15 @@ function ChemicalEquilibriumVirtualLab({
     selectedChemical,
   });
 
+  const DRY_TEST_BOTTLE_IDS = [
+    "salt-sample",
+    "concentrated-h-so",
+    "ammonium-hydroxide-nh-oh",
+  ];
+
+  const isDryTestBottleEquipment = (equipmentId: string) =>
+    DRY_TEST_BOTTLE_IDS.some((token) => equipmentId.startsWith(token));
+
   const pushHistorySnapshot = () => {
     if (!isDryTestExperiment) return;
     const snapshot = captureLabSnapshot();
