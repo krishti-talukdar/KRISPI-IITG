@@ -660,6 +660,21 @@ function ChemicalEquilibriumVirtualLab({
     setAmmoniumDialogError(null);
   };
 
+  const getQuickAddAction = (equipmentId: string) => {
+    if (equipmentId.startsWith("salt-sample")) {
+      return handleSaltDialogOpen;
+    }
+    if (equipmentId.startsWith("concentrated-h-so")) {
+      return handleAcidDialogOpen;
+    }
+    if (equipmentId.startsWith("ammonium-hydroxide-nh-oh") ||
+      equipmentId.startsWith("ammonium-hydroxide")
+    ) {
+      return handleAmmoniumDialogOpen;
+    }
+    return undefined;
+  };
+
   const handleAddSaltToTestTube = () => {
     const mass = parseFloat(saltMass);
     if (Number.isNaN(mass) || mass <= 0) {
