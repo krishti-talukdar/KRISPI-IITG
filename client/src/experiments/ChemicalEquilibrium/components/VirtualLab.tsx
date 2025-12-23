@@ -891,6 +891,12 @@ function ChemicalEquilibriumVirtualLab({
     setStep3WaterAdded(false);
     historyRef.current = [];
     setUndoStackLength(0);
+    if (rinseTimerRef.current) {
+      window.clearTimeout(rinseTimerRef.current);
+      rinseTimerRef.current = null;
+    }
+    setIsRinsing(false);
+    setShowRinseAnimation(false);
     onResetTimer();
     if (onResetExperiment) onResetExperiment();
   };
