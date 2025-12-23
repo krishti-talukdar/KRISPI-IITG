@@ -480,10 +480,6 @@ export const Equipment: React.FC<EquipmentProps> = ({
         (sum, chemical) => sum + (chemical.amount || 0),
         0,
       );
-      const volumeLabel =
-        totalChemicalsAmount > 0
-          ? `${totalChemicalsAmount.toFixed(1)} mL`
-          : null;
       const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
       const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
       const hasSaltOnly = hasSaltSample && !hasAcidSample;
@@ -505,11 +501,6 @@ export const Equipment: React.FC<EquipmentProps> = ({
       return (
           <div className="relative flex flex-col items-center">
             <div className="relative">
-              {volumeLabel && (
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-gray-200 shadow-sm text-[10px] font-semibold text-gray-700">
-                  {volumeLabel}
-                </div>
-              )}
               <div className="relative w-32 h-[18rem]">
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2F5b489eed84cd44f89c5431dbe9fd14d3%2F3f3b9fb2343b4e74a0b66661affefadb?format=webp&width=800"
