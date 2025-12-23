@@ -490,8 +490,9 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   position: absolute;
   pointer-events: none;
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
   left: var(--heat-action-left, 0);
   top: var(--heat-action-top, 0);
   transform: translateY(-50%);
@@ -499,11 +500,12 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 .heat-trigger-button {
   pointer-events: auto;
 }
-.heat-progress-panel {
+.heat-status-panel {
   pointer-events: none;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  width: 100%;
 }
 .heat-progress-status {
   font-size: 11px;
