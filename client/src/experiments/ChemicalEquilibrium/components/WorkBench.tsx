@@ -87,12 +87,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const bunsenBurnerId = "bunsen-burner-virtual-heat-source-3";
   const bunsenPosition = equipmentPositions.find((pos) => pos.id === bunsenBurnerId) ?? null;
   const [heatButtonCoords, setHeatButtonCoords] = useState<{ left: number; top: number } | null>(null);
-  const flameCoords = bunsenPosition
+  const [flameAnchorCoords, setFlameAnchorCoords] = useState<{ left: number; top: number } | null>(null);
+  const defaultFlameCoords = bunsenPosition
     ? {
         left: bunsenPosition.x + 28,
         top: bunsenPosition.y - 62,
       }
     : null;
+  const flameCoords = flameAnchorCoords ?? defaultFlameCoords;
   const updateHeatButtonCoords = useCallback(() => {
     if (!isDryTestWorkbench || !bunsenPosition || !workbenchRef.current) {
       setHeatButtonCoords(null);
