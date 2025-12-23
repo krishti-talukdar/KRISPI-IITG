@@ -203,6 +203,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
   return (
     <div
+      ref={workbenchRef}
       data-workbench="true"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
