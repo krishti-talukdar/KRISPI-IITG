@@ -11,6 +11,11 @@ import { GLASS_CONTAINER_IMAGE_URL } from "../constants";
 
 const GLASS_ROD_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3bdedfd838454c6b8a3cc44b25ecfdc0?format=webp&width=800";
 const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
+const GLASS_CONTAINER_MAX_VOLUME_ML = 12;
+const GLASS_CONTAINER_MIN_OVERLAY_HEIGHT = 16;
+const GLASS_CONTAINER_MAX_OVERLAY_HEIGHT = 94;
+const GLASS_CONTAINER_OVERLAY_WIDTH = 74;
+const GLASS_CONTAINER_OVERLAY_BOTTOM = 12;
 
 interface EquipmentProps {
   id: string;
@@ -454,7 +459,13 @@ export const Equipment: React.FC<EquipmentProps> = ({
       const ammoniumAmount = chemicals
         .filter((chemical) => chemical.id === "nh4oh")
         .reduce((sum, chemical) => sum + (chemical.amount || 0), 0);
-      const overlayHeight = Math.min(90, (Math.min(ammoniumAmount, 5) / 5) * 90);
+      const effectiveVolume = Math.max(0, Math.min(ammoniumAmount, GLASS_CONTAINER_MAX_VOLUME_ML));
+      const fillRatio = GLASS_CONTAINER_MAX_VOLUME_ML
+        ? effectiveVolume / GLASS_CONTAINER_MAX_VOLUME_ML
+        : 0;
+      const overlayHeight =
+        GLASS_CONTAINER_MIN_OVERLAY_HEIGHT +
+        fillRatio * (GLASS_CONTAINER_MAX_OVERLAY_HEIGHT - GLASS_CONTAINER_MIN_OVERLAY_HEIGHT);
       const showAmmoniumOverlay = ammoniumAmount > 0;
       return (
         <div className="relative flex flex-col items-center pointer-events-none">
@@ -465,15 +476,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
           />
           {showAmmoniumOverlay && (
             <div
-              className="absolute bottom-6 left-1/2 -translate-x-1/2"
+              className="absolute left-1/2"
               style={{
-                width: "66px",
-                height: `${Math.max(18, overlayHeight)}px`,
-                borderRadius: "8px",
+                width: `${GLASS_CONTAINER_OVERLAY_WIDTH}px`,
+                height: `${Math.max(GLASS_CONTAINER_MIN_OVERLAY_HEIGHT, overlayHeight)}px`,
+                bottom: `${GLASS_CONTAINER_OVERLAY_BOTTOM}px`,
+                transform: "translateX(-50%)",
+                borderRadius: "0px",
                 background:
                   "linear-gradient(180deg, rgba(204, 233, 255, 0.98), rgba(184, 210, 255, 0.9))",
                 boxShadow:
-                  "inset 0 18px 35px rgba(204, 233, 255, 0.95), 0 0 20px rgba(166, 199, 255, 0.5)",
+                  "inset 0 24px 38px rgba(204, 233, 255, 0.95), 0 0 25px rgba(166, 199, 255, 0.5)",
+                transition: "height 350ms ease",
               }}
             />
           )}
