@@ -261,16 +261,19 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
   useEffect(() => {
     if (!isDryTestWorkbench) {
+      setRinseLayout(null);
       return;
     }
 
     updateHeatButtonCoords();
     updateFlamePosition();
+    updateRinseLayout();
   }, [
     isDryTestWorkbench,
     isBunsenHeating,
     updateHeatButtonCoords,
     updateFlamePosition,
+    updateRinseLayout,
   ]);
 
   useEffect(() => {
