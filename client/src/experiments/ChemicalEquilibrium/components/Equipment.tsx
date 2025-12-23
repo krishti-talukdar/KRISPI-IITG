@@ -425,15 +425,13 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isGlassRodEquipment) {
+      const rodVisualClasses = `w-28 h-6 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`;
       return (
         <div
           className="relative flex flex-col items-center pointer-events-none"
           style={{ marginTop: "28px" }}
         >
-          <div
-            className="w-28 h-6 -rotate-12"
-            style={{ transform: "scale(5)", transformOrigin: "center" }}
-          >
+          <div className={rodVisualClasses}>
             <img
               src={GLASS_ROD_IMAGE_URL}
               alt="Glass Rod"
