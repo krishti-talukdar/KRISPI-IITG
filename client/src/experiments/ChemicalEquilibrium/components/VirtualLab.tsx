@@ -1300,6 +1300,10 @@ function ChemicalEquilibriumVirtualLab({
                 equipmentPositions={equipmentPositions}
                 currentGuidedStep={currentStep}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
+                showRinseButton={hasAmmoniumInGlassContainer}
+                onRinse={handleRinseAction}
+                isRinsing={isRinsing}
+                showRinseAnimation={showRinseAnimation}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
