@@ -212,6 +212,9 @@ function ChemicalEquilibriumVirtualLab({
     useState<Measurements>(DEFAULT_MEASUREMENTS);
   const historyRef = useRef<LabSnapshot[]>([]);
   const [undoStackLength, setUndoStackLength] = useState(0);
+  const [isRinsing, setIsRinsing] = useState(false);
+  const [showRinseAnimation, setShowRinseAnimation] = useState(false);
+  const rinseTimerRef = useRef<number | null>(null);
 
   // Choose chemicals and equipment based on experiment
   const isPHExperiment = experimentTitle === PHHClExperiment.title;
