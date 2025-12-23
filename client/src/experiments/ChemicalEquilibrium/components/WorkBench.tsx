@@ -1,5 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { EquipmentPosition } from "../types";
+
+const DRY_TEST_VAPOR_PUFFS = [
+  { offsetX: -22, duration: "3.8s", delay: "0s", scale: 0.85 },
+  { offsetX: 6, duration: "3.2s", delay: "0.4s", scale: 1.05 },
+  { offsetX: 18, duration: "4.1s", delay: "0.2s", scale: 0.9 },
+] as const;
 
 interface WorkBenchProps {
   onDrop: (id: string, x: number, y: number) => void;
@@ -85,6 +91,16 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const [heatCharge, setHeatCharge] = useState(0);
   const bunsenBurnerId = "bunsen-burner-virtual-heat-source-3";
   const bunsenPosition = equipmentPositions.find((pos) => pos.id === bunsenBurnerId) ?? null;
+  const testTubePosition = useMemo(
+    () => equipmentPositions.find((pos) => pos.id === "test_tubes") ?? null,
+    [equipmentPositions],
+  );
+  const vaporAnchorCoords = testTubePosition
+    ? {
+        left: testTubePosition.x,
+        top: testTubePosition.y - 110,
+      }
+    : null;
   const [heatButtonCoords, setHeatButtonCoords] = useState<{ left: number; top: number } | null>(null);
   const [flameAnchorCoords, setFlameAnchorCoords] = useState<{ left: number; top: number } | null>(null);
   const defaultFlameCoords = bunsenPosition
@@ -439,6 +455,29 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   aria-hidden="true"
                 />
               )}
+              {isBunsenHeating && vaporAnchorCoords && (
+                <div
+                  className="dry-test-vapor-cloud"
+                  style={{
+                    "--vap-anchor-left": `${vaporAnchorCoords.left}px`,
+                    "--vap-anchor-top": `${vaporAnchorCoords.top}px`,
+                  } as React.CSSProperties}
+                  aria-hidden="true"
+                >
+                  {DRY_TEST_VAPOR_PUFFS.map((puff, index) => (
+                    <span
+                      key={`${index}-${puff.delay}`}
+                      className="dry-test-vapor-puff"
+                      style={{
+                        "--vap-offset-x": `${puff.offsetX}px`,
+                        "--vap-duration": puff.duration,
+                        "--vap-delay": puff.delay,
+                        "--vap-scale": puff.scale,
+                      } as React.CSSProperties}
+                    />
+                  ))}
+                </div>
+              )}
               {heatButtonCoords && (
                 <div
                   className="heat-control-panel"
@@ -574,6 +613,48 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 .bunsen-flame-layer.flame-embers {
   opacity: 0.5;
   animation-duration: 1.4s;
+}
+.dry-test-vapor-cloud {
+  position: absolute;
+  pointer-events: none;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  left: var(--vap-anchor-left, 0);
+  top: var(--vap-anchor-top, 0);
+  transform: translate(-50%, -100%);
+}
+.dry-test-vapor-puff {
+  position: absolute;
+  bottom: 0;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.8);
+  filter: blur(0.5px);
+  transform: translate(var(--vap-offset-x, 0), 0) scale(var(--vap-scale, 1));
+  animation: dryTestVaporRise var(--vap-duration, 3.5s) var(--vap-delay, 0s) infinite;
+  opacity: 0;
+}
+@keyframes dryTestVaporRise {
+  0% {
+    opacity: 0;
+    transform: translate(var(--vap-offset-x, 0), 0) scale(var(--vap-scale, 1));
+  }
+  20% {
+    opacity: 0.35;
+  }
+  60% {
+    opacity: 0.9;
+    transform: translate(calc(var(--vap-offset-x, 0) + 4px), -58px) scale(calc(var(--vap-scale, 1) * 1.15));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--vap-offset-x, 0) + 10px), -120px) scale(calc(var(--vap-scale, 1) * 1.4));
+  }
 }
 @keyframes bunsenFlame {
   0% { opacity: 0.85; transform: translate(-50%, 0) scaleY(1); }
