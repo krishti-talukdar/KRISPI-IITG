@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import type { EquipmentPosition } from "../types";
 
 interface WorkBenchProps {
   onDrop: (id: string, x: number, y: number) => void;
@@ -8,6 +9,7 @@ interface WorkBenchProps {
   experimentTitle: string;
   currentGuidedStep?: number;
   totalGuidedSteps?: number;
+  equipmentPositions?: EquipmentPosition[];
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -18,6 +20,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   experimentTitle,
   currentGuidedStep = 1,
   totalGuidedSteps,
+  equipmentPositions = [],
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
@@ -73,6 +76,39 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const dryStepLabel = `Step ${currentGuidedStep}${totalGuidedSteps ? ` of ${totalGuidedSteps}` : ""}`;
 
+  const workbenchRef = useRef<HTMLDivElement>(null);
+  const heatIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const heatTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const flameFadeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isBunsenHeating, setIsBunsenHeating] = useState(false);
+  const [isBunsenLit, setIsBunsenLit] = useState(false);
+  const [heatCharge, setHeatCharge] = useState(0);
+  const bunsenBurnerId = "bunsen-burner-virtual-heat-source-3";
+  const bunsenPosition = equipmentPositions.find((pos) => pos.id === bunsenBurnerId) ?? null;
+  const [heatButtonCoords, setHeatButtonCoords] = useState<{ left: number; top: number } | null>(null);
+  const flameCoords = bunsenPosition
+    ? {
+        left: bunsenPosition.x + 28,
+        top: bunsenPosition.y - 62,
+      }
+    : null;
+  const updateHeatButtonCoords = useCallback(() => {
+    if (!isDryTestWorkbench || !bunsenPosition || !workbenchRef.current) {
+      setHeatButtonCoords(null);
+      return;
+    }
+
+    const rect = workbenchRef.current.getBoundingClientRect();
+    const desiredLeft = bunsenPosition.x + 90;
+    const desiredTop = bunsenPosition.y;
+    const maxLeft = Math.max(32, rect.width - 120);
+    const maxTop = Math.max(32, rect.height - 60);
+    const clampedLeft = Math.min(Math.max(32, desiredLeft), maxLeft);
+    const clampedTop = Math.min(Math.max(32, desiredTop), maxTop);
+
+    setHeatButtonCoords({ left: clampedLeft, top: clampedTop });
+  }, [bunsenPosition, isDryTestWorkbench]);
+
   // PH-specific classes
   const phRootClass =
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
@@ -91,9 +127,89 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           : ""
       }`;
 
+  useEffect(() => {
+    updateHeatButtonCoords();
+    window.addEventListener("resize", updateHeatButtonCoords);
+    return () => {
+      window.removeEventListener("resize", updateHeatButtonCoords);
+    };
+  }, [updateHeatButtonCoords]);
+
+  useEffect(() => {
+    if (!isDryTestWorkbench) {
+      return;
+    }
+
+    if (isBunsenHeating) {
+      if (heatIntervalRef.current) {
+        clearInterval(heatIntervalRef.current);
+      }
+      heatIntervalRef.current = window.setInterval(() => {
+        setHeatCharge((prev) => Math.min(prev + 0.05, 1));
+      }, 120);
+
+      if (heatTimerRef.current) {
+        clearTimeout(heatTimerRef.current);
+      }
+      heatTimerRef.current = window.setTimeout(() => {
+        setIsBunsenHeating(false);
+      }, 6000);
+
+      setIsBunsenLit(true);
+    } else {
+      if (heatIntervalRef.current) {
+        clearInterval(heatIntervalRef.current);
+        heatIntervalRef.current = null;
+      }
+      if (heatTimerRef.current) {
+        clearTimeout(heatTimerRef.current);
+        heatTimerRef.current = null;
+      }
+      setHeatCharge(0);
+    }
+
+    return () => {
+      if (heatIntervalRef.current) {
+        clearInterval(heatIntervalRef.current);
+        heatIntervalRef.current = null;
+      }
+      if (heatTimerRef.current) {
+        clearTimeout(heatTimerRef.current);
+        heatTimerRef.current = null;
+      }
+    };
+  }, [isBunsenHeating, isDryTestWorkbench]);
+
+  useEffect(() => {
+    if (isBunsenHeating) {
+      if (flameFadeRef.current) {
+        clearTimeout(flameFadeRef.current);
+        flameFadeRef.current = null;
+      }
+      return;
+    }
+
+    if (!isBunsenLit) {
+      return;
+    }
+
+    flameFadeRef.current = window.setTimeout(() => {
+      setIsBunsenLit(false);
+      flameFadeRef.current = null;
+    }, 2800);
+
+    return () => {
+      if (flameFadeRef.current) {
+        clearTimeout(flameFadeRef.current);
+        flameFadeRef.current = null;
+      }
+    };
+  }, [isBunsenHeating, isBunsenLit]);
+
 
   return (
     <div
+      ref={workbenchRef}
       data-workbench="true"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -256,6 +372,52 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           {/* Equipment positions and children */}
           <div className="absolute inset-0 transform -translate-y-8">{children}</div>
 
+          {isDryTestWorkbench && bunsenPosition && (
+            <>
+              {(isBunsenHeating || isBunsenLit) && flameCoords && (
+                <div
+                  className="heat-flame-layer"
+                  style={{
+                    "--heat-flame-left": `${flameCoords.left}px`,
+                    "--heat-flame-top": `${flameCoords.top}px`,
+                  } as React.CSSProperties}
+                />
+              )}
+              {heatButtonCoords && (
+                <div
+                  className="heat-action-wrapper"
+                  style={{
+                    "--heat-action-left": `${heatButtonCoords.left}px`,
+                    "--heat-action-top": `${heatButtonCoords.top}px`,
+                  } as React.CSSProperties}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setIsBunsenHeating((prev) => !prev)}
+                    className={`heat-control-button flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-full shadow-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                      isBunsenHeating
+                        ? "bg-amber-600 hover:bg-amber-700 text-white focus-visible:ring-amber-300"
+                        : "bg-orange-500 hover:bg-orange-600 text-white focus-visible:ring-orange-200"
+                    }`}
+                  >
+                    {isBunsenHeating ? "Stop heating" : "Start heating"}
+                  </button>
+                  <div className="heat-progress-group">
+                    <span className="heat-progress-label">
+                      {isBunsenHeating ? "Heating active" : "Ready"}
+                    </span>
+                    <div className="heat-progress-indicator">
+                      <span
+                        className="heat-progress-fill"
+                        style={{ "--heat-level": heatCharge } as React.CSSProperties}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
           {!isDryTestWorkbench && (
             <>
               {/* Grid lines for precise positioning (subtle) */}
@@ -285,6 +447,65 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           )}
         </>
       )}
+      <style>{`
+.heat-action-wrapper {
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  left: var(--heat-action-left, 0);
+  top: var(--heat-action-top, 0);
+  transform: translateY(-50%);
+}
+.heat-control-button {
+  pointer-events: auto;
+}
+.heat-progress-group {
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.heat-progress-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1f2937;
+}
+.heat-progress-indicator {
+  width: 72px;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+}
+.heat-progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  width: calc(var(--heat-level, 0) * 100%);
+  background: linear-gradient(90deg, #fb923c, #ef4444);
+  transition: width 180ms ease;
+}
+.heat-flame-layer {
+  position: absolute;
+  width: 40px;
+  height: 96px;
+  pointer-events: none;
+  left: var(--heat-flame-left, 0);
+  top: var(--heat-flame-top, 0);
+  transform: translate(-50%, 0);
+  background: radial-gradient(circle at 50% 0%, rgba(251, 146, 60, 0.85), rgba(239, 68, 68, 0.6) 45%, rgba(234, 88, 12, 0) 70%);
+  filter: blur(0.5px);
+  animation: bunsenFlame 0.9s ease-in-out infinite;
+}
+@keyframes bunsenFlame {
+  0% { opacity: 0.85; transform: translate(-50%, 0) scaleY(1); }
+  50% { opacity: 1; transform: translate(-50%, -5px) scaleY(1.08); }
+  100% { opacity: 0.8; transform: translate(-50%, 0) scaleY(0.95); }
+}
+      `}</style>
     </div>
   );
 };
