@@ -133,16 +133,17 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       60,
       Math.max(30, bunsenRect.height * 0.35),
     );
-    const heatingTipOffset = Math.min(
-      12,
-      Math.max(4, bunsenRect.height * 0.03),
+    const heatingLift = Math.min(
+      18,
+      Math.max(8, bunsenRect.height * 0.06),
     );
-    const flameTop =
-      bunsenRect.top -
-      workbenchRect.top +
-      (isBunsenHeating ? heatingTipOffset : -defaultFlameOffset);
+    const idleFlameTop = bunsenRect.top - workbenchRect.top - defaultFlameOffset;
+    const heatingFlameTop = idleFlameTop - heatingLift;
 
-    setFlameAnchorCoords({ left: flameLeft, top: flameTop });
+    setFlameAnchorCoords({
+      left: flameLeft,
+      top: isBunsenHeating ? heatingFlameTop : idleFlameTop,
+    });
   }, [
     bunsenBurnerId,
     bunsenPosition?.x,
