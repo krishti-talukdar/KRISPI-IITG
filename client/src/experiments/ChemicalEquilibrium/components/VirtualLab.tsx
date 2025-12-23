@@ -940,7 +940,11 @@ function ChemicalEquilibriumVirtualLab({
                         e.dataTransfer.setData("equipment", equipment.id);
                         e.dataTransfer.effectAllowed = "move";
                       }}
-                      onDoubleClick={() => handleEquipmentDrop(equipment.id, 200, 200)}
+                      onDoubleClick={() => {
+                        if (!isQuickAddCard) {
+                          handleEquipmentDrop(equipment.id, 200, 200);
+                        }
+                      }}
                       role="button"
                       tabIndex={0}
                     >
