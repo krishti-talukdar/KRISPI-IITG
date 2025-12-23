@@ -1084,8 +1084,8 @@ function ChemicalEquilibriumVirtualLab({
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
                   .map((pos) => {
-                  const equipment = equipmentList.find((eq) => eq.id === pos.id);
-                  return equipment ? (
+                    const equipment = equipmentList.find((eq) => eq.id === pos.id);
+                    return equipment ? (
                     <Equipment
                       key={pos.id}
                       id={pos.id}
