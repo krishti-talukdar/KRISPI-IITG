@@ -249,6 +249,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     const handleResize = () => {
       updateHeatButtonCoords();
       updateFlamePosition();
+      updateRinseLayout();
     };
 
     handleResize();
@@ -256,7 +257,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [updateHeatButtonCoords, updateFlamePosition]);
+  }, [updateHeatButtonCoords, updateFlamePosition, updateRinseLayout]);
 
   useEffect(() => {
     if (!isDryTestWorkbench) {
