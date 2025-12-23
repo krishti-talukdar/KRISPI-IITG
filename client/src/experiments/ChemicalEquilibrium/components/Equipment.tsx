@@ -465,13 +465,15 @@ export const Equipment: React.FC<EquipmentProps> = ({
           />
           {showAmmoniumOverlay && (
             <div
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 w-16 rounded-full"
+              className="absolute bottom-6 left-1/2 -translate-x-1/2"
               style={{
+                width: "58px",
                 height: `${Math.max(18, overlayHeight)}px`,
+                borderRadius: "30px 30px 18px 18px / 45px 45px 12px 12px",
                 background:
-                  "linear-gradient(180deg, rgba(224, 242, 255, 0.95), rgba(195, 231, 255, 0.7))",
+                  "linear-gradient(180deg, rgba(224, 242, 255, 0.97), rgba(168, 214, 255, 0.85))",
                 boxShadow:
-                  "inset 0 12px 25px rgba(224, 242, 255, 0.9), 0 0 30px rgba(185, 210, 255, 0.5)",
+                  "inset 0 18px 35px rgba(224, 242, 255, 0.95), 0 0 30px rgba(168, 214, 255, 0.6)",
               }}
             />
           )}
