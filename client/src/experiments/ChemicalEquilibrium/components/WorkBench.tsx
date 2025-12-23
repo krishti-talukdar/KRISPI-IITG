@@ -340,6 +340,12 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     };
   }, [isBunsenHeating, isBunsenLit]);
 
+  const rinseDipDistance = rinseLayout
+    ? Math.max(0, rinseLayout.containerTop - rinseLayout.rodTop - 14)
+    : 0;
+  const rinseRodHeight = rinseLayout
+    ? Math.max(80, rinseLayout.containerTop - rinseLayout.rodTop + 40)
+    : 0;
 
   return (
     <div
