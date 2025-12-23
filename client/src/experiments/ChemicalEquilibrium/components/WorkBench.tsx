@@ -736,6 +736,34 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   50% { opacity: 1; transform: translate(-50%, -6px) scaleY(1.05); }
   100% { opacity: 0.8; transform: translate(-50%, 0) scaleY(0.95); }
 }
+.rod-visual {
+  transform-origin: center;
+  transform: scale(5) rotate(-12deg);
+  will-change: transform;
+}
+.rod-visual--rinsing {
+  animation: rodRinseDip 2.2s ease-in-out both;
+}
+@keyframes rodRinseDip {
+  0% {
+    transform: scale(5) rotate(-12deg) translate(0, 0);
+  }
+  25% {
+    transform: scale(5) rotate(-14deg) translate(-6px, 20px);
+  }
+  45% {
+    transform: scale(5) rotate(-18deg) translate(8px, 42px);
+  }
+  65% {
+    transform: scale(5) rotate(-16deg) translate(-4px, 34px);
+  }
+  85% {
+    transform: scale(5) rotate(-13deg) translate(5px, 28px);
+  }
+  100% {
+    transform: scale(5) rotate(-12deg) translate(0, 0);
+  }
+}
       `}</style>
     </div>
   );
