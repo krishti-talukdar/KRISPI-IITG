@@ -121,6 +121,85 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           : ""
       }`;
 
+  useEffect(() => {
+    updateHeatButtonCoords();
+    window.addEventListener("resize", updateHeatButtonCoords);
+    return () => {
+      window.removeEventListener("resize", updateHeatButtonCoords);
+    };
+  }, [updateHeatButtonCoords]);
+
+  useEffect(() => {
+    if (!isDryTestWorkbench) {
+      return;
+    }
+
+    if (isBunsenHeating) {
+      if (heatIntervalRef.current) {
+        clearInterval(heatIntervalRef.current);
+      }
+      heatIntervalRef.current = window.setInterval(() => {
+        setHeatCharge((prev) => Math.min(prev + 0.05, 1));
+      }, 120);
+
+      if (heatTimerRef.current) {
+        clearTimeout(heatTimerRef.current);
+      }
+      heatTimerRef.current = window.setTimeout(() => {
+        setIsBunsenHeating(false);
+      }, 6000);
+
+      setIsBunsenLit(true);
+    } else {
+      if (heatIntervalRef.current) {
+        clearInterval(heatIntervalRef.current);
+        heatIntervalRef.current = null;
+      }
+      if (heatTimerRef.current) {
+        clearTimeout(heatTimerRef.current);
+        heatTimerRef.current = null;
+      }
+      setHeatCharge(0);
+    }
+
+    return () => {
+      if (heatIntervalRef.current) {
+        clearInterval(heatIntervalRef.current);
+        heatIntervalRef.current = null;
+      }
+      if (heatTimerRef.current) {
+        clearTimeout(heatTimerRef.current);
+        heatTimerRef.current = null;
+      }
+    };
+  }, [isBunsenHeating, isDryTestWorkbench]);
+
+  useEffect(() => {
+    if (isBunsenHeating) {
+      if (flameFadeRef.current) {
+        clearTimeout(flameFadeRef.current);
+        flameFadeRef.current = null;
+      }
+      return;
+    }
+
+    if (!isBunsenLit) {
+      return;
+    }
+
+    flameFadeRef.current = window.setTimeout(() => {
+      setIsBunsenLit(false);
+      flameFadeRef.current = null;
+    }, 2800);
+
+    return () => {
+      if (flameFadeRef.current) {
+        clearTimeout(flameFadeRef.current);
+        flameFadeRef.current = null;
+      }
+    };
+  }, [isBunsenHeating, isBunsenLit]);
+
 
   return (
     <div
