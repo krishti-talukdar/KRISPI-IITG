@@ -76,6 +76,33 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const dryStepLabel = `Step ${currentGuidedStep}${totalGuidedSteps ? ` of ${totalGuidedSteps}` : ""}`;
 
+  const workbenchRef = useRef<HTMLDivElement>(null);
+  const heatIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const heatTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const flameFadeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isBunsenHeating, setIsBunsenHeating] = useState(false);
+  const [isBunsenLit, setIsBunsenLit] = useState(false);
+  const [heatCharge, setHeatCharge] = useState(0);
+  const bunsenBurnerId = "bunsen-burner-virtual-heat-source-3";
+  const bunsenPosition = equipmentPositions.find((pos) => pos.id === bunsenBurnerId) ?? null;
+  const [heatButtonCoords, setHeatButtonCoords] = useState<{ left: number; top: number } | null>(null);
+  const updateHeatButtonCoords = useCallback(() => {
+    if (!isDryTestWorkbench || !bunsenPosition || !workbenchRef.current) {
+      setHeatButtonCoords(null);
+      return;
+    }
+
+    const rect = workbenchRef.current.getBoundingClientRect();
+    const desiredLeft = bunsenPosition.x + 90;
+    const desiredTop = bunsenPosition.y;
+    const maxLeft = Math.max(32, rect.width - 120);
+    const maxTop = Math.max(32, rect.height - 60);
+    const clampedLeft = Math.min(Math.max(32, desiredLeft), maxLeft);
+    const clampedTop = Math.min(Math.max(32, desiredTop), maxTop);
+
+    setHeatButtonCoords({ left: clampedLeft, top: clampedTop });
+  }, [bunsenPosition, isDryTestWorkbench]);
+
   // PH-specific classes
   const phRootClass =
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
