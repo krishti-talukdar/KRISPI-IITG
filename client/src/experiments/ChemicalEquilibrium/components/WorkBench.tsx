@@ -154,12 +154,17 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       }`;
 
   useEffect(() => {
-    updateHeatButtonCoords();
-    window.addEventListener("resize", updateHeatButtonCoords);
-    return () => {
-      window.removeEventListener("resize", updateHeatButtonCoords);
+    const handleResize = () => {
+      updateHeatButtonCoords();
+      updateFlamePosition();
     };
-  }, [updateHeatButtonCoords]);
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [updateHeatButtonCoords, updateFlamePosition]);
 
   useEffect(() => {
     if (!isDryTestWorkbench) {
