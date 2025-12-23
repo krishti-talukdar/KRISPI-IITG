@@ -911,28 +911,48 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="flex-1 overflow-auto">
               <div className="space-y-3">
-                {equipmentList.map((equipment) => (
-                  <div
-                    key={equipment.id}
-                    data-testid={equipment.id}
-                    className="equipment-card justify-between"
-                    draggable
-                    onDragStart={(e) => {
-                      e.dataTransfer.setData("equipment", equipment.id);
-                      e.dataTransfer.effectAllowed = "move";
-                    }}
-                    onDoubleClick={() => handleEquipmentDrop(equipment.id, 200, 200)}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="equipment-icon">
-                        <div className="equipment-icon-inner">{equipment.icon}</div>
+                {equipmentList.map((equipment) => {
+                  const quickAddAction = getQuickAddAction(equipment.id);
+                  const isQuickAddCard = Boolean(quickAddAction);
+                  return (
+                    <div
+                      key={equipment.id}
+                      data-testid={equipment.id}
+                      className="equipment-card justify-between"
+                      draggable={!isQuickAddCard}
+                      onDragStart={(e) => {
+                        if (isQuickAddCard) return;
+                        e.dataTransfer.setData("equipment", equipment.id);
+                        e.dataTransfer.effectAllowed = "move";
+                      }}
+                      onDoubleClick={() => handleEquipmentDrop(equipment.id, 200, 200)}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center space-x-3">
+                          <div className="equipment-icon">
+                            <div className="equipment-icon-inner">{equipment.icon}</div>
+                          </div>
+                          <div className="text-sm font-medium text-gray-700">{equipment.name}</div>
+                        </div>
+                        {isQuickAddCard && quickAddAction && (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              quickAddAction();
+                            }}
+                            className="px-3 py-1 text-xs font-semibold text-white bg-orange-500 rounded-full hover:bg-orange-600 transition"
+                          >
+                            ADD
+                          </button>
+                        )}
                       </div>
-                      <div className="text-sm font-medium text-gray-700">{equipment.name}</div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
