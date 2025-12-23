@@ -95,9 +95,9 @@ const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
 
 const DRY_WORKBENCH_SALT_POSITION = { xPercent: 0.88, yPercent: 0.18 };
 const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
-const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.35, yPercent: 0.28 };
-const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.35, yPercent: 0.22 };
-const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.35, yPercent: 0.75 };
+const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.3, yPercent: 0.28 };
+const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.3, yPercent: 0.22 };
+const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.75 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
