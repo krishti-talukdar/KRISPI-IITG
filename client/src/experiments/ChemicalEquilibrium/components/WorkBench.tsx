@@ -30,7 +30,6 @@ interface WorkBenchProps {
   showRinseButton?: boolean;
   onRinse?: () => void;
   isRinsing?: boolean;
-  showRinseAnimation?: boolean;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -45,7 +44,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   showRinseButton = false,
   onRinse,
   isRinsing = false,
-  showRinseAnimation = false,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
@@ -340,12 +338,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     };
   }, [isBunsenHeating, isBunsenLit]);
 
-  const rinseDipDistance = rinseLayout
-    ? Math.max(0, rinseLayout.containerTop - rinseLayout.rodTop - 14)
-    : 0;
-  const rinseRodHeight = rinseLayout
-    ? Math.max(80, rinseLayout.containerTop - rinseLayout.rodTop + 40)
-    : 0;
 
   return (
     <div
@@ -624,27 +616,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         >
           RINSE
         </button>
-      )}
-      {showRinseAnimation && rinseLayout && (
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: rinseLayout.rodLeft - 3,
-            top: rinseLayout.rodTop + 6,
-            width: "6px",
-            height: `${rinseRodHeight}px`,
-            background: "linear-gradient(180deg, #f8fafc, #e2e8f0)",
-            borderRadius: "999px",
-            boxShadow: "0 10px 30px rgba(15,23,42,0.45)",
-            transformOrigin: "top center",
-            transform: isRinsing
-              ? `translateY(${rinseDipDistance}px)`
-              : "translateY(0)",
-            transition: "transform 1.4s ease-in-out, opacity 0.4s ease",
-            opacity: isRinsing ? 1 : 0,
-            zIndex: 50,
-          }}
-        />
       )}
       <style>{`
 .heat-control-panel {
