@@ -38,6 +38,7 @@ export interface Equipment {
   id: string;
   name: string;
   icon: React.ReactNode;
+  imageUrl?: string;
 }
 
 export interface EquipmentPosition {

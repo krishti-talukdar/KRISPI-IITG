@@ -2,6 +2,9 @@ import React from "react";
 import { TestTube, Thermometer, Beaker, FlaskConical } from "lucide-react";
 import type { Chemical, Equipment } from "./types";
 
+export const GLASS_CONTAINER_IMAGE_URL =
+  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Fd5e350849eb1470e842b3b8164e731dc?format=webp&width=800";
+
 // Chemical reagents specific to Chemical Equilibrium experiment
 export const CHEMICAL_EQUILIBRIUM_CHEMICALS: Chemical[] = [
   {

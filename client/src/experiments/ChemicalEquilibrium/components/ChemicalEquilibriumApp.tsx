@@ -287,7 +287,7 @@ export default function ChemicalEquilibriumApp({
                 setIsRunning={setIsRunning}
                 onResetTimer={() => setTimer(0)}
                 onResetExperiment={() => {
-                  setExperimentStarted(false);
+                  setExperimentStarted(isDryTestExperiment);
                   setIsRunning(false);
                   setTimer(0);
                   setCurrentStep(0);

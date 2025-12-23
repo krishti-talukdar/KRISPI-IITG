@@ -7,6 +7,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState } from "../types";
+import { GLASS_CONTAINER_IMAGE_URL } from "../constants";
 
 const GLASS_ROD_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3bdedfd838454c6b8a3cc44b25ecfdc0?format=webp&width=800";
 const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
@@ -36,6 +37,7 @@ interface EquipmentProps {
   currentStep?: number;
   isDryTest?: boolean;
   disabled?: boolean;
+  imageUrl?: string;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -53,6 +55,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   currentStep = 1,
   isDryTest = false,
   disabled = false,
+  imageUrl,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
@@ -64,6 +67,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     normalizedName.includes("nh4oh");
   const isGlassRodEquipment = normalizedName.includes("glass rod");
   const isBunsenBurnerEquipment = normalizedName.includes("bunsen");
+  const isGlassContainerEquipment = normalizedName.includes("glass container");
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -440,6 +444,19 @@ export const Equipment: React.FC<EquipmentProps> = ({
             src={BUNSEN_BURNER_IMAGE_URL}
             alt="Bunsen Burner"
             className="max-w-[240px] max-h-[240px] object-contain drop-shadow-lg"
+          />
+        </div>
+      );
+    }
+
+    if (isGlassContainerEquipment) {
+      const containerImage = imageUrl ?? GLASS_CONTAINER_IMAGE_URL;
+      return (
+        <div className="relative flex flex-col items-center pointer-events-none">
+          <img
+            src={containerImage}
+            alt="Glass container"
+            className="max-w-[160px] max-h-[160px] object-contain drop-shadow-lg"
           />
         </div>
       );

@@ -17,6 +17,7 @@ import {
   CHEMICAL_EQUILIBRIUM_CHEMICALS,
   CHEMICAL_EQUILIBRIUM_EQUIPMENT,
   DEFAULT_MEASUREMENTS,
+  GLASS_CONTAINER_IMAGE_URL,
   PH_HCL_CHEMICALS,
   PH_HCL_EQUIPMENT,
 } from "../constants";
@@ -94,13 +95,13 @@ const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
 
 const DRY_WORKBENCH_SALT_POSITION = { xPercent: 0.88, yPercent: 0.18 };
 const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
-const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.45, yPercent: 0.42 };
-const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.55, yPercent: 0.22 };
-const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.45, yPercent: 0.82 };
+const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.3, yPercent: 0.35 };
+const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.3, yPercent: 0.3 };
+const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.65 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
-  "concentrated-h-so-3": {
+  "concentrated-h-so-2": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
     yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING,
   },
@@ -151,11 +152,30 @@ const mapDryTestEquipment = (names: string[] = []): EquipmentDefinition[] =>
   names.map((name, index) => {
     const normalized = name.toLowerCase();
     const isTestTube = normalized.includes("test tube");
-    return {
-      id: isTestTube ? "test_tubes" : `${slugify(name)}-${index}`,
+    const id = isTestTube ? "test_tubes" : `${slugify(name)}-${index}`;
+    const base: EquipmentDefinition = {
+      id,
       name,
       icon: getEquipmentIcon(name),
     };
+
+    if (normalized.includes("glass container")) {
+      return {
+        ...base,
+        icon: (
+          <div className="flex items-center justify-center w-20 h-20">
+            <img
+              src={GLASS_CONTAINER_IMAGE_URL}
+              alt="Glass container"
+              className="w-full h-full object-contain"
+            />
+          </div>
+        ),
+        imageUrl: GLASS_CONTAINER_IMAGE_URL,
+      };
+    }
+
+    return base;
   });
 
 function ChemicalEquilibriumVirtualLab({
@@ -1037,6 +1057,7 @@ function ChemicalEquilibriumVirtualLab({
                       currentStep={currentStep}
                       disabled={!experimentStarted}
                       isDryTest={isDryTestExperiment}
+                      imageUrl={equipment.imageUrl}
                     />
                   ) : null;
                 })}
@@ -1175,6 +1196,7 @@ function ChemicalEquilibriumVirtualLab({
                       currentStep={currentStep}
                       disabled={!experimentStarted}
                       isDryTest={isDryTestExperiment}
+                      imageUrl={equipment.imageUrl}
                     />
                   ) : null;
                 })}
