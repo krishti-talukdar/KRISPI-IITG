@@ -233,6 +233,13 @@ function ChemicalEquilibriumVirtualLab({
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const glassContainerEquipmentId =
     equipmentList.find((eq) => eq.name.toLowerCase().includes("glass container"))?.id ?? null;
+  const glassContainerState = equipmentPositions.find((pos) => pos.id === glassContainerEquipmentId);
+  const ammoniumAmountInGlassContainer = glassContainerState
+    ? glassContainerState.chemicals
+        .filter((chemical) => chemical.id === "nh4oh")
+        .reduce((sum, chemical) => sum + (chemical.amount || 0), 0)
+    : 0;
+  const hasAmmoniumInGlassContainer = ammoniumAmountInGlassContainer > 0;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
