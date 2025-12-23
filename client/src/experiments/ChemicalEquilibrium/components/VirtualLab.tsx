@@ -1088,38 +1088,38 @@ function ChemicalEquilibriumVirtualLab({
                     return equipment ? (
                       <Equipment
                         key={pos.id}
-                      id={pos.id}
-                      name={equipment.name}
-                      icon={equipment.icon}
-                      onDrag={experimentStarted ? handleEquipmentDrop : () => {}}
-                      position={pos}
-                      chemicals={pos.chemicals}
-                      onChemicalDrop={experimentStarted ? handleChemicalDrop : () => {}}
-                      onRemove={experimentStarted ? handleEquipmentRemove : () => {}}
-                      onInteract={
-                        experimentStarted
-                          ? equipment.name.toLowerCase().includes("salt sample")
-                            ? handleSaltDialogOpen
-                            : equipment.name.toLowerCase().includes("ammonium") ||
-                              equipment.name.toLowerCase().includes("nh₄oh") ||
-                              equipment.name.toLowerCase().includes("nh4oh")
-                            ? handleAmmoniumDialogOpen
-                            : equipment.name.toLowerCase().includes("h2so4") ||
-                              equipment.name.toLowerCase().includes("h₂so₄") ||
-                              equipment.name.toLowerCase().includes("sulfuric")
-                            ? handleAcidDialogOpen
+                        id={pos.id}
+                        name={equipment.name}
+                        icon={equipment.icon}
+                        onDrag={experimentStarted ? handleEquipmentDrop : () => {}}
+                        position={pos}
+                        chemicals={pos.chemicals}
+                        onChemicalDrop={experimentStarted ? handleChemicalDrop : () => {}}
+                        onRemove={experimentStarted ? handleEquipmentRemove : () => {}}
+                        onInteract={
+                          experimentStarted
+                            ? equipment.name.toLowerCase().includes("salt sample")
+                              ? handleSaltDialogOpen
+                              : equipment.name.toLowerCase().includes("ammonium") ||
+                                equipment.name.toLowerCase().includes("nh₄oh") ||
+                                equipment.name.toLowerCase().includes("nh4oh")
+                              ? handleAmmoniumDialogOpen
+                              : equipment.name.toLowerCase().includes("h2so4") ||
+                                equipment.name.toLowerCase().includes("h₂so₄") ||
+                                equipment.name.toLowerCase().includes("sulfuric")
+                              ? handleAcidDialogOpen
+                              : undefined
                             : undefined
-                          : undefined
-                      }
-                      cobaltReactionState={cobaltReactionState}
-                      allEquipmentPositions={equipmentPositions}
-                      currentStep={currentStep}
-                      disabled={!experimentStarted}
-                      isDryTest={isDryTestExperiment}
-                      imageUrl={equipment.imageUrl}
-                    />
-                  ) : null;
-                })}
+                        }
+                        cobaltReactionState={cobaltReactionState}
+                        allEquipmentPositions={equipmentPositions}
+                        currentStep={currentStep}
+                        disabled={!experimentStarted}
+                        isDryTest={isDryTestExperiment}
+                        imageUrl={equipment.imageUrl}
+                      />
+                    ) : null;
+                  })}
               </WorkBench>
             </div>
 
