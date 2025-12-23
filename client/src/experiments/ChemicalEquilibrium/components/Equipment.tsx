@@ -448,6 +448,19 @@ export const Equipment: React.FC<EquipmentProps> = ({
       );
     }
 
+    if (isGlassContainerEquipment) {
+      const containerImage = imageUrl ?? GLASS_CONTAINER_IMAGE_URL;
+      return (
+        <div className="relative flex flex-col items-center pointer-events-none">
+          <img
+            src={containerImage}
+            alt="Glass container"
+            className="max-w-[240px] max-h-[240px] object-contain drop-shadow-lg"
+          />
+        </div>
+      );
+    }
+
     if (isSaltSampleEquipment) {
       return renderSaltSampleBottle();
     }
