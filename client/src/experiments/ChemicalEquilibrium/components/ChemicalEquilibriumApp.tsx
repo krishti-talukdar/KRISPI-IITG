@@ -136,6 +136,37 @@ export default function ChemicalEquilibriumApp({
           </h1>
           <p className="text-gray-600 mb-4">{experiment.description}</p>
 
+          {isDryTestExperiment && (
+            <div className="dry-test-button-panel-wrapper mb-6">
+              <div className="dry-test-button-panel">
+                <button
+                  type="button"
+                  className="dry-test-action-card"
+                  aria-label="Select Dry Tests for Acid Radicals"
+                >
+                  <span className="dry-test-action-letter" aria-hidden="true">
+                    A
+                  </span>
+                  <p className="dry-test-action-title">
+                    Dry Tests for Acid Radicals
+                  </p>
+                </button>
+                <button
+                  type="button"
+                  className="dry-test-action-card"
+                  aria-label="Select Dry Tests for Basic Radicals"
+                >
+                  <span className="dry-test-action-letter" aria-hidden="true">
+                    B
+                  </span>
+                  <p className="dry-test-action-title">
+                    Dry Tests for basic Radicals
+                  </p>
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Progress Bar - hidden for PH HCl experiment and dry tests (we show per-panel progress) */}
           {experiment.id !== PHHClExperiment.id && !isDryTestExperiment && (
             <>
