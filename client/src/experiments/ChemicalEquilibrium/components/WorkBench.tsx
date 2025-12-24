@@ -7,6 +7,17 @@ const DRY_TEST_VAPOR_PUFFS = [
   { offsetX: 18, duration: "4.1s", delay: "0.2s", scale: 0.9 },
 ] as const;
 
+const POST_MOVE_FUME_CONFIG = [
+  { delay: "0s", scale: 1 },
+  { delay: "0.12s", scale: 1.2 },
+  { delay: "0.24s", scale: 1.15 },
+  { delay: "0.36s", scale: 1.35 },
+  { delay: "0.48s", scale: 1.4 },
+  { delay: "0.6s", scale: 1.25 },
+  { delay: "0.72s", scale: 1.45 },
+  { delay: "0.84s", scale: 1.55 },
+] as const;
+
 const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
 const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
 
@@ -520,16 +531,21 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                     "--fume-anchor-top": `${testTubePosition.y - 60}px`,
                   } as React.CSSProperties}
                 >
-                  {[0, 1, 2, 3].map((index) => (
-                    <span
-                      key={index}
-                      className="post-move-fume"
-                      style={{
-                        "--fume-delay": `${index * 0.25}s`,
-                        "--fume-scale": `${1 + index * 0.15}`,
-                      } as React.CSSProperties}
-                    />
-                  ))}
+                  {POST_MOVE_FUME_CONFIG.map((fume, index) => {
+                    const horizontalOffset =
+                      (index - (POST_MOVE_FUME_CONFIG.length - 1) / 2) * 8;
+                    return (
+                      <span
+                        key={`${index}-${fume.delay}`}
+                        className="post-move-fume"
+                        style={{
+                          "--fume-delay": fume.delay,
+                          "--fume-scale": `${fume.scale}`,
+                          "--fume-offset-x": `${horizontalOffset}px`,
+                        } as React.CSSProperties}
+                      />
+                    );
+                  })}
                 </div>
               )}
               {(isBunsenHeating || isBunsenLit) && flameCoords && (
