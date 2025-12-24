@@ -956,6 +956,7 @@ function ChemicalEquilibriumVirtualLab({
     setUndoStackLength(0);
     setHasRinsed(false);
     setRodMoved(false);
+    setCaseOneResult("No result yet");
     if (rinseTimerRef.current) {
       window.clearTimeout(rinseTimerRef.current);
       rinseTimerRef.current = null;
