@@ -98,7 +98,7 @@ const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
 const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.3, yPercent: 0.35 };
 const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
 const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.65 };
-const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.7, yPercent: 0.42 };
+const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
