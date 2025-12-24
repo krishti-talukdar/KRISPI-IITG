@@ -1155,6 +1155,7 @@ function ChemicalEquilibriumVirtualLab({
                 showRinseButton={hasAmmoniumInGlassContainer}
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
+                hasRinsed={hasRinsed}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
