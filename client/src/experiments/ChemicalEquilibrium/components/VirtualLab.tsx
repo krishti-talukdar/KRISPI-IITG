@@ -1408,8 +1408,8 @@ function ChemicalEquilibriumVirtualLab({
               <input
                 className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                 type="number"
-                min="2"
-                max="3"
+                min={MIN_SALT_MASS}
+                max={MAX_SALT_MASS}
                 step="0.1"
                 value={saltMass}
                 onChange={(event) => setSaltMass(event.target.value)}
