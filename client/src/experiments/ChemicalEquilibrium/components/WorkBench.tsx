@@ -768,6 +768,28 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     transform: scale(5) rotate(-12deg) translate(0, 0);
   }
 }
+.dry-test-rinse-button {
+  position: absolute;
+  left: var(--rinse-left, 0);
+  top: var(--rinse-top, 0);
+  padding: 0.35rem 0.75rem;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 20px 25px -15px rgba(15, 23, 42, 0.75), 0 12px 20px -10px rgba(15, 23, 42, 0.5);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  z-index: 35;
+  cursor: pointer;
+}
+.dry-test-rinse-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
       `}</style>
     </div>
   );
