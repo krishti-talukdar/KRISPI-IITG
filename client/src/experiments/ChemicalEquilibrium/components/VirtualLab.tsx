@@ -1415,7 +1415,7 @@ function ChemicalEquilibriumVirtualLab({
                 onChange={(event) => setSaltMass(event.target.value)}
                 placeholder="2.5"
               />
-              <p className="text-[11px] text-slate-500">Recommended range: 2gm-3gm.</p>
+              <p className="text-[11px] text-slate-500">Recommended range: {SALT_RANGE_LABEL}.</p>
               {saltDialogError && (
                 <p className="text-[11px] text-red-500">{saltDialogError}</p>
               )}
