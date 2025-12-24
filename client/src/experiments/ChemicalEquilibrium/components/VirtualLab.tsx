@@ -931,6 +931,7 @@ function ChemicalEquilibriumVirtualLab({
       ),
     );
     setRodMoved(true);
+    setPostMoveFumesEnabled(true);
     setCaseOneResult("Cl⁻ radical may be present in the given salt.");
     setToastMessage("Glass rod moved above the test tube.");
     setTimeout(() => setToastMessage(null), 2500);
