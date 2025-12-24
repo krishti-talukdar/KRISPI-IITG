@@ -972,7 +972,6 @@ function ChemicalEquilibriumVirtualLab({
     setRodMoved(false);
     setHasRinsed(false);
     setShowRinseAnimation(false);
-    setCaseOneResult("No result yet");
     setToastMessage("Workbench cleared.");
     setTimeout(() => setToastMessage(null), 2500);
   };
