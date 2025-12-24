@@ -831,40 +831,49 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 .post-move-fumes-layer {
   position: absolute;
   pointer-events: none;
-  width: 140px;
-  height: 160px;
+  width: 200px;
+  height: 220px;
   left: var(--fume-anchor-left, 0);
   top: var(--fume-anchor-top, 0);
   transform: translate(-50%, -100%);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 6px;
+  gap: 12px;
   animation: postMoveFumesDrift 3s ease-in-out infinite;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 28px rgba(255, 255, 255, 0.85));
 }
 .post-move-fume {
   position: absolute;
-  width: 18px;
-  height: 18px;
-  background: rgba(255, 255, 255, 0.95);
+  width: 26px;
+  height: 26px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.65) 70%);
   border-radius: 999px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.92);
   opacity: 0;
-  animation: postMoveFumeRise 2.5s linear infinite;
-  transform: translateY(0) scale(var(--fume-scale, 1));
+  animation: postMoveFumeRise 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform: translate(var(--fume-offset-x, 0), 0) scale(var(--fume-scale, 1));
   animation-delay: var(--fume-delay, 0s);
+  mix-blend-mode: screen;
+  filter: blur(0.35px);
+  will-change: transform, opacity;
 }
 @keyframes postMoveFumeRise {
   0% {
     opacity: 0;
-    transform: translateY(8px) scale(var(--fume-scale, 1));
+    transform: translate(calc(var(--fume-offset-x, 0) + 2px), 18px) scale(var(--fume-scale, 1));
   }
-  30% {
-    opacity: 0.9;
+  25% {
+    opacity: 0.75;
+  }
+  60% {
+    opacity: 0.95;
+    transform: translate(calc(var(--fume-offset-x, 0) + 10px), -92px) scale(calc(var(--fume-scale, 1) * 1.4));
   }
   100% {
     opacity: 0;
-    transform: translateY(-60px) scale(calc(var(--fume-scale, 1) * 0.85));
+    transform: translate(calc(var(--fume-offset-x, 0) + 16px), -150px) scale(calc(var(--fume-scale, 1) * 1.8));
   }
 }
 @keyframes postMoveFumesDrift {
@@ -872,10 +881,10 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     transform: translate(-50%, -100%) translateX(0);
   }
   50% {
-    transform: translate(-50%, -100%) translateX(6px);
+    transform: translate(-50%, -100%) translateX(8px);
   }
   100% {
-    transform: translate(-50%, -100%) translateX(-4px);
+    transform: translate(-50%, -100%) translateX(-5px);
   }
 }
       `}</style>
