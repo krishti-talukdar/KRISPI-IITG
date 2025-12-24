@@ -45,6 +45,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   showRinseButton = false,
   onRinse,
   isRinsing = false,
+  hasRinsed = false,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
@@ -243,6 +244,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
           : ""
       }`;
+
+  const rinseButtonLabel = hasRinsed ? "MOVE" : "RINSE";
 
   useEffect(() => {
     const handleResize = () => {
@@ -609,13 +612,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           type="button"
           onClick={() => onRinse?.()}
           disabled={isRinsing}
-          className="absolute px-3 py-1.5 text-[10px] tracking-[0.4em] uppercase rounded-full bg-slate-900 text-white shadow-2xl border border-white/40"
+          className="dry-test-rinse-button"
           style={{
-            left: rinseLayout.buttonLeft,
-            top: rinseLayout.buttonTop,
-          }}
+            "--rinse-left": `${rinseLayout.buttonLeft}px`,
+            "--rinse-top": `${rinseLayout.buttonTop}px`,
+          } as React.CSSProperties}
         >
-          RINSE
+          {rinseButtonLabel}
         </button>
       )}
       <style>{`
