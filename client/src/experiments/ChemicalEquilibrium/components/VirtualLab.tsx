@@ -249,9 +249,9 @@ function ChemicalEquilibriumVirtualLab({
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
   const [saltMass, setSaltMass] = useState("2.0");
   const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
-  const MIN_SALT_MASS = 2;
+  const MIN_SALT_MASS = 0.05;
   const MAX_SALT_MASS = 3;
-  const SALT_RANGE_LABEL = "2gm-3gm";
+  const SALT_RANGE_LABEL = "0.05g-3g";
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
   const [acidVolume, setAcidVolume] = useState("4");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
