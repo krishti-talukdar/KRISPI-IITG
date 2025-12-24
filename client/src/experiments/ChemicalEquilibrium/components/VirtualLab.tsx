@@ -973,6 +973,7 @@ function ChemicalEquilibriumVirtualLab({
   const handleClearWorkbench = () => {
     setEquipmentPositions([]);
     setRodMoved(false);
+    setPostMoveFumesEnabled(false);
     setHasRinsed(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
