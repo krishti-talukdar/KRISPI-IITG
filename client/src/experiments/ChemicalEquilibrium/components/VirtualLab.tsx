@@ -214,6 +214,7 @@ function ChemicalEquilibriumVirtualLab({
   const [undoStackLength, setUndoStackLength] = useState(0);
   const [isRinsing, setIsRinsing] = useState(false);
   const [showRinseAnimation, setShowRinseAnimation] = useState(false);
+  const [hasRinsed, setHasRinsed] = useState(false);
   const rinseTimerRef = useRef<number | null>(null);
 
   // Choose chemicals and equipment based on experiment
@@ -867,6 +868,7 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleRinseAction = () => {
     if (!hasAmmoniumInGlassContainer || isRinsing) return;
+    setHasRinsed(true);
     setIsRinsing(true);
     setShowRinseAnimation(true);
     setToastMessage("Rinsing the glass rod with NH₄OH...");
@@ -901,6 +903,7 @@ function ChemicalEquilibriumVirtualLab({
     setStep3WaterAdded(false);
     historyRef.current = [];
     setUndoStackLength(0);
+    setHasRinsed(false);
     if (rinseTimerRef.current) {
       window.clearTimeout(rinseTimerRef.current);
       rinseTimerRef.current = null;
@@ -1152,6 +1155,7 @@ function ChemicalEquilibriumVirtualLab({
                 showRinseButton={hasAmmoniumInGlassContainer}
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
+                hasRinsed={hasRinsed}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -1305,6 +1309,7 @@ function ChemicalEquilibriumVirtualLab({
                 showRinseButton={hasAmmoniumInGlassContainer}
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
+                hasRinsed={hasRinsed}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(

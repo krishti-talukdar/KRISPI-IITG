@@ -30,6 +30,7 @@ interface WorkBenchProps {
   showRinseButton?: boolean;
   onRinse?: () => void;
   isRinsing?: boolean;
+  hasRinsed?: boolean;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -44,6 +45,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   showRinseButton = false,
   onRinse,
   isRinsing = false,
+  hasRinsed = false,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
@@ -242,6 +244,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
           : ""
       }`;
+
+  const rinseButtonLabel = hasRinsed ? "MOVE" : "RINSE";
 
   useEffect(() => {
     const handleResize = () => {
@@ -608,13 +612,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           type="button"
           onClick={() => onRinse?.()}
           disabled={isRinsing}
-          className="absolute px-3 py-1.5 text-[10px] tracking-[0.4em] uppercase rounded-full bg-slate-900 text-white shadow-2xl border border-white/40"
+          className="dry-test-rinse-button"
           style={{
-            left: rinseLayout.buttonLeft,
-            top: rinseLayout.buttonTop,
-          }}
+            "--rinse-left": `${rinseLayout.buttonLeft}px`,
+            "--rinse-top": `${rinseLayout.buttonTop}px`,
+          } as React.CSSProperties}
         >
-          RINSE
+          {rinseButtonLabel}
         </button>
       )}
       <style>{`
@@ -763,6 +767,28 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   100% {
     transform: scale(5) rotate(-12deg) translate(0, 0);
   }
+}
+.dry-test-rinse-button {
+  position: absolute;
+  left: var(--rinse-left, 0);
+  top: var(--rinse-top, 0);
+  padding: 0.35rem 0.75rem;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 20px 25px -15px rgba(15, 23, 42, 0.75), 0 12px 20px -10px rgba(15, 23, 42, 0.5);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  z-index: 35;
+  cursor: pointer;
+}
+.dry-test-rinse-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
 }
       `}</style>
     </div>
