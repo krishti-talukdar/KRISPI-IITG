@@ -868,6 +868,7 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleRinseAction = () => {
     if (!hasAmmoniumInGlassContainer || isRinsing) return;
+    setHasRinsed(true);
     setIsRinsing(true);
     setShowRinseAnimation(true);
     setToastMessage("Rinsing the glass rod with NH₄OH...");
