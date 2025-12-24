@@ -1223,6 +1223,7 @@ function ChemicalEquilibriumVirtualLab({
                 isRinsing={isRinsing}
                 hasRinsed={hasRinsed}
                 rodMoved={rodMoved}
+                showPostMoveFumes={postMoveFumesEnabled}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
