@@ -60,6 +60,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   isRinsing = false,
   hasRinsed = false,
   rodMoved = false,
+  showPostMoveFumes = true,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
