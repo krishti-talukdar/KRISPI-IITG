@@ -30,6 +30,7 @@ interface WorkBenchProps {
   showRinseButton?: boolean;
   onRinse?: () => void;
   isRinsing?: boolean;
+  hasRinsed?: boolean;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
