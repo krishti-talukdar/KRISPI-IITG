@@ -521,7 +521,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
         150,
         (Math.min(totalChemicalsAmount, 25) / 25) * 150,
       );
-      const overlayHeight = Math.max(baseOverlayHeight, hasSaltOnly ? 60 : 0);
+      const saltOverlayMinimumHeight = hasSaltSample ? 60 : 0;
+      const overlayHeight = Math.max(baseOverlayHeight, saltOverlayMinimumHeight);
       const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
       const overlayColor = overrideWithWhite
         ? "rgba(255, 255, 255, 0.95)"

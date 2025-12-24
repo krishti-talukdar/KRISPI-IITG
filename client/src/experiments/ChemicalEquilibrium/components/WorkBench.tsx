@@ -7,8 +7,19 @@ const DRY_TEST_VAPOR_PUFFS = [
   { offsetX: 18, duration: "4.1s", delay: "0.2s", scale: 0.9 },
 ] as const;
 
+const POST_MOVE_FUME_CONFIG = [
+  { delay: "0s", scale: 1 },
+  { delay: "0.12s", scale: 1.2 },
+  { delay: "0.24s", scale: 1.15 },
+  { delay: "0.36s", scale: 1.35 },
+  { delay: "0.48s", scale: 1.4 },
+  { delay: "0.6s", scale: 1.25 },
+  { delay: "0.72s", scale: 1.45 },
+  { delay: "0.84s", scale: 1.55 },
+] as const;
+
 const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
-const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.7, yPercent: 0.42 };
+const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
 
 type RinseLayout = {
   buttonLeft: number;
@@ -31,6 +42,8 @@ interface WorkBenchProps {
   onRinse?: () => void;
   isRinsing?: boolean;
   hasRinsed?: boolean;
+  rodMoved?: boolean;
+  showPostMoveFumes?: boolean;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -46,6 +59,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   onRinse,
   isRinsing = false,
   hasRinsed = false,
+  rodMoved = false,
+  showPostMoveFumes = true,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
@@ -510,6 +525,31 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
           {isDryTestWorkbench && (
             <>
+              {rodMoved && showPostMoveFumes && testTubePosition && (
+                <div
+                  className="post-move-fumes-layer"
+                  style={{
+                    "--fume-anchor-left": `${testTubePosition.x}px`,
+                    "--fume-anchor-top": `${testTubePosition.y - 60}px`,
+                  } as React.CSSProperties}
+                >
+                  {POST_MOVE_FUME_CONFIG.map((fume, index) => {
+                    const horizontalOffset =
+                      (index - (POST_MOVE_FUME_CONFIG.length - 1) / 2) * 8;
+                    return (
+                      <span
+                        key={`${index}-${fume.delay}`}
+                        className="post-move-fume"
+                        style={{
+                          "--fume-delay": fume.delay,
+                          "--fume-scale": `${fume.scale}`,
+                          "--fume-offset-x": `${horizontalOffset}px`,
+                        } as React.CSSProperties}
+                      />
+                    );
+                  })}
+                </div>
+              )}
               {(isBunsenHeating || isBunsenLit) && flameCoords && (
                 <div
                   className={`bunsen-flame-layer ${isBunsenHeating ? "flame-burning" : "flame-embers"}`}
@@ -611,7 +651,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         <button
           type="button"
           onClick={() => onRinse?.()}
-          disabled={isRinsing}
+          disabled={isRinsing || rodMoved}
           className="dry-test-rinse-button"
           style={{
             "--rinse-left": `${rinseLayout.buttonLeft}px`,
@@ -789,6 +829,65 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
+}
+.post-move-fumes-layer {
+  position: absolute;
+  pointer-events: none;
+  width: 200px;
+  height: 220px;
+  left: var(--fume-anchor-left, 0);
+  top: var(--fume-anchor-top, 0);
+  transform: translate(-50%, -100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  animation: postMoveFumesDrift 3s ease-in-out infinite;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 28px rgba(255, 255, 255, 0.85));
+}
+.post-move-fume {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.65) 70%);
+  border-radius: 999px;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.92);
+  opacity: 0;
+  animation: postMoveFumeRise 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform: translate(var(--fume-offset-x, 0), 0) scale(var(--fume-scale, 1));
+  animation-delay: var(--fume-delay, 0s);
+  mix-blend-mode: screen;
+  filter: blur(0.35px);
+  will-change: transform, opacity;
+}
+@keyframes postMoveFumeRise {
+  0% {
+    opacity: 0;
+    transform: translate(calc(var(--fume-offset-x, 0) + 2px), 18px) scale(var(--fume-scale, 1));
+  }
+  25% {
+    opacity: 0.75;
+  }
+  60% {
+    opacity: 0.95;
+    transform: translate(calc(var(--fume-offset-x, 0) + 10px), -92px) scale(calc(var(--fume-scale, 1) * 1.4));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--fume-offset-x, 0) + 16px), -150px) scale(calc(var(--fume-scale, 1) * 1.8));
+  }
+}
+@keyframes postMoveFumesDrift {
+  0% {
+    transform: translate(-50%, -100%) translateX(0);
+  }
+  50% {
+    transform: translate(-50%, -100%) translateX(8px);
+  }
+  100% {
+    transform: translate(-50%, -100%) translateX(-5px);
+  }
 }
       `}</style>
     </div>

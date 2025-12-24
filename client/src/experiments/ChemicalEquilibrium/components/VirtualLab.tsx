@@ -98,7 +98,7 @@ const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
 const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.3, yPercent: 0.35 };
 const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
 const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.65 };
-const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.7, yPercent: 0.42 };
+const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
@@ -215,6 +215,9 @@ function ChemicalEquilibriumVirtualLab({
   const [isRinsing, setIsRinsing] = useState(false);
   const [showRinseAnimation, setShowRinseAnimation] = useState(false);
   const [hasRinsed, setHasRinsed] = useState(false);
+  const [rodMoved, setRodMoved] = useState(false);
+  const [postMoveFumesEnabled, setPostMoveFumesEnabled] = useState(false);
+  const [caseOneResult, setCaseOneResult] = useState("No result yet");
   const rinseTimerRef = useRef<number | null>(null);
 
   // Choose chemicals and equipment based on experiment
@@ -249,9 +252,9 @@ function ChemicalEquilibriumVirtualLab({
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
   const [saltMass, setSaltMass] = useState("2.0");
   const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
-  const MIN_SALT_MASS = 2;
-  const MAX_SALT_MASS = 3;
-  const SALT_RANGE_LABEL = "2gm-3gm";
+  const MIN_SALT_MASS = 3;
+  const MAX_SALT_MASS = 5;
+  const SALT_RANGE_LABEL = "3g-5g";
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
   const [acidVolume, setAcidVolume] = useState("4");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
@@ -868,20 +871,70 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleRinseAction = () => {
     if (!hasAmmoniumInGlassContainer || isRinsing) return;
-    setHasRinsed(true);
-    setIsRinsing(true);
-    setShowRinseAnimation(true);
-    setToastMessage("Rinsing the glass rod with NH₄OH...");
-    if (rinseTimerRef.current) {
-      window.clearTimeout(rinseTimerRef.current);
+
+    if (!hasRinsed) {
+      setHasRinsed(true);
+      setIsRinsing(true);
+      setShowRinseAnimation(true);
+      setToastMessage("Rinsing the glass rod with NH₄OH...");
+      if (rinseTimerRef.current) {
+        window.clearTimeout(rinseTimerRef.current);
+      }
+      rinseTimerRef.current = window.setTimeout(() => {
+        setIsRinsing(false);
+        setShowRinseAnimation(false);
+        setToastMessage("Rinsing complete.");
+        rinseTimerRef.current = null;
+        setTimeout(() => setToastMessage(null), 2000);
+      }, 2200);
+      return;
     }
-    rinseTimerRef.current = window.setTimeout(() => {
-      setIsRinsing(false);
-      setShowRinseAnimation(false);
-      setToastMessage("Rinsing complete.");
-      rinseTimerRef.current = null;
-      setTimeout(() => setToastMessage(null), 2000);
-    }, 2200);
+
+    if (rodMoved) return;
+
+    const glassRod = equipmentPositions.find((pos) => pos.id.includes("glass-rod"));
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+
+    if (!glassRod || !testTube) {
+      setToastMessage("Place both the glass rod and test tube on the workbench first.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    const workbenchRect =
+      typeof document !== "undefined"
+        ? document
+            .querySelector('[data-workbench="true"]')
+            ?.getBoundingClientRect() ?? null
+        : null;
+    const clampX = (value: number) => {
+      if (!workbenchRect) return value;
+      return Math.max(32, Math.min(value, Math.max(32, workbenchRect.width - 32)));
+    };
+    const clampY = (value: number) => {
+      if (!workbenchRect) return value;
+      return Math.max(32, Math.min(value, Math.max(32, workbenchRect.height - 32)));
+    };
+    const targetX = clampX(testTube.x + 40);
+    const targetY = clampY(testTube.y - 150);
+
+    pushHistorySnapshot();
+    setEquipmentPositions((prev) =>
+      prev.map((pos) =>
+        pos.id === glassRod.id
+          ? {
+              ...pos,
+              x: targetX,
+              y: targetY,
+            }
+          : pos,
+      ),
+    );
+    setRodMoved(true);
+    setPostMoveFumesEnabled(true);
+    setCaseOneResult("Cl⁻ radical may be present in the given salt.");
+    setToastMessage("Glass rod moved above the test tube.");
+    setTimeout(() => setToastMessage(null), 2500);
   };
 
   const handleStartExperiment = () => {
@@ -904,6 +957,9 @@ function ChemicalEquilibriumVirtualLab({
     historyRef.current = [];
     setUndoStackLength(0);
     setHasRinsed(false);
+    setRodMoved(false);
+    setPostMoveFumesEnabled(false);
+    setCaseOneResult("No result yet");
     if (rinseTimerRef.current) {
       window.clearTimeout(rinseTimerRef.current);
       rinseTimerRef.current = null;
@@ -912,6 +968,16 @@ function ChemicalEquilibriumVirtualLab({
     setShowRinseAnimation(false);
     onResetTimer();
     if (onResetExperiment) onResetExperiment();
+  };
+
+  const handleClearWorkbench = () => {
+    setEquipmentPositions([]);
+    setRodMoved(false);
+    setPostMoveFumesEnabled(false);
+    setHasRinsed(false);
+    setShowRinseAnimation(false);
+    setToastMessage("Workbench cleared.");
+    setTimeout(() => setToastMessage(null), 2500);
   };
 
   const handleUndoStep = () => {
@@ -1156,6 +1222,8 @@ function ChemicalEquilibriumVirtualLab({
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
                 hasRinsed={hasRinsed}
+                rodMoved={rodMoved}
+                showPostMoveFumes={postMoveFumesEnabled}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -1235,12 +1303,21 @@ function ChemicalEquilibriumVirtualLab({
             <div className="text-sm font-semibold mb-2">Cases</div>
             <div className="space-y-2">
               <div className="p-2 border rounded">CASE 1
-                <div className="text-xs text-gray-500">No result yet</div>
+                <div className="text-xs text-gray-500">{caseOneResult}</div>
               </div>
               <div className="p-2 border rounded">CASE 2
                 <div className="text-xs text-gray-500">No result yet</div>
               </div>
             </div>
+            {caseOneResult !== "No result yet" && (
+              <button
+                type="button"
+                onClick={handleClearWorkbench}
+                className="mt-3 w-full rounded-full px-3 py-2 text-xs font-semibold tracking-[0.3em] uppercase text-white bg-red-600 shadow-lg hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400 transition-colors"
+              >
+                RESET WORKBENCH
+              </button>
+            )}
           </aside>
         </div>
       ) : (
@@ -1310,6 +1387,8 @@ function ChemicalEquilibriumVirtualLab({
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
                 hasRinsed={hasRinsed}
+                rodMoved={rodMoved}
+                showPostMoveFumes={postMoveFumesEnabled}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
@@ -1408,14 +1487,14 @@ function ChemicalEquilibriumVirtualLab({
               <input
                 className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                 type="number"
-                min="2"
-                max="3"
+                min={MIN_SALT_MASS}
+                max={MAX_SALT_MASS}
                 step="0.1"
                 value={saltMass}
                 onChange={(event) => setSaltMass(event.target.value)}
                 placeholder="2.5"
               />
-              <p className="text-[11px] text-slate-500">Recommended range: 2gm-3gm.</p>
+              <p className="text-[11px] text-slate-500">Recommended range: {SALT_RANGE_LABEL}.</p>
               {saltDialogError && (
                 <p className="text-[11px] text-red-500">{saltDialogError}</p>
               )}
