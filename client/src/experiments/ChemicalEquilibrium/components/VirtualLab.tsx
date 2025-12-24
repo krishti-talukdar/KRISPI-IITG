@@ -1361,6 +1361,7 @@ function ChemicalEquilibriumVirtualLab({
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
                 hasRinsed={hasRinsed}
+                rodMoved={rodMoved}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
