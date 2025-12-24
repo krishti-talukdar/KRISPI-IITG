@@ -512,6 +512,26 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
           {isDryTestWorkbench && (
             <>
+              {rodMoved && testTubePosition && (
+                <div
+                  className="post-move-fumes-layer"
+                  style={{
+                    "--fume-anchor-left": `${testTubePosition.x}px`,
+                    "--fume-anchor-top": `${testTubePosition.y - 60}px`,
+                  } as React.CSSProperties}
+                >
+                  {[0, 1, 2, 3].map((index) => (
+                    <span
+                      key={index}
+                      className="post-move-fume"
+                      style={{
+                        "--fume-delay": `${index * 0.25}s`,
+                        "--fume-scale": `${1 + index * 0.15}`,
+                      } as React.CSSProperties}
+                    />
+                  ))}
+                </div>
+              )}
               {(isBunsenHeating || isBunsenLit) && flameCoords && (
                 <div
                   className={`bunsen-flame-layer ${isBunsenHeating ? "flame-burning" : "flame-embers"}`}
