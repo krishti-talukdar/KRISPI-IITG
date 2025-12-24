@@ -43,6 +43,7 @@ interface WorkBenchProps {
   isRinsing?: boolean;
   hasRinsed?: boolean;
   rodMoved?: boolean;
+  showPostMoveFumes?: boolean;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
