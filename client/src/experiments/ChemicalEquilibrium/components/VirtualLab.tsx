@@ -967,6 +967,16 @@ function ChemicalEquilibriumVirtualLab({
     if (onResetExperiment) onResetExperiment();
   };
 
+  const handleClearWorkbench = () => {
+    setEquipmentPositions([]);
+    setRodMoved(false);
+    setHasRinsed(false);
+    setShowRinseAnimation(false);
+    setCaseOneResult("No result yet");
+    setToastMessage("Workbench cleared.");
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
   const handleUndoStep = () => {
     if (historyRef.current.length === 0) {
       setToastMessage("No operations to undo yet.");
@@ -1295,6 +1305,15 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-xs text-gray-500">No result yet</div>
               </div>
             </div>
+            {caseOneResult !== "No result yet" && (
+              <button
+                type="button"
+                onClick={handleClearWorkbench}
+                className="mt-3 w-full rounded-full px-3 py-2 text-xs font-semibold tracking-[0.3em] uppercase text-white bg-red-600 shadow-lg hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-400 transition-colors"
+              >
+                RESET WORKBENCH
+              </button>
+            )}
           </aside>
         </div>
       ) : (
