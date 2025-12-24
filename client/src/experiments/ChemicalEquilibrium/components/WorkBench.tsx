@@ -525,7 +525,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
           {isDryTestWorkbench && (
             <>
-              {rodMoved && testTubePosition && (
+              {rodMoved && showPostMoveFumes && testTubePosition && (
                 <div
                   className="post-move-fumes-layer"
                   style={{
