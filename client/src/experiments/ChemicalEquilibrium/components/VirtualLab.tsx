@@ -216,6 +216,7 @@ function ChemicalEquilibriumVirtualLab({
   const [showRinseAnimation, setShowRinseAnimation] = useState(false);
   const [hasRinsed, setHasRinsed] = useState(false);
   const [rodMoved, setRodMoved] = useState(false);
+  const [caseOneResult, setCaseOneResult] = useState("No result yet");
   const rinseTimerRef = useRef<number | null>(null);
 
   // Choose chemicals and equipment based on experiment
