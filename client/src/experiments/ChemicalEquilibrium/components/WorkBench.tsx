@@ -812,6 +812,56 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   cursor: not-allowed;
   box-shadow: none;
 }
+.post-move-fumes-layer {
+  position: absolute;
+  pointer-events: none;
+  width: 140px;
+  height: 160px;
+  left: var(--fume-anchor-left, 0);
+  top: var(--fume-anchor-top, 0);
+  transform: translate(-50%, -100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  animation: postMoveFumesDrift 3s ease-in-out infinite;
+}
+.post-move-fume {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 999px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  animation: postMoveFumeRise 2.5s linear infinite;
+  transform: translateY(0) scale(var(--fume-scale, 1));
+  animation-delay: var(--fume-delay, 0s);
+}
+@keyframes postMoveFumeRise {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(var(--fume-scale, 1));
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-60px) scale(calc(var(--fume-scale, 1) * 0.85));
+  }
+}
+@keyframes postMoveFumesDrift {
+  0% {
+    transform: translate(-50%, -100%) translateX(0);
+  }
+  50% {
+    transform: translate(-50%, -100%) translateX(6px);
+  }
+  100% {
+    transform: translate(-50%, -100%) translateX(-4px);
+  }
+}
       `}</style>
     </div>
   );
