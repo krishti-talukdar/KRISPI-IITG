@@ -31,6 +31,7 @@ interface WorkBenchProps {
   onRinse?: () => void;
   isRinsing?: boolean;
   hasRinsed?: boolean;
+  rodMoved?: boolean;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
