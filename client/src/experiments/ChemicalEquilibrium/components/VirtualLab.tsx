@@ -869,20 +869,68 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleRinseAction = () => {
     if (!hasAmmoniumInGlassContainer || isRinsing) return;
-    setHasRinsed(true);
-    setIsRinsing(true);
-    setShowRinseAnimation(true);
-    setToastMessage("Rinsing the glass rod with NH₄OH...");
-    if (rinseTimerRef.current) {
-      window.clearTimeout(rinseTimerRef.current);
+
+    if (!hasRinsed) {
+      setHasRinsed(true);
+      setIsRinsing(true);
+      setShowRinseAnimation(true);
+      setToastMessage("Rinsing the glass rod with NH₄OH...");
+      if (rinseTimerRef.current) {
+        window.clearTimeout(rinseTimerRef.current);
+      }
+      rinseTimerRef.current = window.setTimeout(() => {
+        setIsRinsing(false);
+        setShowRinseAnimation(false);
+        setToastMessage("Rinsing complete.");
+        rinseTimerRef.current = null;
+        setTimeout(() => setToastMessage(null), 2000);
+      }, 2200);
+      return;
     }
-    rinseTimerRef.current = window.setTimeout(() => {
-      setIsRinsing(false);
-      setShowRinseAnimation(false);
-      setToastMessage("Rinsing complete.");
-      rinseTimerRef.current = null;
-      setTimeout(() => setToastMessage(null), 2000);
-    }, 2200);
+
+    if (rodMoved) return;
+
+    const glassRod = equipmentPositions.find((pos) => pos.id.includes("glass-rod"));
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+
+    if (!glassRod || !testTube) {
+      setToastMessage("Place both the glass rod and test tube on the workbench first.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    const workbenchRect =
+      typeof document !== "undefined"
+        ? document
+            .querySelector('[data-workbench="true"]')
+            ?.getBoundingClientRect() ?? null
+        : null;
+    const clampX = (value: number) => {
+      if (!workbenchRect) return value;
+      return Math.max(32, Math.min(value, Math.max(32, workbenchRect.width - 32)));
+    };
+    const clampY = (value: number) => {
+      if (!workbenchRect) return value;
+      return Math.max(32, Math.min(value, Math.max(32, workbenchRect.height - 32)));
+    };
+    const targetX = clampX(testTube.x + 40);
+    const targetY = clampY(testTube.y - 150);
+
+    pushHistorySnapshot();
+    setEquipmentPositions((prev) =>
+      prev.map((pos) =>
+        pos.id === glassRod.id
+          ? {
+              ...pos,
+              x: targetX,
+              y: targetY,
+            }
+          : pos,
+      ),
+    );
+    setRodMoved(true);
+    setToastMessage("Glass rod moved above the test tube.");
+    setTimeout(() => setToastMessage(null), 2500);
   };
 
   const handleStartExperiment = () => {
