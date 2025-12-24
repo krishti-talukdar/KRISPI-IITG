@@ -8,7 +8,7 @@ const DRY_TEST_VAPOR_PUFFS = [
 ] as const;
 
 const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
-const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.7, yPercent: 0.42 };
+const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
 
 type RinseLayout = {
   buttonLeft: number;
