@@ -703,7 +703,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                   <div className="rounded-2xl border border-gray-200 bg-white/80 p-3">
                     <div className="flex items-center text-sm font-semibold text-gray-800">
                       <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px] mr-2">B</span>
-                      <span>pH of 0.01 M CH₃COOH</span>
+                      <span>pH of 0.01 M CH3COOH</span>
                     </div>
                     <div className="mt-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-base font-semibold text-gray-900">
                       {formatPhValue(case2PH)}
