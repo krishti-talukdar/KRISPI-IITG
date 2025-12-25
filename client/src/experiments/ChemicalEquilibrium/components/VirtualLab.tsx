@@ -230,6 +230,7 @@ function ChemicalEquilibriumVirtualLab({
   const isDryTestExperiment = experimentTitle === ChemicalEquilibriumData.title;
   const usePhStyleLayout = isPHExperiment || isDryTestExperiment;
   const totalGuidedSteps = experiment.stepDetails.length;
+  const dryTestEquipmentNames = dryTestEquipment ?? experiment.equipment;
   const chemicalsList = isPHExperiment
     ? PH_HCL_CHEMICALS
     : isDryTestExperiment
@@ -238,7 +239,7 @@ function ChemicalEquilibriumVirtualLab({
   const equipmentList = usePhStyleLayout
     ? isPHExperiment
       ? PH_HCL_EQUIPMENT
-      : mapDryTestEquipment(experiment.equipment)
+      : mapDryTestEquipment(dryTestEquipmentNames)
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const glassContainerEquipmentId =
     equipmentList.find((eq) => eq.name.toLowerCase().includes("glass container"))?.id ?? null;
