@@ -200,6 +200,8 @@ function ChemicalEquilibriumVirtualLab({
   onResetExperiment,
   timer = 0,
   toggleTimer = () => {},
+  dryTestEquipment,
+  dryTestMode,
 }: ChemicalEquilibriumVirtualLabProps) {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
