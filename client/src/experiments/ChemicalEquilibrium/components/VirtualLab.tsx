@@ -31,6 +31,7 @@ import type {
   Result,
   ExperimentStep,
   ChemicalEquilibriumExperiment,
+  DryTestMode,
 } from "../types";
 
 interface ChemicalEquilibriumVirtualLabProps {
