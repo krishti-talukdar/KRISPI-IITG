@@ -445,6 +445,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     if (testTube.contents.includes('HCL') && testTube.colorHex === COLORS.HCL_PH2) {
       const ph = 2.0;
       setLastMeasuredPH(ph);
+      setCase1PH(ph);
       setShowToast('Measured pH ≈ 2 (strong acid)');
       // color pH paper
       setEquipmentOnBench(prev => prev.map(item => (item.id === 'universal-indicator' || item.id.toLowerCase().includes('ph')) ? { ...item, color: '#ff6b6b' } : item));
@@ -455,6 +456,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     if (testTube.contents.includes('CH3COOH') && testTube.colorHex === COLORS.ACETIC_PH3) {
       const ph = 3.5;
       setLastMeasuredPH(ph);
+      setCase2PH(ph);
       setShowToast('Measured pH ≈ 3–4 (weak acid)');
       setEquipmentOnBench(prev => prev.map(item => (item.id === 'universal-indicator' || item.id.toLowerCase().includes('ph')) ? { ...item, color: '#ffb74d' } : item));
       setTimeout(() => setShowToast(''), 2000);
@@ -477,6 +479,12 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     setTimeout(() => setShowToast(''), 1600);
   };
 
+  const formatPhValue = (ph: number | null) => {
+    if (ph == null) return "No result yet";
+    const label = ph < 7 ? "Acidic" : ph > 7 ? "Basic" : "Neutral";
+    return `${ph.toFixed(2)} (${label})`;
+  };
+
   const handleRestore = () => {
     setHistory([]);
     setTestTube(prev => ({ ...prev, volume: 0, contents: [], colorHex: COLORS.CLEAR }));
@@ -493,6 +501,17 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     setQuizScore(score);
     setQuizSubmitted(true);
   };
+
+  const measurementDisplayValue = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
+  const measurementLabel = lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet';
+  const hclStepsCompleted = [1,2,3].filter((id) => completedSteps.includes(id)).length;
+  const aceticStepsCompleted = [1,4,5].filter((id) => completedSteps.includes(id)).length;
+  const hclActionsCount = analysisLog.filter((entry) => entry.action.toLowerCase().includes('hcl') || entry.observation.toLowerCase().includes('strong acid')).length;
+  const aceticActionsCount = analysisLog.filter((entry) => entry.action.toLowerCase().includes('ch3cooh') || entry.observation.toLowerCase().includes('weak acid')).length;
+  const hclTotalVolume = (hclSample?.volume ?? 0).toFixed(1);
+  const aceticTotalVolume = (aceticSample?.volume ?? 0).toFixed(1);
+
+  const measurementHelperText = lastMeasuredPH != null ? 'Latest indicator reading recorded' : 'No measurement yet';
 
   return (
     <TooltipProvider>
@@ -662,20 +681,42 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
               </div>
 
               {/* Measured pH */}
-              <div className="mb-4">
-                <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
-                <div className="flex items-center space-x-2">
-                  {(() => {
-                    const display = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
-                    return (
-                      <>
-                        <div className="text-2xl font-bold text-purple-700">{display}</div>
-                        <div className="text-xs text-gray-500">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet'}</div>
-                      </>
-                    );
-                  })()}
+              <div className="mb-4 space-y-4">
+                <div>
+                  <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
+                  <div className="flex items-baseline gap-3">
+                    <div className="text-2xl font-bold text-purple-700">{measurementDisplayValue}</div>
+                    <div className="text-xs text-gray-500">{measurementLabel}</div>
+                  </div>
                 </div>
-
+                <div className="space-y-2">
+                  <PHScale value={lastMeasuredPH} />
+                  <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide text-purple-600">
+                    <span className="flex-1 border-t border-dashed border-purple-500" />
+                    <span>{measurementHelperText}</span>
+                    <span className="flex-1 border-t border-dashed border-purple-500" />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="rounded-2xl border border-gray-200 bg-white/80 p-3">
+                    <div className="flex items-center text-sm font-semibold text-gray-800">
+                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px] mr-2">A</span>
+                      <span>pH of 0.01 M HCl</span>
+                    </div>
+                    <div className="mt-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-base font-semibold text-gray-900">
+                      {formatPhValue(case1PH)}
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-gray-200 bg-white/80 p-3">
+                    <div className="flex items-center text-sm font-semibold text-gray-800">
+                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px] mr-2">B</span>
+                      <span>pH of 0.01 M CH3COOH</span>
+                    </div>
+                    <div className="mt-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-base font-semibold text-gray-900">
+                      {formatPhValue(case2PH)}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -689,165 +730,139 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
       {/* Results & Analysis Modal */}
       <Dialog open={showResultsModal} onOpenChange={setShowResultsModal}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto text-black">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-green-700 bg-clip-text text-transparent flex items-center">
-              <TrendingUp className="w-6 h-6 mr-2 text-blue-600" />
+          <DialogHeader className="bg-gradient-to-r from-blue-600 to-purple-600 -mx-6 -mt-6 px-6 py-6 rounded-t-lg text-white">
+            <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+              <TrendingUp className="w-6 h-6" />
               Experiment Results & Analysis
             </DialogTitle>
-            <DialogDescription className="text-black">
+            <DialogDescription className="text-blue-100 text-sm mt-1">
               Complete analysis of your pH comparison experiment using universal indicator
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6 mt-4">
-            {/* Per-Solution Experiment Summaries */}
-            <div className="bg-gradient-to-r from-green-50 to-amber-50 rounded-lg p-6 border border-emerald-200">
-              <h3 className="text-lg font-semibold text-black mb-4">Experiment Summary (Per Solution)</h3>
-              {(() => {
-                const hclSteps = [1,2,3].filter(id => completedSteps.includes(id)).length;
-                const aceticSteps = [1,4,5].filter(id => completedSteps.includes(id)).length;
-                const hclActions = analysisLog.filter(l => l.action.includes('HCl') || l.observation.toLowerCase().includes('strong acid'));
-                const aceticActions = analysisLog.filter(l => l.action.includes('CH3COOH') || l.observation.toLowerCase().includes('weak acid'));
-                const hclVol = (hclSample?.volume ?? 0).toFixed(1);
-                const aceticVol = (aceticSample?.volume ?? 0).toFixed(1);
-                return (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* HCl (Red/Orange) */}
-                    <div className="bg-white rounded-lg p-4 shadow-sm border border-red-200">
-                      <div className="flex items-center mb-3">
-                        <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: COLORS.HCL_PH2 }} />
-                        <h4 className="font-semibold text-black">0.01 M HCl + Indicator</h4>
-                      </div>
-                      <div className="grid grid-cols-3 gap-3">
-                        <div className="bg-red-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-green-700">{hclSteps}</div>
-                          <div className="text-xs text-black">Steps Completed</div>
-                        </div>
-                        <div className="bg-red-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-blue-700">{hclActions.length}</div>
-                          <div className="text-xs text-black">Actions Performed</div>
-                        </div>
-                        <div className="bg-red-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-purple-700">{hclVol} mL</div>
-                          <div className="text-xs text-black">Total Volume</div>
-                        </div>
-                      </div>
+          <div className="space-y-6 pt-4 px-6 pb-6">
+            <div className="bg-gradient-to-r from-green-50 to-amber-50 rounded-lg p-6 border border-emerald-200 space-y-6">
+              <h3 className="text-lg font-semibold text-black">Experiment Summary (Per Solution)</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white rounded-lg shadow-sm border border-red-200 p-5 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.HCL_PH2 }} />
+                    <h4 className="font-semibold text-black">0.01 M HCl + Indicator</h4>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3 text-center text-xs text-gray-700">
+                    <div className="rounded-lg border border-red-100 bg-red-50 p-3">
+                      <div className="text-lg font-bold text-green-700">{hclStepsCompleted}</div>
+                      <div className="uppercase tracking-wide">Steps</div>
                     </div>
-
-                    {/* CH3COOH (Yellow) */}
-                    <div className="bg-white rounded-lg p-4 shadow-sm border border-amber-200">
-                      <div className="flex items-center mb-3">
-                        <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: COLORS.ACETIC_PH3 }} />
-                        <h4 className="font-semibold text-black">0.01 M CH3COOH + Indicator</h4>
-                      </div>
-                      <div className="grid grid-cols-3 gap-3">
-                        <div className="bg-amber-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-green-700">{aceticSteps}</div>
-                          <div className="text-xs text-black">Steps Completed</div>
-                        </div>
-                        <div className="bg-amber-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-blue-700">{aceticActions.length}</div>
-                          <div className="text-xs text-black">Actions Performed</div>
-                        </div>
-                        <div className="bg-amber-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-purple-700">{aceticVol} mL</div>
-                          <div className="text-xs text-black">Total Volume</div>
-                        </div>
-                      </div>
+                    <div className="rounded-lg border border-red-100 bg-red-50 p-3">
+                      <div className="text-lg font-bold text-blue-700">{hclActionsCount}</div>
+                      <div className="uppercase tracking-wide">Actions</div>
+                    </div>
+                    <div className="rounded-lg border border-red-100 bg-red-50 p-3">
+                      <div className="text-lg font-bold text-purple-700">{hclTotalVolume} mL</div>
+                      <div className="uppercase tracking-wide">Total Volume</div>
                     </div>
                   </div>
-                );
-              })()}
+                </div>
+                <div className="bg-white rounded-lg shadow-sm border border-amber-200 p-5 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.ACETIC_PH3 }} />
+                    <h4 className="font-semibold text-black">0.01 M CH3COOH + Indicator</h4>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3 text-center text-xs text-gray-700">
+                    <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
+                      <div className="text-lg font-bold text-green-700">{aceticStepsCompleted}</div>
+                      <div className="uppercase tracking-wide">Steps</div>
+                    </div>
+                    <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
+                      <div className="text-lg font-bold text-blue-700">{aceticActionsCount}</div>
+                      <div className="uppercase tracking-wide">Actions</div>
+                    </div>
+                    <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
+                      <div className="text-lg font-bold text-purple-700">{aceticTotalVolume} mL</div>
+                      <div className="uppercase tracking-wide">Total Volume</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* pH Comparison Analysis */}
-            <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
               <h3 className="text-lg font-semibold text-black mb-4">pH Comparison Analysis</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-red-50 rounded-lg p-4 border border-red-200">
-                  <h4 className="font-semibold text-red-800 mb-1">0.01 M HCl + Universal Indicator</h4>
-                  <p className="text-sm text-red-700 mb-2">Strong acid; expected indicator color: red/orange (≈ pH 2).</p>
-                  <div className="flex items-center space-x-2 text-xs">
-                    <span className="w-4 h-4 rounded-full border" style={{ backgroundColor: COLORS.HCL_PH2 }}></span>
-                    <span>Observed acidic color implies higher [H⁺] than CH3COOH.</span>
+                <div className="rounded-lg border border-red-200 bg-red-50/70 p-4 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-red-600" />
+                    <h4 className="text-sm font-semibold text-red-800">0.01 M HCl + Universal Indicator</h4>
+                  </div>
+                  <p className="text-sm text-red-700">Strong acid; expected indicator color: red/orange (≈ pH 2).</p>
+                  <div className="flex items-center gap-2 text-xs text-red-700">
+                    <span className="w-3 h-3 rounded-full border border-red-300" style={{ backgroundColor: COLORS.HCL_PH2 }} />
+                    Observed acidic color implies higher [H⁺] than CH3COOH.
                   </div>
                 </div>
-                <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
-                  <h4 className="font-semibold text-amber-800 mb-1">0.01 M CH3COOH + Universal Indicator</h4>
-                  <p className="text-sm text-amber-700 mb-2">Weak acid; expected indicator color: yellow/orange (≈ pH 3–4).</p>
-                  <div className="flex items-center space-x-2 text-xs">
-                    <span className="w-4 h-4 rounded-full border" style={{ backgroundColor: COLORS.ACETIC_PH3 }}></span>
-                    <span>Less acidic than HCl at same molarity.</span>
+                <div className="rounded-lg border border-amber-200 bg-amber-50/70 p-4 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-amber-600" />
+                    <h4 className="text-sm font-semibold text-amber-800">0.01 M CH3COOH + Universal Indicator</h4>
+                  </div>
+                  <p className="text-sm text-amber-700">Weak acid; expected indicator color: yellow/orange (≈ pH 3–4).</p>
+                  <div className="flex items-center gap-2 text-xs text-amber-700">
+                    <span className="w-3 h-3 rounded-full border border-amber-300" style={{ backgroundColor: COLORS.ACETIC_PH3 }} />
+                    Less acidic than HCl at the same molarity.
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Action Timeline */}
-            <div className="bg-white rounded-lg p-6 border border-gray-200">
-              <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
-                <Clock className="w-5 h-5 mr-2 text-gray-600" />
+            <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+              <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-gray-600" />
                 Action Timeline
               </h3>
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {analysisLog.map((log, index) => (
-                  <div key={log.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">{index + 1}</div>
-                    <div className="flex-1">
+                  <div key={log.id} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 bg-gradient-to-r from-blue-50 to-white">
+                    <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold">{index + 1}</div>
+                    <div className="flex-1 space-y-1">
                       <div className="font-medium text-black">{log.action}</div>
-                      <div className="text-sm text-black">{log.observation}</div>
-                      <div className="flex items-center space-x-4 mt-2 text-xs">
-                        <span className="flex items-center"><span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: log.colorBefore }}></span>Before</span>
+                      <p className="text-sm text-gray-700">{log.observation}</p>
+                      <div className="flex items-center space-x-3 text-xs text-gray-500">
+                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ backgroundColor: log.colorBefore }} />Before</span>
                         <span>→</span>
-                        <span className="flex items-center"><span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: log.colorAfter }}></span>After</span>
+                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ backgroundColor: log.colorAfter }} />After</span>
                       </div>
                     </div>
                   </div>
                 ))}
+                {analysisLog.length === 0 && <p className="text-xs text-gray-500">Actions logged appear after you add reagents.</p>}
               </div>
             </div>
 
             {/* Final Experimental State (Both Solutions) */}
-            <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
               <h3 className="text-lg font-semibold text-black mb-4">Final Experimental State</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* HCl + Indicator (Red/Orange) */}
-                <div className="rounded-lg border border-red-200 p-4 bg-red-50/40">
-                  <div className="flex items-center mb-3">
-                    <span className="w-4 h-4 rounded-full mr-2 border" style={{ backgroundColor: COLORS.HCL_PH2 }} />
-                    <h4 className="font-semibold text-black">0.01 M HCl + Indicator (≈ pH 2)</h4>
+                <div className="rounded-lg border border-red-200 bg-red-50/70 p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.HCL_PH2 }} />
+                    <h4 className="text-sm font-semibold text-black">0.01 M HCl + Indicator (≈ pH 2)</h4>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <h5 className="font-medium text-black mb-2">Current Solution</h5>
-                      <p className="text-sm text-black">Contents: {hclSample ? hclSample.contents.join(', ') : 'Not recorded'}</p>
-                    </div>
-                    <div>
-                      <h5 className="font-medium text-black mb-2">Contents Analysis</h5>
-                      <div className="space-y-1 text-sm">
-                        <div>Volume: <span className="font-medium">{(hclSample?.volume ?? 0).toFixed(1)} mL</span></div>
-                      </div>
-                    </div>
+                  <div className="text-sm text-black space-y-1">
+                    <div><span className="font-medium">Current Solution:</span> {hclSample ? hclSample.contents.join(', ') : 'Not recorded'}</div>
+                    <div><span className="font-medium">Volume:</span> {(hclSample?.volume ?? 0).toFixed(1)} mL</div>
                   </div>
                 </div>
-
-                {/* CH3COOH + Indicator (Yellow) */}
-                <div className="rounded-lg border border-amber-200 p-4 bg-amber-50/40">
-                  <div className="flex items-center mb-3">
-                    <span className="w-4 h-4 rounded-full mr-2 border" style={{ backgroundColor: COLORS.ACETIC_PH3 }} />
-                    <h4 className="font-semibold text-black">0.1 M CH3COOH + Indicator (≈ pH 3–4)</h4>
+                <div className="rounded-lg border border-amber-200 bg-amber-50/70 p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.ACETIC_PH3 }} />
+                    <h4 className="text-sm font-semibold text-black">0.01 M CH3COOH + Indicator (≈ pH 3–4)</h4>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <h5 className="font-medium text-black mb-2">Current Solution</h5>
-                      <p className="text-sm text-black">Contents: {aceticSample ? aceticSample.contents.join(', ') : 'Not recorded'}</p>
-                    </div>
-                    <div>
-                      <h5 className="font-medium text-black mb-2">Contents Analysis</h5>
-                      <div className="space-y-1 text-sm">
-                        <div>Volume: <span className="font-medium">{(aceticSample?.volume ?? 0).toFixed(1)} mL</span></div>
-                      </div>
-                    </div>
+                  <div className="text-sm text-black space-y-1">
+                    <div><span className="font-medium">Current Solution:</span> {aceticSample ? aceticSample.contents.join(', ') : 'Not recorded'}</div>
+                    <div><span className="font-medium">Volume:</span> {(aceticSample?.volume ?? 0).toFixed(1)} mL</div>
                   </div>
                 </div>
               </div>
