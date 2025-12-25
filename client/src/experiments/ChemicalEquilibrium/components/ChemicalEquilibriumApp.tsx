@@ -13,6 +13,19 @@ interface ChemicalEquilibriumAppProps {
   onBack?: () => void;
 }
 
+const WET_ACID_TEST_EQUIPMENT = [
+  "Test Tubes",
+  "Dropper Pipettes",
+  "Indicator Solution (Universal Indicator)",
+  "Dilute HCl (0.1 M)",
+  "Dilute NaOH (0.1 M)",
+  "Distilled Water",
+  "Bunsen Burner (virtual heat source)",
+  "Glass Rod",
+  "Glass Beaker (25 mL)",
+  "pH Paper Strips",
+];
+
 const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
   letter: string;
   label: string;
@@ -27,18 +40,23 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
     letter: "B",
     label: "Dry Tests for Basic Radicals",
     equipment: [
-    "Charcoal",
-    "Anhydrous Na₂CO₃",
-    "NaOH",
-    "Test Tubes",
-    "Bunsen Burner (virtual heat source)",
-    "Platinum Wire",
-    "pH Paper",
-  ],
+      "Charcoal",
+      "Anhydrous Na₂CO₃",
+      "NaOH",
+      "Test Tubes",
+      "Bunsen Burner (virtual heat source)",
+      "Platinum Wire",
+      "pH Paper",
+    ],
+  },
+  wet: {
+    letter: "C",
+    label: "Wet Test for Acid Radicals",
+    equipment: WET_ACID_TEST_EQUIPMENT,
   },
 };
 
-const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic"];
+const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet"];
 
 export default function ChemicalEquilibriumApp({
   onBack,
