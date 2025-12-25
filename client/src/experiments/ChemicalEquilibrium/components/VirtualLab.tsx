@@ -253,6 +253,11 @@ function ChemicalEquilibriumVirtualLab({
     : 0;
   const hasAmmoniumInGlassContainer = ammoniumAmountInGlassContainer > 0;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
+  const instructionMessage = isDryTestExperiment
+    ? dryTestMode === "basic"
+      ? "Arrange charcoal, anhydrous Na₂CO₃, and NaOH on the clean loop, heat gently, and observe the characteristic fumes, residues, and colors of basic radicals."
+      : "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating."
+    : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
