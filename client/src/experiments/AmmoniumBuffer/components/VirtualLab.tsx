@@ -800,7 +800,7 @@ useEffect(() => {
               <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <h4 className="font-semibold mb-3">Interpretation & Key Observations</h4>
                 {(() => {
-                  const res = computeHenderson();
+                  const res = hendersonResult;
                   const pHcalc = res.pH !== null ? res.pH.toFixed(2) : null;
                   const ratioStr = isFinite(res.ratio) ? res.ratio.toFixed(2) : '—';
                   const molesBaseMs = res.molesBase ? (res.molesBase * 1000).toFixed(3) : '0';
