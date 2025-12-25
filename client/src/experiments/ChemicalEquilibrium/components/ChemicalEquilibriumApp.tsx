@@ -75,6 +75,13 @@ export default function ChemicalEquilibriumApp({
     };
   }, [isRunning, timer, experimentStarted]);
 
+  useEffect(() => {
+    setCurrentStep(0);
+    setExperimentStarted(false);
+    setIsRunning(false);
+    setTimer(0);
+  }, [activeDryTestMode]);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
