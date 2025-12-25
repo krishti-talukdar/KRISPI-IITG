@@ -327,6 +327,9 @@ export default function ChemicalEquilibriumApp({
             </CardHeader>
             <CardContent className="p-0">
               <ChemicalEquilibriumVirtualLab
+                key={`dry-test-${activeDryTestMode}`}
+                dryTestEquipment={activeDryTestConfig.equipment}
+                dryTestMode={activeDryTestMode}
                 step={currentStepData}
                 onStepComplete={handleCompleteStep}
                 isActive={true}
