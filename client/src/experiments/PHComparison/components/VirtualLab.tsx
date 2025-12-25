@@ -479,6 +479,12 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     setTimeout(() => setShowToast(''), 1600);
   };
 
+  const formatPhValue = (ph: number | null) => {
+    if (ph == null) return "No result yet";
+    const label = ph < 7 ? "Acidic" : ph > 7 ? "Basic" : "Neutral";
+    return `${ph.toFixed(2)} (${label})`;
+  };
+
   const handleRestore = () => {
     setHistory([]);
     setTestTube(prev => ({ ...prev, volume: 0, contents: [], colorHex: COLORS.CLEAR }));
