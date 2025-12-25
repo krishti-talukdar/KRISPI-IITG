@@ -6,12 +6,31 @@ import { ArrowLeft, ArrowRight, Play, Pause } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import ChemicalEquilibriumVirtualLab from "./VirtualLab";
 import ChemicalEquilibriumData, { PHHClExperiment } from "../data";
-import type { ExperimentStep } from "../types";
+import type { ExperimentStep, DryTestMode } from "../types";
 import { useUpdateProgress } from "@/hooks/use-experiments";
 
 interface ChemicalEquilibriumAppProps {
   onBack?: () => void;
 }
+
+const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
+  letter: string;
+  label: string;
+  equipment: string[];
+}> = {
+  acid: {
+    letter: "A",
+    label: "Dry Tests for Acid Radicals",
+    equipment: ChemicalEquilibriumData.equipment,
+  },
+  basic: {
+    letter: "B",
+    label: "Dry Tests for Basic Radicals",
+    equipment: ["Charcoal", "Anhydrous Na₂CO₃", "NaOH"],
+  },
+};
+
+const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic"];
 
 export default function ChemicalEquilibriumApp({
   onBack,
@@ -20,12 +39,14 @@ export default function ChemicalEquilibriumApp({
   const [isRunning, setIsRunning] = useState(false);
   const [timer, setTimer] = useState(0);
   const [experimentStarted, setExperimentStarted] = useState(false);
+  const [activeDryTestMode, setActiveDryTestMode] = useState<DryTestMode>("acid");
 
   const [match, params] = useRoute("/experiment/:id");
   const experimentId = Number(params?.id ?? 4);
   const experiment = experimentId === PHHClExperiment.id ? PHHClExperiment : ChemicalEquilibriumData;
   const isDryTestExperiment = experiment.id === ChemicalEquilibriumData.id;
   const updateProgress = useUpdateProgress();
+  const activeDryTestConfig = DRY_TEST_MODE_CONFIG[activeDryTestMode];
 
   // Auto-start when URL contains ?autostart=1 for the PH experiment
   useEffect(() => {
@@ -54,6 +75,13 @@ export default function ChemicalEquilibriumApp({
       if (interval) clearInterval(interval);
     };
   }, [isRunning, timer, experimentStarted]);
+
+  useEffect(() => {
+    setCurrentStep(0);
+    setExperimentStarted(false);
+    setIsRunning(false);
+    setTimer(0);
+  }, [activeDryTestMode]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -139,30 +167,25 @@ export default function ChemicalEquilibriumApp({
           {isDryTestExperiment && (
             <div className="dry-test-button-panel-wrapper mb-6">
               <div className="dry-test-button-panel">
-                <button
-                  type="button"
-                  className="dry-test-action-card"
-                  aria-label="Select Dry Tests for Acid Radicals"
-                >
-                  <span className="dry-test-action-letter" aria-hidden="true">
-                    A
-                  </span>
-                  <p className="dry-test-action-title">
-                    Dry Tests for Acid Radicals
-                  </p>
-                </button>
-                <button
-                  type="button"
-                  className="dry-test-action-card"
-                  aria-label="Select Dry Tests for Basic Radicals"
-                >
-                  <span className="dry-test-action-letter" aria-hidden="true">
-                    B
-                  </span>
-                  <p className="dry-test-action-title">
-                    Dry Tests for basic Radicals
-                  </p>
-                </button>
+                {DRY_TEST_MODE_ORDER.map((mode) => {
+                  const modeConfig = DRY_TEST_MODE_CONFIG[mode];
+                  const isActive = activeDryTestMode === mode;
+                  return (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setActiveDryTestMode(mode)}
+                      className={`dry-test-action-card ${isActive ? "dry-test-action-card--active" : ""}`}
+                      aria-pressed={isActive}
+                      aria-label={`Select ${modeConfig.label}`}
+                    >
+                      <span className="dry-test-action-letter" aria-hidden="true">
+                        {modeConfig.letter}
+                      </span>
+                      <p className="dry-test-action-title">{modeConfig.label}</p>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -304,6 +327,9 @@ export default function ChemicalEquilibriumApp({
             </CardHeader>
             <CardContent className="p-0">
               <ChemicalEquilibriumVirtualLab
+                key={`dry-test-${activeDryTestMode}`}
+                dryTestEquipment={activeDryTestConfig.equipment}
+                dryTestMode={activeDryTestMode}
                 step={currentStepData}
                 onStepComplete={handleCompleteStep}
                 isActive={true}

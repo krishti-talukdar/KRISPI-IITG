@@ -31,6 +31,7 @@ import type {
   Result,
   ExperimentStep,
   ChemicalEquilibriumExperiment,
+  DryTestMode,
 } from "../types";
 
 interface ChemicalEquilibriumVirtualLabProps {
@@ -50,6 +51,8 @@ interface ChemicalEquilibriumVirtualLabProps {
   onResetExperiment?: () => void;
   timer?: number;
   toggleTimer?: () => void;
+  dryTestEquipment?: string[];
+  dryTestMode?: DryTestMode;
 }
 
 type LabSnapshot = {
@@ -197,6 +200,8 @@ function ChemicalEquilibriumVirtualLab({
   onResetExperiment,
   timer = 0,
   toggleTimer = () => {},
+  dryTestEquipment,
+  dryTestMode,
 }: ChemicalEquilibriumVirtualLabProps) {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -225,6 +230,7 @@ function ChemicalEquilibriumVirtualLab({
   const isDryTestExperiment = experimentTitle === ChemicalEquilibriumData.title;
   const usePhStyleLayout = isPHExperiment || isDryTestExperiment;
   const totalGuidedSteps = experiment.stepDetails.length;
+  const dryTestEquipmentNames = dryTestEquipment ?? experiment.equipment;
   const chemicalsList = isPHExperiment
     ? PH_HCL_CHEMICALS
     : isDryTestExperiment
@@ -233,7 +239,7 @@ function ChemicalEquilibriumVirtualLab({
   const equipmentList = usePhStyleLayout
     ? isPHExperiment
       ? PH_HCL_EQUIPMENT
-      : mapDryTestEquipment(experiment.equipment)
+      : mapDryTestEquipment(dryTestEquipmentNames)
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const glassContainerEquipmentId =
     equipmentList.find((eq) => eq.name.toLowerCase().includes("glass container"))?.id ?? null;
@@ -247,6 +253,11 @@ function ChemicalEquilibriumVirtualLab({
     : 0;
   const hasAmmoniumInGlassContainer = ammoniumAmountInGlassContainer > 0;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
+  const instructionMessage = isDryTestExperiment
+    ? dryTestMode === "basic"
+      ? "Arrange charcoal, anhydrous Na₂CO₃, and NaOH on the clean loop, heat gently, and observe the characteristic fumes, residues, and colors of basic radicals."
+      : "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating."
+    : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
   const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
@@ -1270,7 +1281,7 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="mt-4 bg-white p-3 border rounded">
               <h4 className="text-sm font-semibold mb-2">Instructions</h4>
-              <p className="text-xs text-gray-600">Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.</p>
+              <p className="text-xs text-gray-600">{instructionMessage}</p>
             </div>
           </main>
 
