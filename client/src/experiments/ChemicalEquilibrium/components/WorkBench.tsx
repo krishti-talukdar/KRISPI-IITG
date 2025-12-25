@@ -114,7 +114,9 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     : false;
 
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
-  const isDryTestWorkbench = normalizedTitle.includes("dry tests for acid radicals");
+  const isDryTestWorkbench =
+    normalizedTitle.includes("dry tests for acid radicals") ||
+    normalizedTitle.includes("dry tests for basic radicals");
   const dryStepLabel = `Step ${currentGuidedStep}${totalGuidedSteps ? ` of ${totalGuidedSteps}` : ""}`;
 
   const workbenchRef = useRef<HTMLDivElement>(null);
