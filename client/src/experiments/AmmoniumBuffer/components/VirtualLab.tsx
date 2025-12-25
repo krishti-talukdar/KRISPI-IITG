@@ -415,6 +415,19 @@ useEffect(() => {
     return { pKa, baseVolMl, acidVolMl, indicatorVolMl, totalVolMl, totalVolL, molesBase, molesAcid, baseConc, acidConc, ratio, pH };
   };
 
+  const describePhLabel = (ph: number | null) => {
+    if (ph == null) return "Awaiting measurement";
+    if (ph < 7) return "Acidic";
+    if (ph > 7) return "Basic";
+    return "Neutral";
+  };
+
+  const hendersonResult = computeHenderson();
+  const bufferedPhResult = hendersonResult.pH ?? ammoniumAfterPH;
+  const initialPhDisplay = ammoniumInitialPH != null ? ammoniumInitialPH.toFixed(2) : "—";
+  const bufferedPhDisplay = bufferedPhResult != null ? bufferedPhResult.toFixed(2) : "—";
+  const hendersonRatioText = Number.isFinite(hendersonResult.ratio) ? hendersonResult.ratio.toFixed(2) : "—";
+
   const stepsProgress = (
     <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
