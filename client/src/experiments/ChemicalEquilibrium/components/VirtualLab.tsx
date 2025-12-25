@@ -262,7 +262,8 @@ function ChemicalEquilibriumVirtualLab({
     : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
   const isDryTestWorkbench =
     normalizedTitle.includes("dry tests for acid radicals") ||
-    normalizedTitle.includes("dry tests for basic radicals");
+    normalizedTitle.includes("dry tests for basic radicals") ||
+    normalizedTitle.includes("salt analysis");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
   const [saltMass, setSaltMass] = useState("2.0");
