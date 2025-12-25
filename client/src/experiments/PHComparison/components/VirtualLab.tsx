@@ -445,6 +445,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     if (testTube.contents.includes('HCL') && testTube.colorHex === COLORS.HCL_PH2) {
       const ph = 2.0;
       setLastMeasuredPH(ph);
+      setCase1PH(ph);
       setShowToast('Measured pH ≈ 2 (strong acid)');
       // color pH paper
       setEquipmentOnBench(prev => prev.map(item => (item.id === 'universal-indicator' || item.id.toLowerCase().includes('ph')) ? { ...item, color: '#ff6b6b' } : item));
@@ -455,6 +456,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     if (testTube.contents.includes('CH3COOH') && testTube.colorHex === COLORS.ACETIC_PH3) {
       const ph = 3.5;
       setLastMeasuredPH(ph);
+      setCase2PH(ph);
       setShowToast('Measured pH ≈ 3–4 (weak acid)');
       setEquipmentOnBench(prev => prev.map(item => (item.id === 'universal-indicator' || item.id.toLowerCase().includes('ph')) ? { ...item, color: '#ffb74d' } : item));
       setTimeout(() => setShowToast(''), 2000);
