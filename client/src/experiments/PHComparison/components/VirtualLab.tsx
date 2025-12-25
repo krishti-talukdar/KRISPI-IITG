@@ -741,64 +741,50 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
           </DialogHeader>
 
           <div className="space-y-6 pt-4 px-6 pb-6">
-            {/* Per-Solution Experiment Summaries */}
-            <div className="bg-gradient-to-r from-green-50 to-amber-50 rounded-lg p-6 border border-emerald-200">
-              <h3 className="text-lg font-semibold text-black mb-4">Experiment Summary (Per Solution)</h3>
-              {(() => {
-                const hclSteps = [1,2,3].filter(id => completedSteps.includes(id)).length;
-                const aceticSteps = [1,4,5].filter(id => completedSteps.includes(id)).length;
-                const hclActions = analysisLog.filter(l => l.action.includes('HCl') || l.observation.toLowerCase().includes('strong acid'));
-                const aceticActions = analysisLog.filter(l => l.action.includes('CH3COOH') || l.observation.toLowerCase().includes('weak acid'));
-                const hclVol = (hclSample?.volume ?? 0).toFixed(1);
-                const aceticVol = (aceticSample?.volume ?? 0).toFixed(1);
-                return (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* HCl (Red/Orange) */}
-                    <div className="bg-white rounded-lg p-4 shadow-sm border border-red-200">
-                      <div className="flex items-center mb-3">
-                        <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: COLORS.HCL_PH2 }} />
-                        <h4 className="font-semibold text-black">0.01 M HCl + Indicator</h4>
-                      </div>
-                      <div className="grid grid-cols-3 gap-3">
-                        <div className="bg-red-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-green-700">{hclSteps}</div>
-                          <div className="text-xs text-black">Steps Completed</div>
-                        </div>
-                        <div className="bg-red-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-blue-700">{hclActions.length}</div>
-                          <div className="text-xs text-black">Actions Performed</div>
-                        </div>
-                        <div className="bg-red-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-purple-700">{hclVol} mL</div>
-                          <div className="text-xs text-black">Total Volume</div>
-                        </div>
-                      </div>
+            <div className="bg-gradient-to-r from-green-50 to-amber-50 rounded-lg p-6 border border-emerald-200 space-y-6">
+              <h3 className="text-lg font-semibold text-black">Experiment Summary (Per Solution)</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white rounded-lg shadow-sm border border-red-200 p-5 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.HCL_PH2 }} />
+                    <h4 className="font-semibold text-black">0.01 M HCl + Indicator</h4>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3 text-center text-xs text-gray-700">
+                    <div className="rounded-lg border border-red-100 bg-red-50 p-3">
+                      <div className="text-lg font-bold text-green-700">{hclStepsCompleted}</div>
+                      <div className="uppercase tracking-wide">Steps</div>
                     </div>
-
-                    {/* CH3COOH (Yellow) */}
-                    <div className="bg-white rounded-lg p-4 shadow-sm border border-amber-200">
-                      <div className="flex items-center mb-3">
-                        <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: COLORS.ACETIC_PH3 }} />
-                        <h4 className="font-semibold text-black">0.01 M CH3COOH + Indicator</h4>
-                      </div>
-                      <div className="grid grid-cols-3 gap-3">
-                        <div className="bg-amber-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-green-700">{aceticSteps}</div>
-                          <div className="text-xs text-black">Steps Completed</div>
-                        </div>
-                        <div className="bg-amber-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-blue-700">{aceticActions.length}</div>
-                          <div className="text-xs text-black">Actions Performed</div>
-                        </div>
-                        <div className="bg-amber-50 rounded-md p-3 text-center">
-                          <div className="text-xl font-bold text-purple-700">{aceticVol} mL</div>
-                          <div className="text-xs text-black">Total Volume</div>
-                        </div>
-                      </div>
+                    <div className="rounded-lg border border-red-100 bg-red-50 p-3">
+                      <div className="text-lg font-bold text-blue-700">{hclActionsCount}</div>
+                      <div className="uppercase tracking-wide">Actions</div>
+                    </div>
+                    <div className="rounded-lg border border-red-100 bg-red-50 p-3">
+                      <div className="text-lg font-bold text-purple-700">{hclTotalVolume} mL</div>
+                      <div className="uppercase tracking-wide">Total Volume</div>
                     </div>
                   </div>
-                );
-              })()}
+                </div>
+                <div className="bg-white rounded-lg shadow-sm border border-amber-200 p-5 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.ACETIC_PH3 }} />
+                    <h4 className="font-semibold text-black">0.01 M CH3COOH + Indicator</h4>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3 text-center text-xs text-gray-700">
+                    <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
+                      <div className="text-lg font-bold text-green-700">{aceticStepsCompleted}</div>
+                      <div className="uppercase tracking-wide">Steps</div>
+                    </div>
+                    <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
+                      <div className="text-lg font-bold text-blue-700">{aceticActionsCount}</div>
+                      <div className="uppercase tracking-wide">Actions</div>
+                    </div>
+                    <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
+                      <div className="text-lg font-bold text-purple-700">{aceticTotalVolume} mL</div>
+                      <div className="uppercase tracking-wide">Total Volume</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* pH Comparison Analysis */}
