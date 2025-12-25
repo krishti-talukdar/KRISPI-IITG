@@ -1281,7 +1281,7 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="mt-4 bg-white p-3 border rounded">
               <h4 className="text-sm font-semibold mb-2">Instructions</h4>
-              <p className="text-xs text-gray-600">Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.</p>
+              <p className="text-xs text-gray-600">{instructionMessage}</p>
             </div>
           </main>
 
