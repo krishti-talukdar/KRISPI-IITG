@@ -674,20 +674,42 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
               </div>
 
               {/* Measured pH */}
-              <div className="mb-4">
-                <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
-                <div className="flex items-center space-x-2">
-                  {(() => {
-                    const display = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
-                    return (
-                      <>
-                        <div className="text-2xl font-bold text-purple-700">{display}</div>
-                        <div className="text-xs text-gray-500">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet'}</div>
-                      </>
-                    );
-                  })()}
+              <div className="mb-4 space-y-4">
+                <div>
+                  <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
+                  <div className="flex items-baseline gap-3">
+                    <div className="text-2xl font-bold text-purple-700">{measurementDisplayValue}</div>
+                    <div className="text-xs text-gray-500">{measurementLabel}</div>
+                  </div>
                 </div>
-
+                <div className="space-y-2">
+                  <PHScale value={lastMeasuredPH} />
+                  <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide text-purple-600">
+                    <span className="flex-1 border-t border-dashed border-purple-500" />
+                    <span>{measurementHelperText}</span>
+                    <span className="flex-1 border-t border-dashed border-purple-500" />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="rounded-2xl border border-gray-200 bg-white/80 p-3">
+                    <div className="flex items-center text-sm font-semibold text-gray-800">
+                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px] mr-2">A</span>
+                      <span>pH of 0.01 M HCl</span>
+                    </div>
+                    <div className="mt-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-base font-semibold text-gray-900">
+                      {formatPhValue(case1PH)}
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-gray-200 bg-white/80 p-3">
+                    <div className="flex items-center text-sm font-semibold text-gray-800">
+                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px] mr-2">B</span>
+                      <span>pH of 0.01 M CH₃COOH</span>
+                    </div>
+                    <div className="mt-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-base font-semibold text-gray-900">
+                      {formatPhValue(case2PH)}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
