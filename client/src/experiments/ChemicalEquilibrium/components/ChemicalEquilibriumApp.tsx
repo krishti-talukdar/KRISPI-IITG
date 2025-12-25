@@ -13,6 +13,25 @@ interface ChemicalEquilibriumAppProps {
   onBack?: () => void;
 }
 
+const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
+  letter: string;
+  label: string;
+  equipment: string[];
+}> = {
+  acid: {
+    letter: "A",
+    label: "Dry Tests for Acid Radicals",
+    equipment: ChemicalEquilibriumData.equipment,
+  },
+  basic: {
+    letter: "B",
+    label: "Dry Tests for Basic Radicals",
+    equipment: ["Charcoal", "Anhydrous Na₂CO₃", "NaOH"],
+  },
+};
+
+const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic"];
+
 export default function ChemicalEquilibriumApp({
   onBack,
 }: ChemicalEquilibriumAppProps) {
