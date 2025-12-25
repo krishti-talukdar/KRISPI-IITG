@@ -730,17 +730,17 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
       {/* Results & Analysis Modal */}
       <Dialog open={showResultsModal} onOpenChange={setShowResultsModal}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto text-black">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-green-700 bg-clip-text text-transparent flex items-center">
-              <TrendingUp className="w-6 h-6 mr-2 text-blue-600" />
+          <DialogHeader className="bg-gradient-to-r from-blue-600 to-purple-600 -mx-6 -mt-6 px-6 py-6 rounded-t-lg text-white">
+            <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+              <TrendingUp className="w-6 h-6" />
               Experiment Results & Analysis
             </DialogTitle>
-            <DialogDescription className="text-black">
+            <DialogDescription className="text-blue-100 text-sm mt-1">
               Complete analysis of your pH comparison experiment using universal indicator
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6 mt-4">
+          <div className="space-y-6 pt-4 px-6 pb-6">
             {/* Per-Solution Experiment Summaries */}
             <div className="bg-gradient-to-r from-green-50 to-amber-50 rounded-lg p-6 border border-emerald-200">
               <h3 className="text-lg font-semibold text-black mb-4">Experiment Summary (Per Solution)</h3>
