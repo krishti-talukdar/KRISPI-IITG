@@ -51,6 +51,8 @@ interface ChemicalEquilibriumVirtualLabProps {
   onResetExperiment?: () => void;
   timer?: number;
   toggleTimer?: () => void;
+  dryTestEquipment?: string[];
+  dryTestMode?: DryTestMode;
 }
 
 type LabSnapshot = {
