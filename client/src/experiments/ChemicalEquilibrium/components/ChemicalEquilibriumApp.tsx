@@ -167,30 +167,25 @@ export default function ChemicalEquilibriumApp({
           {isDryTestExperiment && (
             <div className="dry-test-button-panel-wrapper mb-6">
               <div className="dry-test-button-panel">
-                <button
-                  type="button"
-                  className="dry-test-action-card"
-                  aria-label="Select Dry Tests for Acid Radicals"
-                >
-                  <span className="dry-test-action-letter" aria-hidden="true">
-                    A
-                  </span>
-                  <p className="dry-test-action-title">
-                    Dry Tests for Acid Radicals
-                  </p>
-                </button>
-                <button
-                  type="button"
-                  className="dry-test-action-card"
-                  aria-label="Select Dry Tests for Basic Radicals"
-                >
-                  <span className="dry-test-action-letter" aria-hidden="true">
-                    B
-                  </span>
-                  <p className="dry-test-action-title">
-                    Dry Tests for basic Radicals
-                  </p>
-                </button>
+                {DRY_TEST_MODE_ORDER.map((mode) => {
+                  const modeConfig = DRY_TEST_MODE_CONFIG[mode];
+                  const isActive = activeDryTestMode === mode;
+                  return (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setActiveDryTestMode(mode)}
+                      className={`dry-test-action-card ${isActive ? "dry-test-action-card--active" : ""}`}
+                      aria-pressed={isActive}
+                      aria-label={`Select ${modeConfig.label}`}
+                    >
+                      <span className="dry-test-action-letter" aria-hidden="true">
+                        {modeConfig.letter}
+                      </span>
+                      <p className="dry-test-action-title">{modeConfig.label}</p>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
