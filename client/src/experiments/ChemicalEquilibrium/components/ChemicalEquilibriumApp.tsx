@@ -26,7 +26,15 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
   basic: {
     letter: "B",
     label: "Dry Tests for Basic Radicals",
-    equipment: ["Charcoal", "Anhydrous Na₂CO₃", "NaOH"],
+    equipment: [
+    "Charcoal",
+    "Anhydrous Na₂CO₃",
+    "NaOH",
+    "Test Tubes",
+    "Bunsen Burner (virtual heat source)",
+    "Platinum Wire",
+    "pH Paper",
+  ],
   },
 };
 
