@@ -820,7 +820,7 @@ useEffect(() => {
                 <h4 className="font-semibold mb-3">Buffer Capacity (Practical)</h4>
                 <div className="text-sm text-black space-y-2">
                   {(() => {
-                    const res = computeHenderson();
+                    const res = hendersonResult;
                     const totalMoles = (res.molesBase || 0) + (res.molesAcid || 0);
                     const capacity = totalMoles > 0 ? (totalMoles * 1000).toFixed(3) : '0';
                     const capacityAssessment = totalMoles <= 0 ? 'No buffer formed' : totalMoles < 0.001 ? 'Low buffer capacity' : totalMoles < 0.01 ? 'Moderate buffer capacity' : 'High buffer capacity';
