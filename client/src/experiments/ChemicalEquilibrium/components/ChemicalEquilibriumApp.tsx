@@ -46,6 +46,7 @@ export default function ChemicalEquilibriumApp({
   const experiment = experimentId === PHHClExperiment.id ? PHHClExperiment : ChemicalEquilibriumData;
   const isDryTestExperiment = experiment.id === ChemicalEquilibriumData.id;
   const updateProgress = useUpdateProgress();
+  const activeDryTestConfig = DRY_TEST_MODE_CONFIG[activeDryTestMode];
 
   // Auto-start when URL contains ?autostart=1 for the PH experiment
   useEffect(() => {
