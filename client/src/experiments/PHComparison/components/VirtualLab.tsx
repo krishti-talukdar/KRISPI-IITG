@@ -502,6 +502,10 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     setQuizSubmitted(true);
   };
 
+  const measurementDisplayValue = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
+  const measurementLabel = lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet';
+  const measurementHelperText = lastMeasuredPH != null ? 'Latest indicator reading recorded' : 'No measurement yet';
+
   return (
     <TooltipProvider>
       <div className="w-full h-full bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 p-6">
