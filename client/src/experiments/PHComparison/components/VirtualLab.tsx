@@ -504,6 +504,13 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
 
   const measurementDisplayValue = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
   const measurementLabel = lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet';
+  const hclStepsCompleted = [1,2,3].filter((id) => completedSteps.includes(id)).length;
+  const aceticStepsCompleted = [1,4,5].filter((id) => completedSteps.includes(id)).length;
+  const hclActionsCount = analysisLog.filter((entry) => entry.action.toLowerCase().includes('hcl') || entry.observation.toLowerCase().includes('strong acid')).length;
+  const aceticActionsCount = analysisLog.filter((entry) => entry.action.toLowerCase().includes('ch3cooh') || entry.observation.toLowerCase().includes('weak acid')).length;
+  const hclTotalVolume = (hclSample?.volume ?? 0).toFixed(1);
+  const aceticTotalVolume = (aceticSample?.volume ?? 0).toFixed(1);
+
   const measurementHelperText = lastMeasuredPH != null ? 'Latest indicator reading recorded' : 'No measurement yet';
 
   return (
