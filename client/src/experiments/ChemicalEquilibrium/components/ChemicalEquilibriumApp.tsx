@@ -39,6 +39,7 @@ export default function ChemicalEquilibriumApp({
   const [isRunning, setIsRunning] = useState(false);
   const [timer, setTimer] = useState(0);
   const [experimentStarted, setExperimentStarted] = useState(false);
+  const [activeDryTestMode, setActiveDryTestMode] = useState<DryTestMode>("acid");
 
   const [match, params] = useRoute("/experiment/:id");
   const experimentId = Number(params?.id ?? 4);
