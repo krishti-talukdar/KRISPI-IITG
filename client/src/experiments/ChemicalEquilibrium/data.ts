@@ -3,7 +3,7 @@ import type { ChemicalEquilibriumExperiment } from "./types";
 // Complete Chemical Equilibrium experiment data
 const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   id: 3,
-  title: "Dry Tests for Basic Radicals - Virtual Laboratory",
+  title: "Salt Analysis",
   description:
     "Learn classical dry test techniques to identify common acid radicals (anions) such as carbonate, sulfate, chloride, nitrate and nitrite using a clean wire loop and heat. This qualitative analysis focuses on observation of color, smell, and residue characteristics in a safe virtual environment.",
   category: "Qualitative Analysis",
@@ -18,8 +18,8 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     "Salt Sample",
     "Concentrated H₂SO₄",
     "Bunsen Burner (virtual heat source)",
-    "Glass container",
     "Glass Rod",
+    "Glass container",
     "Ammonium hydroxide (NH₄OH)",
     "MnO₂",
     "K₂Cr₂O₇",

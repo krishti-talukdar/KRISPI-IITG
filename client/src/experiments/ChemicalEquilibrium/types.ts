@@ -25,7 +25,7 @@ export interface ChemicalEquilibriumExperiment {
   safetyInfo: string;
 }
 
-export type DryTestMode = "acid" | "basic" | "wet";
+export type DryTestMode = "acid" | "basic" | "wet" | "wetBasic";
 
 export interface Chemical {
   id: string;

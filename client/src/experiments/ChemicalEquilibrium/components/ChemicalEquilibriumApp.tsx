@@ -26,6 +26,18 @@ const WET_ACID_TEST_EQUIPMENT = [
   "pH Paper Strips",
 ];
 
+const WET_BASIC_TEST_EQUIPMENT = [
+  "Test Tubes",
+  "Dropper Pipettes",
+  "Indicator Solution (Universal Indicator)",
+  "Dilute NaOH (0.1 M)",
+  "Distilled Water",
+  "Bunsen Burner (virtual heat source)",
+  "Glass Rod",
+  "Glass Beaker (25 mL)",
+  "pH Paper Strips",
+];
+
 const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
   letter: string;
   label: string;
@@ -54,9 +66,14 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
     label: "Wet Test for Acid Radicals",
     equipment: WET_ACID_TEST_EQUIPMENT,
   },
+  wetBasic: {
+    letter: "D",
+    label: "Wet Test for Basic Radicals",
+    equipment: WET_BASIC_TEST_EQUIPMENT,
+  },
 };
 
-const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet"];
+const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
 
 export default function ChemicalEquilibriumApp({
   onBack,
