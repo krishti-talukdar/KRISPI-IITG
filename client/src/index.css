@@ -582,6 +582,7 @@
   border-color: rgba(15, 118, 110, 0.45);
   box-shadow: 0 20px 42px rgba(15, 118, 110, 0.18);
   transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(255, 253, 231, 0.95), rgba(255, 249, 196, 0.95));
 }
 
 .dry-test-action-card--active .dry-test-action-letter {
