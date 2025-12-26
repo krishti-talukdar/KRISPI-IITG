@@ -784,6 +784,10 @@ function ChemicalEquilibriumVirtualLab({
     setAmmoniumDialogError(null);
   };
 
+  const handleBunsenHeatingChange = useCallback((heating: boolean) => {
+    setIsWorkbenchHeating(heating);
+  }, []);
+
   const getQuickAddAction = (equipmentId: string) => {
     if (equipmentId.startsWith("salt-sample")) {
       return handleSaltDialogOpen;
