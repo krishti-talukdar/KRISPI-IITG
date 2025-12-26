@@ -83,10 +83,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     }
   }, [isRunning]);
 
-  useEffect(() => {
-    onHeatingStateChange?.(isBunsenHeating);
-  }, [isBunsenHeating, onHeatingStateChange]);
-
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -135,6 +131,10 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const [isBunsenHeating, setIsBunsenHeating] = useState(false);
   const [isBunsenLit, setIsBunsenLit] = useState(false);
   const [heatCharge, setHeatCharge] = useState(0);
+
+  useEffect(() => {
+    onHeatingStateChange?.(isBunsenHeating);
+  }, [isBunsenHeating, onHeatingStateChange]);
   const bunsenBurnerBaseId = "bunsen-burner-virtual-heat-source";
   const bunsenPosition =
     equipmentPositions.find((pos) => stripEquipmentIdSuffix(pos.id) === bunsenBurnerBaseId) ??
