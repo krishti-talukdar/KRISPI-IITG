@@ -784,9 +784,23 @@ function ChemicalEquilibriumVirtualLab({
     setAmmoniumDialogError(null);
   };
 
-  const handleBunsenHeatingChange = useCallback((heating: boolean) => {
-    setIsWorkbenchHeating(heating);
-  }, []);
+  const handleBunsenHeatingChange = useCallback(
+    (heating: boolean) => {
+      setIsWorkbenchHeating(heating);
+
+      if (
+        heating &&
+        experiment.id === ChemicalEquilibriumData.id &&
+        resolvedDryTestMode === "basic"
+      ) {
+        setCaseOneResult(
+          "Formation of white sublimate (ammonium chloride) shows NH₄⁺ is present.",
+        );
+      }
+    },
+    [experiment.id, resolvedDryTestMode],
+  );
+
 
   const getQuickAddAction = (equipmentId: string) => {
     if (equipmentId.startsWith("salt-sample")) {
