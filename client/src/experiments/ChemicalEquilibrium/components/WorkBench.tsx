@@ -175,8 +175,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       return;
     }
 
+    if (!bunsenPosition?.id) {
+      setFlameAnchorCoords(null);
+      return;
+    }
+
     const bunsenElement = workbenchRef.current.querySelector<HTMLDivElement>(
-      `[data-equipment-id="${bunsenBurnerId}"]`,
+      `[data-equipment-id="${bunsenPosition.id}"]`,
     );
     if (!bunsenElement) {
       setFlameAnchorCoords(null);
@@ -203,7 +208,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       top: isBunsenHeating ? heatingFlameTop : idleFlameTop,
     });
   }, [
-    bunsenBurnerId,
+    bunsenPosition?.id,
     bunsenPosition?.x,
     bunsenPosition?.y,
     isDryTestWorkbench,
