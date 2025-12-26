@@ -129,8 +129,10 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const [isBunsenHeating, setIsBunsenHeating] = useState(false);
   const [isBunsenLit, setIsBunsenLit] = useState(false);
   const [heatCharge, setHeatCharge] = useState(0);
-  const bunsenBurnerId = "bunsen-burner-virtual-heat-source-3";
-  const bunsenPosition = equipmentPositions.find((pos) => pos.id === bunsenBurnerId) ?? null;
+  const bunsenBurnerBaseId = "bunsen-burner-virtual-heat-source";
+  const bunsenPosition =
+    equipmentPositions.find((pos) => stripEquipmentIdSuffix(pos.id) === bunsenBurnerBaseId) ??
+    null;
   const testTubePosition = useMemo(
     () => equipmentPositions.find((pos) => pos.id === "test_tubes") ?? null,
     [equipmentPositions],
