@@ -812,10 +812,31 @@ function ChemicalEquilibriumVirtualLab({
     [experiment.id, resolvedDryTestMode],
   );
 
+  const handleNaOHDialogOpen = () => {
+    setNaohMass("0.5");
+    setNaohDialogError(null);
+    setNaohDialogOpen(true);
+  };
+
+  const handleNaOHDialogClose = () => {
+    setNaohDialogOpen(false);
+    setNaohDialogError(null);
+  };
+
   const handleAddNaOHToTestTube = () => {
+    const mass = parseFloat(naohMass);
+    if (Number.isNaN(mass) || mass <= 0) {
+      setNaohDialogError("Enter a valid mass.");
+      return;
+    }
+
+    if (mass < MIN_NAOH_MASS || mass > MAX_NAOH_MASS) {
+      setNaohDialogError(`Enter a mass within ${NAOH_MASS_LABEL}.`);
+      return;
+    }
+
     if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
-      setToastMessage("Place the test tube on the workbench first.");
-      setTimeout(() => setToastMessage(null), 2500);
+      setNaohDialogError("Place the test tube on the workbench first.");
       return;
     }
 
@@ -833,7 +854,7 @@ function ChemicalEquilibriumVirtualLab({
               chemical.id === NAOH_CHEMICAL_ID
                 ? {
                     ...chemical,
-                    amount: (chemical.amount ?? 0) + NAOH_ADDITION_AMOUNT,
+                    amount: (chemical.amount ?? 0) + mass,
                   }
                 : chemical,
             )
@@ -843,7 +864,7 @@ function ChemicalEquilibriumVirtualLab({
                 id: NAOH_CHEMICAL_ID,
                 name: NAOH_NAME,
                 color: NAOH_COLOR,
-                amount: NAOH_ADDITION_AMOUNT,
+                amount: mass,
                 concentration: NAOH_CONCENTRATION,
               },
             ];
@@ -852,8 +873,10 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage("Added NaOH to the test tube.");
+    setToastMessage(`Added ${mass.toFixed(2)} g of NaOH to the test tube.`);
     setTimeout(() => setToastMessage(null), 3000);
+
+    handleNaOHDialogClose();
   };
 
   const getQuickAddAction = (equipmentId: string) => {
