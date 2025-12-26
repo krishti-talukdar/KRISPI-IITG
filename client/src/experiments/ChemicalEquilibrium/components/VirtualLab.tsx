@@ -1460,6 +1460,7 @@ function ChemicalEquilibriumVirtualLab({
                         currentStep={currentStep}
                         disabled={!experimentStarted}
                         isDryTest={isDryTestExperiment}
+                        dryTestMode={resolvedDryTestMode}
                         isRinseActive={pos.id === glassRodEquipmentId && showRinseAnimation}
                         imageUrl={equipment.imageUrl}
                       />
@@ -1566,6 +1567,7 @@ function ChemicalEquilibriumVirtualLab({
                     currentStep={currentStep}
                     disabled={!experimentStarted}
                     isDryTest={isDryTestExperiment}
+                    dryTestMode={resolvedDryTestMode}
                   />
                 </div>
               ))}
@@ -1618,6 +1620,7 @@ function ChemicalEquilibriumVirtualLab({
                       currentStep={currentStep}
                       disabled={!experimentStarted}
                       isDryTest={isDryTestExperiment}
+                      dryTestMode={resolvedDryTestMode}
                       imageUrl={equipment.imageUrl}
                     />
                   ) : null;

@@ -6,10 +6,11 @@ import {
   Droplet,
   Thermometer,
 } from "lucide-react";
-import type { EquipmentPosition, CobaltReactionState } from "../types";
+import type { EquipmentPosition, CobaltReactionState, DryTestMode } from "../types";
 import { GLASS_CONTAINER_IMAGE_URL } from "../constants";
 
 const NAOH_CHEMICAL_ID = "naoh";
+const NAOH_SOLUTION_COLOR = "#bfdbfe";
 const MAX_NAOH_VOLUME_DISPLAY = 6;
 const GLASS_ROD_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3bdedfd838454c6b8a3cc44b25ecfdc0?format=webp&width=800";
 const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
@@ -43,6 +44,7 @@ interface EquipmentProps {
   allEquipmentPositions?: EquipmentPosition[];
   currentStep?: number;
   isDryTest?: boolean;
+  dryTestMode?: DryTestMode;
   disabled?: boolean;
   imageUrl?: string;
   isRinseActive?: boolean;
@@ -64,6 +66,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   isDryTest = false,
   disabled = false,
   imageUrl,
+  dryTestMode,
   isRinseActive = false,
 }) => {
   const normalizedName = name.toLowerCase();
@@ -533,9 +536,19 @@ export const Equipment: React.FC<EquipmentProps> = ({
           Math.min(150, heightRatio * 150),
         );
         const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
-        const overlayColor = overrideWithWhite
+        const baseOverlayColor = overrideWithWhite
           ? "rgba(255, 255, 255, 0.95)"
           : getMixedColor();
+        const shouldForceNaOHBlue =
+          isDryTest &&
+          dryTestMode === "basic" &&
+          hasSaltSample &&
+          hasNaOHSample &&
+          !hasAcidSample &&
+          !hasAmmoniumSample;
+        const overlayColor = shouldForceNaOHBlue
+          ? NAOH_SOLUTION_COLOR
+          : baseOverlayColor;
         const showOverlay =
           overlayColor !== "transparent" && totalChemicalsAmount > 0;
         const displayLabel = name.toLowerCase().includes("test tube")
