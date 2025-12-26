@@ -538,10 +538,10 @@ export const Equipment: React.FC<EquipmentProps> = ({
           : getMixedColor();
         const showOverlay =
           overlayColor !== "transparent" && totalChemicalsAmount > 0;
-      const displayLabel = name.toLowerCase().includes("test tube")
-        ? "25ml Test Tube"
-        : name;
-      return (
+        const displayLabel = name.toLowerCase().includes("test tube")
+          ? "25ml Test Tube"
+          : name;
+        return (
           <div className="relative flex flex-col items-center">
             <div className="relative">
               <div className="relative w-32 h-[18rem]">
