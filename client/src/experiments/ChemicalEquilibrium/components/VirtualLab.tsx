@@ -806,6 +806,49 @@ function ChemicalEquilibriumVirtualLab({
     [experiment.id, resolvedDryTestMode],
   );
 
+  const handleAddNaOHToTestTube = () => {
+    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
+      setToastMessage("Place the test tube on the workbench first.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    pushHistorySnapshot();
+
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find((chemical) => chemical.id === NAOH_CHEMICAL_ID);
+        const updatedChemicals = existing
+          ? pos.chemicals.map((chemical) =>
+              chemical.id === NAOH_CHEMICAL_ID
+                ? {
+                    ...chemical,
+                    amount: (chemical.amount ?? 0) + NAOH_ADDITION_AMOUNT,
+                  }
+                : chemical,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: NAOH_CHEMICAL_ID,
+                name: NAOH_NAME,
+                color: NAOH_COLOR,
+                amount: NAOH_ADDITION_AMOUNT,
+                concentration: NAOH_CONCENTRATION,
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage("Added NaOH to the test tube.");
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const getQuickAddAction = (equipmentId: string) => {
     if (equipmentId.startsWith("salt-sample")) {
