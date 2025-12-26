@@ -1720,27 +1720,27 @@ function ChemicalEquilibriumVirtualLab({
         <Dialog open={naohDialogOpen} onOpenChange={(open) => !open && handleNaOHDialogClose()}>
           <DialogContent className="max-w-sm space-y-4">
             <DialogHeader>
-              <DialogTitle>Enter Mass</DialogTitle>
+              <DialogTitle>Enter Volume</DialogTitle>
               <DialogDescription>
-                Enter the mass of NaOH to add to the test tube.
+                Enter the volume of NaOH to add to the test tube.
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-1">
               <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
-                Mass (g)
+                Volume (mL)
               </label>
               <input
                 className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 type="number"
-                min={MIN_NAOH_MASS}
-                max={MAX_NAOH_MASS}
+                min={MIN_NAOH_VOLUME}
+                max={MAX_NAOH_VOLUME}
                 step="0.1"
-                value={naohMass}
-                onChange={(event) => setNaohMass(event.target.value)}
-                placeholder="0.5"
+                value={naohVolume}
+                onChange={(event) => setNaohVolume(event.target.value)}
+                placeholder="2.5"
               />
-              <p className="text-[11px] text-slate-500">Recommended range: {NAOH_MASS_LABEL}.</p>
+              <p className="text-[11px] text-slate-500">Recommended range: {NAOH_VOLUME_LABEL}.</p>
               {naohDialogError && (
                 <p className="text-[11px] text-red-500">{naohDialogError}</p>
               )}
