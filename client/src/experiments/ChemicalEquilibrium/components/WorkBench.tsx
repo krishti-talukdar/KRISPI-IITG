@@ -46,6 +46,7 @@ interface WorkBenchProps {
   hasRinsed?: boolean;
   rodMoved?: boolean;
   showPostMoveFumes?: boolean;
+  onHeatingStateChange?: (isHeating: boolean) => void;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -63,6 +64,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   hasRinsed = false,
   rodMoved = false,
   showPostMoveFumes = true,
+  onHeatingStateChange,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
@@ -80,6 +82,10 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       return () => clearInterval(tempInterval);
     }
   }, [isRunning]);
+
+  useEffect(() => {
+    onHeatingStateChange?.(isBunsenHeating);
+  }, [isBunsenHeating, onHeatingStateChange]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
