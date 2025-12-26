@@ -512,32 +512,32 @@ export const Equipment: React.FC<EquipmentProps> = ({
     if (id === "test_tubes") {
       if (isDryTest) {
         const totalChemicalsAmount = chemicals.reduce(
-        (sum, chemical) => sum + (chemical.amount || 0),
-        0,
-      );
-      const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
-      const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
-      const hasAmmoniumSample = chemicals.some((chemical) => chemical.id === "nh4oh");
-      const hasNaOHSample = chemicals.some((chemical) => chemical.id === NAOH_CHEMICAL_ID);
-      const hasSaltOnly =
-        hasSaltSample && !hasAcidSample && !hasNaOHSample && !hasAmmoniumSample;
-      const naohAmount = chemicals
-        .find((chemical) => chemical.id === NAOH_CHEMICAL_ID)
-        ?.amount ?? 0;
-      const naohHeightRatio = Math.min(naohAmount, MAX_NAOH_VOLUME_DISPLAY) / MAX_NAOH_VOLUME_DISPLAY;
-      const totalHeightRatio = Math.min(totalChemicalsAmount, 25) / 25;
-      const heightRatio = hasNaOHSample ? naohHeightRatio : totalHeightRatio;
-      const saltOverlayMinimumHeight = hasSaltSample ? 60 : 0;
-      const overlayHeight = Math.max(
-        saltOverlayMinimumHeight,
-        Math.min(150, heightRatio * 150),
-      );
-      const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
-      const overlayColor = overrideWithWhite
-        ? "rgba(255, 255, 255, 0.95)"
-        : getMixedColor();
-      const showOverlay =
-        overlayColor !== "transparent" && totalChemicalsAmount > 0;
+          (sum, chemical) => sum + (chemical.amount || 0),
+          0,
+        );
+        const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
+        const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
+        const hasAmmoniumSample = chemicals.some((chemical) => chemical.id === "nh4oh");
+        const hasNaOHSample = chemicals.some((chemical) => chemical.id === NAOH_CHEMICAL_ID);
+        const hasSaltOnly =
+          hasSaltSample && !hasAcidSample && !hasNaOHSample && !hasAmmoniumSample;
+        const naohAmount =
+          chemicals.find((chemical) => chemical.id === NAOH_CHEMICAL_ID)?.amount ?? 0;
+        const naohHeightRatio =
+          Math.min(naohAmount, MAX_NAOH_VOLUME_DISPLAY) / MAX_NAOH_VOLUME_DISPLAY;
+        const totalHeightRatio = Math.min(totalChemicalsAmount, 25) / 25;
+        const heightRatio = hasNaOHSample ? naohHeightRatio : totalHeightRatio;
+        const saltOverlayMinimumHeight = hasSaltSample ? 60 : 0;
+        const overlayHeight = Math.max(
+          saltOverlayMinimumHeight,
+          Math.min(150, heightRatio * 150),
+        );
+        const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
+        const overlayColor = overrideWithWhite
+          ? "rgba(255, 255, 255, 0.95)"
+          : getMixedColor();
+        const showOverlay =
+          overlayColor !== "transparent" && totalChemicalsAmount > 0;
       const displayLabel = name.toLowerCase().includes("test tube")
         ? "25ml Test Tube"
         : name;
