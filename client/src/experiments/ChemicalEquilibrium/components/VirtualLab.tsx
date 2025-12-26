@@ -1395,6 +1395,7 @@ function ChemicalEquilibriumVirtualLab({
                 rodMoved={rodMoved}
                 showPostMoveFumes={postMoveFumesEnabled}
                 onHeatingStateChange={handleBunsenHeatingChange}
+                workbenchResetTrigger={workbenchResetTrigger}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
