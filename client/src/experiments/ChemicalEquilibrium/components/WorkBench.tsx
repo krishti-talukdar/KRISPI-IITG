@@ -21,6 +21,8 @@ const POST_MOVE_FUME_CONFIG = [
 const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
 const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
 
+const stripEquipmentIdSuffix = (value: string) => value.replace(/-\d+$/, "");
+
 type RinseLayout = {
   buttonLeft: number;
   buttonTop: number;
@@ -44,6 +46,7 @@ interface WorkBenchProps {
   hasRinsed?: boolean;
   rodMoved?: boolean;
   showPostMoveFumes?: boolean;
+  onHeatingStateChange?: (isHeating: boolean) => void;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -61,6 +64,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   hasRinsed = false,
   rodMoved = false,
   showPostMoveFumes = true,
+  onHeatingStateChange,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
@@ -127,8 +131,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const [isBunsenHeating, setIsBunsenHeating] = useState(false);
   const [isBunsenLit, setIsBunsenLit] = useState(false);
   const [heatCharge, setHeatCharge] = useState(0);
-  const bunsenBurnerId = "bunsen-burner-virtual-heat-source-3";
-  const bunsenPosition = equipmentPositions.find((pos) => pos.id === bunsenBurnerId) ?? null;
+
+  useEffect(() => {
+    onHeatingStateChange?.(isBunsenHeating);
+  }, [isBunsenHeating, onHeatingStateChange]);
+  const bunsenBurnerBaseId = "bunsen-burner-virtual-heat-source";
+  const bunsenPosition =
+    equipmentPositions.find((pos) => stripEquipmentIdSuffix(pos.id) === bunsenBurnerBaseId) ??
+    null;
   const testTubePosition = useMemo(
     () => equipmentPositions.find((pos) => pos.id === "test_tubes") ?? null,
     [equipmentPositions],
@@ -171,8 +181,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       return;
     }
 
+    if (!bunsenPosition?.id) {
+      setFlameAnchorCoords(null);
+      return;
+    }
+
     const bunsenElement = workbenchRef.current.querySelector<HTMLDivElement>(
-      `[data-equipment-id="${bunsenBurnerId}"]`,
+      `[data-equipment-id="${bunsenPosition.id}"]`,
     );
     if (!bunsenElement) {
       setFlameAnchorCoords(null);
@@ -199,7 +214,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       top: isBunsenHeating ? heatingFlameTop : idleFlameTop,
     });
   }, [
-    bunsenBurnerId,
+    bunsenPosition?.id,
     bunsenPosition?.x,
     bunsenPosition?.y,
     isDryTestWorkbench,

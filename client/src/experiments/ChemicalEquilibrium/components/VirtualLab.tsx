@@ -104,25 +104,26 @@ const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.65 };
 const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
-  "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
-  "concentrated-h-so-2": {
+  "salt-sample": DRY_WORKBENCH_SALT_POSITION,
+  "concentrated-h-so": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
     yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING,
   },
-  "ammonium-hydroxide-nh-oh-4": {
+  "ammonium-hydroxide-nh-oh": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
     yPercent:
       DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING * 2,
   },
   "test_tubes": DRY_WORKBENCH_TEST_TUBE_POSITION,
-  "glass-rod-5": DRY_WORKBENCH_GLASS_ROD_POSITION,
-  "bunsen-burner-virtual-heat-source-3": DRY_WORKBENCH_BUNSEN_POSITION,
-  "glass-container-6": DRY_WORKBENCH_GLASS_CONTAINER_POSITION,
+  "glass-rod": DRY_WORKBENCH_GLASS_ROD_POSITION,
+  "bunsen-burner-virtual-heat-source": DRY_WORKBENCH_BUNSEN_POSITION,
+  "glass-container": DRY_WORKBENCH_GLASS_CONTAINER_POSITION,
 };
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
-  const layout = DRY_WORKBENCH_BOTTLE_LAYOUT[id];
+  const lookupId = stripEquipmentIdSuffix(id);
+  const layout = DRY_WORKBENCH_BOTTLE_LAYOUT[lookupId];
   if (!layout) return null;
 
   const margin = 48;
@@ -142,6 +143,8 @@ const slugify = (value: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
+
+const stripEquipmentIdSuffix = (value: string) => value.replace(/-\d+$/, "");
 
 const getEquipmentIcon = (name: string) => {
   const key = name.toLowerCase();
@@ -257,7 +260,7 @@ function ChemicalEquilibriumVirtualLab({
     acid:
       "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
     basic:
-      "Arrange charcoal, anhydrous Na₂CO₃, and NaOH on the clean loop, heat gently, and observe the characteristic fumes, residues, and colors of basic radicals.",
+      "Arrange anhydrous Na₂CO₃ and NaOH on the clean loop, heat gently, and observe the characteristic fumes, residues, and colors of basic radicals.",
     wet:
       "Set up wet test reagents in clean test tubes, add dilute acid and indicator, warm gently over the Bunsen burner, and watch for color changes or precipitates that reveal acid radicals.",
     wetBasic:
@@ -278,6 +281,9 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_SALT_MASS = 3;
   const MAX_SALT_MASS = 5;
   const SALT_RANGE_LABEL = "3g-5g";
+  const SALT_HEATING_STEP = 0.35;
+  const SALT_HEATING_MIN_REMAINING = 0.5;
+  const SALT_HEATING_INTERVAL_MS = 1200;
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
   const [acidVolume, setAcidVolume] = useState("4");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
@@ -290,6 +296,9 @@ function ChemicalEquilibriumVirtualLab({
   const [ammoniumVolume, setAmmoniumVolume] = useState("5.0");
   const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
+  const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
+  const saltHeatingIntervalRef = useRef<number | null>(null);
+  const resolvedDryTestMode = dryTestMode ?? "acid";
 
   // Chemical Equilibrium specific states
   const [cobaltChlorideAdded, setCobaltChlorideAdded] = useState(false);
@@ -379,6 +388,32 @@ function ChemicalEquilibriumVirtualLab({
     historyRef.current = updatedHistory;
     setUndoStackLength(updatedHistory.length);
   };
+
+  const reduceSaltSampleOnHeat = useCallback(() => {
+    setEquipmentPositions((prev) => {
+      let changed = false;
+      const updated = prev.map((pos) => {
+        if (pos.id !== "test_tubes") return pos;
+        let tubeUpdated = false;
+        const updatedChemicals = pos.chemicals.map((chemical) => {
+          if (chemical.id !== "salt_sample") return chemical;
+          const currentAmount = chemical.amount ?? 0;
+          if (currentAmount <= SALT_HEATING_MIN_REMAINING) return chemical;
+          const nextAmount = Math.max(
+            SALT_HEATING_MIN_REMAINING,
+            Math.round((currentAmount - SALT_HEATING_STEP) * 100) / 100,
+          );
+          if (nextAmount === currentAmount) return chemical;
+          tubeUpdated = true;
+          return { ...chemical, amount: nextAmount };
+        });
+        if (!tubeUpdated) return pos;
+        changed = true;
+        return { ...pos, chemicals: updatedChemicals };
+      });
+      return changed ? updated : prev;
+    });
+  }, [setEquipmentPositions]);
 
   const handleEquipmentDrop = useCallback(
   (id: string, x: number, y: number) => {
@@ -680,6 +715,42 @@ function ChemicalEquilibriumVirtualLab({
     setSelectedChemical(null);
   };
 
+  useEffect(() => {
+    if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
+      if (saltHeatingIntervalRef.current) {
+        window.clearInterval(saltHeatingIntervalRef.current);
+        saltHeatingIntervalRef.current = null;
+      }
+      return;
+    }
+
+    if (!isWorkbenchHeating) {
+      if (saltHeatingIntervalRef.current) {
+        window.clearInterval(saltHeatingIntervalRef.current);
+        saltHeatingIntervalRef.current = null;
+      }
+      return;
+    }
+
+    reduceSaltSampleOnHeat();
+    saltHeatingIntervalRef.current = window.setInterval(
+      reduceSaltSampleOnHeat,
+      SALT_HEATING_INTERVAL_MS,
+    );
+
+    return () => {
+      if (saltHeatingIntervalRef.current) {
+        window.clearInterval(saltHeatingIntervalRef.current);
+        saltHeatingIntervalRef.current = null;
+      }
+    };
+  }, [
+    isWorkbenchHeating,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    reduceSaltSampleOnHeat,
+  ]);
+
   const handleSaltDialogOpen = () => {
     setSaltMass("0.05");
     setSaltDialogError(null);
@@ -712,6 +783,10 @@ function ChemicalEquilibriumVirtualLab({
     setAmmoniumDialogOpen(false);
     setAmmoniumDialogError(null);
   };
+
+  const handleBunsenHeatingChange = useCallback((heating: boolean) => {
+    setIsWorkbenchHeating(heating);
+  }, []);
 
   const getQuickAddAction = (equipmentId: string) => {
     if (equipmentId.startsWith("salt-sample")) {
@@ -1247,6 +1322,7 @@ function ChemicalEquilibriumVirtualLab({
                 hasRinsed={hasRinsed}
                 rodMoved={rodMoved}
                 showPostMoveFumes={postMoveFumesEnabled}
+                onHeatingStateChange={handleBunsenHeatingChange}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -1412,6 +1488,7 @@ function ChemicalEquilibriumVirtualLab({
                 hasRinsed={hasRinsed}
                 rodMoved={rodMoved}
                 showPostMoveFumes={postMoveFumesEnabled}
+                onHeatingStateChange={handleBunsenHeatingChange}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
