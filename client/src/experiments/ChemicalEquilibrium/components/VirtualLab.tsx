@@ -296,6 +296,9 @@ function ChemicalEquilibriumVirtualLab({
   const [ammoniumVolume, setAmmoniumVolume] = useState("5.0");
   const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
+  const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
+  const saltHeatingIntervalRef = useRef<number | null>(null);
+  const resolvedDryTestMode = dryTestMode ?? "acid";
 
   // Chemical Equilibrium specific states
   const [cobaltChlorideAdded, setCobaltChlorideAdded] = useState(false);
