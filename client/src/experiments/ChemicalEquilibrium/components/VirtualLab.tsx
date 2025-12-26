@@ -389,6 +389,32 @@ function ChemicalEquilibriumVirtualLab({
     setUndoStackLength(updatedHistory.length);
   };
 
+  const reduceSaltSampleOnHeat = useCallback(() => {
+    setEquipmentPositions((prev) => {
+      let changed = false;
+      const updated = prev.map((pos) => {
+        if (pos.id !== "test_tubes") return pos;
+        let tubeUpdated = false;
+        const updatedChemicals = pos.chemicals.map((chemical) => {
+          if (chemical.id !== "salt_sample") return chemical;
+          const currentAmount = chemical.amount ?? 0;
+          if (currentAmount <= SALT_HEATING_MIN_REMAINING) return chemical;
+          const nextAmount = Math.max(
+            SALT_HEATING_MIN_REMAINING,
+            Math.round((currentAmount - SALT_HEATING_STEP) * 100) / 100,
+          );
+          if (nextAmount === currentAmount) return chemical;
+          tubeUpdated = true;
+          return { ...chemical, amount: nextAmount };
+        });
+        if (!tubeUpdated) return pos;
+        changed = true;
+        return { ...pos, chemicals: updatedChemicals };
+      });
+      return changed ? updated : prev;
+    });
+  }, [setEquipmentPositions]);
+
   const handleEquipmentDrop = useCallback(
   (id: string, x: number, y: number) => {
     if (isDryTestBottleEquipment(id)) {
