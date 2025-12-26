@@ -122,7 +122,8 @@ const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: 
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
-  const layout = DRY_WORKBENCH_BOTTLE_LAYOUT[id];
+  const lookupId = stripEquipmentIdSuffix(id);
+  const layout = DRY_WORKBENCH_BOTTLE_LAYOUT[lookupId];
   if (!layout) return null;
 
   const margin = 48;
