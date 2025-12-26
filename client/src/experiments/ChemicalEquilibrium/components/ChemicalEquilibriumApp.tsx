@@ -52,6 +52,7 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
     letter: "B",
     label: "Dry Tests for Basic Radicals",
     equipment: [
+      "Salt Sample",
       "Anhydrous Na₂CO₃",
       "NaOH",
       "Test Tubes",
