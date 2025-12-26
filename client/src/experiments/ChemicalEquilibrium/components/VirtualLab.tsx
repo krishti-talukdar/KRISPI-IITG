@@ -1488,6 +1488,7 @@ function ChemicalEquilibriumVirtualLab({
                 hasRinsed={hasRinsed}
                 rodMoved={rodMoved}
                 showPostMoveFumes={postMoveFumesEnabled}
+                onHeatingStateChange={handleBunsenHeatingChange}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
