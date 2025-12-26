@@ -284,6 +284,11 @@ function ChemicalEquilibriumVirtualLab({
   const SALT_HEATING_STEP = 0.35;
   const SALT_HEATING_MIN_REMAINING = 0.5;
   const SALT_HEATING_INTERVAL_MS = 1200;
+  const NAOH_ADDITION_AMOUNT = 0.5;
+  const NAOH_COLOR = "#bfdbfe";
+  const NAOH_NAME = "NaOH";
+  const NAOH_CONCENTRATION = "Reagent";
+  const NAOH_CHEMICAL_ID = "naoh";
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
   const [acidVolume, setAcidVolume] = useState("4");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
@@ -784,11 +789,75 @@ function ChemicalEquilibriumVirtualLab({
     setAmmoniumDialogError(null);
   };
 
-  const handleBunsenHeatingChange = useCallback((heating: boolean) => {
-    setIsWorkbenchHeating(heating);
-  }, []);
+  const handleBunsenHeatingChange = useCallback(
+    (heating: boolean) => {
+      setIsWorkbenchHeating(heating);
+
+      if (
+        heating &&
+        experiment.id === ChemicalEquilibriumData.id &&
+        resolvedDryTestMode === "basic"
+      ) {
+        setCaseOneResult(
+          "Formation of white sublimate (ammonium chloride) shows NH₄⁺ is present.",
+        );
+      }
+    },
+    [experiment.id, resolvedDryTestMode],
+  );
+
+  const handleAddNaOHToTestTube = () => {
+    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
+      setToastMessage("Place the test tube on the workbench first.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    pushHistorySnapshot();
+
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find((chemical) => chemical.id === NAOH_CHEMICAL_ID);
+        const updatedChemicals = existing
+          ? pos.chemicals.map((chemical) =>
+              chemical.id === NAOH_CHEMICAL_ID
+                ? {
+                    ...chemical,
+                    amount: (chemical.amount ?? 0) + NAOH_ADDITION_AMOUNT,
+                  }
+                : chemical,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: NAOH_CHEMICAL_ID,
+                name: NAOH_NAME,
+                color: NAOH_COLOR,
+                amount: NAOH_ADDITION_AMOUNT,
+                concentration: NAOH_CONCENTRATION,
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage("Added NaOH to the test tube.");
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const getQuickAddAction = (equipmentId: string) => {
+    if (
+      isDryTestExperiment &&
+      resolvedDryTestMode === "basic" &&
+      equipmentId.startsWith("naoh")
+    ) {
+      return handleAddNaOHToTestTube;
+    }
     if (equipmentId.startsWith("salt-sample")) {
       return handleSaltDialogOpen;
     }
