@@ -104,20 +104,20 @@ const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.65 };
 const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
 
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
-  "salt-sample-1": DRY_WORKBENCH_SALT_POSITION,
-  "concentrated-h-so-2": {
+  "salt-sample": DRY_WORKBENCH_SALT_POSITION,
+  "concentrated-h-so": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
     yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING,
   },
-  "ammonium-hydroxide-nh-oh-4": {
+  "ammonium-hydroxide-nh-oh": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
     yPercent:
       DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING * 2,
   },
   "test_tubes": DRY_WORKBENCH_TEST_TUBE_POSITION,
-  "glass-rod-5": DRY_WORKBENCH_GLASS_ROD_POSITION,
-  "bunsen-burner-virtual-heat-source-3": DRY_WORKBENCH_BUNSEN_POSITION,
-  "glass-container-6": DRY_WORKBENCH_GLASS_CONTAINER_POSITION,
+  "glass-rod": DRY_WORKBENCH_GLASS_ROD_POSITION,
+  "bunsen-burner-virtual-heat-source": DRY_WORKBENCH_BUNSEN_POSITION,
+  "glass-container": DRY_WORKBENCH_GLASS_CONTAINER_POSITION,
 };
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
