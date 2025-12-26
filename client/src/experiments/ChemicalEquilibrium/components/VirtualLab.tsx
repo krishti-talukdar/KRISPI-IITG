@@ -1716,6 +1716,50 @@ function ChemicalEquilibriumVirtualLab({
         </Dialog>
       )}
 
+      {isDryTestExperiment && resolvedDryTestMode === "basic" && (
+        <Dialog open={naohDialogOpen} onOpenChange={(open) => !open && handleNaOHDialogClose()}>
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Mass</DialogTitle>
+              <DialogDescription>
+                Enter the mass of NaOH to add to the test tube.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Mass (g)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                type="number"
+                min={MIN_NAOH_MASS}
+                max={MAX_NAOH_MASS}
+                step="0.1"
+                value={naohMass}
+                onChange={(event) => setNaohMass(event.target.value)}
+                placeholder="0.5"
+              />
+              <p className="text-[11px] text-slate-500">Recommended range: {NAOH_MASS_LABEL}.</p>
+              {naohDialogError && (
+                <p className="text-[11px] text-red-500">{naohDialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleNaOHDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddNaOHToTestTube}>
+                  Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
       {isDryTestExperiment && (
         <Dialog open={acidDialogOpen} onOpenChange={(open) => !open && handleAcidDialogClose()}>
           <DialogContent className="max-w-sm space-y-4">
