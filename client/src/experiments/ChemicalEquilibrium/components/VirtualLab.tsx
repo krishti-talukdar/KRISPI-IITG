@@ -885,7 +885,7 @@ function ChemicalEquilibriumVirtualLab({
       resolvedDryTestMode === "basic" &&
       equipmentId.startsWith("naoh")
     ) {
-      return handleAddNaOHToTestTube;
+      return handleNaOHDialogOpen;
     }
     if (equipmentId.startsWith("salt-sample")) {
       return handleSaltDialogOpen;
