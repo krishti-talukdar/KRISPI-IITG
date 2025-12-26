@@ -226,6 +226,7 @@ function ChemicalEquilibriumVirtualLab({
   const [rodMoved, setRodMoved] = useState(false);
   const [postMoveFumesEnabled, setPostMoveFumesEnabled] = useState(false);
   const [caseOneResult, setCaseOneResult] = useState("No result yet");
+  const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const rinseTimerRef = useRef<number | null>(null);
 
   // Choose chemicals and equipment based on experiment
@@ -1134,6 +1135,7 @@ function ChemicalEquilibriumVirtualLab({
     setIsRinsing(false);
     setShowRinseAnimation(false);
     onResetTimer();
+    setWorkbenchResetTrigger((prev) => prev + 1);
     if (onResetExperiment) onResetExperiment();
   };
 
@@ -1145,6 +1147,7 @@ function ChemicalEquilibriumVirtualLab({
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
     setTimeout(() => setToastMessage(null), 2500);
+    setWorkbenchResetTrigger((prev) => prev + 1);
   };
 
   const handleUndoStep = () => {
