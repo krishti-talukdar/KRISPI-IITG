@@ -715,6 +715,42 @@ function ChemicalEquilibriumVirtualLab({
     setSelectedChemical(null);
   };
 
+  useEffect(() => {
+    if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
+      if (saltHeatingIntervalRef.current) {
+        window.clearInterval(saltHeatingIntervalRef.current);
+        saltHeatingIntervalRef.current = null;
+      }
+      return;
+    }
+
+    if (!isWorkbenchHeating) {
+      if (saltHeatingIntervalRef.current) {
+        window.clearInterval(saltHeatingIntervalRef.current);
+        saltHeatingIntervalRef.current = null;
+      }
+      return;
+    }
+
+    reduceSaltSampleOnHeat();
+    saltHeatingIntervalRef.current = window.setInterval(
+      reduceSaltSampleOnHeat,
+      SALT_HEATING_INTERVAL_MS,
+    );
+
+    return () => {
+      if (saltHeatingIntervalRef.current) {
+        window.clearInterval(saltHeatingIntervalRef.current);
+        saltHeatingIntervalRef.current = null;
+      }
+    };
+  }, [
+    isWorkbenchHeating,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    reduceSaltSampleOnHeat,
+  ]);
+
   const handleSaltDialogOpen = () => {
     setSaltMass("0.05");
     setSaltDialogError(null);
