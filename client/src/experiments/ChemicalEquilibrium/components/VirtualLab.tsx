@@ -813,7 +813,7 @@ function ChemicalEquilibriumVirtualLab({
   );
 
   const handleNaOHDialogOpen = () => {
-    setNaohMass("0.5");
+    setNaohVolume("2.5");
     setNaohDialogError(null);
     setNaohDialogOpen(true);
   };
@@ -824,14 +824,14 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleAddNaOHToTestTube = () => {
-    const mass = parseFloat(naohMass);
-    if (Number.isNaN(mass) || mass <= 0) {
-      setNaohDialogError("Enter a valid mass.");
+    const volume = parseFloat(naohVolume);
+    if (Number.isNaN(volume) || volume <= 0) {
+      setNaohDialogError("Enter a valid volume.");
       return;
     }
 
-    if (mass < MIN_NAOH_MASS || mass > MAX_NAOH_MASS) {
-      setNaohDialogError(`Enter a mass within ${NAOH_MASS_LABEL}.`);
+    if (volume < MIN_NAOH_VOLUME || volume > MAX_NAOH_VOLUME) {
+      setNaohDialogError(`Enter a volume within ${NAOH_VOLUME_LABEL}.`);
       return;
     }
 
@@ -854,7 +854,7 @@ function ChemicalEquilibriumVirtualLab({
               chemical.id === NAOH_CHEMICAL_ID
                 ? {
                     ...chemical,
-                    amount: (chemical.amount ?? 0) + mass,
+                    amount: (chemical.amount ?? 0) + volume,
                   }
                 : chemical,
             )
@@ -864,7 +864,7 @@ function ChemicalEquilibriumVirtualLab({
                 id: NAOH_CHEMICAL_ID,
                 name: NAOH_NAME,
                 color: NAOH_COLOR,
-                amount: mass,
+                amount: volume,
                 concentration: NAOH_CONCENTRATION,
               },
             ];
@@ -873,7 +873,7 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${mass.toFixed(2)} g of NaOH to the test tube.`);
+    setToastMessage(`Added ${volume.toFixed(2)} mL of NaOH to the test tube.`);
     setTimeout(() => setToastMessage(null), 3000);
 
     handleNaOHDialogClose();
