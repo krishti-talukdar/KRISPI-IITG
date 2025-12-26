@@ -143,6 +143,8 @@ const slugify = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
+const stripEquipmentIdSuffix = (value: string) => value.replace(/-\d+$/, "");
+
 const getEquipmentIcon = (name: string) => {
   const key = name.toLowerCase();
   if (key.includes("test tube")) return <TestTube size={36} className="text-blue-600" />;
