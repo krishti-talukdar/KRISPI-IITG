@@ -1567,6 +1567,7 @@ function ChemicalEquilibriumVirtualLab({
                     currentStep={currentStep}
                     disabled={!experimentStarted}
                     isDryTest={isDryTestExperiment}
+                    dryTestMode={resolvedDryTestMode}
                   />
                 </div>
               ))}
