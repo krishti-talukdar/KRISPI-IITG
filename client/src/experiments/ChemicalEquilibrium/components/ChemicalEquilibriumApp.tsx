@@ -52,11 +52,11 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
     letter: "B",
     label: "Dry Tests for Basic Radicals",
     equipment: [
+      "Test Tubes",
       "Salt Sample",
+      "Bunsen Burner (virtual heat source)",
       "Anhydrous Na₂CO₃",
       "NaOH",
-      "Test Tubes",
-      "Bunsen Burner (virtual heat source)",
       "Platinum Wire",
       "pH Paper",
     ],
