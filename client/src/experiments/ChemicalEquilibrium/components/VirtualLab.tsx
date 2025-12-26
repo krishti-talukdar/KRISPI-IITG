@@ -851,6 +851,13 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const getQuickAddAction = (equipmentId: string) => {
+    if (
+      isDryTestExperiment &&
+      resolvedDryTestMode === "basic" &&
+      equipmentId.startsWith("naoh")
+    ) {
+      return handleAddNaOHToTestTube;
+    }
     if (equipmentId.startsWith("salt-sample")) {
       return handleSaltDialogOpen;
     }
