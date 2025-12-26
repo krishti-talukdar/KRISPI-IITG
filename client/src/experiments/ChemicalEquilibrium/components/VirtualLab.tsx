@@ -285,11 +285,16 @@ function ChemicalEquilibriumVirtualLab({
   const SALT_HEATING_STEP = 0.35;
   const SALT_HEATING_MIN_REMAINING = 0.5;
   const SALT_HEATING_INTERVAL_MS = 1200;
-  const NAOH_ADDITION_AMOUNT = 0.5;
   const NAOH_COLOR = "#bfdbfe";
   const NAOH_NAME = "NaOH";
   const NAOH_CONCENTRATION = "Reagent";
   const NAOH_CHEMICAL_ID = "naoh";
+  const NAOH_MASS_LABEL = "0.2g-1.5g";
+  const MIN_NAOH_MASS = 0.2;
+  const MAX_NAOH_MASS = 1.5;
+  const [naohDialogOpen, setNaohDialogOpen] = useState(false);
+  const [naohMass, setNaohMass] = useState("0.5");
+  const [naohDialogError, setNaohDialogError] = useState<string | null>(null);
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
   const [acidVolume, setAcidVolume] = useState("4");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
