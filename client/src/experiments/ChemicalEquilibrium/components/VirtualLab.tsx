@@ -257,7 +257,7 @@ function ChemicalEquilibriumVirtualLab({
     acid:
       "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
     basic:
-      "Arrange charcoal, anhydrous Na₂CO₃, and NaOH on the clean loop, heat gently, and observe the characteristic fumes, residues, and colors of basic radicals.",
+      "Arrange anhydrous Na₂CO₃ and NaOH on the clean loop, heat gently, and observe the characteristic fumes, residues, and colors of basic radicals.",
     wet:
       "Set up wet test reagents in clean test tubes, add dilute acid and indicator, warm gently over the Bunsen burner, and watch for color changes or precipitates that reveal acid radicals.",
     wetBasic:
