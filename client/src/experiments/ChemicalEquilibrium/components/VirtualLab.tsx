@@ -226,6 +226,7 @@ function ChemicalEquilibriumVirtualLab({
   const [rodMoved, setRodMoved] = useState(false);
   const [postMoveFumesEnabled, setPostMoveFumesEnabled] = useState(false);
   const [caseOneResult, setCaseOneResult] = useState("No result yet");
+  const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const rinseTimerRef = useRef<number | null>(null);
 
   // Choose chemicals and equipment based on experiment
@@ -284,11 +285,16 @@ function ChemicalEquilibriumVirtualLab({
   const SALT_HEATING_STEP = 0.35;
   const SALT_HEATING_MIN_REMAINING = 0.5;
   const SALT_HEATING_INTERVAL_MS = 1200;
-  const NAOH_ADDITION_AMOUNT = 0.5;
   const NAOH_COLOR = "#bfdbfe";
   const NAOH_NAME = "NaOH";
   const NAOH_CONCENTRATION = "Reagent";
   const NAOH_CHEMICAL_ID = "naoh";
+  const NAOH_VOLUME_LABEL = "2ml - 4ml";
+  const MIN_NAOH_VOLUME = 2;
+  const MAX_NAOH_VOLUME = 4;
+  const [naohDialogOpen, setNaohDialogOpen] = useState(false);
+  const [naohVolume, setNaohVolume] = useState("2.5");
+  const [naohDialogError, setNaohDialogError] = useState<string | null>(null);
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
   const [acidVolume, setAcidVolume] = useState("4");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
@@ -806,10 +812,31 @@ function ChemicalEquilibriumVirtualLab({
     [experiment.id, resolvedDryTestMode],
   );
 
+  const handleNaOHDialogOpen = () => {
+    setNaohVolume("2.5");
+    setNaohDialogError(null);
+    setNaohDialogOpen(true);
+  };
+
+  const handleNaOHDialogClose = () => {
+    setNaohDialogOpen(false);
+    setNaohDialogError(null);
+  };
+
   const handleAddNaOHToTestTube = () => {
+    const volume = parseFloat(naohVolume);
+    if (Number.isNaN(volume) || volume <= 0) {
+      setNaohDialogError("Enter a valid volume.");
+      return;
+    }
+
+    if (volume < MIN_NAOH_VOLUME || volume > MAX_NAOH_VOLUME) {
+      setNaohDialogError(`Enter a volume within ${NAOH_VOLUME_LABEL}.`);
+      return;
+    }
+
     if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
-      setToastMessage("Place the test tube on the workbench first.");
-      setTimeout(() => setToastMessage(null), 2500);
+      setNaohDialogError("Place the test tube on the workbench first.");
       return;
     }
 
@@ -827,7 +854,7 @@ function ChemicalEquilibriumVirtualLab({
               chemical.id === NAOH_CHEMICAL_ID
                 ? {
                     ...chemical,
-                    amount: (chemical.amount ?? 0) + NAOH_ADDITION_AMOUNT,
+                    amount: (chemical.amount ?? 0) + volume,
                   }
                 : chemical,
             )
@@ -837,7 +864,7 @@ function ChemicalEquilibriumVirtualLab({
                 id: NAOH_CHEMICAL_ID,
                 name: NAOH_NAME,
                 color: NAOH_COLOR,
-                amount: NAOH_ADDITION_AMOUNT,
+                amount: volume,
                 concentration: NAOH_CONCENTRATION,
               },
             ];
@@ -846,8 +873,10 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage("Added NaOH to the test tube.");
+    setToastMessage(`Added ${volume.toFixed(2)} mL of NaOH to the test tube.`);
     setTimeout(() => setToastMessage(null), 3000);
+
+    handleNaOHDialogClose();
   };
 
   const getQuickAddAction = (equipmentId: string) => {
@@ -856,7 +885,7 @@ function ChemicalEquilibriumVirtualLab({
       resolvedDryTestMode === "basic" &&
       equipmentId.startsWith("naoh")
     ) {
-      return handleAddNaOHToTestTube;
+      return handleNaOHDialogOpen;
     }
     if (equipmentId.startsWith("salt-sample")) {
       return handleSaltDialogOpen;
@@ -1134,6 +1163,7 @@ function ChemicalEquilibriumVirtualLab({
     setIsRinsing(false);
     setShowRinseAnimation(false);
     onResetTimer();
+    setWorkbenchResetTrigger((prev) => prev + 1);
     if (onResetExperiment) onResetExperiment();
   };
 
@@ -1145,6 +1175,7 @@ function ChemicalEquilibriumVirtualLab({
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
     setTimeout(() => setToastMessage(null), 2500);
+    setWorkbenchResetTrigger((prev) => prev + 1);
   };
 
   const handleUndoStep = () => {
@@ -1392,6 +1423,7 @@ function ChemicalEquilibriumVirtualLab({
                 rodMoved={rodMoved}
                 showPostMoveFumes={postMoveFumesEnabled}
                 onHeatingStateChange={handleBunsenHeatingChange}
+                workbenchResetTrigger={workbenchResetTrigger}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -1558,6 +1590,7 @@ function ChemicalEquilibriumVirtualLab({
                 rodMoved={rodMoved}
                 showPostMoveFumes={postMoveFumesEnabled}
                 onHeatingStateChange={handleBunsenHeatingChange}
+                workbenchResetTrigger={workbenchResetTrigger}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
@@ -1675,6 +1708,50 @@ function ChemicalEquilibriumVirtualLab({
                   Cancel
                 </Button>
                 <Button size="sm" onClick={handleAddSaltToTestTube}>
+                  Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {isDryTestExperiment && resolvedDryTestMode === "basic" && (
+        <Dialog open={naohDialogOpen} onOpenChange={(open) => !open && handleNaOHDialogClose()}>
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Volume</DialogTitle>
+              <DialogDescription>
+                Enter the volume of NaOH to add to the test tube.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Volume (mL)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                type="number"
+                min={MIN_NAOH_VOLUME}
+                max={MAX_NAOH_VOLUME}
+                step="0.1"
+                value={naohVolume}
+                onChange={(event) => setNaohVolume(event.target.value)}
+                placeholder="2.5"
+              />
+              <p className="text-[11px] text-slate-500">Recommended range: {NAOH_VOLUME_LABEL}.</p>
+              {naohDialogError && (
+                <p className="text-[11px] text-red-500">{naohDialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleNaOHDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddNaOHToTestTube}>
                   Add to test tube
                 </Button>
               </div>

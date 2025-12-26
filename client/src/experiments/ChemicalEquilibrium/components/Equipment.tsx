@@ -9,6 +9,8 @@ import {
 import type { EquipmentPosition, CobaltReactionState } from "../types";
 import { GLASS_CONTAINER_IMAGE_URL } from "../constants";
 
+const NAOH_CHEMICAL_ID = "naoh";
+const MAX_NAOH_VOLUME_DISPLAY = 6;
 const GLASS_ROD_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3bdedfd838454c6b8a3cc44b25ecfdc0?format=webp&width=800";
 const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
 const GLASS_CONTAINER_MAX_VOLUME_ML = 12;
@@ -510,29 +512,36 @@ export const Equipment: React.FC<EquipmentProps> = ({
     if (id === "test_tubes") {
       if (isDryTest) {
         const totalChemicalsAmount = chemicals.reduce(
-        (sum, chemical) => sum + (chemical.amount || 0),
-        0,
-      );
-      const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
-      const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
-      const hasSaltOnly = hasSaltSample && !hasAcidSample;
-      const hasAmmoniumSample = chemicals.some((chemical) => chemical.id === "nh4oh");
-      const baseOverlayHeight = Math.min(
-        150,
-        (Math.min(totalChemicalsAmount, 25) / 25) * 150,
-      );
-      const saltOverlayMinimumHeight = hasSaltSample ? 60 : 0;
-      const overlayHeight = Math.max(baseOverlayHeight, saltOverlayMinimumHeight);
-      const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
-      const overlayColor = overrideWithWhite
-        ? "rgba(255, 255, 255, 0.95)"
-        : getMixedColor();
-      const showOverlay =
-        overlayColor !== "transparent" && totalChemicalsAmount > 0;
-      const displayLabel = name.toLowerCase().includes("test tube")
-        ? "25ml Test Tube"
-        : name;
-      return (
+          (sum, chemical) => sum + (chemical.amount || 0),
+          0,
+        );
+        const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
+        const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
+        const hasAmmoniumSample = chemicals.some((chemical) => chemical.id === "nh4oh");
+        const hasNaOHSample = chemicals.some((chemical) => chemical.id === NAOH_CHEMICAL_ID);
+        const hasSaltOnly =
+          hasSaltSample && !hasAcidSample && !hasNaOHSample && !hasAmmoniumSample;
+        const naohAmount =
+          chemicals.find((chemical) => chemical.id === NAOH_CHEMICAL_ID)?.amount ?? 0;
+        const naohHeightRatio =
+          Math.min(naohAmount, MAX_NAOH_VOLUME_DISPLAY) / MAX_NAOH_VOLUME_DISPLAY;
+        const totalHeightRatio = Math.min(totalChemicalsAmount, 25) / 25;
+        const heightRatio = hasNaOHSample ? naohHeightRatio : totalHeightRatio;
+        const saltOverlayMinimumHeight = hasSaltSample ? 60 : 0;
+        const overlayHeight = Math.max(
+          saltOverlayMinimumHeight,
+          Math.min(150, heightRatio * 150),
+        );
+        const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
+        const overlayColor = overrideWithWhite
+          ? "rgba(255, 255, 255, 0.95)"
+          : getMixedColor();
+        const showOverlay =
+          overlayColor !== "transparent" && totalChemicalsAmount > 0;
+        const displayLabel = name.toLowerCase().includes("test tube")
+          ? "25ml Test Tube"
+          : name;
+        return (
           <div className="relative flex flex-col items-center">
             <div className="relative">
               <div className="relative w-32 h-[18rem]">

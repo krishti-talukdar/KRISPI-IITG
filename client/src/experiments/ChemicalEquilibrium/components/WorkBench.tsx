@@ -46,6 +46,7 @@ interface WorkBenchProps {
   hasRinsed?: boolean;
   rodMoved?: boolean;
   showPostMoveFumes?: boolean;
+  workbenchResetTrigger?: number;
   onHeatingStateChange?: (isHeating: boolean) => void;
 }
 
@@ -64,6 +65,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   hasRinsed = false,
   rodMoved = false,
   showPostMoveFumes = true,
+  workbenchResetTrigger = 0,
   onHeatingStateChange,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
@@ -131,6 +133,12 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const [isBunsenHeating, setIsBunsenHeating] = useState(false);
   const [isBunsenLit, setIsBunsenLit] = useState(false);
   const [heatCharge, setHeatCharge] = useState(0);
+
+  useEffect(() => {
+    setIsBunsenHeating(false);
+    setIsBunsenLit(false);
+    setHeatCharge(0);
+  }, [workbenchResetTrigger]);
 
   useEffect(() => {
     onHeatingStateChange?.(isBunsenHeating);
