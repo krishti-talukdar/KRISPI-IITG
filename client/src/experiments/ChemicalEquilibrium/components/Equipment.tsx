@@ -517,14 +517,21 @@ export const Equipment: React.FC<EquipmentProps> = ({
       );
       const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
       const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
-      const hasSaltOnly = hasSaltSample && !hasAcidSample;
       const hasAmmoniumSample = chemicals.some((chemical) => chemical.id === "nh4oh");
-      const baseOverlayHeight = Math.min(
-        150,
-        (Math.min(totalChemicalsAmount, 25) / 25) * 150,
-      );
+      const hasNaOHSample = chemicals.some((chemical) => chemical.id === NAOH_CHEMICAL_ID);
+      const hasSaltOnly =
+        hasSaltSample && !hasAcidSample && !hasNaOHSample && !hasAmmoniumSample;
+      const naohAmount = chemicals
+        .find((chemical) => chemical.id === NAOH_CHEMICAL_ID)
+        ?.amount ?? 0;
+      const naohHeightRatio = Math.min(naohAmount, MAX_NAOH_VOLUME_DISPLAY) / MAX_NAOH_VOLUME_DISPLAY;
+      const totalHeightRatio = Math.min(totalChemicalsAmount, 25) / 25;
+      const heightRatio = hasNaOHSample ? naohHeightRatio : totalHeightRatio;
       const saltOverlayMinimumHeight = hasSaltSample ? 60 : 0;
-      const overlayHeight = Math.max(baseOverlayHeight, saltOverlayMinimumHeight);
+      const overlayHeight = Math.max(
+        saltOverlayMinimumHeight,
+        Math.min(150, heightRatio * 150),
+      );
       const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
       const overlayColor = overrideWithWhite
         ? "rgba(255, 255, 255, 0.95)"
