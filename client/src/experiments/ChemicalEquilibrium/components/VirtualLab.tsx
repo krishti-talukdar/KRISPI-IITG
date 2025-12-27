@@ -266,7 +266,8 @@ function ChemicalEquilibriumVirtualLab({
     }
     setRodMoveAnimationConfig(null);
   }, [setRodMoveAnimationConfig]);
-  const [caseOneResult, setCaseOneResult] = useState("No result yet");
+  const [caseOneResult, setCaseOneResult] = useState(DEFAULT_CASE_RESULT);
+  const [caseTwoResult, setCaseTwoResult] = useState(DEFAULT_CASE_RESULT);
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const rinseTimerRef = useRef<number | null>(null);
 
