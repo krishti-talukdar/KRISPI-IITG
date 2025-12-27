@@ -32,6 +32,7 @@ import type {
   ExperimentStep,
   ChemicalEquilibriumExperiment,
   DryTestMode,
+  RodMoveAnimationConfig,
 } from "../types";
 
 interface ChemicalEquilibriumVirtualLabProps {
