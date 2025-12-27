@@ -472,6 +472,16 @@ export const Equipment: React.FC<EquipmentProps> = ({
         GLASS_CONTAINER_MIN_OVERLAY_HEIGHT +
         fillRatio * (GLASS_CONTAINER_MAX_OVERLAY_HEIGHT - GLASS_CONTAINER_MIN_OVERLAY_HEIGHT);
       const showAmmoniumOverlay = ammoniumAmount > 0;
+      const acidAmount = chemicals
+        .filter((chemical) => chemical.id === "conc_hcl")
+        .reduce((sum, chemical) => sum + (chemical.amount || 0), 0);
+      const acidFillRatio = GLASS_CONTAINER_MAX_VOLUME_ML
+        ? Math.min(acidAmount, GLASS_CONTAINER_MAX_VOLUME_ML) / GLASS_CONTAINER_MAX_VOLUME_ML
+        : 0;
+      const acidOverlayHeight =
+        GLASS_CONTAINER_MIN_OVERLAY_HEIGHT +
+        acidFillRatio * (GLASS_CONTAINER_MAX_OVERLAY_HEIGHT - GLASS_CONTAINER_MIN_OVERLAY_HEIGHT);
+      const showAcidOverlay = acidAmount > 0;
       return (
         <div className="relative flex flex-col items-center pointer-events-none">
           <img
@@ -479,6 +489,24 @@ export const Equipment: React.FC<EquipmentProps> = ({
             alt="Glass container"
             className="max-w-[160px] max-h-[160px] object-contain drop-shadow-lg"
           />
+          {showAcidOverlay && (
+            <div
+              className="absolute left-1/2"
+              style={{
+                width: `${GLASS_CONTAINER_OVERLAY_WIDTH}px`,
+                height: `${Math.max(GLASS_CONTAINER_MIN_OVERLAY_HEIGHT, acidOverlayHeight)}px`,
+                bottom: `${GLASS_CONTAINER_OVERLAY_BOTTOM}px`,
+                transform: "translateX(-50%)",
+                borderRadius: "0px 0px 14px 14px",
+                background:
+                  "linear-gradient(180deg, rgba(199, 227, 255, 0.98), rgba(167, 211, 255, 0.92))",
+                boxShadow:
+                  "inset 0 24px 38px rgba(199, 227, 255, 0.95), 0 0 15px rgba(167, 211, 255, 0.5)",
+                transition: "height 350ms ease",
+                zIndex: 0,
+              }}
+            />
+          )}
           {showAmmoniumOverlay && (
             <div
               className="absolute left-1/2"
