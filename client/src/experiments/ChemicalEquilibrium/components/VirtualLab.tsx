@@ -333,6 +333,7 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_ACID_DROPS = 3;
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
+  const GLASS_CONTAINER_HCL_DROPS = 4;
   const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
   const MIN_AMMONIUM_VOLUME = 5;
   const MAX_AMMONIUM_VOLUME = 10;
@@ -1003,6 +1004,13 @@ function ChemicalEquilibriumVirtualLab({
     if (equipmentId.startsWith("conc-h-cl")) {
       return () => handleAcidDialogOpen("hcl");
     }
+    if (
+      isDryTestExperiment &&
+      resolvedDryTestMode === "basic" &&
+      equipmentId.startsWith("glass-container")
+    ) {
+      return handleAddHClToGlassContainer;
+    }
     if (equipmentId.startsWith("concentrated-h-so")) {
       return () => handleAcidDialogOpen("h2so4");
     }
@@ -1178,6 +1186,59 @@ function ChemicalEquilibriumVirtualLab({
     );
     setTimeout(() => setToastMessage(null), 3000);
     handleAmmoniumDialogClose();
+  };
+
+  const handleAddHClToGlassContainer = () => {
+    const drops = GLASS_CONTAINER_HCL_DROPS;
+    if (!glassContainerEquipmentId) {
+      setToastMessage("Glass container is not available in this layout.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === glassContainerEquipmentId)) {
+      setToastMessage("Place the glass container on the workbench first.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    pushHistorySnapshot();
+
+    const acidConfig = ACID_CONFIG.hcl;
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== glassContainerEquipmentId) {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find(
+          (chemical) => chemical.id === acidConfig.chemicalId,
+        );
+        const updatedChemicals = existing
+          ? pos.chemicals.map((chemical) =>
+              chemical.id === acidConfig.chemicalId
+                ? { ...chemical, amount: (chemical.amount ?? 0) + drops }
+                : chemical,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: acidConfig.chemicalId,
+                name: acidConfig.label,
+                color: acidConfig.color,
+                amount: drops,
+                concentration: "Concentrated",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(
+      `Added ${drops} drops of ${acidConfig.label} to the glass container.`,
+    );
+    setTimeout(() => setToastMessage(null), 3000);
   };
 
   const handleRinseAction = () => {
