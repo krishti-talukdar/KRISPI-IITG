@@ -1097,7 +1097,7 @@ function ChemicalEquilibriumVirtualLab({
     if (
       isDryTestExperiment &&
       resolvedDryTestMode === "basic" &&
-      equipmentId.startsWith("glass-container")
+      equipmentId.startsWith("conc-h-cl")
     ) {
       return handleGlassAcidDialogOpen;
     }
