@@ -1280,13 +1280,19 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleRinseAction = () => {
-    if (!hasAmmoniumInGlassContainer || isRinsing) return;
+    if (!shouldShowRinseButton || isRinsing) return;
+
+    const rinseSourceLabel = hasAmmoniumInGlassContainer
+      ? "NH₄OH"
+      : hasHClInGlassContainer
+        ? "Conc. HCl"
+        : "solution";
 
     if (!hasRinsed) {
       setHasRinsed(true);
       setIsRinsing(true);
       setShowRinseAnimation(true);
-      setToastMessage("Rinsing the glass rod with NH₄OH...");
+      setToastMessage(`Rinsing the glass rod with ${rinseSourceLabel}...`);
       if (rinseTimerRef.current) {
         window.clearTimeout(rinseTimerRef.current);
       }
