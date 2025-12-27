@@ -322,6 +322,7 @@ function ChemicalEquilibriumVirtualLab({
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
   const [acidVolume, setAcidVolume] = useState("4");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
+  const [acidTarget, setAcidTarget] = useState<AcidTarget>("h2so4");
   const MIN_ACID_DROPS = 3;
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
