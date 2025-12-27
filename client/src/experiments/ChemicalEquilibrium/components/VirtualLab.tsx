@@ -1453,6 +1453,7 @@ const NAOH_COLOR = "#bfdbfe";
     }
     setIsRinsing(false);
     setShowRinseAnimation(false);
+    cancelRodMoveAnimation();
 
     const lastSnapshot = historyRef.current.pop();
     if (!lastSnapshot) {
