@@ -66,6 +66,8 @@ type LabSnapshot = {
   step3WaterAdded: boolean;
   measurements: Measurements;
   selectedChemical: string | null;
+  caseOneResult: string;
+  caseTwoResult: string;
 };
 
 const MAX_HISTORY_ENTRIES = 25;
