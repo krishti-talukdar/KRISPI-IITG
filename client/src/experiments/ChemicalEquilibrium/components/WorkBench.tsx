@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { EquipmentPosition } from "../types";
+import type { EquipmentPosition, RodMoveAnimationConfig } from "../types";
+import { GLASS_ROD_IMAGE_URL } from "../constants";
 
 const DRY_TEST_VAPOR_PUFFS = [
   { offsetX: -22, duration: "3.8s", delay: "0s", scale: 0.85 },
