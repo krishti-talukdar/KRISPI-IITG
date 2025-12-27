@@ -325,18 +325,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
     "beakers",
   ].includes(id);
 
-  const getMixedColor = () => {
-    if (chemicals.length === 0) return "transparent";
-    if (chemicals.length === 1) return chemicals[0].color;
+  const getMixedColor = (subset: typeof chemicals = chemicals) => {
+    if (subset.length === 0) return "transparent";
+    if (subset.length === 1) return subset[0].color;
 
-    const chemicalIds = chemicals.map((c) => c.id).sort();
+    const chemicalIds = subset.map((c) => c.id).sort();
 
     let r = 0,
       g = 0,
       b = 0,
       totalAmount = 0;
 
-    chemicals.forEach((chemical) => {
+    subset.forEach((chemical) => {
       const color = chemical.color;
       const amount = chemical.amount;
 
