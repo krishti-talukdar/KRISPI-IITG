@@ -858,6 +858,39 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     transform: scale(5) rotate(-12deg) translate(0, 0);
   }
 }
+.rod-move-animation {
+  --rod-anim-dx: 0px;
+  --rod-anim-dy: 0px;
+  --rod-anim-duration: 1.2s;
+  position: absolute;
+  pointer-events: none;
+  width: 140px;
+  height: 32px;
+  left: 0;
+  top: 0;
+  transform-origin: center;
+  z-index: 45;
+  animation: rodMoveGlide var(--rod-anim-duration, 1.2s) ease-in-out both;
+}
+.rod-move-animation__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+@keyframes rodMoveGlide {
+  0% {
+    transform: translate(-50%, -50%) rotate(-12deg);
+  }
+  30% {
+    transform: translate(calc(var(--rod-anim-dx) * 0.35 - 50%), calc(var(--rod-anim-dy) * 0.35 - 50% - 12px)) rotate(-14deg);
+  }
+  60% {
+    transform: translate(calc(var(--rod-anim-dx) * 0.7 - 50%), calc(var(--rod-anim-dy) * 0.7 - 50% - 6px)) rotate(-15deg);
+  }
+  100% {
+    transform: translate(calc(var(--rod-anim-dx) - 50%), calc(var(--rod-anim-dy) - 50%)) rotate(-12deg);
+  }
+}
 .dry-test-rinse-button {
   position: absolute;
   left: var(--rinse-left, 0);
