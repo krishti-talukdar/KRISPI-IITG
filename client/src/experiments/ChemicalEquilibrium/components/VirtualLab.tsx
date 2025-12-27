@@ -142,6 +142,13 @@ const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: 
 const DRY_TEST_FIXED_EQUIPMENT_IDS = [
   "test_tubes",
   "bunsen-burner-virtual-heat-source",
+  "glass-rod",
+  "glass-container",
+];
+
+const DRY_TEST_BASIC_GLASS_AUTOPOSITION_IDS = [
+  "glass-rod",
+  "glass-container",
 ];
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
@@ -453,29 +460,42 @@ function ChemicalEquilibriumVirtualLab({
   }, [setEquipmentPositions]);
 
   const handleEquipmentDrop = useCallback(
-  (id: string, x: number, y: number) => {
-    if (isDryTestBottleEquipment(id)) {
-      setToastMessage(
-        "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, Conc. HCl, and NH₄OH to load the test tube.",
-      );
-      setTimeout(() => setToastMessage(null), 2500);
-      return;
-    }
+    (id: string, x: number, y: number) => {
+      if (isDryTestBottleEquipment(id)) {
+        setToastMessage(
+          "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, Conc. HCl, and NH₄OH to load the test tube.",
+        );
+        setTimeout(() => setToastMessage(null), 2500);
+        return;
+      }
 
-    const workbenchRect =
-      typeof document !== "undefined"
-        ? document
-            .querySelector('[data-workbench="true"]')
-            ?.getBoundingClientRect() ?? null
+      const normalizedId = stripEquipmentIdSuffix(id);
+      const shouldSnapBasicGlassPlacement =
+        resolvedDryTestMode === "basic" &&
+        DRY_TEST_BASIC_GLASS_AUTOPOSITION_IDS.includes(normalizedId);
+
+      const workbenchRect =
+        typeof document !== "undefined"
+          ? document
+              .querySelector('[data-workbench="true"]')
+              ?.getBoundingClientRect() ?? null
+          : null;
+      const layoutPosition = isDryTestExperiment
+        ? getDryTestWorkbenchPosition(workbenchRect, id)
         : null;
-    const layoutPosition = isDryTestExperiment
-      ? getDryTestWorkbenchPosition(workbenchRect, id)
-      : null;
-    const dropX = layoutPosition?.x ?? x;
-    const dropY = layoutPosition?.y ?? y;
+      const dropX = layoutPosition?.x ?? x;
+      const dropY = layoutPosition?.y ?? y;
 
-    pushHistorySnapshot();
-    setEquipmentPositions((prev) => {
+      const getSnappedPosition = (baseX: number, baseY: number) =>
+        shouldSnapBasicGlassPlacement
+          ? {
+              x: layoutPosition?.x ?? baseX,
+              y: layoutPosition?.y ?? baseY,
+            }
+          : { x: baseX, y: baseY };
+
+      pushHistorySnapshot();
+      setEquipmentPositions((prev) => {
         const existing = prev.find((pos) => pos.id === id);
         if (existing) {
           // Auto-alignment logic for Chemical Equilibrium
@@ -549,7 +569,10 @@ function ChemicalEquilibriumVirtualLab({
               }
             }
           }
-          return prev.map((pos) => (pos.id === id ? { ...pos, x, y } : pos));
+          const snapped = getSnappedPosition(x, y);
+          return prev.map((pos) =>
+            pos.id === id ? { ...pos, x: snapped.x, y: snapped.y } : pos,
+          );
         }
 
         // Stirring rod automation for Chemical Equilibrium
@@ -586,10 +609,11 @@ function ChemicalEquilibriumVirtualLab({
           }, 1000);
         }
 
-        return [...prev, { id, x: dropX, y: dropY, chemicals: [] }];
+        const snappedDrop = getSnappedPosition(dropX, dropY);
+        return [...prev, { id, x: snappedDrop.x, y: snappedDrop.y, chemicals: [] }];
       });
     },
-    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment, pushHistorySnapshot],
+    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode],
   );
 
   const handleEquipmentRemove = useCallback((id: string) => {
