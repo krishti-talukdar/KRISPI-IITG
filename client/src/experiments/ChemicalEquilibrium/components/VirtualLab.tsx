@@ -405,10 +405,11 @@ function ChemicalEquilibriumVirtualLab({
   });
 
   const DRY_TEST_BOTTLE_IDS = [
-    "salt-sample",
-    "concentrated-h-so",
-    "ammonium-hydroxide-nh-oh",
-  ];
+  "salt-sample",
+  "concentrated-h-so",
+  "conc-h-cl",
+  "ammonium-hydroxide-nh-oh",
+];
 
   const isDryTestBottleEquipment = (equipmentId: string) =>
     DRY_TEST_BOTTLE_IDS.some((token) => equipmentId.startsWith(token));
@@ -454,7 +455,7 @@ function ChemicalEquilibriumVirtualLab({
   (id: string, x: number, y: number) => {
     if (isDryTestBottleEquipment(id)) {
       setToastMessage(
-        "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, and NH₄OH to load the test tube.",
+        "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, Conc. HCl, and NH₄OH to load the test tube.",
       );
       setTimeout(() => setToastMessage(null), 2500);
       return;
