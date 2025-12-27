@@ -1429,6 +1429,7 @@ const NAOH_COLOR = "#bfdbfe";
   };
 
   const handleClearWorkbench = () => {
+    cancelRodMoveAnimation();
     setEquipmentPositions([]);
     setRodMoved(false);
     setPostMoveFumesEnabled(false);
