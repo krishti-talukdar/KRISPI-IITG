@@ -120,6 +120,11 @@ const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: 
   "glass-container": DRY_WORKBENCH_GLASS_CONTAINER_POSITION,
 };
 
+const DRY_TEST_FIXED_EQUIPMENT_IDS = [
+  "test_tubes",
+  "bunsen-burner-virtual-heat-source",
+];
+
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
   const lookupId = stripEquipmentIdSuffix(id);
@@ -572,6 +577,65 @@ function ChemicalEquilibriumVirtualLab({
     setToastMessage("Equipment removed from workbench");
     setTimeout(() => setToastMessage(null), 2000);
   }, [pushHistorySnapshot]);
+
+  useEffect(() => {
+    if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
+      return;
+    }
+    if (equipmentPositions.length === 0) {
+      return;
+    }
+
+    if (typeof document === "undefined") {
+      return;
+    }
+
+    const workbenchRect =
+      document.querySelector('[data-workbench="true"]')
+        ?.getBoundingClientRect() ?? null;
+    if (!workbenchRect) {
+      return;
+    }
+
+    let didUpdate = false;
+    const alignedPositions = equipmentPositions.map((position) => {
+      const normalizedId = stripEquipmentIdSuffix(position.id);
+      if (!DRY_TEST_FIXED_EQUIPMENT_IDS.includes(normalizedId)) {
+        return position;
+      }
+
+      const layoutPosition = getDryTestWorkbenchPosition(
+        workbenchRect,
+        position.id,
+      );
+      if (!layoutPosition) {
+        return position;
+      }
+
+      if (
+        layoutPosition.x === position.x &&
+        layoutPosition.y === position.y
+      ) {
+        return position;
+      }
+
+      didUpdate = true;
+      return {
+        ...position,
+        x: layoutPosition.x,
+        y: layoutPosition.y,
+      };
+    });
+
+    if (didUpdate) {
+      setEquipmentPositions(alignedPositions);
+    }
+  }, [
+    equipmentPositions,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    setEquipmentPositions,
+  ]);
 
   const handleChemicalSelect = (id: string) => {
     setSelectedChemical(selectedChemical === id ? null : id);
