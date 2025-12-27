@@ -1395,6 +1395,7 @@ const NAOH_COLOR = "#bfdbfe";
   const currentAcidLabel = ACID_CONFIG[acidTarget].label;
 
   const handleReset = () => {
+    cancelRodMoveAnimation();
     setEquipmentPositions([]);
     setSelectedChemical(null);
     setIsRunning(false);
