@@ -701,7 +701,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         <button
           type="button"
           onClick={() => onRinse?.()}
-          disabled={isRinsing || rodMoved}
+          disabled={isRinsing || rodMoved || isRodMoving}
           className="dry-test-rinse-button"
           style={{
             "--rinse-left": `${rinseLayout.buttonLeft}px`,
