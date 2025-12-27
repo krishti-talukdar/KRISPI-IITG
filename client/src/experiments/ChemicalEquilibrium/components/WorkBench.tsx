@@ -554,6 +554,25 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           {/* Equipment positions and children */}
           <div className="absolute inset-0 transform -translate-y-8">{children}</div>
 
+          {rodMoveAnimation && (
+            <div
+              className="rod-move-animation"
+              style={{
+                left: `${rodMoveAnimation.startX}px`,
+                top: `${rodMoveAnimation.startY}px`,
+                "--rod-anim-dx": `${rodMoveAnimation.deltaX}px`,
+                "--rod-anim-dy": `${rodMoveAnimation.deltaY}px`,
+                "--rod-anim-duration": `${rodMoveAnimation.durationMs}ms`,
+              } as React.CSSProperties}
+            >
+              <img
+                src={GLASS_ROD_IMAGE_URL}
+                alt="Moving glass rod"
+                className="rod-move-animation__image"
+              />
+            </div>
+          )}
+
           {isDryTestWorkbench && (
             <>
               {rodMoved && showPostMoveFumes && testTubePosition && (
