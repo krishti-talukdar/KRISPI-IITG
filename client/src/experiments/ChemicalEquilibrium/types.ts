@@ -99,3 +99,11 @@ export interface Result {
     };
   };
 }
+
+export interface RodMoveAnimationConfig {
+  startX: number;
+  startY: number;
+  deltaX: number;
+  deltaY: number;
+  durationMs: number;
+}

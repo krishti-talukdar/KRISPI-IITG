@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { EquipmentPosition } from "../types";
+import type { EquipmentPosition, RodMoveAnimationConfig } from "../types";
+import { GLASS_ROD_IMAGE_URL } from "../constants";
 
 const DRY_TEST_VAPOR_PUFFS = [
   { offsetX: -22, duration: "3.8s", delay: "0s", scale: 0.85 },
@@ -46,6 +47,8 @@ interface WorkBenchProps {
   hasRinsed?: boolean;
   rodMoved?: boolean;
   showPostMoveFumes?: boolean;
+  rodMoveAnimation?: RodMoveAnimationConfig | null;
+  isRodMoving?: boolean;
   workbenchResetTrigger?: number;
   onHeatingStateChange?: (isHeating: boolean) => void;
 }
@@ -64,6 +67,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   isRinsing = false,
   hasRinsed = false,
   rodMoved = false,
+  rodMoveAnimation = null,
+  isRodMoving = false,
   showPostMoveFumes = true,
   workbenchResetTrigger = 0,
   onHeatingStateChange,
@@ -549,6 +554,25 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           {/* Equipment positions and children */}
           <div className="absolute inset-0 transform -translate-y-8">{children}</div>
 
+          {rodMoveAnimation && (
+            <div
+              className="rod-move-animation"
+              style={{
+                left: `${rodMoveAnimation.startX}px`,
+                top: `${rodMoveAnimation.startY}px`,
+                "--rod-anim-dx": `${rodMoveAnimation.deltaX}px`,
+                "--rod-anim-dy": `${rodMoveAnimation.deltaY}px`,
+                "--rod-anim-duration": `${rodMoveAnimation.durationMs}ms`,
+              } as React.CSSProperties}
+            >
+              <img
+                src={GLASS_ROD_IMAGE_URL}
+                alt="Moving glass rod"
+                className="rod-move-animation__image"
+              />
+            </div>
+          )}
+
           {isDryTestWorkbench && (
             <>
               {rodMoved && showPostMoveFumes && testTubePosition && (
@@ -677,7 +701,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         <button
           type="button"
           onClick={() => onRinse?.()}
-          disabled={isRinsing || rodMoved}
+          disabled={isRinsing || rodMoved || isRodMoving}
           className="dry-test-rinse-button"
           style={{
             "--rinse-left": `${rinseLayout.buttonLeft}px`,
@@ -832,6 +856,39 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   }
   100% {
     transform: scale(5) rotate(-12deg) translate(0, 0);
+  }
+}
+.rod-move-animation {
+  --rod-anim-dx: 0px;
+  --rod-anim-dy: 0px;
+  --rod-anim-duration: 1.2s;
+  position: absolute;
+  pointer-events: none;
+  width: 140px;
+  height: 32px;
+  left: 0;
+  top: 0;
+  transform-origin: center;
+  z-index: 45;
+  animation: rodMoveGlide var(--rod-anim-duration, 1.2s) ease-in-out both;
+}
+.rod-move-animation__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+@keyframes rodMoveGlide {
+  0% {
+    transform: translate(-50%, -50%) rotate(-12deg);
+  }
+  30% {
+    transform: translate(calc(var(--rod-anim-dx) * 0.35 - 50%), calc(var(--rod-anim-dy) * 0.35 - 50% - 12px)) rotate(-14deg);
+  }
+  60% {
+    transform: translate(calc(var(--rod-anim-dx) * 0.7 - 50%), calc(var(--rod-anim-dy) * 0.7 - 50% - 6px)) rotate(-15deg);
+  }
+  100% {
+    transform: translate(calc(var(--rod-anim-dx) - 50%), calc(var(--rod-anim-dy) - 50%)) rotate(-12deg);
   }
 }
 .dry-test-rinse-button {

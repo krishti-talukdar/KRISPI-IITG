@@ -7,12 +7,11 @@ import {
   Thermometer,
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState, DryTestMode } from "../types";
-import { GLASS_CONTAINER_IMAGE_URL } from "../constants";
+import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL } from "../constants";
 
 const NAOH_CHEMICAL_ID = "naoh";
 const NAOH_SOLUTION_COLOR = "#bfdbfe";
 const MAX_NAOH_VOLUME_DISPLAY = 6;
-const GLASS_ROD_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3bdedfd838454c6b8a3cc44b25ecfdc0?format=webp&width=800";
 const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
 const GLASS_CONTAINER_MAX_VOLUME_ML = 12;
 const GLASS_CONTAINER_MIN_OVERLAY_HEIGHT = 16;
@@ -325,18 +324,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
     "beakers",
   ].includes(id);
 
-  const getMixedColor = () => {
-    if (chemicals.length === 0) return "transparent";
-    if (chemicals.length === 1) return chemicals[0].color;
+  const getMixedColor = (subset: typeof chemicals = chemicals) => {
+    if (subset.length === 0) return "transparent";
+    if (subset.length === 1) return subset[0].color;
 
-    const chemicalIds = chemicals.map((c) => c.id).sort();
+    const chemicalIds = subset.map((c) => c.id).sort();
 
     let r = 0,
       g = 0,
       b = 0,
       totalAmount = 0;
 
-    chemicals.forEach((chemical) => {
+    subset.forEach((chemical) => {
       const color = chemical.color;
       const amount = chemical.amount;
 
@@ -472,6 +471,16 @@ export const Equipment: React.FC<EquipmentProps> = ({
         GLASS_CONTAINER_MIN_OVERLAY_HEIGHT +
         fillRatio * (GLASS_CONTAINER_MAX_OVERLAY_HEIGHT - GLASS_CONTAINER_MIN_OVERLAY_HEIGHT);
       const showAmmoniumOverlay = ammoniumAmount > 0;
+      const acidAmount = chemicals
+        .filter((chemical) => chemical.id === "conc_hcl")
+        .reduce((sum, chemical) => sum + (chemical.amount || 0), 0);
+      const acidFillRatio = GLASS_CONTAINER_MAX_VOLUME_ML
+        ? Math.min(acidAmount, GLASS_CONTAINER_MAX_VOLUME_ML) / GLASS_CONTAINER_MAX_VOLUME_ML
+        : 0;
+      const acidOverlayHeight =
+        GLASS_CONTAINER_MIN_OVERLAY_HEIGHT +
+        acidFillRatio * (GLASS_CONTAINER_MAX_OVERLAY_HEIGHT - GLASS_CONTAINER_MIN_OVERLAY_HEIGHT);
+      const showAcidOverlay = acidAmount > 0;
       return (
         <div className="relative flex flex-col items-center pointer-events-none">
           <img
@@ -479,6 +488,24 @@ export const Equipment: React.FC<EquipmentProps> = ({
             alt="Glass container"
             className="max-w-[160px] max-h-[160px] object-contain drop-shadow-lg"
           />
+          {showAcidOverlay && (
+            <div
+              className="absolute left-1/2"
+              style={{
+                width: `${GLASS_CONTAINER_OVERLAY_WIDTH}px`,
+                height: `${Math.max(GLASS_CONTAINER_MIN_OVERLAY_HEIGHT, acidOverlayHeight)}px`,
+                bottom: `${GLASS_CONTAINER_OVERLAY_BOTTOM}px`,
+                transform: "translateX(-50%)",
+                borderRadius: "0px 0px 14px 14px",
+                background:
+                  "linear-gradient(180deg, rgba(199, 227, 255, 0.98), rgba(167, 211, 255, 0.92))",
+                boxShadow:
+                  "inset 0 24px 38px rgba(199, 227, 255, 0.95), 0 0 15px rgba(167, 211, 255, 0.5)",
+                transition: "height 350ms ease",
+                zIndex: 0,
+              }}
+            />
+          )}
           {showAmmoniumOverlay && (
             <div
               className="absolute left-1/2"
@@ -536,9 +563,12 @@ export const Equipment: React.FC<EquipmentProps> = ({
           Math.min(150, heightRatio * 150),
         );
         const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
+        const nonNaOHChemicals = chemicals.filter((chemical) => chemical.id !== NAOH_CHEMICAL_ID);
+        const overlayColorSource =
+          nonNaOHChemicals.length > 0 ? nonNaOHChemicals : chemicals;
         const baseOverlayColor = overrideWithWhite
           ? "rgba(255, 255, 255, 0.95)"
-          : getMixedColor();
+          : getMixedColor(overlayColorSource);
         const shouldForceNaOHBlue =
           isDryTest &&
           dryTestMode === "basic" &&

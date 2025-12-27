@@ -32,6 +32,7 @@ import type {
   ExperimentStep,
   ChemicalEquilibriumExperiment,
   DryTestMode,
+  RodMoveAnimationConfig,
 } from "../types";
 
 interface ChemicalEquilibriumVirtualLabProps {
@@ -65,6 +66,8 @@ type LabSnapshot = {
   step3WaterAdded: boolean;
   measurements: Measurements;
   selectedChemical: string | null;
+  caseOneResult: string;
+  caseTwoResult: string;
 };
 
 const MAX_HISTORY_ENTRIES = 25;
@@ -98,10 +101,10 @@ const DRY_TESTS_CHEMICALS: ChemicalDefinition[] = [
 
 const DRY_WORKBENCH_SALT_POSITION = { xPercent: 0.88, yPercent: 0.18 };
 const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
-const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.3, yPercent: 0.25 };
-const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
-const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.55 };
-const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
+const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.3, yPercent: 0.3 };
+const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.75, yPercent: 0.15 };
+const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.6 };
+const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.65, yPercent: 0.45 };
 
 type AcidTarget = "h2so4" | "hcl";
 
@@ -256,7 +259,17 @@ function ChemicalEquilibriumVirtualLab({
   const [hasRinsed, setHasRinsed] = useState(false);
   const [rodMoved, setRodMoved] = useState(false);
   const [postMoveFumesEnabled, setPostMoveFumesEnabled] = useState(false);
-  const [caseOneResult, setCaseOneResult] = useState("No result yet");
+  const [rodMoveAnimationConfig, setRodMoveAnimationConfig] = useState<RodMoveAnimationConfig | null>(null);
+  const rodMoveAnimationTimerRef = useRef<number | null>(null);
+  const cancelRodMoveAnimation = useCallback(() => {
+    if (rodMoveAnimationTimerRef.current) {
+      window.clearTimeout(rodMoveAnimationTimerRef.current);
+      rodMoveAnimationTimerRef.current = null;
+    }
+    setRodMoveAnimationConfig(null);
+  }, [setRodMoveAnimationConfig]);
+  const [caseOneResult, setCaseOneResult] = useState(DEFAULT_CASE_RESULT);
+  const [caseTwoResult, setCaseTwoResult] = useState(DEFAULT_CASE_RESULT);
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const rinseTimerRef = useRef<number | null>(null);
 
@@ -287,6 +300,10 @@ function ChemicalEquilibriumVirtualLab({
         .reduce((sum, chemical) => sum + (chemical.amount || 0), 0)
     : 0;
   const hasAmmoniumInGlassContainer = ammoniumAmountInGlassContainer > 0;
+  const hasHClInGlassContainer = glassContainerState
+    ? glassContainerState.chemicals.some((chemical) => chemical.id === "conc_hcl")
+    : false;
+  const shouldShowRinseButton = hasAmmoniumInGlassContainer || hasHClInGlassContainer;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
@@ -312,9 +329,13 @@ function ChemicalEquilibriumVirtualLab({
   const SALT_HEATING_STEP = 0.35;
   const SALT_HEATING_MIN_REMAINING = 0.5;
   const SALT_HEATING_INTERVAL_MS = 1200;
+  const ROD_MOVE_ANIMATION_DURATION = 1200;
   const NAOH_COLOR = "#bfdbfe";
   const NAOH_NAME = "NaOH";
   const NAOH_CONCENTRATION = "Reagent";
+  const DEFAULT_CASE_RESULT = "No result yet";
+  const CASE_TWO_BASIC_RESULT =
+    "CASE 2: Strong pungent smell of NH₃ and white fumes with conc. HCl confirm the ammonium radical (NH₄⁺) in the salt.";
   const NAOH_CHEMICAL_ID = "naoh";
   const NAOH_VOLUME_LABEL = "2ml - 4ml";
   const MIN_NAOH_VOLUME = 2;
@@ -395,8 +416,9 @@ function ChemicalEquilibriumVirtualLab({
       if (rinseTimerRef.current) {
         window.clearTimeout(rinseTimerRef.current);
       }
+      cancelRodMoveAnimation();
     };
-  }, []);
+  }, [cancelRodMoveAnimation]);
 
   const cobaltReactionState: CobaltReactionState = {
     cobaltChlorideAdded,
@@ -419,6 +441,8 @@ function ChemicalEquilibriumVirtualLab({
     step3WaterAdded,
     measurements: { ...measurements },
     selectedChemical,
+    caseOneResult,
+    caseTwoResult,
   });
 
   const DRY_TEST_BOTTLE_IDS = [
@@ -1094,7 +1118,7 @@ function ChemicalEquilibriumVirtualLab({
     if (
       isDryTestExperiment &&
       resolvedDryTestMode === "basic" &&
-      equipmentId.startsWith("conc-h-cl")
+      (equipmentId.startsWith("conc-hcl") || equipmentId.startsWith("conc-h-cl"))
     ) {
       return handleGlassAcidDialogOpen;
     }
@@ -1276,13 +1300,19 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleRinseAction = () => {
-    if (!hasAmmoniumInGlassContainer || isRinsing) return;
+    if (!shouldShowRinseButton || isRinsing) return;
+
+    const rinseSourceLabel = hasAmmoniumInGlassContainer
+      ? "NH₄OH"
+      : hasHClInGlassContainer
+        ? "Conc. HCl"
+        : "solution";
 
     if (!hasRinsed) {
       setHasRinsed(true);
       setIsRinsing(true);
       setShowRinseAnimation(true);
-      setToastMessage("Rinsing the glass rod with NH₄OH...");
+      setToastMessage(`Rinsing the glass rod with ${rinseSourceLabel}...`);
       if (rinseTimerRef.current) {
         window.clearTimeout(rinseTimerRef.current);
       }
@@ -1296,7 +1326,7 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
-    if (rodMoved) return;
+    if (rodMoved || rodMoveAnimationConfig) return;
 
     const glassRod = equipmentPositions.find((pos) => pos.id.includes("glass-rod"));
     const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
@@ -1323,24 +1353,50 @@ function ChemicalEquilibriumVirtualLab({
     };
     const targetX = clampX(testTube.x + 40);
     const targetY = clampY(testTube.y - 150);
+    const startX = glassRod.x;
+    const startY = glassRod.y;
+    const deltaX = targetX - startX;
+    const deltaY = targetY - startY;
 
-    pushHistorySnapshot();
-    setEquipmentPositions((prev) =>
-      prev.map((pos) =>
-        pos.id === glassRod.id
-          ? {
-              ...pos,
-              x: targetX,
-              y: targetY,
-            }
-          : pos,
-      ),
-    );
-    setRodMoved(true);
-    setPostMoveFumesEnabled(true);
-    setCaseOneResult("Cl⁻ radical may be present in the given salt.");
-    setToastMessage("Glass rod moved above the test tube.");
-    setTimeout(() => setToastMessage(null), 2500);
+    cancelRodMoveAnimation();
+    setRodMoveAnimationConfig({
+      startX,
+      startY,
+      deltaX,
+      deltaY,
+      durationMs: ROD_MOVE_ANIMATION_DURATION,
+    });
+
+    setToastMessage("Moving the glass rod above the test tube...");
+
+    const rodId = glassRod.id;
+    if (rodMoveAnimationTimerRef.current) {
+      window.clearTimeout(rodMoveAnimationTimerRef.current);
+    }
+    rodMoveAnimationTimerRef.current = window.setTimeout(() => {
+      setRodMoveAnimationConfig(null);
+      pushHistorySnapshot();
+      setEquipmentPositions((prev) =>
+        prev.map((pos) =>
+          pos.id === rodId
+            ? {
+                ...pos,
+                x: targetX,
+                y: targetY,
+              }
+            : pos,
+        ),
+      );
+      setRodMoved(true);
+      setPostMoveFumesEnabled(true);
+      setCaseOneResult("Cl⁻ radical may be present in the given salt.");
+      if (isDryTestExperiment && resolvedDryTestMode === "basic") {
+        setCaseTwoResult(CASE_TWO_BASIC_RESULT);
+      }
+      setToastMessage("Glass rod moved above the test tube.");
+      setTimeout(() => setToastMessage(null), 2500);
+      rodMoveAnimationTimerRef.current = null;
+    }, ROD_MOVE_ANIMATION_DURATION);
   };
 
   const handleStartExperiment = () => {
@@ -1350,6 +1406,7 @@ function ChemicalEquilibriumVirtualLab({
   const currentAcidLabel = ACID_CONFIG[acidTarget].label;
 
   const handleReset = () => {
+    cancelRodMoveAnimation();
     setEquipmentPositions([]);
     setSelectedChemical(null);
     setIsRunning(false);
@@ -1367,7 +1424,8 @@ function ChemicalEquilibriumVirtualLab({
     setHasRinsed(false);
     setRodMoved(false);
     setPostMoveFumesEnabled(false);
-    setCaseOneResult("No result yet");
+    setCaseOneResult(DEFAULT_CASE_RESULT);
+    setCaseTwoResult(DEFAULT_CASE_RESULT);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
     setGlassAcidDialogError(null);
@@ -1383,10 +1441,13 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleClearWorkbench = () => {
+    cancelRodMoveAnimation();
     setEquipmentPositions([]);
     setRodMoved(false);
     setPostMoveFumesEnabled(false);
     setHasRinsed(false);
+    setCaseOneResult(DEFAULT_CASE_RESULT);
+    setCaseTwoResult(DEFAULT_CASE_RESULT);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
     setTimeout(() => setToastMessage(null), 2500);
@@ -1406,6 +1467,7 @@ function ChemicalEquilibriumVirtualLab({
     }
     setIsRinsing(false);
     setShowRinseAnimation(false);
+    cancelRodMoveAnimation();
 
     const lastSnapshot = historyRef.current.pop();
     if (!lastSnapshot) {
@@ -1429,6 +1491,8 @@ function ChemicalEquilibriumVirtualLab({
     setColorTransition(lastSnapshot.colorTransition);
     setStep3WaterAdded(lastSnapshot.step3WaterAdded);
     setMeasurements({ ...lastSnapshot.measurements });
+    setCaseOneResult(lastSnapshot.caseOneResult);
+    setCaseTwoResult(lastSnapshot.caseTwoResult);
 
     setToastMessage("Reverted the last operation.");
     setTimeout(() => setToastMessage(null), 2500);
@@ -1631,11 +1695,13 @@ function ChemicalEquilibriumVirtualLab({
                 equipmentPositions={equipmentPositions}
                 currentGuidedStep={currentStep}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
-                showRinseButton={hasAmmoniumInGlassContainer}
+                showRinseButton={shouldShowRinseButton}
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
                 hasRinsed={hasRinsed}
                 rodMoved={rodMoved}
+                rodMoveAnimation={rodMoveAnimationConfig}
+                isRodMoving={Boolean(rodMoveAnimationConfig)}
                 showPostMoveFumes={postMoveFumesEnabled}
                 onHeatingStateChange={handleBunsenHeatingChange}
                 workbenchResetTrigger={workbenchResetTrigger}
@@ -1724,10 +1790,10 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-xs text-gray-500">{caseOneResult}</div>
               </div>
               <div className="p-2 border rounded">CASE 2
-                <div className="text-xs text-gray-500">No result yet</div>
+                <div className="text-xs text-gray-500">{caseTwoResult}</div>
               </div>
             </div>
-            {caseOneResult !== "No result yet" && (
+            {caseOneResult !== DEFAULT_CASE_RESULT && (
               <button
                 type="button"
                 onClick={handleClearWorkbench}
@@ -1802,11 +1868,13 @@ function ChemicalEquilibriumVirtualLab({
                 equipmentPositions={equipmentPositions}
                 currentGuidedStep={currentStep}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
-                showRinseButton={hasAmmoniumInGlassContainer}
+                showRinseButton={shouldShowRinseButton}
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
                 hasRinsed={hasRinsed}
                 rodMoved={rodMoved}
+                rodMoveAnimation={rodMoveAnimationConfig}
+                isRodMoving={Boolean(rodMoveAnimationConfig)}
                 showPostMoveFumes={postMoveFumesEnabled}
                 onHeatingStateChange={handleBunsenHeatingChange}
                 workbenchResetTrigger={workbenchResetTrigger}
