@@ -335,7 +335,7 @@ function ChemicalEquilibriumVirtualLab({
   const NAOH_CONCENTRATION = "Reagent";
   const DEFAULT_CASE_RESULT = "No result yet";
   const CASE_TWO_BASIC_RESULT =
-    "Strong pungent smell of NH₃ and white fumes with conc. HCl confirm the ammonium radical (NH₄⁺) in the salt.";
+    "CASE 2: Strong pungent smell of NH₃ and white fumes with conc. HCl confirm the ammonium radical (NH₄⁺) in the salt.";
   const NAOH_CHEMICAL_ID = "naoh";
   const NAOH_VOLUME_LABEL = "2ml - 4ml";
   const MIN_NAOH_VOLUME = 2;
