@@ -67,6 +67,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   isRinsing = false,
   hasRinsed = false,
   rodMoved = false,
+  rodMoveAnimation = null,
+  isRodMoving = false,
   showPostMoveFumes = true,
   workbenchResetTrigger = 0,
   onHeatingStateChange,
