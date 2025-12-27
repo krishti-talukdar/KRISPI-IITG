@@ -564,9 +564,12 @@ export const Equipment: React.FC<EquipmentProps> = ({
           Math.min(150, heightRatio * 150),
         );
         const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
+        const nonNaOHChemicals = chemicals.filter((chemical) => chemical.id !== NAOH_CHEMICAL_ID);
+        const overlayColorSource =
+          nonNaOHChemicals.length > 0 ? nonNaOHChemicals : chemicals;
         const baseOverlayColor = overrideWithWhite
           ? "rgba(255, 255, 255, 0.95)"
-          : getMixedColor();
+          : getMixedColor(overlayColorSource);
         const shouldForceNaOHBlue =
           isDryTest &&
           dryTestMode === "basic" &&
