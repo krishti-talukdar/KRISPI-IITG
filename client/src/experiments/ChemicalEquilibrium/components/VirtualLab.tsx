@@ -306,10 +306,6 @@ function ChemicalEquilibriumVirtualLab({
     normalizedTitle.includes("dry tests for acid radicals") ||
     normalizedTitle.includes("dry tests for basic radicals") ||
     normalizedTitle.includes("salt analysis");
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [saltDialogOpen, setSaltDialogOpen] = useState(false);
-  const [saltMass, setSaltMass] = useState("2.0");
-  const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
   const MIN_SALT_MASS = 3;
   const MAX_SALT_MASS = 5;
   const SALT_RANGE_LABEL = "3g-5g";
@@ -323,6 +319,19 @@ function ChemicalEquilibriumVirtualLab({
   const NAOH_VOLUME_LABEL = "2ml - 4ml";
   const MIN_NAOH_VOLUME = 2;
   const MAX_NAOH_VOLUME = 4;
+  const MIN_ACID_DROPS = 3;
+  const MAX_ACID_DROPS = 5;
+  const ACID_RANGE_LABEL = "3-5 drops";
+  const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
+  const MIN_GLASS_HCL_VOLUME = 1;
+  const MAX_GLASS_HCL_VOLUME = 6;
+  const GLASS_CONTAINER_HCL_VOLUME_LABEL = "1 - 6 mL";
+  const MIN_AMMONIUM_VOLUME = 5;
+  const MAX_AMMONIUM_VOLUME = 10;
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [saltDialogOpen, setSaltDialogOpen] = useState(false);
+  const [saltMass, setSaltMass] = useState("2.0");
+  const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
   const [naohDialogOpen, setNaohDialogOpen] = useState(false);
   const [naohVolume, setNaohVolume] = useState("2.5");
   const [naohDialogError, setNaohDialogError] = useState<string | null>(null);
@@ -335,16 +344,7 @@ function ChemicalEquilibriumVirtualLab({
     GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString(),
   );
   const [glassAcidDialogError, setGlassAcidDialogError] = useState<string | null>(null);
-  const MIN_ACID_DROPS = 3;
-  const MAX_ACID_DROPS = 5;
-  const ACID_RANGE_LABEL = "3-5 drops";
-  const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
-  const MIN_GLASS_HCL_VOLUME = 1;
-  const MAX_GLASS_HCL_VOLUME = 6;
-  const GLASS_CONTAINER_HCL_VOLUME_LABEL = "1 - 6 mL";
   const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
-  const MIN_AMMONIUM_VOLUME = 5;
-  const MAX_AMMONIUM_VOLUME = 10;
   const [ammoniumVolume, setAmmoniumVolume] = useState("5.0");
   const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
