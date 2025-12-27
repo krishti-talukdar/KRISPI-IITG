@@ -1790,10 +1790,10 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-xs text-gray-500">{caseOneResult}</div>
               </div>
               <div className="p-2 border rounded">CASE 2
-                <div className="text-xs text-gray-500">No result yet</div>
+                <div className="text-xs text-gray-500">{caseTwoResult}</div>
               </div>
             </div>
-            {caseOneResult !== "No result yet" && (
+            {caseOneResult !== DEFAULT_CASE_RESULT && (
               <button
                 type="button"
                 onClick={handleClearWorkbench}
