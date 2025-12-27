@@ -58,7 +58,6 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
       "Anhydrous Na₂CO₃",
       "NaOH",
       "Platinum Wire",
-      "pH Paper",
     ],
   },
   wet: {
