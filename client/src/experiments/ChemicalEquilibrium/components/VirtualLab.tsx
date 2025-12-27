@@ -1371,6 +1371,9 @@ function ChemicalEquilibriumVirtualLab({
     setRodMoved(false);
     setPostMoveFumesEnabled(false);
     setCaseOneResult("No result yet");
+    setGlassAcidDialogOpen(false);
+    setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
+    setGlassAcidDialogError(null);
     if (rinseTimerRef.current) {
       window.clearTimeout(rinseTimerRef.current);
       rinseTimerRef.current = null;
