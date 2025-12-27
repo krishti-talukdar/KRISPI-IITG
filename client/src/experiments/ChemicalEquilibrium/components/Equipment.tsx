@@ -7,7 +7,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState, DryTestMode } from "../types";
-import { GLASS_CONTAINER_IMAGE_URL } from "../constants";
+import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL } from "../constants";
 
 const NAOH_CHEMICAL_ID = "naoh";
 const NAOH_SOLUTION_COLOR = "#bfdbfe";
