@@ -1004,6 +1004,13 @@ function ChemicalEquilibriumVirtualLab({
     if (equipmentId.startsWith("conc-h-cl")) {
       return () => handleAcidDialogOpen("hcl");
     }
+    if (
+      isDryTestExperiment &&
+      resolvedDryTestMode === "basic" &&
+      equipmentId.startsWith("glass-container")
+    ) {
+      return handleAddHClToGlassContainer;
+    }
     if (equipmentId.startsWith("concentrated-h-so")) {
       return () => handleAcidDialogOpen("h2so4");
     }
