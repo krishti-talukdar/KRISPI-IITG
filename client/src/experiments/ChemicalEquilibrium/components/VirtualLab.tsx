@@ -976,8 +976,11 @@ function ChemicalEquilibriumVirtualLab({
     if (equipmentId.startsWith("salt-sample")) {
       return handleSaltDialogOpen;
     }
+    if (equipmentId.startsWith("conc-h-cl")) {
+      return () => handleAcidDialogOpen("hcl");
+    }
     if (equipmentId.startsWith("concentrated-h-so")) {
-      return handleAcidDialogOpen;
+      return () => handleAcidDialogOpen("h2so4");
     }
     if (equipmentId.startsWith("ammonium-hydroxide-nh-oh") ||
       equipmentId.startsWith("ammonium-hydroxide")
