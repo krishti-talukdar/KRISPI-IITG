@@ -257,6 +257,15 @@ function ChemicalEquilibriumVirtualLab({
   const [hasRinsed, setHasRinsed] = useState(false);
   const [rodMoved, setRodMoved] = useState(false);
   const [postMoveFumesEnabled, setPostMoveFumesEnabled] = useState(false);
+  const [rodMoveAnimationConfig, setRodMoveAnimationConfig] = useState<RodMoveAnimationConfig | null>(null);
+  const rodMoveAnimationTimerRef = useRef<number | null>(null);
+  const cancelRodMoveAnimation = useCallback(() => {
+    if (rodMoveAnimationTimerRef.current) {
+      window.clearTimeout(rodMoveAnimationTimerRef.current);
+      rodMoveAnimationTimerRef.current = null;
+    }
+    setRodMoveAnimationConfig(null);
+  }, [setRodMoveAnimationConfig]);
   const [caseOneResult, setCaseOneResult] = useState("No result yet");
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const rinseTimerRef = useRef<number | null>(null);
