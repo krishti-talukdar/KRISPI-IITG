@@ -441,6 +441,8 @@ function ChemicalEquilibriumVirtualLab({
     step3WaterAdded,
     measurements: { ...measurements },
     selectedChemical,
+    caseOneResult,
+    caseTwoResult,
   });
 
   const DRY_TEST_BOTTLE_IDS = [
