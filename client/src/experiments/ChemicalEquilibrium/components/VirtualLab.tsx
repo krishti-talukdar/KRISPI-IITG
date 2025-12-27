@@ -1443,6 +1443,8 @@ function ChemicalEquilibriumVirtualLab({
     setRodMoved(false);
     setPostMoveFumesEnabled(false);
     setHasRinsed(false);
+    setCaseOneResult(DEFAULT_CASE_RESULT);
+    setCaseTwoResult(DEFAULT_CASE_RESULT);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
     setTimeout(() => setToastMessage(null), 2500);
