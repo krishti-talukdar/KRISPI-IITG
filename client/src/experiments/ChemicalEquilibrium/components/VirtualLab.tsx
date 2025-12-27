@@ -287,6 +287,10 @@ function ChemicalEquilibriumVirtualLab({
         .reduce((sum, chemical) => sum + (chemical.amount || 0), 0)
     : 0;
   const hasAmmoniumInGlassContainer = ammoniumAmountInGlassContainer > 0;
+  const hasHClInGlassContainer = glassContainerState
+    ? glassContainerState.chemicals.some((chemical) => chemical.id === "conc_hcl")
+    : false;
+  const shouldShowRinseButton = hasAmmoniumInGlassContainer || hasHClInGlassContainer;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
