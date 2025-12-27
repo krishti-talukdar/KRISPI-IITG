@@ -306,10 +306,6 @@ function ChemicalEquilibriumVirtualLab({
     normalizedTitle.includes("dry tests for acid radicals") ||
     normalizedTitle.includes("dry tests for basic radicals") ||
     normalizedTitle.includes("salt analysis");
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [saltDialogOpen, setSaltDialogOpen] = useState(false);
-  const [saltMass, setSaltMass] = useState("2.0");
-  const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
   const MIN_SALT_MASS = 3;
   const MAX_SALT_MASS = 5;
   const SALT_RANGE_LABEL = "3g-5g";
@@ -323,6 +319,19 @@ function ChemicalEquilibriumVirtualLab({
   const NAOH_VOLUME_LABEL = "2ml - 4ml";
   const MIN_NAOH_VOLUME = 2;
   const MAX_NAOH_VOLUME = 4;
+  const MIN_ACID_DROPS = 3;
+  const MAX_ACID_DROPS = 5;
+  const ACID_RANGE_LABEL = "3-5 drops";
+  const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
+  const MIN_GLASS_HCL_VOLUME = 1;
+  const MAX_GLASS_HCL_VOLUME = 6;
+  const GLASS_CONTAINER_HCL_VOLUME_LABEL = "1 - 6 mL";
+  const MIN_AMMONIUM_VOLUME = 5;
+  const MAX_AMMONIUM_VOLUME = 10;
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [saltDialogOpen, setSaltDialogOpen] = useState(false);
+  const [saltMass, setSaltMass] = useState("2.0");
+  const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
   const [naohDialogOpen, setNaohDialogOpen] = useState(false);
   const [naohVolume, setNaohVolume] = useState("2.5");
   const [naohDialogError, setNaohDialogError] = useState<string | null>(null);
@@ -330,13 +339,12 @@ function ChemicalEquilibriumVirtualLab({
   const [acidVolume, setAcidVolume] = useState("4");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
   const [acidTarget, setAcidTarget] = useState<AcidTarget>("h2so4");
-  const MIN_ACID_DROPS = 3;
-  const MAX_ACID_DROPS = 5;
-  const ACID_RANGE_LABEL = "3-5 drops";
-  const GLASS_CONTAINER_HCL_DROPS = 4;
+  const [glassAcidDialogOpen, setGlassAcidDialogOpen] = useState(false);
+  const [glassAcidVolume, setGlassAcidVolume] = useState(
+    GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString(),
+  );
+  const [glassAcidDialogError, setGlassAcidDialogError] = useState<string | null>(null);
   const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
-  const MIN_AMMONIUM_VOLUME = 5;
-  const MAX_AMMONIUM_VOLUME = 10;
   const [ammoniumVolume, setAmmoniumVolume] = useState("5.0");
   const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(stepNumber);
@@ -934,6 +942,88 @@ function ChemicalEquilibriumVirtualLab({
     setNaohDialogError(null);
   };
 
+  const handleGlassAcidDialogOpen = () => {
+    setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
+    setGlassAcidDialogError(null);
+    setGlassAcidDialogOpen(true);
+  };
+
+  const handleGlassAcidDialogClose = () => {
+    setGlassAcidDialogOpen(false);
+    setGlassAcidDialogError(null);
+  };
+
+  const addHClToGlassContainer = (volume: number) => {
+    if (!glassContainerEquipmentId) {
+      return;
+    }
+
+    pushHistorySnapshot();
+    const acidConfig = ACID_CONFIG.hcl;
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== glassContainerEquipmentId) {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find(
+          (chemical) => chemical.id === acidConfig.chemicalId,
+        );
+        const updatedChemicals = existing
+          ? pos.chemicals.map((chemical) =>
+              chemical.id === acidConfig.chemicalId
+                ? { ...chemical, amount: (chemical.amount ?? 0) + volume }
+                : chemical,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: acidConfig.chemicalId,
+                name: acidConfig.label,
+                color: acidConfig.color,
+                amount: volume,
+                concentration: "Concentrated",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(
+      `Added ${volume.toFixed(1)} mL of ${acidConfig.label} to the glass container.`,
+    );
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleAddGlassAcidToContainer = () => {
+    const volume = parseFloat(glassAcidVolume);
+    if (Number.isNaN(volume) || volume <= 0) {
+      setGlassAcidDialogError("Enter a valid volume.");
+      return;
+    }
+
+    if (volume < MIN_GLASS_HCL_VOLUME || volume > MAX_GLASS_HCL_VOLUME) {
+      setGlassAcidDialogError(
+        `Keep the value within ${GLASS_CONTAINER_HCL_VOLUME_LABEL}.`,
+      );
+      return;
+    }
+
+    if (!glassContainerEquipmentId) {
+      setGlassAcidDialogError("Glass container is not available in this layout.");
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === glassContainerEquipmentId)) {
+      setGlassAcidDialogError("Place the glass container on the workbench first.");
+      return;
+    }
+
+    addHClToGlassContainer(volume);
+    handleGlassAcidDialogClose();
+  };
+
   const handleAddNaOHToTestTube = () => {
     const volume = parseFloat(naohVolume);
     if (Number.isNaN(volume) || volume <= 0) {
@@ -1001,15 +1091,12 @@ function ChemicalEquilibriumVirtualLab({
     if (equipmentId.startsWith("salt-sample")) {
       return handleSaltDialogOpen;
     }
-    if (equipmentId.startsWith("conc-h-cl")) {
-      return () => handleAcidDialogOpen("hcl");
-    }
     if (
       isDryTestExperiment &&
       resolvedDryTestMode === "basic" &&
-      equipmentId.startsWith("glass-container")
+      equipmentId.startsWith("conc-h-cl")
     ) {
-      return handleAddHClToGlassContainer;
+      return handleGlassAcidDialogOpen;
     }
     if (equipmentId.startsWith("concentrated-h-so")) {
       return () => handleAcidDialogOpen("h2so4");
@@ -1188,59 +1275,6 @@ function ChemicalEquilibriumVirtualLab({
     handleAmmoniumDialogClose();
   };
 
-  const handleAddHClToGlassContainer = () => {
-    const drops = GLASS_CONTAINER_HCL_DROPS;
-    if (!glassContainerEquipmentId) {
-      setToastMessage("Glass container is not available in this layout.");
-      setTimeout(() => setToastMessage(null), 3000);
-      return;
-    }
-
-    if (!equipmentPositions.some((pos) => pos.id === glassContainerEquipmentId)) {
-      setToastMessage("Place the glass container on the workbench first.");
-      setTimeout(() => setToastMessage(null), 3000);
-      return;
-    }
-
-    pushHistorySnapshot();
-
-    const acidConfig = ACID_CONFIG.hcl;
-    setEquipmentPositions((prev) =>
-      prev.map((pos) => {
-        if (pos.id !== glassContainerEquipmentId) {
-          return pos;
-        }
-
-        const existing = pos.chemicals.find(
-          (chemical) => chemical.id === acidConfig.chemicalId,
-        );
-        const updatedChemicals = existing
-          ? pos.chemicals.map((chemical) =>
-              chemical.id === acidConfig.chemicalId
-                ? { ...chemical, amount: (chemical.amount ?? 0) + drops }
-                : chemical,
-            )
-          : [
-              ...pos.chemicals,
-              {
-                id: acidConfig.chemicalId,
-                name: acidConfig.label,
-                color: acidConfig.color,
-                amount: drops,
-                concentration: "Concentrated",
-              },
-            ];
-
-        return { ...pos, chemicals: updatedChemicals };
-      }),
-    );
-
-    setToastMessage(
-      `Added ${drops} drops of ${acidConfig.label} to the glass container.`,
-    );
-    setTimeout(() => setToastMessage(null), 3000);
-  };
-
   const handleRinseAction = () => {
     if (!hasAmmoniumInGlassContainer || isRinsing) return;
 
@@ -1334,6 +1368,9 @@ function ChemicalEquilibriumVirtualLab({
     setRodMoved(false);
     setPostMoveFumesEnabled(false);
     setCaseOneResult("No result yet");
+    setGlassAcidDialogOpen(false);
+    setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
+    setGlassAcidDialogError(null);
     if (rinseTimerRef.current) {
       window.clearTimeout(rinseTimerRef.current);
       rinseTimerRef.current = null;
@@ -1936,6 +1973,52 @@ function ChemicalEquilibriumVirtualLab({
                 </Button>
                 <Button size="sm" onClick={handleAddNaOHToTestTube}>
                   Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {isDryTestExperiment && resolvedDryTestMode === "basic" && (
+        <Dialog open={glassAcidDialogOpen} onOpenChange={(open) => !open && handleGlassAcidDialogClose()}>
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Volume</DialogTitle>
+              <DialogDescription>
+                Enter the volume of Conc. HCl to add to the glass container.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Volume (mL)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
+                type="number"
+                min={MIN_GLASS_HCL_VOLUME}
+                max={MAX_GLASS_HCL_VOLUME}
+                step="0.1"
+                value={glassAcidVolume}
+                onChange={(event) => setGlassAcidVolume(event.target.value)}
+                placeholder="4.0"
+              />
+              <p className="text-[11px] text-slate-500">
+                Recommended range: {GLASS_CONTAINER_HCL_VOLUME_LABEL}.
+              </p>
+              {glassAcidDialogError && (
+                <p className="text-[11px] text-red-500">{glassAcidDialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleGlassAcidDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddGlassAcidToContainer}>
+                  Add to glass container
                 </Button>
               </div>
             </DialogFooter>
