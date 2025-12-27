@@ -1864,7 +1864,7 @@ function ChemicalEquilibriumVirtualLab({
             <DialogHeader>
               <DialogTitle>Enter Volume</DialogTitle>
               <DialogDescription>
-                Enter the volume of concentrated H₂SO₄ to add to the test tube.
+                Enter the volume of {currentAcidLabel} to add to the test tube.
               </DialogDescription>
             </DialogHeader>
 
@@ -1882,7 +1882,7 @@ function ChemicalEquilibriumVirtualLab({
                 onChange={(event) => setAcidVolume(event.target.value)}
                 placeholder="4"
               />
-              <p className="text-[11px] text-slate-500">Recommended range: 3-5 drops.</p>
+              <p className="text-[11px] text-slate-500">Recommended range: {ACID_RANGE_LABEL}.</p>
               {acidDialogError && (
                 <p className="text-[11px] text-red-500">{acidDialogError}</p>
               )}
