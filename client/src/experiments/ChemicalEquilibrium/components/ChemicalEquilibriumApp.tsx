@@ -54,11 +54,12 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
     equipment: [
       "Test Tubes",
       "Salt Sample",
+      "Glass Rod",
       "Bunsen Burner (virtual heat source)",
+      "Conc. HCl",
       "Anhydrous Na₂CO₃",
       "NaOH",
-      "Platinum Wire",
-      "pH Paper",
+      "Glass container",
     ],
   },
   wet: {

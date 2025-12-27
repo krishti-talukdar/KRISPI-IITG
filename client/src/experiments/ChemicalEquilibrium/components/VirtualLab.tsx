@@ -103,11 +103,30 @@ const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
 const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.55 };
 const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
 
+type AcidTarget = "h2so4" | "hcl";
+
+const ACID_CONFIG: Record<AcidTarget, { chemicalId: string; label: string; color: string }> = {
+  h2so4: {
+    chemicalId: "conc_h2so4",
+    label: "Conc. H₂SO₄",
+    color: "#fb7185",
+  },
+  hcl: {
+    chemicalId: "conc_hcl",
+    label: "Conc. HCl",
+    color: "#f87171",
+  },
+};
+
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample": DRY_WORKBENCH_SALT_POSITION,
   "concentrated-h-so": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
     yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING,
+  },
+  "conc-h-cl": {
+    xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent + 0.08,
+    yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING * 1.5,
   },
   "ammonium-hydroxide-nh-oh": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
@@ -303,6 +322,7 @@ function ChemicalEquilibriumVirtualLab({
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
   const [acidVolume, setAcidVolume] = useState("4");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
+  const [acidTarget, setAcidTarget] = useState<AcidTarget>("h2so4");
   const MIN_ACID_DROPS = 3;
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
@@ -386,10 +406,11 @@ function ChemicalEquilibriumVirtualLab({
   });
 
   const DRY_TEST_BOTTLE_IDS = [
-    "salt-sample",
-    "concentrated-h-so",
-    "ammonium-hydroxide-nh-oh",
-  ];
+  "salt-sample",
+  "concentrated-h-so",
+  "conc-h-cl",
+  "ammonium-hydroxide-nh-oh",
+];
 
   const isDryTestBottleEquipment = (equipmentId: string) =>
     DRY_TEST_BOTTLE_IDS.some((token) => equipmentId.startsWith(token));
@@ -435,7 +456,7 @@ function ChemicalEquilibriumVirtualLab({
   (id: string, x: number, y: number) => {
     if (isDryTestBottleEquipment(id)) {
       setToastMessage(
-        "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, and NH₄OH to load the test tube.",
+        "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, Conc. HCl, and NH₄OH to load the test tube.",
       );
       setTimeout(() => setToastMessage(null), 2500);
       return;
@@ -837,9 +858,10 @@ function ChemicalEquilibriumVirtualLab({
     setSaltDialogError(null);
   };
 
-  const handleAcidDialogOpen = () => {
+  const handleAcidDialogOpen = (target: AcidTarget = "h2so4") => {
     setAcidVolume("4");
     setAcidDialogError(null);
+    setAcidTarget(target);
     setAcidDialogOpen(true);
   };
 
@@ -954,8 +976,11 @@ function ChemicalEquilibriumVirtualLab({
     if (equipmentId.startsWith("salt-sample")) {
       return handleSaltDialogOpen;
     }
+    if (equipmentId.startsWith("conc-h-cl")) {
+      return () => handleAcidDialogOpen("hcl");
+    }
     if (equipmentId.startsWith("concentrated-h-so")) {
-      return handleAcidDialogOpen;
+      return () => handleAcidDialogOpen("h2so4");
     }
     if (equipmentId.startsWith("ammonium-hydroxide-nh-oh") ||
       equipmentId.startsWith("ammonium-hydroxide")
@@ -1034,6 +1059,8 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
+    const acidConfig = ACID_CONFIG[acidTarget];
+
     pushHistorySnapshot();
 
     setEquipmentPositions((prev) =>
@@ -1042,19 +1069,19 @@ function ChemicalEquilibriumVirtualLab({
           return pos;
         }
 
-        const existing = pos.chemicals.find((c) => c.id === "conc_h2so4");
+        const existing = pos.chemicals.find((c) => c.id === acidConfig.chemicalId);
         const updatedChemicals = existing
           ? pos.chemicals.map((c) =>
-              c.id === "conc_h2so4"
-                ? { ...c, amount: c.amount + drops }
+              c.id === acidConfig.chemicalId
+                ? { ...c, amount: (c.amount ?? 0) + drops }
                 : c,
             )
           : [
               ...pos.chemicals,
               {
-                id: "conc_h2so4",
-                name: "Conc. H₂SO₄",
-                color: "#fb7185",
+                id: acidConfig.chemicalId,
+                name: acidConfig.label,
+                color: acidConfig.color,
                 amount: drops,
                 concentration: "Concentrated",
               },
@@ -1064,7 +1091,7 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${drops} drops of Conc. H₂SO₄ to the test tube.`);
+    setToastMessage(`Added ${drops} drops of ${acidConfig.label} to the test tube.`);
     setTimeout(() => setToastMessage(null), 3000);
     handleAcidDialogClose();
   };
@@ -1200,6 +1227,8 @@ function ChemicalEquilibriumVirtualLab({
   const handleStartExperiment = () => {
     onStartExperiment();
   };
+
+  const currentAcidLabel = ACID_CONFIG[acidTarget].label;
 
   const handleReset = () => {
     setEquipmentPositions([]);
@@ -1512,11 +1541,13 @@ function ChemicalEquilibriumVirtualLab({
                                 equipment.name.toLowerCase().includes("nh₄oh") ||
                                 equipment.name.toLowerCase().includes("nh4oh")
                               ? handleAmmoniumDialogOpen
-                              : equipment.name.toLowerCase().includes("h2so4") ||
-                                equipment.name.toLowerCase().includes("h₂so₄") ||
-                                equipment.name.toLowerCase().includes("sulfuric")
-                              ? handleAcidDialogOpen
-                              : undefined
+                              : equipment.name.toLowerCase().includes("hcl")
+                                ? () => handleAcidDialogOpen("hcl")
+                                : equipment.name.toLowerCase().includes("h2so4") ||
+                                  equipment.name.toLowerCase().includes("h₂so₄") ||
+                                  equipment.name.toLowerCase().includes("sulfuric")
+                                ? () => handleAcidDialogOpen("h2so4")
+                                : undefined
                             : undefined
                         }
                         cobaltReactionState={cobaltReactionState}
@@ -1833,7 +1864,7 @@ function ChemicalEquilibriumVirtualLab({
             <DialogHeader>
               <DialogTitle>Enter Volume</DialogTitle>
               <DialogDescription>
-                Enter the volume of concentrated H₂SO₄ to add to the test tube.
+                Enter the volume of {currentAcidLabel} to add to the test tube.
               </DialogDescription>
             </DialogHeader>
 
@@ -1851,7 +1882,7 @@ function ChemicalEquilibriumVirtualLab({
                 onChange={(event) => setAcidVolume(event.target.value)}
                 placeholder="4"
               />
-              <p className="text-[11px] text-slate-500">Recommended range: 3-5 drops.</p>
+              <p className="text-[11px] text-slate-500">Recommended range: {ACID_RANGE_LABEL}.</p>
               {acidDialogError && (
                 <p className="text-[11px] text-red-500">{acidDialogError}</p>
               )}
