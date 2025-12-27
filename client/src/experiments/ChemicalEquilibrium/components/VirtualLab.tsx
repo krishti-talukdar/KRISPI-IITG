@@ -410,8 +410,9 @@ const NAOH_COLOR = "#bfdbfe";
       if (rinseTimerRef.current) {
         window.clearTimeout(rinseTimerRef.current);
       }
+      cancelRodMoveAnimation();
     };
-  }, []);
+  }, [cancelRodMoveAnimation]);
 
   const cobaltReactionState: CobaltReactionState = {
     cobaltChlorideAdded,
