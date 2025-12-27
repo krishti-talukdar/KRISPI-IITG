@@ -333,6 +333,7 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_ACID_DROPS = 3;
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
+  const GLASS_CONTAINER_HCL_DROPS = 4;
   const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
   const MIN_AMMONIUM_VOLUME = 5;
   const MAX_AMMONIUM_VOLUME = 10;
