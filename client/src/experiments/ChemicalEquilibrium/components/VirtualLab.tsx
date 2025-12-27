@@ -1485,6 +1485,8 @@ function ChemicalEquilibriumVirtualLab({
     setColorTransition(lastSnapshot.colorTransition);
     setStep3WaterAdded(lastSnapshot.step3WaterAdded);
     setMeasurements({ ...lastSnapshot.measurements });
+    setCaseOneResult(lastSnapshot.caseOneResult);
+    setCaseTwoResult(lastSnapshot.caseTwoResult);
 
     setToastMessage("Reverted the last operation.");
     setTimeout(() => setToastMessage(null), 2500);
