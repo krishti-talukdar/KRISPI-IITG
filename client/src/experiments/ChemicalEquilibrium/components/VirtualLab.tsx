@@ -1318,7 +1318,7 @@ const NAOH_COLOR = "#bfdbfe";
       return;
     }
 
-    if (rodMoved) return;
+    if (rodMoved || rodMoveAnimationConfig) return;
 
     const glassRod = equipmentPositions.find((pos) => pos.id.includes("glass-rod"));
     const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
@@ -1345,24 +1345,47 @@ const NAOH_COLOR = "#bfdbfe";
     };
     const targetX = clampX(testTube.x + 40);
     const targetY = clampY(testTube.y - 150);
+    const startX = glassRod.x;
+    const startY = glassRod.y;
+    const deltaX = targetX - startX;
+    const deltaY = targetY - startY;
 
-    pushHistorySnapshot();
-    setEquipmentPositions((prev) =>
-      prev.map((pos) =>
-        pos.id === glassRod.id
-          ? {
-              ...pos,
-              x: targetX,
-              y: targetY,
-            }
-          : pos,
-      ),
-    );
-    setRodMoved(true);
-    setPostMoveFumesEnabled(true);
-    setCaseOneResult("Cl⁻ radical may be present in the given salt.");
-    setToastMessage("Glass rod moved above the test tube.");
-    setTimeout(() => setToastMessage(null), 2500);
+    cancelRodMoveAnimation();
+    setRodMoveAnimationConfig({
+      startX,
+      startY,
+      deltaX,
+      deltaY,
+      durationMs: ROD_MOVE_ANIMATION_DURATION,
+    });
+
+    setToastMessage("Moving the glass rod above the test tube...");
+
+    const rodId = glassRod.id;
+    if (rodMoveAnimationTimerRef.current) {
+      window.clearTimeout(rodMoveAnimationTimerRef.current);
+    }
+    rodMoveAnimationTimerRef.current = window.setTimeout(() => {
+      setRodMoveAnimationConfig(null);
+      pushHistorySnapshot();
+      setEquipmentPositions((prev) =>
+        prev.map((pos) =>
+          pos.id === rodId
+            ? {
+                ...pos,
+                x: targetX,
+                y: targetY,
+              }
+            : pos,
+        ),
+      );
+      setRodMoved(true);
+      setPostMoveFumesEnabled(true);
+      setCaseOneResult("Cl⁻ radical may be present in the given salt.");
+      setToastMessage("Glass rod moved above the test tube.");
+      setTimeout(() => setToastMessage(null), 2500);
+      rodMoveAnimationTimerRef.current = null;
+    }, ROD_MOVE_ANIMATION_DURATION);
   };
 
   const handleStartExperiment = () => {
