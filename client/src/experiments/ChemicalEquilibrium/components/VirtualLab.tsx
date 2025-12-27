@@ -1094,7 +1094,7 @@ function ChemicalEquilibriumVirtualLab({
     if (
       isDryTestExperiment &&
       resolvedDryTestMode === "basic" &&
-      equipmentId.startsWith("conc-h-cl")
+      (equipmentId.startsWith("conc-hcl") || equipmentId.startsWith("conc-h-cl"))
     ) {
       return handleGlassAcidDialogOpen;
     }
