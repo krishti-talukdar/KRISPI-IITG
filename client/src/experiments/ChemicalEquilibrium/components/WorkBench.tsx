@@ -47,6 +47,8 @@ interface WorkBenchProps {
   hasRinsed?: boolean;
   rodMoved?: boolean;
   showPostMoveFumes?: boolean;
+  rodMoveAnimation?: RodMoveAnimationConfig | null;
+  isRodMoving?: boolean;
   workbenchResetTrigger?: number;
   onHeatingStateChange?: (isHeating: boolean) => void;
 }
