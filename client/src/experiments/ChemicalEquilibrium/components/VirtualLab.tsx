@@ -1059,6 +1059,8 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
+    const acidConfig = ACID_CONFIG[acidTarget];
+
     pushHistorySnapshot();
 
     setEquipmentPositions((prev) =>
@@ -1067,19 +1069,19 @@ function ChemicalEquilibriumVirtualLab({
           return pos;
         }
 
-        const existing = pos.chemicals.find((c) => c.id === "conc_h2so4");
+        const existing = pos.chemicals.find((c) => c.id === acidConfig.chemicalId);
         const updatedChemicals = existing
           ? pos.chemicals.map((c) =>
-              c.id === "conc_h2so4"
-                ? { ...c, amount: c.amount + drops }
+              c.id === acidConfig.chemicalId
+                ? { ...c, amount: (c.amount ?? 0) + drops }
                 : c,
             )
           : [
               ...pos.chemicals,
               {
-                id: "conc_h2so4",
-                name: "Conc. H₂SO₄",
-                color: "#fb7185",
+                id: acidConfig.chemicalId,
+                name: acidConfig.label,
+                color: acidConfig.color,
                 amount: drops,
                 concentration: "Concentrated",
               },
@@ -1089,7 +1091,7 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${drops} drops of Conc. H₂SO₄ to the test tube.`);
+    setToastMessage(`Added ${drops} drops of ${acidConfig.label} to the test tube.`);
     setTimeout(() => setToastMessage(null), 3000);
     handleAcidDialogClose();
   };
