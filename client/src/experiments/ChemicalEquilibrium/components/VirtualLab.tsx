@@ -1641,7 +1641,7 @@ function ChemicalEquilibriumVirtualLab({
                 equipmentPositions={equipmentPositions}
                 currentGuidedStep={currentStep}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
-                showRinseButton={hasAmmoniumInGlassContainer}
+                showRinseButton={shouldShowRinseButton}
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
                 hasRinsed={hasRinsed}
@@ -1812,7 +1812,7 @@ function ChemicalEquilibriumVirtualLab({
                 equipmentPositions={equipmentPositions}
                 currentGuidedStep={currentStep}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
-                showRinseButton={hasAmmoniumInGlassContainer}
+                showRinseButton={shouldShowRinseButton}
                 onRinse={handleRinseAction}
                 isRinsing={isRinsing}
                 hasRinsed={hasRinsed}
