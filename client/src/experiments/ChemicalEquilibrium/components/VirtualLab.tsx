@@ -101,7 +101,7 @@ const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
 const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.3, yPercent: 0.3 };
 const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.75, yPercent: 0.15 };
 const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.6 };
-const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.6, yPercent: 0.43 };
+const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.65, yPercent: 0.45 };
 
 type AcidTarget = "h2so4" | "hcl";
 
