@@ -942,6 +942,88 @@ function ChemicalEquilibriumVirtualLab({
     setNaohDialogError(null);
   };
 
+  const handleGlassAcidDialogOpen = () => {
+    setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
+    setGlassAcidDialogError(null);
+    setGlassAcidDialogOpen(true);
+  };
+
+  const handleGlassAcidDialogClose = () => {
+    setGlassAcidDialogOpen(false);
+    setGlassAcidDialogError(null);
+  };
+
+  const addHClToGlassContainer = (volume: number) => {
+    if (!glassContainerEquipmentId) {
+      return;
+    }
+
+    pushHistorySnapshot();
+    const acidConfig = ACID_CONFIG.hcl;
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== glassContainerEquipmentId) {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find(
+          (chemical) => chemical.id === acidConfig.chemicalId,
+        );
+        const updatedChemicals = existing
+          ? pos.chemicals.map((chemical) =>
+              chemical.id === acidConfig.chemicalId
+                ? { ...chemical, amount: (chemical.amount ?? 0) + volume }
+                : chemical,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: acidConfig.chemicalId,
+                name: acidConfig.label,
+                color: acidConfig.color,
+                amount: volume,
+                concentration: "Concentrated",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(
+      `Added ${volume.toFixed(1)} mL of ${acidConfig.label} to the glass container.`,
+    );
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleAddGlassAcidToContainer = () => {
+    const volume = parseFloat(glassAcidVolume);
+    if (Number.isNaN(volume) || volume <= 0) {
+      setGlassAcidDialogError("Enter a valid volume.");
+      return;
+    }
+
+    if (volume < MIN_GLASS_HCL_VOLUME || volume > MAX_GLASS_HCL_VOLUME) {
+      setGlassAcidDialogError(
+        `Keep the value within ${GLASS_CONTAINER_HCL_VOLUME_LABEL}.`,
+      );
+      return;
+    }
+
+    if (!glassContainerEquipmentId) {
+      setGlassAcidDialogError("Glass container is not available in this layout.");
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === glassContainerEquipmentId)) {
+      setGlassAcidDialogError("Place the glass container on the workbench first.");
+      return;
+    }
+
+    addHClToGlassContainer(volume);
+    handleGlassAcidDialogClose();
+  };
+
   const handleAddNaOHToTestTube = () => {
     const volume = parseFloat(naohVolume);
     if (Number.isNaN(volume) || volume <= 0) {
