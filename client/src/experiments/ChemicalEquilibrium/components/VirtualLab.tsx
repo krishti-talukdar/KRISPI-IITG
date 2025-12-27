@@ -103,11 +103,30 @@ const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.7, yPercent: 0.15 };
 const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.55 };
 const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.55, yPercent: 0.37 };
 
+type AcidTarget = "h2so4" | "hcl";
+
+const ACID_CONFIG: Record<AcidTarget, { chemicalId: string; label: string; color: string }> = {
+  h2so4: {
+    chemicalId: "conc_h2so4",
+    label: "Conc. H₂SO₄",
+    color: "#fb7185",
+  },
+  hcl: {
+    chemicalId: "conc_hcl",
+    label: "Conc. HCl",
+    color: "#f87171",
+  },
+};
+
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample": DRY_WORKBENCH_SALT_POSITION,
   "concentrated-h-so": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
     yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING,
+  },
+  "conc-h-cl": {
+    xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent + 0.08,
+    yPercent: DRY_WORKBENCH_SALT_POSITION.yPercent + DRY_WORKBENCH_VERTICAL_SPACING * 1.5,
   },
   "ammonium-hydroxide-nh-oh": {
     xPercent: DRY_WORKBENCH_SALT_POSITION.xPercent,
