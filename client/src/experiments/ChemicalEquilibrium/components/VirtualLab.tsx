@@ -142,6 +142,13 @@ const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: 
 const DRY_TEST_FIXED_EQUIPMENT_IDS = [
   "test_tubes",
   "bunsen-burner-virtual-heat-source",
+  "glass-rod",
+  "glass-container",
+];
+
+const DRY_TEST_BASIC_GLASS_AUTOPOSITION_IDS = [
+  "glass-rod",
+  "glass-container",
 ];
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
@@ -462,6 +469,11 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
+    const normalizedId = stripEquipmentIdSuffix(id);
+    const shouldSnapBasicGlassPlacement =
+      resolvedDryTestMode === "basic" &&
+      DRY_TEST_BASIC_GLASS_AUTOPOSITION_IDS.includes(normalizedId);
+
     const workbenchRect =
       typeof document !== "undefined"
         ? document
@@ -473,6 +485,14 @@ function ChemicalEquilibriumVirtualLab({
       : null;
     const dropX = layoutPosition?.x ?? x;
     const dropY = layoutPosition?.y ?? y;
+
+    const getSnappedPosition = (baseX: number, baseY: number) =>
+      shouldSnapBasicGlassPlacement
+        ? {
+            x: layoutPosition?.x ?? baseX,
+            y: layoutPosition?.y ?? baseY,
+          }
+        : { x: baseX, y: baseY };
 
     pushHistorySnapshot();
     setEquipmentPositions((prev) => {
@@ -549,7 +569,10 @@ function ChemicalEquilibriumVirtualLab({
               }
             }
           }
-          return prev.map((pos) => (pos.id === id ? { ...pos, x, y } : pos));
+          const snapped = getSnappedPosition(x, y);
+          return prev.map((pos) =>
+            pos.id === id ? { ...pos, x: snapped.x, y: snapped.y } : pos,
+          );
         }
 
         // Stirring rod automation for Chemical Equilibrium
@@ -586,10 +609,11 @@ function ChemicalEquilibriumVirtualLab({
           }, 1000);
         }
 
-        return [...prev, { id, x: dropX, y: dropY, chemicals: [] }];
+        const snappedDrop = getSnappedPosition(dropX, dropY);
+        return [...prev, { id, x: snappedDrop.x, y: snappedDrop.y, chemicals: [] }];
       });
     },
-    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment, pushHistorySnapshot],
+    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode],
   );
 
   const handleEquipmentRemove = useCallback((id: string) => {
