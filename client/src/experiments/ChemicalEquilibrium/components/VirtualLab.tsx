@@ -1092,14 +1092,13 @@ function ChemicalEquilibriumVirtualLab({
       return handleSaltDialogOpen;
     }
     if (equipmentId.startsWith("conc-h-cl")) {
+      if (
+        isDryTestExperiment &&
+        resolvedDryTestMode === "basic"
+      ) {
+        return handleGlassAcidDialogOpen;
+      }
       return () => handleAcidDialogOpen("hcl");
-    }
-    if (
-      isDryTestExperiment &&
-      resolvedDryTestMode === "basic" &&
-      equipmentId.startsWith("conc-h-cl")
-    ) {
-      return handleGlassAcidDialogOpen;
     }
     if (equipmentId.startsWith("concentrated-h-so")) {
       return () => handleAcidDialogOpen("h2so4");
