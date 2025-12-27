@@ -1228,6 +1228,8 @@ function ChemicalEquilibriumVirtualLab({
     onStartExperiment();
   };
 
+  const currentAcidLabel = ACID_CONFIG[acidTarget].label;
+
   const handleReset = () => {
     setEquipmentPositions([]);
     setSelectedChemical(null);
