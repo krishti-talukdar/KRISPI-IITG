@@ -317,7 +317,8 @@ function ChemicalEquilibriumVirtualLab({
   const SALT_HEATING_STEP = 0.35;
   const SALT_HEATING_MIN_REMAINING = 0.5;
   const SALT_HEATING_INTERVAL_MS = 1200;
-  const NAOH_COLOR = "#bfdbfe";
+const ROD_MOVE_ANIMATION_DURATION = 1200;
+const NAOH_COLOR = "#bfdbfe";
   const NAOH_NAME = "NaOH";
   const NAOH_CONCENTRATION = "Reagent";
   const NAOH_CHEMICAL_ID = "naoh";
