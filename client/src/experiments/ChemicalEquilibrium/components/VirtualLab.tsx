@@ -1098,9 +1098,6 @@ function ChemicalEquilibriumVirtualLab({
     ) {
       return handleGlassAcidDialogOpen;
     }
-    if (equipmentId.startsWith("conc-h-cl")) {
-      return () => handleAcidDialogOpen("hcl");
-    }
     if (equipmentId.startsWith("concentrated-h-so")) {
       return () => handleAcidDialogOpen("h2so4");
     }
