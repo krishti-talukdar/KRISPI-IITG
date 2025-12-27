@@ -1099,7 +1099,7 @@ function ChemicalEquilibriumVirtualLab({
       resolvedDryTestMode === "basic" &&
       equipmentId.startsWith("glass-container")
     ) {
-      return handleAddHClToGlassContainer;
+      return handleGlassAcidDialogOpen;
     }
     if (equipmentId.startsWith("concentrated-h-so")) {
       return () => handleAcidDialogOpen("h2so4");
