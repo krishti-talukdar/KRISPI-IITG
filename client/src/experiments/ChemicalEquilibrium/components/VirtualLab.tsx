@@ -858,9 +858,10 @@ function ChemicalEquilibriumVirtualLab({
     setSaltDialogError(null);
   };
 
-  const handleAcidDialogOpen = () => {
+  const handleAcidDialogOpen = (target: AcidTarget = "h2so4") => {
     setAcidVolume("4");
     setAcidDialogError(null);
+    setAcidTarget(target);
     setAcidDialogOpen(true);
   };
 
