@@ -60,7 +60,6 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
       "Anhydrous Na₂CO₃",
       "NaOH",
       "Glass container",
-      "Platinum Wire",
     ],
   },
   wet: {
