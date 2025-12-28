@@ -479,6 +479,41 @@ function ChemicalEquilibriumVirtualLab({
   ]);
 
   useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      resolvedDryTestMode !== "acid"
+    ) {
+      return;
+    }
+
+    const hasBunsen = equipmentPositions.some((pos) =>
+      pos.id.includes("bunsen-burner-virtual-heat-source"),
+    );
+
+    if (
+      hasBunsen &&
+      !bunsenPlacedTracked &&
+      currentStep === 4
+    ) {
+      setBunsenPlacedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Bunsen burner placed. Moving to the next step.");
+      setTimeout(() => setToastMessage(null), 3000);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    bunsenPlacedTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
+  useEffect(() => {
     setTestTubePlacementTracked(false);
     setSampleAddedTracked(false);
     setAcidAddedTracked(false);
