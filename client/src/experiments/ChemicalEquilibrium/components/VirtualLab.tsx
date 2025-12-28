@@ -402,6 +402,7 @@ function ChemicalEquilibriumVirtualLab({
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const saltHeatingIntervalRef = useRef<number | null>(null);
   const resolvedDryTestMode = dryTestMode ?? "acid";
+  const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
 
   // Chemical Equilibrium specific states
   const [cobaltChlorideAdded, setCobaltChlorideAdded] = useState(false);
@@ -2200,17 +2201,23 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="text-xs text-gray-600 mb-3">
               <div className="font-medium">Completed Steps</div>
-              <ul className="list-disc list-inside mt-2">
+              <ul
+                className={`list-disc list-inside mt-2 ${
+                  isAcidDryTest ? "text-lime-400" : ""
+                }`}
+              >
                 {allSteps.slice(0, Math.max(0, currentStep - 1)).map((s) => (
                   <li key={s.id}>{s.title}</li>
                 ))}
               </ul>
             </div>
 
-            <div className="mt-2 mb-4 p-3 bg-gray-50 rounded">
-              <div className="text-xs font-medium text-gray-600">Measured pH</div>
-              <div className="text-2xl font-bold mt-1">{measurements.ph ? measurements.ph : 'No result yet'}</div>
-            </div>
+            {!isAcidDryTest && (
+              <div className="mt-2 mb-4 p-3 bg-gray-50 rounded">
+                <div className="text-xs font-medium text-gray-600">Measured pH</div>
+                <div className="text-2xl font-bold mt-1">{measurements.ph ? measurements.ph : 'No result yet'}</div>
+              </div>
+            )}
 
             <div className="text-sm font-semibold mb-2">Cases</div>
             <div className="space-y-2">
