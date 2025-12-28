@@ -2307,6 +2307,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
+    setSodiumNitroprussideAdded(false);
     setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
