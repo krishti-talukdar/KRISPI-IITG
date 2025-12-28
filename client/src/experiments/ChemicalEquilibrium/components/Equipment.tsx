@@ -585,6 +585,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
         const displayLabel = name.toLowerCase().includes("test tube")
           ? "25ml Test Tube"
           : name;
+        const showObserve = Boolean(onObserve) && dryTestMode === "wet";
         return (
           <div className="relative flex flex-col items-center">
             <div className="relative">
@@ -615,6 +616,20 @@ export const Equipment: React.FC<EquipmentProps> = ({
               <div className="text-[11px] uppercase tracking-[0.2em] font-semibold text-center mt-2 text-gray-700">
                 {displayLabel}
               </div>
+            )}
+            {showObserve && (
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  onObserve?.();
+                }}
+                className="mt-2 w-32 rounded-md py-1 text-[11px] font-semibold text-white uppercase tracking-[0.3em]"
+                style={{ backgroundColor: "#80b48c" }}
+              >
+                OBSERVE
+              </button>
             )}
           </div>
         );
