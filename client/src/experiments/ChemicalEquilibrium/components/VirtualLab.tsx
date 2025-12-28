@@ -1475,10 +1475,26 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${volume.toFixed(2)} mL of NaOH to the test tube.`);
+    const shouldAdvanceAfterBasicNaOH =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "basic" &&
+      currentStep === 7 &&
+      !basicNaOHAddedTracked;
+    const naohToast = shouldAdvanceAfterBasicNaOH
+      ? "NaOH solution added. Moving to Step 8."
+      : `Added ${volume.toFixed(2)} mL of NaOH to the test tube.`;
+
+    setToastMessage(naohToast);
     setTimeout(() => setToastMessage(null), 3000);
 
     handleNaOHDialogClose();
+
+    if (shouldAdvanceAfterBasicNaOH) {
+      setBasicNaOHAddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    }
   };
 
   const getQuickAddAction = (equipmentId: string) => {
