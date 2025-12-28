@@ -1490,10 +1490,24 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(
-      `Added ${volume.toFixed(1)} mL of ${acidConfig.label} to the glass container.`,
-    );
+    const shouldAdvanceAfterBasicGlassAcid =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "basic" &&
+      currentStep === 10 &&
+      !basicGlassAcidAddedTracked;
+    const acidToast = shouldAdvanceAfterBasicGlassAcid
+      ? "Concentrated HCl added to the glass container. Moving to Step 11."
+      : `Added ${volume.toFixed(1)} mL of ${acidConfig.label} to the glass container.`;
+
+    setToastMessage(acidToast);
     setTimeout(() => setToastMessage(null), 3000);
+
+    if (shouldAdvanceAfterBasicGlassAcid) {
+      setBasicGlassAcidAddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    }
   };
 
   const handleAddGlassAcidToContainer = () => {
