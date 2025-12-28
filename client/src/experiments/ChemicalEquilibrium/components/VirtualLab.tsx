@@ -537,8 +537,27 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
-    if (!hasPlacedTestTube && testTubePlacementTracked) {
-      setTestTubePlacementTracked(false);
+    const shouldAdvanceSecondTubeStep =
+      hasPlacedTestTube &&
+      !basicSecondTubeTracked &&
+      currentStep === 5;
+
+    if (shouldAdvanceSecondTubeStep) {
+      setBasicSecondTubeTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Test tube placed on the workbench. Moving to Step 6.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!hasPlacedTestTube) {
+      if (testTubePlacementTracked) {
+        setTestTubePlacementTracked(false);
+      }
+      if (basicSecondTubeTracked) {
+        setBasicSecondTubeTracked(false);
+      }
     }
   }, [
     equipmentPositions,
@@ -546,6 +565,7 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment,
     resolvedDryTestMode,
     testTubePlacementTracked,
+    basicSecondTubeTracked,
     currentStep,
     totalSteps,
     onStepComplete,
