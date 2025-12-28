@@ -541,6 +541,51 @@ function ChemicalEquilibriumVirtualLab({
   ]);
 
   useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      resolvedDryTestMode !== "acid"
+    ) {
+      return;
+    }
+
+    const hasGlassRod = equipmentPositions.some((pos) =>
+      stripEquipmentIdSuffix(pos.id) === "glass-rod",
+    );
+    const hasGlassContainer = equipmentPositions.some((pos) =>
+      stripEquipmentIdSuffix(pos.id) === "glass-container",
+    );
+
+    const readyForGlassSetup = hasGlassRod && hasGlassContainer;
+
+    if (
+      readyForGlassSetup &&
+      !glassRodContainerTracked &&
+      currentStep === 5
+    ) {
+      setGlassRodContainerTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Glass rod and container placed. Moving to the next step.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!readyForGlassSetup && glassRodContainerTracked) {
+      setGlassRodContainerTracked(false);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    glassRodContainerTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
+  useEffect(() => {
     setTestTubePlacementTracked(false);
     setSampleAddedTracked(false);
     setAcidAddedTracked(false);
