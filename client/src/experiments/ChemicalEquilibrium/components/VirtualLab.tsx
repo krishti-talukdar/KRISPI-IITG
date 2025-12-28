@@ -1508,6 +1508,9 @@ function ChemicalEquilibriumVirtualLab({
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
     setGlassAcidDialogError(null);
+    setMno2DialogOpen(false);
+    setMno2Mass(MNO2_DEFAULT_MASS);
+    setMno2DialogError(null);
     if (rinseTimerRef.current) {
       window.clearTimeout(rinseTimerRef.current);
       rinseTimerRef.current = null;
