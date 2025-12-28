@@ -1627,6 +1627,7 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleReturnToExperiments = () => {
     setShowCase2ResultsModal(false);
+    setLocation("/");
     setToastMessage("Return to the experiments list to try another activity.");
     setTimeout(() => setToastMessage(null), 2500);
   };
