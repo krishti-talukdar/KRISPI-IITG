@@ -659,6 +659,49 @@ function ChemicalEquilibriumVirtualLab({
     if (
       !experimentStarted ||
       !isDryTestExperiment ||
+      resolvedDryTestMode !== "basic"
+    ) {
+      return;
+    }
+
+    if (currentStep !== 8) {
+      if (basicSecondBunsenTracked) {
+        setBasicSecondBunsenTracked(false);
+      }
+      return;
+    }
+
+    const hasBunsen = equipmentPositions.some((pos) =>
+      pos.id.includes("bunsen-burner-virtual-heat-source"),
+    );
+
+    if (hasBunsen && !basicSecondBunsenTracked) {
+      setBasicSecondBunsenTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Bunsen burner placed. Moving to Step 9.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!hasBunsen && basicSecondBunsenTracked) {
+      setBasicSecondBunsenTracked(false);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    basicSecondBunsenTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
       resolvedDryTestMode !== "acid"
     ) {
       return;
