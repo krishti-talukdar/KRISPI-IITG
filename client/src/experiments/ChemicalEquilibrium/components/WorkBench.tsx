@@ -844,6 +844,31 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   animation: dryTestVaporRise var(--vap-duration, 3.5s) var(--vap-delay, 0s) infinite;
   opacity: 0;
 }
+.mno2-gas-cloud {
+  position: absolute;
+  pointer-events: none;
+  width: 160px;
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  left: var(--mno2-gas-left, 0);
+  top: var(--mno2-gas-top, 0);
+  transform: translate(-50%, -100%);
+}
+.mno2-gas-puff {
+  position: absolute;
+  bottom: 0;
+  width: 26px;
+  height: 30px;
+  background: linear-gradient(180deg, rgba(132, 204, 22, 0.85), rgba(250, 204, 21, 0.4));
+  border-radius: 50% 50% 60% 60%;
+  box-shadow: 0 12px 30px rgba(132, 204, 22, 0.6);
+  filter: blur(1px);
+  transform: translate(var(--mno2-offset-x, 0), 0) scale(var(--mno2-scale, 1));
+  animation: mno2GasDrift var(--mno2-duration, 3.4s) var(--mno2-delay, 0s) infinite;
+  opacity: 0;
+}
 @keyframes dryTestVaporRise {
   0% {
     opacity: 0;
