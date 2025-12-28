@@ -1717,7 +1717,11 @@ function ChemicalEquilibriumVirtualLab({
                 </button>
                 <button
                   onClick={handleViewResults}
-                  className="w-full px-3 py-2 bg-blue-600 text-white rounded shadow-sm hover:bg-blue-700 transition"
+                  className={`w-full px-3 py-2 rounded shadow-sm transition ${
+                    resultsReady
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "bg-blue-200 text-blue-800 opacity-80"
+                  }`}
                 >
                   View Results &amp; Analysis
                 </button>
