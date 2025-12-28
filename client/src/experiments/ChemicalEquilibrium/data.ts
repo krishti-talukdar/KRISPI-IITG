@@ -1,4 +1,4 @@
-import type { ChemicalEquilibriumExperiment } from "./types";
+import type { ChemicalEquilibriumExperiment, ExperimentStep } from "./types";
 
 // Complete Chemical Equilibrium experiment data
 const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
@@ -112,6 +112,86 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   safetyInfo:
     "This is a virtual simulation. In real laboratory practice, dry tests use hot wire loops and can produce toxic fumes (eg. NO2) or hot residues. Always use proper ventilation, a fume hood, safety goggles, heat-resistant gloves, and follow institutional safety protocols.",
 };
+
+export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
+  {
+    id: 1,
+    title: "Drag the test tube in the workbench",
+    description:
+      "Move a clean test tube from the rack onto the workbench to begin the basic radical dry test.",
+    completed: false,
+  },
+  {
+    id: 2,
+    title: "Add salt sample in the test tube",
+    description:
+      "Carefully drop a small portion of the dry salt sample into the test tube before adding any reagents.",
+    completed: false,
+  },
+  {
+    id: 3,
+    title: "Drag the bunsen burner in the workbench and warm the tube gently over a low flame",
+    description:
+      "Position the bunsen burner close to the tube and heat the sample gently with a low flame to observe the basic radicals.",
+    completed: false,
+  },
+  {
+    id: 4,
+    title: "Reset the workbench",
+    description:
+      "Use the reset control to clear the current setup so the follow-up steps start with fresh glassware.",
+    completed: false,
+  },
+  {
+    id: 5,
+    title: "Drag the test tube in the workbench",
+    description:
+      "Place another clean test tube on the workbench to continue the basic radical investigation.",
+    completed: false,
+  },
+  {
+    id: 6,
+    title: "Add salt sample in the test tube",
+    description:
+      "Add a second portion of the salt sample into the new tube to repeat the dry test.",
+    completed: false,
+  },
+  {
+    id: 7,
+    title: "Add NaOH solution in the test tube",
+    description:
+      "Introduce sodium hydroxide into the test tube using the NaOH control to reveal basic radical behavior.",
+    completed: false,
+  },
+  {
+    id: 8,
+    title: "Drag the bunsen burner in the workbench and warm the tube gently over a low flame",
+    description:
+      "Warm the NaOH-treated tube on a low flame so the evolved fumes or residues can be observed.",
+    completed: false,
+  },
+  {
+    id: 9,
+    title: "Drop the Glass Rod & Glass container in the workbench",
+    description:
+      "Place both the glass rod and glass container on the workbench to prepare for the spotting transfer.",
+    completed: false,
+  },
+  {
+    id: 10,
+    title: "Add conc. HCL in the glass container",
+    description:
+      "Add concentrated HCl into the glass container so the spotting acid is ready for transfer.",
+    completed: false,
+  },
+  {
+    id: 11,
+    title: "Press the \"RINSE\" and \"MOVE\" buttons",
+    description:
+      "Use the RINSE control to clean the glass rod, then tap MOVE so it hovers above the test tube for the final observation.",
+    completed: false,
+  },
+];
 
 export const PHHClExperiment: ChemicalEquilibriumExperiment = {
   id: 4,

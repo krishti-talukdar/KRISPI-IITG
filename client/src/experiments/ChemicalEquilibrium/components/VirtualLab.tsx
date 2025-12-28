@@ -297,7 +297,7 @@ function ChemicalEquilibriumVirtualLab({
   const isPHExperiment = experimentTitle === PHHClExperiment.title;
   const isDryTestExperiment = experimentTitle === ChemicalEquilibriumData.title;
   const usePhStyleLayout = isPHExperiment || isDryTestExperiment;
-  const totalGuidedSteps = experiment.stepDetails.length;
+  const totalGuidedSteps = allSteps.length;
   const dryTestEquipmentNames = dryTestEquipment ?? experiment.equipment;
   const chemicalsList = isPHExperiment
     ? PH_HCL_CHEMICALS
@@ -509,11 +509,98 @@ function ChemicalEquilibriumVirtualLab({
     if (
       !experimentStarted ||
       !isDryTestExperiment ||
-      resolvedDryTestMode !== "acid"
+      resolvedDryTestMode !== "basic"
     ) {
       return;
     }
 
+    const hasPlacedTestTube = equipmentPositions.some(
+      (pos) => pos.id === "test_tubes",
+    );
+
+    if (
+      hasPlacedTestTube &&
+      !testTubePlacementTracked &&
+      currentStep === 1
+    ) {
+      setTestTubePlacementTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!hasPlacedTestTube && testTubePlacementTracked) {
+      setTestTubePlacementTracked(false);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    testTubePlacementTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      resolvedDryTestMode !== "basic"
+    ) {
+      return;
+    }
+
+    if (currentStep !== 2) {
+      if (sampleAddedTracked) {
+        setSampleAddedTracked(false);
+      }
+      return;
+    }
+
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+    const hasSaltSample = Boolean(
+      testTube?.chemicals.some(
+        (chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+      ),
+    );
+
+    if (hasSaltSample && !sampleAddedTracked) {
+      setSampleAddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Salt sample added. Advancing to Step 3.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!hasSaltSample && sampleAddedTracked) {
+      setSampleAddedTracked(false);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    sampleAddedTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      (resolvedDryTestMode !== "acid" && resolvedDryTestMode !== "basic")
+    ) {
+      return;
+    }
+
+    const expectedStep = resolvedDryTestMode === "acid" ? 4 : 3;
     const hasBunsen = equipmentPositions.some((pos) =>
       pos.id.includes("bunsen-burner-virtual-heat-source"),
     );
@@ -521,7 +608,7 @@ function ChemicalEquilibriumVirtualLab({
     if (
       hasBunsen &&
       !bunsenPlacedTracked &&
-      currentStep === 4
+      currentStep === expectedStep
     ) {
       setBunsenPlacedTracked(true);
       onStepComplete();
@@ -602,19 +689,23 @@ function ChemicalEquilibriumVirtualLab({
   }, [stepNumber, workbenchResetTrigger]);
 
   useEffect(() => {
-    if (
-      !experimentStarted ||
-      !isDryTestExperiment ||
-      resolvedDryTestMode !== "acid"
-    ) {
+    if (!experimentStarted || !isDryTestExperiment) {
       workbenchResetTriggerRef.current = workbenchResetTrigger;
       return;
     }
 
+    const isAcidResetStep =
+      resolvedDryTestMode === "acid" &&
+      currentStep === 7 &&
+      !workbenchResetStepTracked;
+    const isBasicResetStep =
+      resolvedDryTestMode === "basic" &&
+      currentStep === 4 &&
+      !workbenchResetStepTracked;
+
     if (
       workbenchResetTrigger !== workbenchResetTriggerRef.current &&
-      currentStep === 7 &&
-      !workbenchResetStepTracked
+      (isAcidResetStep || isBasicResetStep)
     ) {
       setWorkbenchResetStepTracked(true);
       onStepComplete();

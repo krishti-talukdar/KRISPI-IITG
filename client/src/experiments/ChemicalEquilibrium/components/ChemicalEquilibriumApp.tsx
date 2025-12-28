@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Play, Pause } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import ChemicalEquilibriumVirtualLab from "./VirtualLab";
-import ChemicalEquilibriumData, { PHHClExperiment } from "../data";
+import ChemicalEquilibriumData, { PHHClExperiment, BASIC_DRY_TEST_STEPS } from "../data";
 import type { ExperimentStep, DryTestMode } from "../types";
 import { useUpdateProgress } from "@/hooks/use-experiments";
 
@@ -91,6 +91,10 @@ export default function ChemicalEquilibriumApp({
   const isDryTestExperiment = experiment.id === ChemicalEquilibriumData.id;
   const updateProgress = useUpdateProgress();
   const activeDryTestConfig = DRY_TEST_MODE_CONFIG[activeDryTestMode];
+  const activeStepDetails =
+    isDryTestExperiment && activeDryTestMode === "basic"
+      ? BASIC_DRY_TEST_STEPS
+      : experiment.stepDetails;
 
   // Auto-start when URL contains ?autostart=1 for the PH experiment
   useEffect(() => {
@@ -145,13 +149,13 @@ export default function ChemicalEquilibriumApp({
   };
 
   const handleCompleteStep = () => {
-    if (currentStep < experiment.stepDetails.length - 1) {
+    if (currentStep < activeStepDetails.length - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
 
   const handleNextStep = () => {
-    if (currentStep < experiment.stepDetails.length - 1) {
+    if (currentStep < activeStepDetails.length - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -161,13 +165,13 @@ export default function ChemicalEquilibriumApp({
     return;
   };
 
-  const currentStepData = experiment.stepDetails[currentStep];
+  const currentStepData = activeStepDetails[currentStep];
   const progressPercentage = Math.round(
-    ((currentStep + 1) / experiment.stepDetails.length) * 100,
+    ((currentStep + 1) / activeStepDetails.length) * 100,
   );
 
   useEffect(() => {
-    const total = experiment.stepDetails.length;
+    const total = activeStepDetails.length;
     const done = experimentStarted ? Math.min(currentStep + 1, total) : 0;
     updateProgress.mutate({
       experimentId,
@@ -175,7 +179,7 @@ export default function ChemicalEquilibriumApp({
       completed: done >= total,
       progressPercentage: Math.round((done / total) * 100),
     });
-  }, [experimentStarted, currentStep, experiment.stepDetails.length, experimentId]);
+  }, [experimentStarted, currentStep, activeStepDetails.length, experimentId]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -256,7 +260,7 @@ export default function ChemicalEquilibriumApp({
                     <p className="text-xs text-gray-500 mt-1">Follow the guided steps below to complete the dry tests.</p>
                   </div>
                   <div className="flex flex-col items-start md:items-end gap-2">
-                    <span className="text-xs text-gray-500">Step {currentStep + 1} of {experiment.stepDetails.length}</span>
+                    <span className="text-xs text-gray-500">Step {currentStep + 1} of {activeStepDetails.length}</span>
                     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500 text-white text-xs font-bold">
                       <div className="w-2 h-2 bg-white rounded-full" />
                       <span>STEP {currentStep + 1}</span>
@@ -338,7 +342,7 @@ export default function ChemicalEquilibriumApp({
                           </Button>
                           <div className="flex items-center space-x-2 px-2">
                             <span className="text-sm text-gray-600">
-                              {currentStep + 1} / {experiment.stepDetails.length}
+                              {currentStep + 1} / {activeStepDetails.length}
                             </span>
                             <span className="inline-flex items-center px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">
                               <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse mr-1"></div>
@@ -349,7 +353,7 @@ export default function ChemicalEquilibriumApp({
                             variant="outline"
                             onClick={handleNextStep}
                             disabled={
-                              currentStep === experiment.stepDetails.length - 1
+                              currentStep === activeStepDetails.length - 1
                             }
                             size="sm"
                           >
@@ -361,7 +365,7 @@ export default function ChemicalEquilibriumApp({
                   ) : (
                     <div className="flex items-center space-x-2">
                       <div className="flex items-center space-x-2 px-2">
-                        <span className="text-sm text-gray-600">{currentStep + 1} / {experiment.stepDetails.length}</span>
+                        <span className="text-sm text-gray-600">{currentStep + 1} / {activeStepDetails.length}</span>
                         <span className="inline-flex items-center px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">STEP {currentStep + 1}</span>
                       </div>
                     </div>
@@ -378,10 +382,10 @@ export default function ChemicalEquilibriumApp({
                 onStepComplete={handleCompleteStep}
                 isActive={true}
                 stepNumber={currentStep + 1}
-                totalSteps={experiment.stepDetails.length}
+                totalSteps={activeStepDetails.length}
                 experimentTitle={experiment.title}
                 experiment={experiment}
-                allSteps={experiment.stepDetails}
+                allSteps={activeStepDetails}
                 experimentStarted={experimentStarted}
                 onStartExperiment={handleStartExperiment}
                 isRunning={isRunning}
