@@ -1264,6 +1264,7 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment,
     resolvedDryTestMode,
     setEquipmentPositions,
+    setSodiumNitroprussideAdded,
   ]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
