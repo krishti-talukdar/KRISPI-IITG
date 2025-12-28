@@ -1156,11 +1156,27 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleEquipmentAddDialogConfirm = useCallback(() => {
     if (!addDialogEquipment) return;
+
+    const parsedAmount = parseFloat(addDialogAmount);
+    const requiresDropValidation =
+      isDryTestExperiment && resolvedDryTestMode === "wet";
+
+    if (requiresDropValidation) {
+      if (Number.isNaN(parsedAmount) || parsedAmount <= 0) {
+        setAddDialogError("Enter a valid number of drops between 3 and 6.");
+        return;
+      }
+      if (parsedAmount < 3 || parsedAmount > 6) {
+        setAddDialogError("Enter a value between 3 and 6 drops.");
+        return;
+      }
+    }
+
     handleEquipmentAddButton(addDialogEquipment.id);
     setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
     setTimeout(() => setToastMessage(null), 2500);
     handleEquipmentAddDialogClose();
-  }, [addDialogAmount, addDialogEquipment, handleEquipmentAddButton, handleEquipmentAddDialogClose]);
+  }, [addDialogAmount, addDialogEquipment, handleEquipmentAddButton, handleEquipmentAddDialogClose, isDryTestExperiment, resolvedDryTestMode]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
     pushHistorySnapshot();
