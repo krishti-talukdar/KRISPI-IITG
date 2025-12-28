@@ -2327,7 +2327,7 @@ function ChemicalEquilibriumVirtualLab({
                             onClick={(event) => {
                               event.preventDefault();
                               event.stopPropagation();
-                              handleEquipmentAddButton(equipment.id, quickAddAction);
+                              handleAddButtonClick(equipment, quickAddAction);
                             }}
                             className="px-3 py-1 text-xs font-semibold text-white bg-orange-500 rounded-full hover:bg-orange-600 transition"
                           >
