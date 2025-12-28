@@ -15,15 +15,6 @@ interface ChemicalEquilibriumAppProps {
 
 const WET_ACID_TEST_EQUIPMENT = [
   "Test Tubes",
-  "Dropper Pipettes",
-  "Indicator Solution (Universal Indicator)",
-  "Dilute HCl (0.1 M)",
-  "Dilute NaOH (0.1 M)",
-  "Distilled Water",
-  "Bunsen Burner (virtual heat source)",
-  "Glass Rod",
-  "Glass Beaker (25 mL)",
-  "pH Paper Strips",
 ];
 
 const WET_BASIC_TEST_EQUIPMENT = [
