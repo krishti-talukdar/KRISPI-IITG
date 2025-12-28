@@ -15,15 +15,16 @@ interface ChemicalEquilibriumAppProps {
 
 const WET_ACID_TEST_EQUIPMENT = [
   "Test Tubes",
-  "Dropper Pipettes",
-  "Indicator Solution (Universal Indicator)",
-  "Dilute HCl (0.1 M)",
-  "Dilute NaOH (0.1 M)",
-  "Distilled Water",
+  "Salt Sample",
+  "BaCl₂ Solution",
+  "Sodium Nitroprusside",
+  "Acidified Potassium Dichromate Solution (K₂Cr₂O₇)",
+  "Dil. H₂SO₄",
+  "AgNO₃",
+  "CaCl₂ Solution",
+  "FeSO₄",
+  "FeCl₃",
   "Bunsen Burner (virtual heat source)",
-  "Glass Rod",
-  "Glass Beaker (25 mL)",
-  "pH Paper Strips",
 ];
 
 const WET_BASIC_TEST_EQUIPMENT = [

@@ -69,6 +69,11 @@ type LabSnapshot = {
   selectedChemical: string | null;
   caseOneResult: string;
   caseTwoResult: string;
+  caseThreeResult: string;
+  caseFourResult: string;
+  caseFiveResult: string;
+  caseSixResult: string;
+  caseSevenResult: string;
 };
 
 const MAX_HISTORY_ENTRIES = 25;
@@ -292,6 +297,11 @@ function ChemicalEquilibriumVirtualLab({
   }, [setRodMoveAnimationConfig]);
   const [caseOneResult, setCaseOneResult] = useState(DEFAULT_CASE_RESULT);
   const [caseTwoResult, setCaseTwoResult] = useState(DEFAULT_CASE_RESULT);
+  const [caseThreeResult, setCaseThreeResult] = useState(DEFAULT_CASE_RESULT);
+  const [caseFourResult, setCaseFourResult] = useState(DEFAULT_CASE_RESULT);
+  const [caseFiveResult, setCaseFiveResult] = useState(DEFAULT_CASE_RESULT);
+  const [caseSixResult, setCaseSixResult] = useState(DEFAULT_CASE_RESULT);
+  const [caseSevenResult, setCaseSevenResult] = useState(DEFAULT_CASE_RESULT);
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
@@ -376,6 +386,10 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_ACID_DROPS = 3;
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
+  const BA_CL_DROP_VOLUME_ML = 0.25;
+  const BA_CL_CHEMICAL_ID = "bacl2_solution";
+  const BA_CL_CHEMICAL_NAME = "BaCl₂ Solution";
+  const BA_CL_CHEMICAL_COLOR = "#38bdf8";
   const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
   const MIN_GLASS_HCL_VOLUME = 1;
   const MAX_GLASS_HCL_VOLUME = 6;
@@ -383,6 +397,9 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_AMMONIUM_VOLUME = 5;
   const MAX_AMMONIUM_VOLUME = 10;
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [addDialogEquipment, setAddDialogEquipment] = useState<{ id: string; name: string } | null>(null);
+  const [addDialogAmount, setAddDialogAmount] = useState("3.0");
+  const [addDialogError, setAddDialogError] = useState<string | null>(null);
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
   const [saltMass, setSaltMass] = useState("2.0");
   const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
@@ -409,6 +426,7 @@ function ChemicalEquilibriumVirtualLab({
   const saltHeatingIntervalRef = useRef<number | null>(null);
   const resolvedDryTestMode = dryTestMode ?? "acid";
   const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
+  const showMeasuredPh = !isAcidDryTest && resolvedDryTestMode !== "wet";
 
   // Chemical Equilibrium specific states
   const [cobaltChlorideAdded, setCobaltChlorideAdded] = useState(false);
@@ -874,6 +892,11 @@ function ChemicalEquilibriumVirtualLab({
     selectedChemical,
     caseOneResult,
     caseTwoResult,
+    caseThreeResult,
+    caseFourResult,
+    caseFiveResult,
+    caseSixResult,
+    caseSevenResult,
   });
 
   const DRY_TEST_BOTTLE_IDS = [
@@ -1097,12 +1120,138 @@ function ChemicalEquilibriumVirtualLab({
     [currentStep, distilledWaterAdded, experimentStarted, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode, testTubePlacementTracked, totalSteps],
   );
 
+  const handleEquipmentAddButton = useCallback(
+    (equipmentId: string) => {
+      const workbenchRect =
+        typeof document !== "undefined"
+          ? document
+              .querySelector('[data-workbench="true"]')
+              ?.getBoundingClientRect() ?? null
+          : null;
+      const targetX = workbenchRect
+        ? workbenchRect.left + workbenchRect.width / 2
+        : 200;
+      const targetY = workbenchRect
+        ? workbenchRect.top + workbenchRect.height / 2
+        : 200;
+      handleEquipmentDrop(equipmentId, targetX, targetY);
+    },
+    [handleEquipmentDrop],
+  );
+
+  const handleAddButtonClick = useCallback(
+    (equipment: EquipmentDefinition, quickAdd?: () => void) => {
+      if (quickAdd) {
+        quickAdd();
+        return;
+      }
+      setAddDialogEquipment({ id: equipment.id, name: equipment.name });
+      setAddDialogAmount("3.0");
+      setAddDialogError(null);
+    },
+    [],
+  );
+
+  const handleEquipmentAddDialogClose = useCallback(() => {
+    setAddDialogEquipment(null);
+    setAddDialogAmount("3.0");
+    setAddDialogError(null);
+  }, []);
+
+  const handleEquipmentAddDialogConfirm = useCallback(() => {
+    if (!addDialogEquipment) return;
+
+    const parsedAmount = parseFloat(addDialogAmount);
+    const requiresDropValidation =
+      isDryTestExperiment && resolvedDryTestMode === "wet";
+
+    if (requiresDropValidation) {
+      if (Number.isNaN(parsedAmount) || parsedAmount <= 0) {
+        setAddDialogError("Enter a valid number of drops between 3 and 6.");
+        return;
+      }
+      if (parsedAmount < 3 || parsedAmount > 6) {
+        setAddDialogError("Enter a value between 3 and 6 drops.");
+        return;
+      }
+    }
+
+    const isBaClAddition = addDialogEquipment.name.toLowerCase().includes("bacl");
+
+    if (requiresDropValidation && isBaClAddition) {
+      const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === BA_CL_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === BA_CL_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: BA_CL_CHEMICAL_ID,
+                    name: BA_CL_CHEMICAL_NAME,
+                    color: BA_CL_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "0.1 M",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          return updated ? next : prev;
+        });
+      }
+    }
+
+    handleEquipmentAddButton(addDialogEquipment.id);
+    setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
+    setTimeout(() => setToastMessage(null), 2500);
+    handleEquipmentAddDialogClose();
+  }, [
+    addDialogAmount,
+    addDialogEquipment,
+    handleEquipmentAddButton,
+    handleEquipmentAddDialogClose,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    setEquipmentPositions,
+  ]);
+
   const handleEquipmentRemove = useCallback((id: string) => {
     pushHistorySnapshot();
     setEquipmentPositions((prev) => prev.filter((pos) => pos.id !== id));
     setToastMessage("Equipment removed from workbench");
     setTimeout(() => setToastMessage(null), 2000);
   }, [pushHistorySnapshot]);
+
+  const handleObserveWetTest = useCallback(() => {
+    setToastMessage("Observation noted for the Wet Acid Test.");
+    setTimeout(() => setToastMessage(null), 2500);
+  }, []);
 
   useEffect(() => {
     if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
@@ -2097,6 +2246,11 @@ function ChemicalEquilibriumVirtualLab({
     setPostMoveFumesEnabled(false);
     setCaseOneResult(DEFAULT_CASE_RESULT);
     setCaseTwoResult(DEFAULT_CASE_RESULT);
+    setCaseThreeResult(DEFAULT_CASE_RESULT);
+    setCaseFourResult(DEFAULT_CASE_RESULT);
+    setCaseFiveResult(DEFAULT_CASE_RESULT);
+    setCaseSixResult(DEFAULT_CASE_RESULT);
+    setCaseSevenResult(DEFAULT_CASE_RESULT);
     setShowCase2ResultsModal(false);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
@@ -2126,6 +2280,11 @@ function ChemicalEquilibriumVirtualLab({
     setMno2DialogError(null);
     setHasRinsed(false);
     setCaseTwoResult(DEFAULT_CASE_RESULT);
+    setCaseThreeResult(DEFAULT_CASE_RESULT);
+    setCaseFourResult(DEFAULT_CASE_RESULT);
+    setCaseFiveResult(DEFAULT_CASE_RESULT);
+    setCaseSixResult(DEFAULT_CASE_RESULT);
+    setCaseSevenResult(DEFAULT_CASE_RESULT);
     setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
@@ -2172,6 +2331,11 @@ function ChemicalEquilibriumVirtualLab({
     setMeasurements({ ...lastSnapshot.measurements });
     setCaseOneResult(lastSnapshot.caseOneResult);
     setCaseTwoResult(lastSnapshot.caseTwoResult);
+    setCaseThreeResult(lastSnapshot.caseThreeResult);
+    setCaseFourResult(lastSnapshot.caseFourResult);
+    setCaseFiveResult(lastSnapshot.caseFiveResult);
+    setCaseSixResult(lastSnapshot.caseSixResult);
+    setCaseSevenResult(lastSnapshot.caseSevenResult);
 
     setToastMessage("Reverted the last operation.");
     setTimeout(() => setToastMessage(null), 2500);
@@ -2245,6 +2409,11 @@ function ChemicalEquilibriumVirtualLab({
                 {equipmentList.map((equipment) => {
                   const quickAddAction = getQuickAddAction(equipment.id);
                   const isQuickAddCard = Boolean(quickAddAction);
+                  const normalizedEquipmentName = equipment.name.toLowerCase();
+                  const hideAddButton =
+                    normalizedEquipmentName.includes("test tube") ||
+                    normalizedEquipmentName.includes("bunsen");
+                  const showAddButton = !hideAddButton;
                   return (
                     <div
                       key={equipment.id}
@@ -2271,13 +2440,13 @@ function ChemicalEquilibriumVirtualLab({
                           </div>
                           <div className="text-sm font-medium text-gray-700">{equipment.name}</div>
                         </div>
-                        {isQuickAddCard && quickAddAction && (
+                        {showAddButton && (
                           <button
                             type="button"
                             onClick={(event) => {
                               event.preventDefault();
                               event.stopPropagation();
-                              quickAddAction();
+                              handleAddButtonClick(equipment, quickAddAction);
                             }}
                             className="px-3 py-1 text-xs font-semibold text-white bg-orange-500 rounded-full hover:bg-orange-600 transition"
                           >
@@ -2450,6 +2619,7 @@ function ChemicalEquilibriumVirtualLab({
                         isDryTest={isDryTestExperiment}
                         dryTestMode={resolvedDryTestMode}
                         isRinseActive={pos.id === glassRodEquipmentId && showRinseAnimation}
+                        onObserve={isDryTestExperiment && resolvedDryTestMode === "wet" ? handleObserveWetTest : undefined}
                         imageUrl={equipment.imageUrl}
                       />
                     ) : null;
@@ -2491,7 +2661,7 @@ function ChemicalEquilibriumVirtualLab({
               </ul>
             </div>
 
-            {!isAcidDryTest && (
+            {showMeasuredPh && (
               <div className="mt-2 mb-4 p-3 bg-gray-50 rounded">
                 <div className="text-xs font-medium text-gray-600">Measured pH</div>
                 <div className="text-2xl font-bold mt-1">{measurements.ph ? measurements.ph : 'No result yet'}</div>
@@ -2500,14 +2670,20 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="text-sm font-bold mb-2 text-slate-900">Cases</div>
             <div className="space-y-2">
-              <div className="p-3 border rounded bg-white text-slate-900">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">CASE 1</div>
-                <div className="mt-1 text-sm text-slate-800">{caseOneResult}</div>
-              </div>
-              <div className="p-3 border rounded bg-white text-slate-900">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">CASE 2</div>
-                <div className="mt-1 text-sm text-slate-800">{caseTwoResult}</div>
-              </div>
+              {[
+                { label: "CASE 1", result: caseOneResult },
+                { label: "CASE 2", result: caseTwoResult },
+                { label: "CASE 3", result: caseThreeResult },
+                { label: "CASE 4", result: caseFourResult },
+                { label: "CASE 5", result: caseFiveResult },
+                { label: "CASE 6", result: caseSixResult },
+                { label: "CASE 7", result: caseSevenResult },
+              ].map((entry) => (
+                <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
+                  <div className="mt-1 text-sm text-slate-800">{entry.result}</div>
+                </div>
+              ))}
             </div>
             {caseOneResult !== DEFAULT_CASE_RESULT && (
               <button
@@ -2674,6 +2850,55 @@ function ChemicalEquilibriumVirtualLab({
           </div>
         )}
       </div>
+      )}
+
+      {Boolean(addDialogEquipment) && (
+        <Dialog
+          open={Boolean(addDialogEquipment)}
+          onOpenChange={(open) => !open && handleEquipmentAddDialogClose()}
+        >
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Amount</DialogTitle>
+              <DialogDescription>
+                Add {addDialogEquipment?.name} to the workbench.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Quantity
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                type="number"
+                min="0.1"
+                step="0.1"
+                value={addDialogAmount}
+                onChange={(event) => setAddDialogAmount(event.target.value)}
+                placeholder="3.0"
+              />
+              <p className="text-[11px] text-slate-500">
+                Equipment will be placed near the center of the workbench.
+              </p>
+              <p className="text-[11px] text-slate-500">Recommended range: 3 - 6 drops.</p>
+              {addDialogError && (
+                <p className="text-[11px] text-red-500">{addDialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleEquipmentAddDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleEquipmentAddDialogConfirm}>
+                  Add to workbench
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
 
       {isDryTestExperiment && (
