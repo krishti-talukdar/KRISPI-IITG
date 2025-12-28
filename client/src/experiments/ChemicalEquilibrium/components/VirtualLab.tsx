@@ -343,6 +343,7 @@ function ChemicalEquilibriumVirtualLab({
     : false;
   const shouldShowRinseButton = hasAmmoniumInGlassContainer || hasHClInGlassContainer;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
+  const resolvedDryTestMode = dryTestMode ?? "acid";
   const testTubeState = equipmentPositions.find((pos) => pos.id === "test_tubes");
   const mnO2Chemical = testTubeState?.chemicals.find((chemical) => chemical.id === "mno2");
   const hasMnO2InTestTube = (mnO2Chemical?.amount ?? 0) > 0;
