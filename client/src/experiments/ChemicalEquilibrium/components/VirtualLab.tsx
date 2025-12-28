@@ -2414,7 +2414,7 @@ function ChemicalEquilibriumVirtualLab({
                     normalizedEquipmentName.includes("test tube") ||
                     normalizedEquipmentName.includes("bunsen") ||
                     (isDryTestExperiment &&
-                      dryTestMode === "acid" &&
+                      (dryTestMode === "acid" || dryTestMode === "basic") &&
                       (normalizedEquipmentName.includes("glass rod") ||
                         normalizedEquipmentName.includes("glass container")));
                   const showAddButton = !hideAddButton;
