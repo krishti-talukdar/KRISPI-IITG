@@ -314,10 +314,6 @@ function ChemicalEquilibriumVirtualLab({
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
-  const CASE_ONE_WET_NO_PRECIPITATE_RESULT =
-    "No precipitate appears, so sulphate, sulphite, carbonate and sulphide ions are absent.";
-  const CASE_TWO_WET_NO_PURPLE_RESULT =
-    "Normally a violet/purple colour indicates sulphide; in your table no purple colour forms, so S²⁻ is absent.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
