@@ -69,6 +69,11 @@ type LabSnapshot = {
   selectedChemical: string | null;
   caseOneResult: string;
   caseTwoResult: string;
+  caseThreeResult: string;
+  caseFourResult: string;
+  caseFiveResult: string;
+  caseSixResult: string;
+  caseSevenResult: string;
 };
 
 const MAX_HISTORY_ENTRIES = 25;
