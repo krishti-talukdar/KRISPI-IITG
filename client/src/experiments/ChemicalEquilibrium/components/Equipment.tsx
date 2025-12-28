@@ -628,7 +628,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
                   event.stopPropagation();
                   onObserve?.();
                 }}
-                className="mt-2 w-32 rounded-md py-1 text-[11px] font-semibold text-white uppercase tracking-[0.3em]"
+                className={`mt-2 w-32 rounded-md py-1 text-[11px] font-semibold text-white uppercase tracking-[0.3em] ${
+                  observeBlinking ? "animate-pulse" : ""
+                }`}
                 style={{ backgroundColor: "#80b48c" }}
               >
                 OBSERVE
