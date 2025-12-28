@@ -353,7 +353,7 @@ export default function ChemicalEquilibriumApp({
                             variant="outline"
                             onClick={handleNextStep}
                             disabled={
-                              currentStep === experiment.stepDetails.length - 1
+                              currentStep === activeStepDetails.length - 1
                             }
                             size="sm"
                           >
