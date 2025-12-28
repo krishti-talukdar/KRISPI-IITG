@@ -247,6 +247,7 @@ function ChemicalEquilibriumVirtualLab({
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
   const DEFAULT_CASE_RESULT = "No result yet";
+  const [, setLocation] = useLocation();
   const CASE_TWO_BASIC_RESULT =
     "CASE 2: Strong pungent smell of NH₃ and white fumes with conc. HCl confirm the ammonium radical (NH₄⁺) in the salt.";
   const [equipmentPositions, setEquipmentPositions] = useState<
