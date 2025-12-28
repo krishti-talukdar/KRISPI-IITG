@@ -2377,7 +2377,7 @@ function ChemicalEquilibriumVirtualLab({
               </DialogDescription>
             </DialogHeader>
 
-            <div className="px-6 pb-6 pt-4 space-y-6">
+            <div className="px-6 pb-6 pt-4 space-y-6 text-slate-900">
               <div className="grid gap-4 md:grid-cols-2">
                 <section className="rounded-lg border border-rose-200 bg-gradient-to-br from-rose-50 to-white p-5 shadow-lg shadow-rose-100">
                   <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-rose-500">Case 1 • Initial Clues</div>
