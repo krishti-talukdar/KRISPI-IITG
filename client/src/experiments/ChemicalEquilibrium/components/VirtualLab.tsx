@@ -1623,6 +1623,18 @@ function ChemicalEquilibriumVirtualLab({
     setShowCase2ResultsModal(true);
   };
 
+  const handleReturnToExperiments = () => {
+    setShowCase2ResultsModal(false);
+    setToastMessage("Return to the expermiments list to try another activity.");
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
+  const handleLaunchQuiz = () => {
+    setShowCase2ResultsModal(false);
+    setToastMessage("Quiz coming soon for this experiment.");
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
   return (
     <TooltipProvider>
       {usePhStyleLayout ? (
@@ -2448,6 +2460,17 @@ function ChemicalEquilibriumVirtualLab({
               </div>
             </div>
 
+            <div className="flex flex-col gap-3 border-y border-white/40 px-6 py-4 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs text-slate-500 uppercase tracking-[0.4em]">Explore more</p>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="ghost" size="sm" onClick={handleReturnToExperiments}>
+                  Return to Experiments
+                </Button>
+                <Button size="sm" onClick={handleLaunchQuiz}>
+                  QUIZ
+                </Button>
+              </div>
+            </div>
             <DialogFooter className="px-6 pb-6">
               <div className="flex justify-between w-full items-center text-xs text-gray-500">
                 <span>Generated after documenting both Case 1 and Case 2.</span>
