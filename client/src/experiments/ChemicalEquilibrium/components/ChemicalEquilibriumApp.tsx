@@ -171,7 +171,7 @@ export default function ChemicalEquilibriumApp({
   );
 
   useEffect(() => {
-    const total = experiment.stepDetails.length;
+    const total = activeStepDetails.length;
     const done = experimentStarted ? Math.min(currentStep + 1, total) : 0;
     updateProgress.mutate({
       experimentId,
@@ -179,7 +179,7 @@ export default function ChemicalEquilibriumApp({
       completed: done >= total,
       progressPercentage: Math.round((done / total) * 100),
     });
-  }, [experimentStarted, currentStep, experiment.stepDetails.length, experimentId]);
+  }, [experimentStarted, currentStep, activeStepDetails.length, experimentId]);
 
   return (
     <div className="min-h-screen bg-gray-50">
