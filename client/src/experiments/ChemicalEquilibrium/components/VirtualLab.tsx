@@ -2158,6 +2158,11 @@ function ChemicalEquilibriumVirtualLab({
     setPostMoveFumesEnabled(false);
     setCaseOneResult(DEFAULT_CASE_RESULT);
     setCaseTwoResult(DEFAULT_CASE_RESULT);
+    setCaseThreeResult(DEFAULT_CASE_RESULT);
+    setCaseFourResult(DEFAULT_CASE_RESULT);
+    setCaseFiveResult(DEFAULT_CASE_RESULT);
+    setCaseSixResult(DEFAULT_CASE_RESULT);
+    setCaseSevenResult(DEFAULT_CASE_RESULT);
     setShowCase2ResultsModal(false);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
