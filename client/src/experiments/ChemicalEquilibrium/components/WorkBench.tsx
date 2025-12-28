@@ -170,7 +170,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     : null;
   const hasMnO2InTestTube =
     Boolean(
-      testTubePosition?.chemicals.some(
+      testTubePosition?.chemicals?.some(
         (chemical) => chemical.id === "mno2" && (chemical.amount ?? 0) > 0,
       ),
     );
