@@ -273,6 +273,7 @@ function ChemicalEquilibriumVirtualLab({
   }, [setRodMoveAnimationConfig]);
   const [caseOneResult, setCaseOneResult] = useState(DEFAULT_CASE_RESULT);
   const [caseTwoResult, setCaseTwoResult] = useState(DEFAULT_CASE_RESULT);
+  const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
