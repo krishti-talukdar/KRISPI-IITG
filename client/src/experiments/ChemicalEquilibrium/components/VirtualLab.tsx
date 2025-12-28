@@ -914,6 +914,7 @@ function ChemicalEquilibriumVirtualLab({
     caseFiveResult,
     caseSixResult,
     caseSevenResult,
+    sodiumNitroprussideAdded,
   });
 
   const DRY_TEST_BOTTLE_IDS = [
