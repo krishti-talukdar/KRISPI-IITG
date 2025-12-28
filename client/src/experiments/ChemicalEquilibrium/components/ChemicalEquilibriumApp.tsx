@@ -260,7 +260,7 @@ export default function ChemicalEquilibriumApp({
                     <p className="text-xs text-gray-500 mt-1">Follow the guided steps below to complete the dry tests.</p>
                   </div>
                   <div className="flex flex-col items-start md:items-end gap-2">
-                    <span className="text-xs text-gray-500">Step {currentStep + 1} of {experiment.stepDetails.length}</span>
+                    <span className="text-xs text-gray-500">Step {currentStep + 1} of {activeStepDetails.length}</span>
                     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500 text-white text-xs font-bold">
                       <div className="w-2 h-2 bg-white rounded-full" />
                       <span>STEP {currentStep + 1}</span>
