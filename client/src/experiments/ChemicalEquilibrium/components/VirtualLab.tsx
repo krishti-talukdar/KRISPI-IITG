@@ -1150,7 +1150,8 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleEquipmentAddDialogClose = useCallback(() => {
     setAddDialogEquipment(null);
-    setAddDialogAmount("1.0");
+    setAddDialogAmount("3.0");
+    setAddDialogError(null);
   }, []);
 
   const handleEquipmentAddDialogConfirm = useCallback(() => {
