@@ -394,7 +394,8 @@ function ChemicalEquilibriumVirtualLab({
   const MAX_AMMONIUM_VOLUME = 10;
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [addDialogEquipment, setAddDialogEquipment] = useState<{ id: string; name: string } | null>(null);
-  const [addDialogAmount, setAddDialogAmount] = useState("1.0");
+  const [addDialogAmount, setAddDialogAmount] = useState("3.0");
+  const [addDialogError, setAddDialogError] = useState<string | null>(null);
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
   const [saltMass, setSaltMass] = useState("2.0");
   const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
