@@ -549,11 +549,58 @@ function ChemicalEquilibriumVirtualLab({
     if (
       !experimentStarted ||
       !isDryTestExperiment ||
-      resolvedDryTestMode !== "acid"
+      resolvedDryTestMode !== "basic"
     ) {
       return;
     }
 
+    if (currentStep !== 2) {
+      if (sampleAddedTracked) {
+        setSampleAddedTracked(false);
+      }
+      return;
+    }
+
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+    const hasSaltSample = Boolean(
+      testTube?.chemicals.some(
+        (chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+      ),
+    );
+
+    if (hasSaltSample && !sampleAddedTracked) {
+      setSampleAddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Salt sample added. Advancing to Step 3.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!hasSaltSample && sampleAddedTracked) {
+      setSampleAddedTracked(false);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    sampleAddedTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      (resolvedDryTestMode !== "acid" && resolvedDryTestMode !== "basic")
+    ) {
+      return;
+    }
+
+    const expectedStep = resolvedDryTestMode === "acid" ? 4 : 3;
     const hasBunsen = equipmentPositions.some((pos) =>
       pos.id.includes("bunsen-burner-virtual-heat-source"),
     );
@@ -561,7 +608,7 @@ function ChemicalEquilibriumVirtualLab({
     if (
       hasBunsen &&
       !bunsenPlacedTracked &&
-      currentStep === 4
+      currentStep === expectedStep
     ) {
       setBunsenPlacedTracked(true);
       onStepComplete();
