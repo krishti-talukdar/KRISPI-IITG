@@ -2058,7 +2058,9 @@ function ChemicalEquilibriumVirtualLab({
       );
       setRodMoved(true);
       setPostMoveFumesEnabled(true);
-      setCaseOneResult("Cl⁻ radical may be present in the given salt.");
+      if (!caseOneReady) {
+        setCaseOneResult("Cl⁻ radical may be present in the given salt.");
+      }
       if (isDryTestExperiment && resolvedDryTestMode === "basic") {
         setCaseTwoResult(CASE_TWO_BASIC_RESULT);
       }
