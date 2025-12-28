@@ -645,6 +645,30 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   ))}
                 </div>
               )}
+              {isBunsenHeating && hasMnO2InTestTube && vaporAnchorCoords && (
+                <div
+                  className="mno2-gas-cloud"
+                  style={{
+                    "--mno2-gas-left": `${vaporAnchorCoords.left}px`,
+                    "--mno2-gas-top": `${vaporAnchorCoords.top}px`,
+                  } as React.CSSProperties}
+                  role="status"
+                  aria-label="Greenish-yellow gas rising from MnO₂ heated in the test tube"
+                >
+                  {MNO2_GAS_PUFFS.map((puff, index) => (
+                    <span
+                      key={`mno2-${index}-${puff.delay}`}
+                      className="mno2-gas-puff"
+                      style={{
+                        "--mno2-offset-x": `${puff.offsetX}px`,
+                        "--mno2-duration": puff.duration,
+                        "--mno2-delay": puff.delay,
+                        "--mno2-scale": puff.scale,
+                      } as React.CSSProperties}
+                    />
+                  ))}
+                </div>
+              )}
               {heatButtonCoords && (
                 <div
                   className="heat-control-panel"
