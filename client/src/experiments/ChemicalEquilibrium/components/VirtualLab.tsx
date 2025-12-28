@@ -2190,7 +2190,10 @@ function ChemicalEquilibriumVirtualLab({
           {/* Right Live Analysis Column */}
           <aside className="w-56 flex-shrink-0 bg-white/90 border border-gray-200 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-semibold">Live Analysis</h4>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 bg-lime-300 rounded-full shadow-lg shadow-lime-200 animate-pulse" />
+                <h4 className="text-base font-bold text-slate-900">Live Analysis</h4>
+              </div>
               <div className="text-xs text-gray-500">Step {currentStep} of {totalSteps}</div>
             </div>
 
@@ -2203,7 +2206,7 @@ function ChemicalEquilibriumVirtualLab({
               <div className="font-medium">Completed Steps</div>
               <ul
                 className={`list-disc list-inside mt-2 ${
-                  isAcidDryTest ? "text-lime-400" : ""
+                  isAcidDryTest ? "text-lime-300 font-bold text-sm" : ""
                 }`}
               >
                 {allSteps.slice(0, Math.max(0, currentStep - 1)).map((s) => (
@@ -2219,7 +2222,7 @@ function ChemicalEquilibriumVirtualLab({
               </div>
             )}
 
-            <div className="text-sm font-semibold mb-2">Cases</div>
+            <div className="text-sm font-bold mb-2 text-slate-900">Cases</div>
             <div className="space-y-2">
               <div className="p-3 border rounded bg-white text-slate-900">
                 <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">CASE 1</div>
