@@ -1439,9 +1439,26 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${drops} drops of ${acidConfig.label} to the test tube.`);
+    const shouldAdvanceAfterAcid =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "acid" &&
+      currentStep === 3 &&
+      !acidAddedTracked;
+
+    setToastMessage(
+      shouldAdvanceAfterAcid
+        ? "Concentrated acid added. Moving to the next step."
+        : `Added ${drops} drops of ${acidConfig.label} to the test tube.`,
+    );
     setTimeout(() => setToastMessage(null), 3000);
     handleAcidDialogClose();
+
+    if (shouldAdvanceAfterAcid) {
+      setAcidAddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    }
   };
 
   const handleAddAmmoniumToGlassContainer = () => {
