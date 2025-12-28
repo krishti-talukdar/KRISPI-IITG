@@ -744,6 +744,56 @@ function ChemicalEquilibriumVirtualLab({
   ]);
 
   useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      resolvedDryTestMode !== "basic"
+    ) {
+      return;
+    }
+
+    if (currentStep !== 9) {
+      if (basicGlassSetupTracked) {
+        setBasicGlassSetupTracked(false);
+      }
+      return;
+    }
+
+    const hasGlassRod = equipmentPositions.some((pos) =>
+      stripEquipmentIdSuffix(pos.id) === "glass-rod",
+    );
+    const hasGlassContainer = equipmentPositions.some((pos) =>
+      stripEquipmentIdSuffix(pos.id) === "glass-container",
+    );
+
+    if (
+      hasGlassRod &&
+      hasGlassContainer &&
+      !basicGlassSetupTracked
+    ) {
+      setBasicGlassSetupTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Glass rod and container placed. Moving to Step 10.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!(hasGlassRod && hasGlassContainer) && basicGlassSetupTracked) {
+      setBasicGlassSetupTracked(false);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    basicGlassSetupTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
+  useEffect(() => {
     setTestTubePlacementTracked(false);
     setSecondTestTubePlacementTracked(false);
     setSampleAddedTracked(false);
@@ -755,6 +805,12 @@ function ChemicalEquilibriumVirtualLab({
     setAmmoniumAddedTracked(false);
     setWorkbenchResetStepTracked(false);
     setMno2AddedTracked(false);
+    setBasicSecondTubeTracked(false);
+    setBasicSaltAddedTracked(false);
+    setBasicNaOHAddedTracked(false);
+    setBasicSecondBunsenTracked(false);
+    setBasicGlassSetupTracked(false);
+    setBasicGlassAcidAddedTracked(false);
   }, [stepNumber, workbenchResetTrigger]);
 
   useEffect(() => {
