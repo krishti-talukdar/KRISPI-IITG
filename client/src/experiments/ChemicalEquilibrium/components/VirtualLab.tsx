@@ -2726,6 +2726,51 @@ function ChemicalEquilibriumVirtualLab({
       </div>
       )}
 
+      {Boolean(addDialogEquipment) && (
+        <Dialog
+          open={Boolean(addDialogEquipment)}
+          onOpenChange={(open) => !open && handleEquipmentAddDialogClose()}
+        >
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Amount</DialogTitle>
+              <DialogDescription>
+                Add {addDialogEquipment?.name} to the workbench.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Quantity
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                type="number"
+                min="0.1"
+                step="0.1"
+                value={addDialogAmount}
+                onChange={(event) => setAddDialogAmount(event.target.value)}
+                placeholder="1.0"
+              />
+              <p className="text-[11px] text-slate-500">
+                Equipment will be placed near the center of the workbench.
+              </p>
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleEquipmentAddDialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleEquipmentAddDialogConfirm}>
+                  Add to workbench
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
       {isDryTestExperiment && (
         <Dialog open={saltDialogOpen} onOpenChange={(open) => !open && handleSaltDialogClose()}>
           <DialogContent className="max-w-sm space-y-4">
