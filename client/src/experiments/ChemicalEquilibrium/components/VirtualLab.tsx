@@ -255,6 +255,8 @@ function ChemicalEquilibriumVirtualLab({
   const [, setLocation] = useLocation();
   const CASE_TWO_BASIC_RESULT =
     "CASE 2: Strong pungent smell of NH₃ and white fumes with conc. HCl confirm the ammonium radical (NH₄⁺) in the salt.";
+  const CASE_ONE_WET_NO_PRECIPITATE_RESULT =
+    "No precipitate appears, so sulphate, sulphite, carbonate and sulphide ions are absent.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
