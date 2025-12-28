@@ -1922,11 +1922,13 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="text-sm font-semibold mb-2">Cases</div>
             <div className="space-y-2">
-              <div className="p-2 border rounded">CASE 1
-                <div className="text-xs text-gray-500">{caseOneResult}</div>
+              <div className="p-3 border rounded bg-white text-slate-900">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">CASE 1</div>
+                <div className="mt-1 text-sm text-slate-800">{caseOneResult}</div>
               </div>
-              <div className="p-2 border rounded">CASE 2
-                <div className="text-xs text-gray-500">{caseTwoResult}</div>
+              <div className="p-3 border rounded bg-white text-slate-900">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">CASE 2</div>
+                <div className="mt-1 text-sm text-slate-800">{caseTwoResult}</div>
               </div>
             </div>
             {caseOneResult !== DEFAULT_CASE_RESULT && (
