@@ -1277,9 +1277,22 @@ function ChemicalEquilibriumVirtualLab({
     if (isBaClAddedToTestTube && caseOneResult === DEFAULT_CASE_RESULT) {
       setCaseOneResult(CASE_ONE_WET_NO_PRECIPITATE_RESULT);
     }
+    if (sodiumNitroprussideAdded && caseTwoResult === DEFAULT_CASE_RESULT) {
+      setCaseTwoResult(CASE_TWO_WET_NO_PURPLE_RESULT);
+      setSodiumNitroprussideAdded(false);
+    }
     setToastMessage("Observation noted for the Wet Acid Test.");
     setTimeout(() => setToastMessage(null), 2500);
-  }, [caseOneResult, isBaClAddedToTestTube, setCaseOneResult, setToastMessage]);
+  }, [
+    caseOneResult,
+    caseTwoResult,
+    isBaClAddedToTestTube,
+    sodiumNitroprussideAdded,
+    setCaseOneResult,
+    setCaseTwoResult,
+    setSodiumNitroprussideAdded,
+    setToastMessage,
+  ]);
 
   useEffect(() => {
     if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
