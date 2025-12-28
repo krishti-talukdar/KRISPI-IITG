@@ -1512,9 +1512,26 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${mass.toFixed(2)} g of MnO₂ to the test tube.`);
+    const shouldAdvanceAfterMnO2 =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "acid" &&
+      currentStep === 11 &&
+      !mno2AddedTracked;
+
+    setToastMessage(
+      shouldAdvanceAfterMnO2
+        ? "MnO₂ added. Moving to the next step."
+        : `Added ${mass.toFixed(2)} g of MnO₂ to the test tube.`,
+    );
     setTimeout(() => setToastMessage(null), 3000);
     handleMnO2DialogClose();
+
+    if (shouldAdvanceAfterMnO2) {
+      setMno2AddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    }
   };
 
   const handleAddAcidToTestTube = () => {
