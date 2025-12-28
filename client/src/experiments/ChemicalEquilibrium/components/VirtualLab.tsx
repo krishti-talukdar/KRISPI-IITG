@@ -439,6 +439,42 @@ function ChemicalEquilibriumVirtualLab({
     };
   }, [cancelRodMoveAnimation]);
 
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      resolvedDryTestMode !== "acid"
+    ) {
+      return;
+    }
+
+    const hasPlacedTestTube = equipmentPositions.some(
+      (pos) => pos.id === "test_tubes",
+    );
+
+    if (hasPlacedTestTube && !testTubePlacementTracked && currentStep === 1) {
+      setTestTubePlacementTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Test tube placed on the workbench. Moving to the next step.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!hasPlacedTestTube && testTubePlacementTracked) {
+      setTestTubePlacementTracked(false);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    testTubePlacementTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
   const cobaltReactionState: CobaltReactionState = {
     cobaltChlorideAdded,
     distilledWaterAdded,
