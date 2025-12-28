@@ -42,7 +42,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
       id: 3,
       title: "Add concentrated H₂SO₄ down the side of the tube",
       description:
-        "Carefully dispense 2	63 drops of concentrated H₂SO₄ down the glass wall so the acid mixes gently with the sample.",
+        "Carefully dispense 2–3 drops of concentrated H₂SO₄ down the glass wall so the acid mixes gently with the sample.",
       completed: false,
     },
     {
