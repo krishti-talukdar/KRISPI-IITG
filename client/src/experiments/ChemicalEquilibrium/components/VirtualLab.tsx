@@ -689,19 +689,23 @@ function ChemicalEquilibriumVirtualLab({
   }, [stepNumber, workbenchResetTrigger]);
 
   useEffect(() => {
-    if (
-      !experimentStarted ||
-      !isDryTestExperiment ||
-      resolvedDryTestMode !== "acid"
-    ) {
+    if (!experimentStarted || !isDryTestExperiment) {
       workbenchResetTriggerRef.current = workbenchResetTrigger;
       return;
     }
 
+    const isAcidResetStep =
+      resolvedDryTestMode === "acid" &&
+      currentStep === 7 &&
+      !workbenchResetStepTracked;
+    const isBasicResetStep =
+      resolvedDryTestMode === "basic" &&
+      currentStep === 4 &&
+      !workbenchResetStepTracked;
+
     if (
       workbenchResetTrigger !== workbenchResetTriggerRef.current &&
-      currentStep === 7 &&
-      !workbenchResetStepTracked
+      (isAcidResetStep || isBasicResetStep)
     ) {
       setWorkbenchResetStepTracked(true);
       onStepComplete();
