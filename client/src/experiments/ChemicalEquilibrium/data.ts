@@ -26,52 +26,86 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   stepDetails: [
     {
       id: 1,
-      title: "Clean the Wire Loop",
+      title: "Drag the test tube into the workbench",
       description:
-        "Heat the wire loop to red-hot and cool in distilled water to remove contaminants. A clean loop prevents false positives during dry tests.",
-      duration: "5 minutes",
-      temperature: "Red-hot (virtual)",
+        "Move the test tube from the rack onto the virtual workbench so the dry test sequence can begin.",
       completed: false,
     },
     {
       id: 2,
-      title: "Test for Carbonates (CO3^2-)",
+      title: "Add salt sample to the test tube",
       description:
-        "Place a small sample on the wire loop and strongly heat. Observe effervescence on subsequent wet testing or formation of white residue; add dilute acid to confirm CO2 evolution (effervescence).",
-      duration: "8 minutes",
-      safety: "Perform in well-ventilated area (virtual)",
+        "Drop a small amount of the dry salt sample into the tube before applying any reagents.",
       completed: false,
     },
     {
       id: 3,
-      title: "Test for Sulfates (SO4^2-)",
+      title: "Add concentrated H₂SO₄ down the side of the tube",
       description:
-        "Heat the sample and observe for any characteristic changes; follow with a wet confirmatory test (barium chloride on acidified solution) if required. In dry test, sulfate often gives no flame color but leaves a persistent residue.",
-      duration: "6 minutes",
+        "Carefully dispense 2	63 drops of concentrated H₂SO₄ down the glass wall so the acid mixes gently with the sample.",
       completed: false,
     },
     {
       id: 4,
-      title: "Test for Chlorides and Halides",
+      title: "Warm the tube gently with the bunsen burner",
       description:
-        "Warm the sample and observe for white fumes or reaction with silver nitrate in a subsequent wet confirmatory test. Some halides may impart characteristic flame colors when heated on a wire loop with proper reagents.",
-      duration: "7 minutes",
+        "Drag the bunsen burner onto the workbench and heat the tube over a low flame to activate the dry test reactions.",
       completed: false,
     },
     {
       id: 5,
-      title: "Test for Nitrates and Nitrites",
+      title: "Drop the glass rod and container into the workbench",
       description:
-        "Heat the sample on the loop; nitrates may decompose to give brown fumes (NO2) or a peculiar smell. Use the observed decomposition behavior as a qualitative indicator and follow up with wet tests if needed.",
-      duration: "7 minutes",
+        "Place a clean glass rod alongside an empty glass container so they are ready for the next reagent transfer.",
       completed: false,
     },
     {
       id: 6,
-      title: "Record Observations and Conclusions",
+      title: "Add NH₄OH to the container and dip the rod",
       description:
-        "Document colors, residues, fumes, and odors observed during dry tests. Compare results against known characteristic behaviors of common acid radicals and conclude the most likely identities.",
-      duration: "7 minutes",
+        "Pour ammonium hydroxide into the glass container and dip the glass rod into the solution for subsequent spotting.",
+      completed: false,
+    },
+    {
+      id: 7,
+      title: "Reset the workbench",
+      description:
+        "Clear the current setup using the reset control so you can begin the next stage with a fresh workspace.",
+      completed: false,
+    },
+    {
+      id: 8,
+      title: "Drag the test tube into the workbench",
+      description:
+        "Bring a fresh test tube onto the workbench to repeat the dry test under the new conditions.",
+      completed: false,
+    },
+    {
+      id: 9,
+      title: "Add salt sample to the test tube",
+      description:
+        "Load another portion of the dry salt sample into the clean tube before reheating.",
+      completed: false,
+    },
+    {
+      id: 10,
+      title: "Add concentrated H₂SO₄ down the side of the tube",
+      description:
+        "Carefully add 2	63 drops of concentrated H₂SO₄ down the glass wall so the new sample is acidified gently.",
+      completed: false,
+    },
+    {
+      id: 11,
+      title: "Add a pinch of solid MnO₂ to the test tube",
+      description:
+        "Drop a small pinch of manganese dioxide into the acidified tube to help generate the characteristic fumes.",
+      completed: false,
+    },
+    {
+      id: 12,
+      title: "Warm the tube gently with the bunsen burner",
+      description:
+        "Return the bunsen burner to the workbench and heat the tube over a low flame for the final observation.",
       completed: false,
     },
   ],
