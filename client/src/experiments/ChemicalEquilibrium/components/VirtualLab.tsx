@@ -1200,6 +1200,9 @@ function ChemicalEquilibriumVirtualLab({
     const isSodiumNitroprussideAddition = addDialogEquipment.name
       .toLowerCase()
       .includes("nitroprusside");
+    const isDichromateAddition = addDialogEquipment.name
+      .toLowerCase()
+      .includes("dichromate");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -1240,6 +1243,55 @@ function ChemicalEquilibriumVirtualLab({
                     color: BA_CL_CHEMICAL_COLOR,
                     amount: dropVolume,
                     concentration: "0.1 M",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          return updated ? next : prev;
+        });
+      }
+    }
+
+    if (requiresDropValidation && isDichromateAddition) {
+      const dropVolume = parsedAmount * K2CR2O7_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === K2CR2O7_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === K2CR2O7_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: K2CR2O7_CHEMICAL_ID,
+                    name: K2CR2O7_CHEMICAL_NAME,
+                    color: K2CR2O7_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "Reagent",
                   },
                 ];
 
