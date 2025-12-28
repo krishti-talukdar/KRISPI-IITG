@@ -1100,11 +1100,7 @@ function ChemicalEquilibriumVirtualLab({
   );
 
   const handleEquipmentAddButton = useCallback(
-    (equipmentId: string, quickAdd?: () => void) => {
-      if (quickAdd) {
-        quickAdd();
-        return;
-      }
+    (equipmentId: string) => {
       const workbenchRect =
         typeof document !== "undefined"
           ? document
@@ -1121,6 +1117,30 @@ function ChemicalEquilibriumVirtualLab({
     },
     [handleEquipmentDrop],
   );
+
+  const handleAddButtonClick = useCallback(
+    (equipment: EquipmentDefinition, quickAdd?: () => void) => {
+      if (quickAdd) {
+        quickAdd();
+        return;
+      }
+      setAddDialogEquipment({ id: equipment.id, name: equipment.name });
+    },
+    [],
+  );
+
+  const handleEquipmentAddDialogClose = useCallback(() => {
+    setAddDialogEquipment(null);
+    setAddDialogAmount("1.0");
+  }, []);
+
+  const handleEquipmentAddDialogConfirm = useCallback(() => {
+    if (!addDialogEquipment) return;
+    handleEquipmentAddButton(addDialogEquipment.id);
+    setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
+    setTimeout(() => setToastMessage(null), 2500);
+    handleEquipmentAddDialogClose();
+  }, [addDialogAmount, addDialogEquipment, handleEquipmentAddButton, handleEquipmentAddDialogClose]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
     pushHistorySnapshot();
