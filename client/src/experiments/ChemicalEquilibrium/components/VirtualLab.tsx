@@ -809,6 +809,22 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      const shouldCaptureBasicStep1Placement =
+        experimentStarted &&
+        isDryTestExperiment &&
+        resolvedDryTestMode === "basic" &&
+        id === "test_tubes" &&
+        !testTubePlacementTracked &&
+        currentStep === 1;
+
+      if (shouldCaptureBasicStep1Placement) {
+        setTestTubePlacementTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+
       const normalizedId = stripEquipmentIdSuffix(id);
       const shouldSnapBasicGlassPlacement =
         resolvedDryTestMode === "basic" &&
@@ -953,7 +969,7 @@ function ChemicalEquilibriumVirtualLab({
         return [...prev, { id, x: snappedDrop.x, y: snappedDrop.y, chemicals: [] }];
       });
     },
-    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode],
+    [currentStep, distilledWaterAdded, experimentStarted, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode, testTubePlacementTracked, totalSteps],
   );
 
   const handleEquipmentRemove = useCallback((id: string) => {
