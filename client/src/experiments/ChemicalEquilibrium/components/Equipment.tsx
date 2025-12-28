@@ -70,6 +70,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   imageUrl,
   dryTestMode,
   isRinseActive = false,
+  observeBlinking = false,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
