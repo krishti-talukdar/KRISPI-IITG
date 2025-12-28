@@ -1626,11 +1626,26 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(
-      `Added ${volume.toFixed(1)} mL of Ammonium hydroxide to the glass container.`,
-    );
+    const shouldAdvanceAfterAmmonium =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "acid" &&
+      currentStep === 6 &&
+      !ammoniumAddedTracked;
+
+    const ammoniumToast = shouldAdvanceAfterAmmonium
+      ? "NH₄OH solution ready. Moving to the next step."
+      : `Added ${volume.toFixed(1)} mL of Ammonium hydroxide to the glass container.`;
+
+    setToastMessage(ammoniumToast);
     setTimeout(() => setToastMessage(null), 3000);
     handleAmmoniumDialogClose();
+
+    if (shouldAdvanceAfterAmmonium) {
+      setAmmoniumAddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    }
   };
 
   const handleRinseAction = () => {
