@@ -1316,9 +1316,26 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`);
+    const shouldAdvanceAfterSample =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "acid" &&
+      currentStep === 2 &&
+      !sampleAddedTracked;
+
+    setToastMessage(
+      shouldAdvanceAfterSample
+        ? "Salt sample added. Moving to the next step."
+        : `Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`,
+    );
     setTimeout(() => setToastMessage(null), 3000);
     handleSaltDialogClose();
+
+    if (shouldAdvanceAfterSample) {
+      setSampleAddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    }
   };
 
   const handleAddMnO2ToTestTube = () => {
