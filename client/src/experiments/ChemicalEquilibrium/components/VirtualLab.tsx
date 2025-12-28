@@ -2444,9 +2444,9 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              <div className="rounded-lg border border-white/70 bg-white/80 p-5 text-sm text-slate-700 shadow-xl backdrop-blur">
+              <div className="rounded-lg border border-white/70 bg-white/90 p-5 text-sm text-slate-900 shadow-xl backdrop-blur">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
-                <ul className="mt-3 space-y-2 text-sm">
+                <ul className="mt-3 space-y-2 text-sm text-slate-900">
                   <li className="flex items-start gap-2">
                     <span className="mt-[2px] h-2 w-2 rounded-full bg-pink-500" />Residues on the loop indicated chloride ions even before the oxidizing reagent was introduced.
                   </li>
