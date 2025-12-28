@@ -2412,7 +2412,11 @@ function ChemicalEquilibriumVirtualLab({
                   const normalizedEquipmentName = equipment.name.toLowerCase();
                   const hideAddButton =
                     normalizedEquipmentName.includes("test tube") ||
-                    normalizedEquipmentName.includes("bunsen");
+                    normalizedEquipmentName.includes("bunsen") ||
+                    (isDryTestExperiment &&
+                      dryTestMode === "acid" &&
+                      (normalizedEquipmentName.includes("glass rod") ||
+                        normalizedEquipmentName.includes("glass container")));
                   const showAddButton = !hideAddButton;
                   return (
                     <div
