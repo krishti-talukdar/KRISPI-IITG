@@ -12,6 +12,8 @@ import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL } from "../constants";
 const NAOH_CHEMICAL_ID = "naoh";
 const NAOH_SOLUTION_COLOR = "#bfdbfe";
 const MAX_NAOH_VOLUME_DISPLAY = 6;
+const K2CR2O7_CHEMICAL_ID = "k2cr2o7_solution";
+const K2CR2O7_SOLUTION_COLOR = "#fb923c";
 const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
 const GLASS_CONTAINER_MAX_VOLUME_ML = 12;
 const GLASS_CONTAINER_MIN_OVERLAY_HEIGHT = 16;
@@ -573,6 +575,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
         const baseOverlayColor = overrideWithWhite
           ? "rgba(255, 255, 255, 0.95)"
           : getMixedColor(overlayColorSource);
+        const hasDichromate = chemicals.some(
+          (chemical) => chemical.id === K2CR2O7_CHEMICAL_ID,
+        );
         const shouldForceNaOHBlue =
           isDryTest &&
           dryTestMode === "basic" &&
@@ -580,9 +585,11 @@ export const Equipment: React.FC<EquipmentProps> = ({
           hasNaOHSample &&
           !hasAcidSample &&
           !hasAmmoniumSample;
-        const overlayColor = shouldForceNaOHBlue
-          ? NAOH_SOLUTION_COLOR
-          : baseOverlayColor;
+        const overlayColor = hasDichromate
+          ? K2CR2O7_SOLUTION_COLOR
+          : shouldForceNaOHBlue
+            ? NAOH_SOLUTION_COLOR
+            : baseOverlayColor;
         const showOverlay =
           overlayColor !== "transparent" && totalChemicalsAmount > 0;
         const displayLabel = name.toLowerCase().includes("test tube")

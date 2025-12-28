@@ -165,6 +165,10 @@ const BA_CL_DROP_VOLUME_ML = 0.25;
 const BA_CL_CHEMICAL_ID = "bacl2_solution";
 const BA_CL_CHEMICAL_NAME = "BaCl₂ Solution";
 const BA_CL_CHEMICAL_COLOR = "#38bdf8";
+const K2CR2O7_DROP_VOLUME_ML = 0.25;
+const K2CR2O7_CHEMICAL_ID = "k2cr2o7_solution";
+const K2CR2O7_CHEMICAL_NAME = "Acidified Potassium Dichromate Solution (K₂Cr₂O₇)";
+const K2CR2O7_CHEMICAL_COLOR = "#fb923c";
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
@@ -265,6 +269,8 @@ function ChemicalEquilibriumVirtualLab({
     "No precipitate appears, so sulphate, sulphite, carbonate and sulphide ions are absent.";
   const CASE_TWO_WET_NO_PURPLE_RESULT =
     "Normally a violet/purple colour indicates sulphide; in your table no purple colour forms, so S²⁻ is absent.";
+  const CASE_THREE_WET_NO_GREEN_RESULT =
+    "a green colour would indicate sulphite, but the table shows no green colour, so SO₃²⁻ is absent.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
@@ -1196,6 +1202,9 @@ function ChemicalEquilibriumVirtualLab({
     const isSodiumNitroprussideAddition = addDialogEquipment.name
       .toLowerCase()
       .includes("nitroprusside");
+    const isDichromateAddition = addDialogEquipment.name
+      .toLowerCase()
+      .includes("dichromate");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -1246,6 +1255,55 @@ function ChemicalEquilibriumVirtualLab({
       }
     }
 
+    if (requiresDropValidation && isDichromateAddition) {
+      const dropVolume = parsedAmount * K2CR2O7_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === K2CR2O7_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === K2CR2O7_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: K2CR2O7_CHEMICAL_ID,
+                    name: K2CR2O7_CHEMICAL_NAME,
+                    color: K2CR2O7_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "Reagent",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          return updated ? next : prev;
+        });
+      }
+    }
+
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
       setSodiumNitroprussideAdded(true);
     }
@@ -1280,17 +1338,29 @@ function ChemicalEquilibriumVirtualLab({
       setCaseTwoResult(CASE_TWO_WET_NO_PURPLE_RESULT);
       setSodiumNitroprussideAdded(false);
     }
+    const hasDiluteH2SO4InTestTube = testTubeState?.chemicals.some(
+      (chemical) => chemical.id === ACID_CONFIG.h2so4.chemicalId,
+    );
+    if (
+      hasDiluteH2SO4InTestTube &&
+      caseThreeResult === DEFAULT_CASE_RESULT
+    ) {
+      setCaseThreeResult(CASE_THREE_WET_NO_GREEN_RESULT);
+    }
     setToastMessage("Observation noted for the Wet Acid Test.");
     setTimeout(() => setToastMessage(null), 2500);
   }, [
     caseOneResult,
     caseTwoResult,
+    caseThreeResult,
     isBaClAddedToTestTube,
     sodiumNitroprussideAdded,
     setCaseOneResult,
     setCaseTwoResult,
+    setCaseThreeResult,
     setSodiumNitroprussideAdded,
     setToastMessage,
+    testTubeState,
   ]);
 
   useEffect(() => {
@@ -2320,8 +2390,6 @@ function ChemicalEquilibriumVirtualLab({
     setMno2Mass(MNO2_DEFAULT_MASS);
     setMno2DialogError(null);
     setHasRinsed(false);
-    setCaseTwoResult(DEFAULT_CASE_RESULT);
-    setCaseThreeResult(DEFAULT_CASE_RESULT);
     setCaseFourResult(DEFAULT_CASE_RESULT);
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
@@ -2721,6 +2789,7 @@ function ChemicalEquilibriumVirtualLab({
               {[
                 { label: "CASE 1", result: caseOneResult },
                 { label: "CASE 2", result: caseTwoResult },
+                { label: "CASE 3", result: caseThreeResult },
               ].map((entry) => (
                 <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
@@ -3226,7 +3295,7 @@ function ChemicalEquilibriumVirtualLab({
             </DialogHeader>
 
             <div className="px-6 pb-6 pt-4 space-y-6 text-slate-900">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-3">
                 <section className="rounded-lg border border-rose-200 bg-gradient-to-br from-rose-50 to-white p-5 shadow-lg shadow-rose-100">
                   <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-rose-500">Case 1 • Initial Clues</div>
                   <p className="mt-3 text-base font-semibold leading-relaxed text-slate-900">
@@ -3249,6 +3318,17 @@ function ChemicalEquilibriumVirtualLab({
                   <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-lime-100 bg-lime-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-600">
                     Chlorine gas detected
                     <span className="h-2.5 w-2.5 rounded-full bg-lime-500" />
+                  </div>
+                </section>
+                <section className="rounded-lg border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-lg shadow-emerald-100">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-600">Case 3 • Sulphite Check</div>
+                  <p className="mt-3 text-base font-semibold text-slate-900 leading-relaxed">{caseThreeResult}</p>
+                  <p className="mt-2 text-sm text-slate-700">
+                    Dilute H₂SO₄ and acidified dichromate were combined without any green colour, showing that SO₃²⁻ is not present in the sample.
+                  </p>
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-600">
+                    Sulphite absent
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                   </div>
                 </section>
               </div>
@@ -3300,6 +3380,9 @@ function ChemicalEquilibriumVirtualLab({
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-[2px] h-2 w-2 rounded-full bg-lime-500" />MnO₂ accelerated chloride oxidation under the bunsen flame, releasing pungent greenish chlorine gas.
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-[2px] h-2 w-2 rounded-full bg-emerald-500" />No green hue formed when H₂SO₄ and acidified dichromate were mixed, confirming sulphite ions are absent.
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-[2px] h-2 w-2 rounded-full bg-sky-500" />Both cases now display a complete qualitative analysis for the acid radical dry test.
