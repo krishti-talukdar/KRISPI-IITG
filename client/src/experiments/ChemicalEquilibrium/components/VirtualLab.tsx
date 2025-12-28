@@ -1145,6 +1145,13 @@ function ChemicalEquilibriumVirtualLab({
     if (equipmentId.startsWith("concentrated-h-so")) {
       return () => handleAcidDialogOpen("h2so4");
     }
+    if (
+      isDryTestExperiment &&
+      resolvedDryTestMode === "acid" &&
+      equipmentId.startsWith("mno")
+    ) {
+      return handleMnO2DialogOpen;
+    }
     if (equipmentId.startsWith("ammonium-hydroxide-nh-oh") ||
       equipmentId.startsWith("ammonium-hydroxide")
     ) {
