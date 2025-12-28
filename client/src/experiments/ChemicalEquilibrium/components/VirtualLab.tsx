@@ -1586,6 +1586,7 @@ function ChemicalEquilibriumVirtualLab({
     }
     setIsRinsing(false);
     setShowRinseAnimation(false);
+    setTestTubePlacementTracked(false);
     onResetTimer();
     setWorkbenchResetTrigger((prev) => prev + 1);
     if (onResetExperiment) onResetExperiment();
