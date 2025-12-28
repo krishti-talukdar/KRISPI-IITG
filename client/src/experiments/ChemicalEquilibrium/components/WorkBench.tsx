@@ -8,6 +8,12 @@ const DRY_TEST_VAPOR_PUFFS = [
   { offsetX: 18, duration: "4.1s", delay: "0.2s", scale: 0.9 },
 ] as const;
 
+const MNO2_GAS_PUFFS = [
+  { offsetX: -14, duration: "3.2s", delay: "0s", scale: 0.9 },
+  { offsetX: 8, duration: "3.6s", delay: "0.3s", scale: 1.05 },
+  { offsetX: 22, duration: "4.0s", delay: "0.5s", scale: 0.8 },
+] as const;
+
 const POST_MOVE_FUME_CONFIG = [
   { delay: "0s", scale: 1 },
   { delay: "0.12s", scale: 1.2 },
