@@ -149,13 +149,13 @@ export default function ChemicalEquilibriumApp({
   };
 
   const handleCompleteStep = () => {
-    if (currentStep < experiment.stepDetails.length - 1) {
+    if (currentStep < activeStepDetails.length - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
 
   const handleNextStep = () => {
-    if (currentStep < experiment.stepDetails.length - 1) {
+    if (currentStep < activeStepDetails.length - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
