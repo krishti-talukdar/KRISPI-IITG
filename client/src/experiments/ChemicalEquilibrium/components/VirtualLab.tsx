@@ -1195,6 +1195,9 @@ function ChemicalEquilibriumVirtualLab({
     }
 
     const isBaClAddition = addDialogEquipment.name.toLowerCase().includes("bacl");
+    const isSodiumNitroprussideAddition = addDialogEquipment.name
+      .toLowerCase()
+      .includes("nitroprusside");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -1243,6 +1246,10 @@ function ChemicalEquilibriumVirtualLab({
           return updated ? next : prev;
         });
       }
+    }
+
+    if (requiresDropValidation && isSodiumNitroprussideAddition) {
+      setSodiumNitroprussideAdded(true);
     }
 
     handleEquipmentAddButton(addDialogEquipment.id);
