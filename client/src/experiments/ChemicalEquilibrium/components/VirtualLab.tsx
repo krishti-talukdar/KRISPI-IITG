@@ -456,6 +456,7 @@ function ChemicalEquilibriumVirtualLab({
   "salt-sample",
   "concentrated-h-so",
   "conc-h-cl",
+  "mno",
   "ammonium-hydroxide-nh-oh",
 ];
 
