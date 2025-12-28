@@ -74,6 +74,7 @@ type LabSnapshot = {
   caseFiveResult: string;
   caseSixResult: string;
   caseSevenResult: string;
+  sodiumNitroprussideAdded: boolean;
 };
 
 const MAX_HISTORY_ENTRIES = 25;
@@ -159,6 +160,11 @@ const DRY_TEST_BASIC_GLASS_AUTOPOSITION_IDS = [
   "glass-rod",
   "glass-container",
 ];
+
+const BA_CL_DROP_VOLUME_ML = 0.25;
+const BA_CL_CHEMICAL_ID = "bacl2_solution";
+const BA_CL_CHEMICAL_NAME = "BaCl₂ Solution";
+const BA_CL_CHEMICAL_COLOR = "#38bdf8";
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
@@ -255,6 +261,10 @@ function ChemicalEquilibriumVirtualLab({
   const [, setLocation] = useLocation();
   const CASE_TWO_BASIC_RESULT =
     "CASE 2: Strong pungent smell of NH₃ and white fumes with conc. HCl confirm the ammonium radical (NH₄⁺) in the salt.";
+  const CASE_ONE_WET_NO_PRECIPITATE_RESULT =
+    "No precipitate appears, so sulphate, sulphite, carbonate and sulphide ions are absent.";
+  const CASE_TWO_WET_NO_PURPLE_RESULT =
+    "Normally a violet/purple colour indicates sulphide; in your table no purple colour forms, so S²⁻ is absent.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
@@ -302,6 +312,7 @@ function ChemicalEquilibriumVirtualLab({
   const [caseFiveResult, setCaseFiveResult] = useState(DEFAULT_CASE_RESULT);
   const [caseSixResult, setCaseSixResult] = useState(DEFAULT_CASE_RESULT);
   const [caseSevenResult, setCaseSevenResult] = useState(DEFAULT_CASE_RESULT);
+  const [sodiumNitroprussideAdded, setSodiumNitroprussideAdded] = useState(false);
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
@@ -341,9 +352,18 @@ function ChemicalEquilibriumVirtualLab({
     : false;
   const shouldShowRinseButton = hasAmmoniumInGlassContainer || hasHClInGlassContainer;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
+  const resolvedDryTestMode = dryTestMode ?? "acid";
   const testTubeState = equipmentPositions.find((pos) => pos.id === "test_tubes");
   const mnO2Chemical = testTubeState?.chemicals.find((chemical) => chemical.id === "mno2");
   const hasMnO2InTestTube = (mnO2Chemical?.amount ?? 0) > 0;
+  const baClChemical = testTubeState?.chemicals.find((chemical) => chemical.id === BA_CL_CHEMICAL_ID);
+  const baClAmountInTestTube = baClChemical?.amount ?? 0;
+  const isBaClAddedToTestTube = baClAmountInTestTube > 0;
+  const shouldBlinkObserveButton =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "wet" &&
+    isBaClAddedToTestTube &&
+    caseOneResult === DEFAULT_CASE_RESULT;
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
       "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
@@ -386,10 +406,6 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_ACID_DROPS = 3;
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
-  const BA_CL_DROP_VOLUME_ML = 0.25;
-  const BA_CL_CHEMICAL_ID = "bacl2_solution";
-  const BA_CL_CHEMICAL_NAME = "BaCl₂ Solution";
-  const BA_CL_CHEMICAL_COLOR = "#38bdf8";
   const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
   const MIN_GLASS_HCL_VOLUME = 1;
   const MAX_GLASS_HCL_VOLUME = 6;
@@ -424,7 +440,6 @@ function ChemicalEquilibriumVirtualLab({
   const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const saltHeatingIntervalRef = useRef<number | null>(null);
-  const resolvedDryTestMode = dryTestMode ?? "acid";
   const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
   const showMeasuredPh = !isAcidDryTest && resolvedDryTestMode !== "wet";
 
@@ -897,6 +912,7 @@ function ChemicalEquilibriumVirtualLab({
     caseFiveResult,
     caseSixResult,
     caseSevenResult,
+    sodiumNitroprussideAdded,
   });
 
   const DRY_TEST_BOTTLE_IDS = [
@@ -1177,6 +1193,9 @@ function ChemicalEquilibriumVirtualLab({
     }
 
     const isBaClAddition = addDialogEquipment.name.toLowerCase().includes("bacl");
+    const isSodiumNitroprussideAddition = addDialogEquipment.name
+      .toLowerCase()
+      .includes("nitroprusside");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -1227,6 +1246,10 @@ function ChemicalEquilibriumVirtualLab({
       }
     }
 
+    if (requiresDropValidation && isSodiumNitroprussideAddition) {
+      setSodiumNitroprussideAdded(true);
+    }
+
     handleEquipmentAddButton(addDialogEquipment.id);
     setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
     setTimeout(() => setToastMessage(null), 2500);
@@ -1239,6 +1262,7 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment,
     resolvedDryTestMode,
     setEquipmentPositions,
+    setSodiumNitroprussideAdded,
   ]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
@@ -1249,9 +1273,25 @@ function ChemicalEquilibriumVirtualLab({
   }, [pushHistorySnapshot]);
 
   const handleObserveWetTest = useCallback(() => {
+    if (isBaClAddedToTestTube && caseOneResult === DEFAULT_CASE_RESULT) {
+      setCaseOneResult(CASE_ONE_WET_NO_PRECIPITATE_RESULT);
+    }
+    if (sodiumNitroprussideAdded && caseTwoResult === DEFAULT_CASE_RESULT) {
+      setCaseTwoResult(CASE_TWO_WET_NO_PURPLE_RESULT);
+      setSodiumNitroprussideAdded(false);
+    }
     setToastMessage("Observation noted for the Wet Acid Test.");
     setTimeout(() => setToastMessage(null), 2500);
-  }, []);
+  }, [
+    caseOneResult,
+    caseTwoResult,
+    isBaClAddedToTestTube,
+    sodiumNitroprussideAdded,
+    setCaseOneResult,
+    setCaseTwoResult,
+    setSodiumNitroprussideAdded,
+    setToastMessage,
+  ]);
 
   useEffect(() => {
     if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
@@ -2251,6 +2291,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
+    setSodiumNitroprussideAdded(false);
     setShowCase2ResultsModal(false);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
@@ -2285,6 +2326,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
+    setSodiumNitroprussideAdded(false);
     setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
@@ -2336,6 +2378,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult(lastSnapshot.caseFiveResult);
     setCaseSixResult(lastSnapshot.caseSixResult);
     setCaseSevenResult(lastSnapshot.caseSevenResult);
+    setSodiumNitroprussideAdded(lastSnapshot.sodiumNitroprussideAdded);
 
     setToastMessage("Reverted the last operation.");
     setTimeout(() => setToastMessage(null), 2500);
@@ -2412,7 +2455,11 @@ function ChemicalEquilibriumVirtualLab({
                   const normalizedEquipmentName = equipment.name.toLowerCase();
                   const hideAddButton =
                     normalizedEquipmentName.includes("test tube") ||
-                    normalizedEquipmentName.includes("bunsen");
+                    normalizedEquipmentName.includes("bunsen") ||
+                    (isDryTestExperiment &&
+                      (dryTestMode === "acid" || dryTestMode === "basic") &&
+                      (normalizedEquipmentName.includes("glass rod") ||
+                        normalizedEquipmentName.includes("glass container")));
                   const showAddButton = !hideAddButton;
                   return (
                     <div
@@ -2620,6 +2667,7 @@ function ChemicalEquilibriumVirtualLab({
                         dryTestMode={resolvedDryTestMode}
                         isRinseActive={pos.id === glassRodEquipmentId && showRinseAnimation}
                         onObserve={isDryTestExperiment && resolvedDryTestMode === "wet" ? handleObserveWetTest : undefined}
+                        observeButtonBlinking={shouldBlinkObserveButton && equipment.id === "test_tubes"}
                         imageUrl={equipment.imageUrl}
                       />
                     ) : null;
@@ -2673,11 +2721,6 @@ function ChemicalEquilibriumVirtualLab({
               {[
                 { label: "CASE 1", result: caseOneResult },
                 { label: "CASE 2", result: caseTwoResult },
-                { label: "CASE 3", result: caseThreeResult },
-                { label: "CASE 4", result: caseFourResult },
-                { label: "CASE 5", result: caseFiveResult },
-                { label: "CASE 6", result: caseSixResult },
-                { label: "CASE 7", result: caseSevenResult },
               ].map((entry) => (
                 <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
