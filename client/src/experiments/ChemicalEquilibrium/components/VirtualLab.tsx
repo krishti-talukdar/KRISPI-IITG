@@ -2463,10 +2463,19 @@ function ChemicalEquilibriumVirtualLab({
             <div className="flex flex-col gap-3 border-y border-white/40 px-6 py-4 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs text-slate-500 uppercase tracking-[0.4em]">Explore more</p>
               <div className="flex flex-wrap gap-2">
-                <Button variant="ghost" size="sm" onClick={handleReturnToExperiments}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleReturnToExperiments}
+                  className="bg-white text-slate-800 border border-slate-200 shadow-sm hover:bg-slate-50"
+                >
                   Return to Experiments
                 </Button>
-                <Button size="sm" onClick={handleLaunchQuiz}>
+                <Button
+                  size="sm"
+                  onClick={handleLaunchQuiz}
+                  className="bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-200 hover:opacity-90"
+                >
                   QUIZ
                 </Button>
               </div>
