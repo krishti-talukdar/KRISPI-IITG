@@ -923,6 +923,18 @@ function ChemicalEquilibriumVirtualLab({
     setSaltDialogError(null);
   };
 
+  const handleMnO2DialogOpen = () => {
+    setMno2Mass(MNO2_DEFAULT_MASS);
+    setMno2DialogError(null);
+    setMno2DialogOpen(true);
+  };
+
+  const handleMnO2DialogClose = () => {
+    setMno2DialogOpen(false);
+    setMno2Mass(MNO2_DEFAULT_MASS);
+    setMno2DialogError(null);
+  };
+
   const handleAcidDialogOpen = (target: AcidTarget = "h2so4") => {
     setAcidVolume("4");
     setAcidDialogError(null);
