@@ -1428,12 +1428,21 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    const shouldAdvanceAfterSample =
+    const shouldAdvanceAfterFirstSample =
       experimentStarted &&
       isDryTestExperiment &&
       resolvedDryTestMode === "acid" &&
       currentStep === 2 &&
       !sampleAddedTracked;
+    const shouldAdvanceAfterSecondSample =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "acid" &&
+      currentStep === 9 &&
+      !secondSampleAddedTracked;
+
+    const shouldAdvanceAfterSample =
+      shouldAdvanceAfterFirstSample || shouldAdvanceAfterSecondSample;
 
     setToastMessage(
       shouldAdvanceAfterSample
@@ -1444,7 +1453,11 @@ function ChemicalEquilibriumVirtualLab({
     handleSaltDialogClose();
 
     if (shouldAdvanceAfterSample) {
-      setSampleAddedTracked(true);
+      if (shouldAdvanceAfterFirstSample) {
+        setSampleAddedTracked(true);
+      } else {
+        setSecondSampleAddedTracked(true);
+      }
       onStepComplete();
       setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
     }
