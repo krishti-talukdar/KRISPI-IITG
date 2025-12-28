@@ -342,7 +342,7 @@ export default function ChemicalEquilibriumApp({
                           </Button>
                           <div className="flex items-center space-x-2 px-2">
                             <span className="text-sm text-gray-600">
-                              {currentStep + 1} / {experiment.stepDetails.length}
+                              {currentStep + 1} / {activeStepDetails.length}
                             </span>
                             <span className="inline-flex items-center px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">
                               <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse mr-1"></div>
