@@ -328,7 +328,9 @@ function ChemicalEquilibriumVirtualLab({
   const instructionMessage = isDryTestExperiment
     ? dryTestInstructionMap[dryTestMode]
     : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
-  const resultsReady = caseTwoResult !== DEFAULT_CASE_RESULT;
+  const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
+  const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
+  const resultsReady = caseOneReady && caseTwoReady;
   const isDryTestWorkbench =
     normalizedTitle.includes("dry tests for acid radicals") ||
     normalizedTitle.includes("dry tests for basic radicals") ||
@@ -1608,8 +1610,17 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleViewResults = () => {
-    setToastMessage("Results & analysis will appear after completing the steps.");
-    setTimeout(() => setToastMessage(null), 2500);
+    if (!resultsReady) {
+      const missing = !caseOneReady
+        ? "Case 1 observations"
+        : !caseTwoReady
+          ? "Case 2 observations"
+          : "observations";
+      setToastMessage(`Complete ${missing} before viewing the analysis.`);
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+    setShowCase2ResultsModal(true);
   };
 
   return (
@@ -2346,49 +2357,71 @@ function ChemicalEquilibriumVirtualLab({
 
       {isDryTestExperiment && (
         <Dialog open={showCase2ResultsModal} onOpenChange={setShowCase2ResultsModal}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader className="bg-gradient-to-r from-emerald-600 to-lime-500 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
-              <DialogTitle className="text-2xl font-bold text-white">Results &amp; Analysis</DialogTitle>
-              <DialogDescription className="text-emerald-100">
-                Chloride confirmation from the Greenish-yellow gas observation.
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
+              <DialogTitle className="text-2xl font-bold text-white">Experiment Results &amp; Analysis</DialogTitle>
+              <DialogDescription className="text-white/80">
+                Complete summary of Case 1 and Case 2 observations for the Salt Analysis dry acid radicals test.
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-6 pt-4">
+            <div className="px-6 pb-6 pt-4 space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="p-4 border-l-4 border-emerald-400 bg-emerald-50 rounded-lg shadow-sm">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-600">
-                    Case 2 Summary
-                  </div>
-                  <p className="mt-2 text-sm text-gray-700">{caseTwoResult}</p>
-                  <p className="mt-3 text-xs text-gray-500">
-                    The greenish-yellow gas evolved while MnO₂ and the cooled salt sample were heated over the bunsen flame.
+                <section className="rounded-lg border border-rose-100 bg-white p-5 shadow-sm">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-rose-500">Case 1 • Initial Clues</div>
+                  <p className="mt-3 text-sm font-medium text-gray-700 leading-relaxed">
+                    {caseOneResult}
                   </p>
-                  <p className="text-xs text-gray-500">
-                    Chlorine evolution is a classic confirmatory clue for chloride radicals under oxidizing, acidic conditions.
+                  <p className="mt-2 text-xs text-gray-500">
+                    White residues and a faint halide scent on the loop suggested the presence of chloride radicals before any heating with MnO₂.
                   </p>
-                </div>
-                <div className="p-4 border border-emerald-200 rounded-lg bg-white shadow-sm">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-lime-600">
-                    Gas evidence
-                  </div>
-                  <ul className="mt-3 space-y-2 text-sm text-gray-700 list-disc list-inside">
-                    <li>MnO₂ oxidizes chloride ions in the presence of acid, releasing Cl₂ gas.</li>
-                    <li>Greenish-yellow fumes, accompanied by a pungent odor, match chlorine's signature.</li>
-                    <li>Recording the case result saves this observation for analysis and comparison with known radicals.</li>
-                  </ul>
-                </div>
+                </section>
+                <section className="rounded-lg border border-lime-300 bg-lime-50 p-5 shadow-sm">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-lime-600">Case 2 • Confirmatory Gas</div>
+                  <p className="mt-3 text-sm font-medium text-gray-700 leading-relaxed">{caseTwoResult}</p>
+                  <p className="mt-2 text-xs text-gray-500">
+                    The greenish-yellow fumes released during heating confirm chlorine evolution from MnO₂-oxidized chloride ions.
+                  </p>
+                </section>
               </div>
-              <div className="bg-gradient-to-br from-emerald-50 to-lime-50 border border-emerald-200 rounded-lg p-5 shadow-inner">
-                <h5 className="text-base font-semibold text-emerald-800 mb-2">Interpretation</h5>
-                <p className="text-sm text-gray-700">
-                  Case 2 automatically logs this conclusion once the bunsen burner is heating and MnO₂ is in the test tube. The gas evolution ties chloride to its halogen, reaffirming the dry test's qualitative analysis.
+
+              <div className="rounded-lg border border-indigo-100 bg-indigo-50 p-5 text-sm text-indigo-700 shadow-inner">
+                <div className="font-semibold text-indigo-800">Case Comparison</div>
+                <p className="mt-2 leading-relaxed">
+                  Case 1 establishes the likelihood of chloride radicals while Case 2 captures the oxidizing reaction that releases chlorine gas. Together they validate chloride ions in the salt, matching the classic dry test evidence for acid radicals.
                 </p>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="rounded-lg border border-gray-100 bg-white p-4">
+                  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
+                    <span>Case 1 Indicator</span>
+                    <span>Chloride residue</span>
+                  </div>
+                  <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-300 relative">
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Loop residue</span>
+                  </div>
+                </div>
+                <div className="rounded-lg border border-gray-100 bg-white p-4">
+                  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
+                    <span>Case 2 Indicator</span>
+                    <span>Cl₂ gas</span>
+                  </div>
+                  <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-500 relative">
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Greenish-yellow plume</span>
+                  </div>
+                </div>
+                <div className="rounded-lg border border-gray-100 bg-white p-4">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">Final Insight</div>
+                  <p className="mt-2 text-sm text-slate-700">
+                    Saving both Case 1 and Case 2 results ensures the entire dry test logic is preserved for reporting or review.
+                  </p>
+                </div>
               </div>
             </div>
 
-            <DialogFooter className="pt-6">
-              <div className="w-full flex justify-end">
+            <DialogFooter className="px-6 pb-6">
+              <div className="flex justify-end w-full">
                 <Button variant="outline" size="sm" onClick={() => setShowCase2ResultsModal(false)}>
                   Close Analysis
                 </Button>
