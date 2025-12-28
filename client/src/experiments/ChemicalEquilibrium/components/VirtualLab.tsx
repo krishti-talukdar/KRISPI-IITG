@@ -2367,7 +2367,7 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="px-6 pb-6 pt-4 space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
-                <section className="rounded-lg border border-rose-100 bg-white p-5 shadow-sm">
+                <section className="rounded-lg border border-rose-200 bg-gradient-to-br from-rose-50 to-white p-5 shadow-lg shadow-rose-100">
                   <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-rose-500">Case 1 • Initial Clues</div>
                   <p className="mt-3 text-sm font-medium text-gray-700 leading-relaxed">
                     {caseOneResult}
@@ -2375,53 +2375,82 @@ function ChemicalEquilibriumVirtualLab({
                   <p className="mt-2 text-xs text-gray-500">
                     White residues and a faint halide scent on the loop suggested the presence of chloride radicals before any heating with MnO₂.
                   </p>
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-rose-100 bg-rose-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-rose-600">
+                    Residue detected
+                    <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                  </div>
                 </section>
-                <section className="rounded-lg border border-lime-300 bg-lime-50 p-5 shadow-sm">
+                <section className="rounded-lg border border-lime-200 bg-gradient-to-br from-lime-50 to-white p-5 shadow-lg shadow-lime-100">
                   <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-lime-600">Case 2 • Confirmatory Gas</div>
                   <p className="mt-3 text-sm font-medium text-gray-700 leading-relaxed">{caseTwoResult}</p>
                   <p className="mt-2 text-xs text-gray-500">
                     The greenish-yellow fumes released during heating confirm chlorine evolution from MnO₂-oxidized chloride ions.
                   </p>
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-lime-100 bg-lime-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-600">
+                    Chlorine gas detected
+                    <span className="h-2.5 w-2.5 rounded-full bg-lime-500" />
+                  </div>
                 </section>
               </div>
 
-              <div className="rounded-lg border border-indigo-100 bg-indigo-50 p-5 text-sm text-indigo-700 shadow-inner">
+              <div className="rounded-lg border border-indigo-100 bg-gradient-to-br from-sky-50 via-indigo-50 to-white p-5 text-sm text-indigo-700 shadow-inner">
                 <div className="font-semibold text-indigo-800">Case Comparison</div>
                 <p className="mt-2 leading-relaxed">
                   Case 1 establishes the likelihood of chloride radicals while Case 2 captures the oxidizing reaction that releases chlorine gas. Together they validate chloride ions in the salt, matching the classic dry test evidence for acid radicals.
                 </p>
+                <div className="mt-3 flex flex-wrap gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-indigo-500">
+                  <span className="rounded-full bg-indigo-100 px-3 py-1">Residue trace</span>
+                  <span className="rounded-full bg-indigo-100 px-3 py-1">Gas evolution</span>
+                  <span className="rounded-full bg-indigo-100 px-3 py-1">Qualitative proof</span>
+                </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <div className="rounded-lg border border-gray-100 bg-white p-4">
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                   <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
                     <span>Case 1 Indicator</span>
                     <span>Chloride residue</span>
                   </div>
                   <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-300 relative">
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Loop residue</span>
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Loop film</span>
                   </div>
                 </div>
-                <div className="rounded-lg border border-gray-100 bg-white p-4">
+                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                   <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
                     <span>Case 2 Indicator</span>
-                    <span>Cl₂ gas</span>
+                    <span>Greenish-yellow plume</span>
                   </div>
                   <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-500 relative">
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Greenish-yellow plume</span>
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Chlorine</span>
                   </div>
                 </div>
-                <div className="rounded-lg border border-gray-100 bg-white p-4">
+                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">Final Insight</div>
                   <p className="mt-2 text-sm text-slate-700">
-                    Saving both Case 1 and Case 2 results ensures the entire dry test logic is preserved for reporting or review.
+                    Saving both case results preserves the entire dry test narrative so you can compare residues, odors, and gas evolution in reported conclusions.
                   </p>
                 </div>
+              </div>
+
+              <div className="rounded-lg border border-white/70 bg-white/80 p-5 text-sm text-slate-700 shadow-xl backdrop-blur">
+                <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
+                <ul className="mt-3 space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="mt-[2px] h-2 w-2 rounded-full bg-pink-500" />Residues on the loop indicated chloride ions even before the oxidizing reagent was introduced.
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-[2px] h-2 w-2 rounded-full bg-lime-500" />MnO₂ accelerated chloride oxidation under the bunsen flame, releasing pungent greenish chlorine gas.
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-[2px] h-2 w-2 rounded-full bg-sky-500" />Both cases now display a complete qualitative analysis for the acid radical dry test.
+                  </li>
+                </ul>
               </div>
             </div>
 
             <DialogFooter className="px-6 pb-6">
-              <div className="flex justify-end w-full">
+              <div className="flex justify-between w-full items-center text-xs text-gray-500">
+                <span>Generated after documenting both Case 1 and Case 2.</span>
                 <Button variant="outline" size="sm" onClick={() => setShowCase2ResultsModal(false)}>
                   Close Analysis
                 </Button>
