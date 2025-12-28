@@ -1205,6 +1205,58 @@ function ChemicalEquilibriumVirtualLab({
     handleSaltDialogClose();
   };
 
+  const handleAddMnO2ToTestTube = () => {
+    const mass = parseFloat(mno2Mass);
+    if (Number.isNaN(mass) || mass <= 0) {
+      setMno2DialogError("Enter a valid amount.");
+      return;
+    }
+
+    if (mass < MIN_MNO2_MASS || mass > MAX_MNO2_MASS) {
+      setMno2DialogError(`Use between ${MNO2_RANGE_LABEL}.`);
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
+      setMno2DialogError("Place the test tube on the workbench first.");
+      return;
+    }
+
+    pushHistorySnapshot();
+
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find((c) => c.id === "mno2");
+        const updatedChemicals = existing
+          ? pos.chemicals.map((c) =>
+              c.id === "mno2"
+                ? { ...c, amount: (c.amount ?? 0) + mass }
+                : c,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: "mno2",
+                name: "MnO₂",
+                color: "#a855f7",
+                amount: mass,
+                concentration: "Dry",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${mass.toFixed(2)} g of MnO₂ to the test tube.`);
+    setTimeout(() => setToastMessage(null), 3000);
+    handleMnO2DialogClose();
+  };
+
   const handleAddAcidToTestTube = () => {
     const drops = Number(acidVolume);
     if (Number.isNaN(drops) || !Number.isInteger(drops) || drops <= 0) {
