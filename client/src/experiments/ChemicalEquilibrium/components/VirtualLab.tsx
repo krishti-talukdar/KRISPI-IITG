@@ -2089,6 +2089,53 @@ function ChemicalEquilibriumVirtualLab({
         </Dialog>
       )}
 
+      {isDryTestExperiment && (
+        <Dialog
+          open={mno2DialogOpen}
+          onOpenChange={(open) => !open && handleMnO2DialogClose()}
+        >
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Mass</DialogTitle>
+              <DialogDescription>
+                Enter the mass of MnO₂ to add to the test tube.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Mass (g)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+                type="number"
+                min={MIN_MNO2_MASS}
+                max={MAX_MNO2_MASS}
+                step="0.1"
+                value={mno2Mass}
+                onChange={(event) => setMno2Mass(event.target.value)}
+                placeholder="0.2"
+              />
+              <p className="text-[11px] text-slate-500">Recommended range: {MNO2_RANGE_LABEL}.</p>
+              {mno2DialogError && (
+                <p className="text-[11px] text-red-500">{mno2DialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleMnO2DialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddMnO2ToTestTube}>
+                  Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
       {isDryTestExperiment && resolvedDryTestMode === "basic" && (
         <Dialog open={naohDialogOpen} onOpenChange={(open) => !open && handleNaOHDialogClose()}>
           <DialogContent className="max-w-sm space-y-4">
