@@ -509,6 +509,46 @@ function ChemicalEquilibriumVirtualLab({
     if (
       !experimentStarted ||
       !isDryTestExperiment ||
+      resolvedDryTestMode !== "basic"
+    ) {
+      return;
+    }
+
+    const hasPlacedTestTube = equipmentPositions.some(
+      (pos) => pos.id === "test_tubes",
+    );
+
+    if (
+      hasPlacedTestTube &&
+      !testTubePlacementTracked &&
+      currentStep === 1
+    ) {
+      setTestTubePlacementTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!hasPlacedTestTube && testTubePlacementTracked) {
+      setTestTubePlacementTracked(false);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    testTubePlacementTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
       resolvedDryTestMode !== "acid"
     ) {
       return;
