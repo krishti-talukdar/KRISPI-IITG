@@ -297,7 +297,7 @@ function ChemicalEquilibriumVirtualLab({
   const isPHExperiment = experimentTitle === PHHClExperiment.title;
   const isDryTestExperiment = experimentTitle === ChemicalEquilibriumData.title;
   const usePhStyleLayout = isPHExperiment || isDryTestExperiment;
-  const totalGuidedSteps = experiment.stepDetails.length;
+  const totalGuidedSteps = allSteps.length;
   const dryTestEquipmentNames = dryTestEquipment ?? experiment.equipment;
   const chemicalsList = isPHExperiment
     ? PH_HCL_CHEMICALS
