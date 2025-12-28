@@ -2581,14 +2581,20 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="text-sm font-bold mb-2 text-slate-900">Cases</div>
             <div className="space-y-2">
-              <div className="p-3 border rounded bg-white text-slate-900">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">CASE 1</div>
-                <div className="mt-1 text-sm text-slate-800">{caseOneResult}</div>
-              </div>
-              <div className="p-3 border rounded bg-white text-slate-900">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">CASE 2</div>
-                <div className="mt-1 text-sm text-slate-800">{caseTwoResult}</div>
-              </div>
+              {[
+                { label: "CASE 1", result: caseOneResult },
+                { label: "CASE 2", result: caseTwoResult },
+                { label: "CASE 3", result: caseThreeResult },
+                { label: "CASE 4", result: caseFourResult },
+                { label: "CASE 5", result: caseFiveResult },
+                { label: "CASE 6", result: caseSixResult },
+                { label: "CASE 7", result: caseSevenResult },
+              ].map((entry) => (
+                <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
+                  <div className="mt-1 text-sm text-slate-800">{entry.result}</div>
+                </div>
+              ))}
             </div>
             {caseOneResult !== DEFAULT_CASE_RESULT && (
               <button
