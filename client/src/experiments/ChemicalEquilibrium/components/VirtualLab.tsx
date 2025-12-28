@@ -435,7 +435,6 @@ function ChemicalEquilibriumVirtualLab({
   const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const saltHeatingIntervalRef = useRef<number | null>(null);
-  const resolvedDryTestMode = dryTestMode ?? "acid";
   const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
   const showMeasuredPh = !isAcidDryTest && resolvedDryTestMode !== "wet";
 
