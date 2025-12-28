@@ -168,6 +168,12 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         top: testTubePosition.y - 110,
       }
     : null;
+  const hasMnO2InTestTube =
+    Boolean(
+      testTubePosition?.chemicals.some(
+        (chemical) => chemical.id === "mno2" && (chemical.amount ?? 0) > 0,
+      ),
+    );
   const [heatButtonCoords, setHeatButtonCoords] = useState<{ left: number; top: number } | null>(null);
   const [flameAnchorCoords, setFlameAnchorCoords] = useState<{ left: number; top: number } | null>(null);
   const defaultFlameCoords = bunsenPosition
