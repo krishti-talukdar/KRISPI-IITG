@@ -2807,7 +2807,7 @@ function ChemicalEquilibriumVirtualLab({
                 step="0.1"
                 value={addDialogAmount}
                 onChange={(event) => setAddDialogAmount(event.target.value)}
-                placeholder="1.0"
+                placeholder="3.0"
               />
               <p className="text-[11px] text-slate-500">
                 Equipment will be placed near the center of the workbench.
