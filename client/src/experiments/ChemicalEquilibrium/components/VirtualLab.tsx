@@ -34,6 +34,7 @@ import type {
   DryTestMode,
   RodMoveAnimationConfig,
 } from "../types";
+import { useLocation } from "wouter";
 
 interface ChemicalEquilibriumVirtualLabProps {
   step: ExperimentStep;
