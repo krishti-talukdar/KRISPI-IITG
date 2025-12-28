@@ -2192,6 +2192,11 @@ function ChemicalEquilibriumVirtualLab({
     setMno2DialogError(null);
     setHasRinsed(false);
     setCaseTwoResult(DEFAULT_CASE_RESULT);
+    setCaseThreeResult(DEFAULT_CASE_RESULT);
+    setCaseFourResult(DEFAULT_CASE_RESULT);
+    setCaseFiveResult(DEFAULT_CASE_RESULT);
+    setCaseSixResult(DEFAULT_CASE_RESULT);
+    setCaseSevenResult(DEFAULT_CASE_RESULT);
     setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
