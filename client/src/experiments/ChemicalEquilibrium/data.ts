@@ -22,7 +22,6 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     "Glass container",
     "Ammonium hydroxide (NH₄OH)",
     "MnO₂",
-    "K₂Cr₂O₇",
   ],
   stepDetails: [
     {

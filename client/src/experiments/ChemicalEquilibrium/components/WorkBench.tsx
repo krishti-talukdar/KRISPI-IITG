@@ -8,6 +8,12 @@ const DRY_TEST_VAPOR_PUFFS = [
   { offsetX: 18, duration: "4.1s", delay: "0.2s", scale: 0.9 },
 ] as const;
 
+const MNO2_GAS_PUFFS = [
+  { offsetX: -14, duration: "3.2s", delay: "0s", scale: 0.9 },
+  { offsetX: 8, duration: "3.6s", delay: "0.3s", scale: 1.05 },
+  { offsetX: 22, duration: "4.0s", delay: "0.5s", scale: 0.8 },
+] as const;
+
 const POST_MOVE_FUME_CONFIG = [
   { delay: "0s", scale: 1 },
   { delay: "0.12s", scale: 1.2 },
@@ -162,6 +168,12 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         top: testTubePosition.y - 110,
       }
     : null;
+  const hasMnO2InTestTube =
+    Boolean(
+      testTubePosition?.chemicals?.some(
+        (chemical) => chemical.id === "mno2" && (chemical.amount ?? 0) > 0,
+      ),
+    );
   const [heatButtonCoords, setHeatButtonCoords] = useState<{ left: number; top: number } | null>(null);
   const [flameAnchorCoords, setFlameAnchorCoords] = useState<{ left: number; top: number } | null>(null);
   const defaultFlameCoords = bunsenPosition
@@ -633,6 +645,30 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   ))}
                 </div>
               )}
+              {isBunsenHeating && hasMnO2InTestTube && vaporAnchorCoords && (
+                <div
+                  className="mno2-gas-cloud"
+                  style={{
+                    "--mno2-gas-left": `${vaporAnchorCoords.left}px`,
+                    "--mno2-gas-top": `${vaporAnchorCoords.top}px`,
+                  } as React.CSSProperties}
+                  role="status"
+                  aria-label="Greenish-yellow gas rising from MnO₂ heated in the test tube"
+                >
+                  {MNO2_GAS_PUFFS.map((puff, index) => (
+                    <span
+                      key={`mno2-${index}-${puff.delay}`}
+                      className="mno2-gas-puff"
+                      style={{
+                        "--mno2-offset-x": `${puff.offsetX}px`,
+                        "--mno2-duration": puff.duration,
+                        "--mno2-delay": puff.delay,
+                        "--mno2-scale": puff.scale,
+                      } as React.CSSProperties}
+                    />
+                  ))}
+                </div>
+              )}
               {heatButtonCoords && (
                 <div
                   className="heat-control-panel"
@@ -808,6 +844,31 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   animation: dryTestVaporRise var(--vap-duration, 3.5s) var(--vap-delay, 0s) infinite;
   opacity: 0;
 }
+.mno2-gas-cloud {
+  position: absolute;
+  pointer-events: none;
+  width: 160px;
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  left: var(--mno2-gas-left, 0);
+  top: var(--mno2-gas-top, 0);
+  transform: translate(-50%, -100%);
+}
+.mno2-gas-puff {
+  position: absolute;
+  bottom: 0;
+  width: 26px;
+  height: 30px;
+  background: linear-gradient(180deg, rgba(132, 204, 22, 0.85), rgba(250, 204, 21, 0.4));
+  border-radius: 50% 50% 60% 60%;
+  box-shadow: 0 12px 30px rgba(132, 204, 22, 0.6);
+  filter: blur(1px);
+  transform: translate(var(--mno2-offset-x, 0), 0) scale(var(--mno2-scale, 1));
+  animation: mno2GasDrift var(--mno2-duration, 3.4s) var(--mno2-delay, 0s) infinite;
+  opacity: 0;
+}
 @keyframes dryTestVaporRise {
   0% {
     opacity: 0;
@@ -823,6 +884,24 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   100% {
     opacity: 0;
     transform: translate(calc(var(--vap-offset-x, 0) + 10px), -120px) scale(calc(var(--vap-scale, 1) * 1.4));
+  }
+}
+@keyframes mno2GasDrift {
+  0% {
+    opacity: 0;
+    transform: translate(var(--mno2-offset-x, 0), 0) scale(var(--mno2-scale, 1));
+  }
+  25% {
+    opacity: 0.38;
+    transform: translate(calc(var(--mno2-offset-x, 0) + 2px), -40px) scale(calc(var(--mno2-scale, 1) * 1.05));
+  }
+  60% {
+    opacity: 0.9;
+    transform: translate(calc(var(--mno2-offset-x, 0) + 8px), -80px) scale(calc(var(--mno2-scale, 1) * 1.2));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--mno2-offset-x, 0) + 14px), -140px) scale(calc(var(--mno2-scale, 1) * 1.3));
   }
 }
 @keyframes bunsenFlame {

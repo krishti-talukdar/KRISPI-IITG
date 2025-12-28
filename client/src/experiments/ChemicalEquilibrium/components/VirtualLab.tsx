@@ -34,6 +34,7 @@ import type {
   DryTestMode,
   RodMoveAnimationConfig,
 } from "../types";
+import { useLocation } from "wouter";
 
 interface ChemicalEquilibriumVirtualLabProps {
   step: ExperimentStep;
@@ -246,6 +247,7 @@ function ChemicalEquilibriumVirtualLab({
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
   const DEFAULT_CASE_RESULT = "No result yet";
+  const [, setLocation] = useLocation();
   const CASE_TWO_BASIC_RESULT =
     "CASE 2: Strong pungent smell of NH₃ and white fumes with conc. HCl confirm the ammonium radical (NH₄⁺) in the salt.";
   const [equipmentPositions, setEquipmentPositions] = useState<
@@ -273,6 +275,9 @@ function ChemicalEquilibriumVirtualLab({
   }, [setRodMoveAnimationConfig]);
   const [caseOneResult, setCaseOneResult] = useState(DEFAULT_CASE_RESULT);
   const [caseTwoResult, setCaseTwoResult] = useState(DEFAULT_CASE_RESULT);
+  const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
+  const MNO2_CASE_TWO_RESULT =
+    "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const rinseTimerRef = useRef<number | null>(null);
 
@@ -308,6 +313,9 @@ function ChemicalEquilibriumVirtualLab({
     : false;
   const shouldShowRinseButton = hasAmmoniumInGlassContainer || hasHClInGlassContainer;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
+  const testTubeState = equipmentPositions.find((pos) => pos.id === "test_tubes");
+  const mnO2Chemical = testTubeState?.chemicals.find((chemical) => chemical.id === "mno2");
+  const hasMnO2InTestTube = (mnO2Chemical?.amount ?? 0) > 0;
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
       "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
@@ -322,6 +330,9 @@ function ChemicalEquilibriumVirtualLab({
   const instructionMessage = isDryTestExperiment
     ? dryTestInstructionMap[dryTestMode]
     : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
+  const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
+  const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
+  const resultsReady = caseOneReady && caseTwoReady;
   const isDryTestWorkbench =
     normalizedTitle.includes("dry tests for acid radicals") ||
     normalizedTitle.includes("dry tests for basic radicals") ||
@@ -329,6 +340,10 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_SALT_MASS = 3;
   const MAX_SALT_MASS = 5;
   const SALT_RANGE_LABEL = "3g-5g";
+  const MIN_MNO2_MASS = 1.0;
+  const MAX_MNO2_MASS = 3.0;
+  const MNO2_RANGE_LABEL = "1.0 g - 3.0 g";
+  const MNO2_DEFAULT_MASS = "1.5";
   const SALT_HEATING_STEP = 0.35;
   const SALT_HEATING_MIN_REMAINING = 0.5;
   const SALT_HEATING_INTERVAL_MS = 1200;
@@ -353,6 +368,9 @@ function ChemicalEquilibriumVirtualLab({
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
   const [saltMass, setSaltMass] = useState("2.0");
   const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
+  const [mno2DialogOpen, setMno2DialogOpen] = useState(false);
+  const [mno2Mass, setMno2Mass] = useState(MNO2_DEFAULT_MASS);
+  const [mno2DialogError, setMno2DialogError] = useState<string | null>(null);
   const [naohDialogOpen, setNaohDialogOpen] = useState(false);
   const [naohVolume, setNaohVolume] = useState("2.5");
   const [naohDialogError, setNaohDialogError] = useState<string | null>(null);
@@ -449,6 +467,7 @@ function ChemicalEquilibriumVirtualLab({
   "salt-sample",
   "concentrated-h-so",
   "conc-h-cl",
+  "mno",
   "ammonium-hydroxide-nh-oh",
 ];
 
@@ -496,7 +515,7 @@ function ChemicalEquilibriumVirtualLab({
     (id: string, x: number, y: number) => {
       if (isDryTestBottleEquipment(id)) {
         setToastMessage(
-          "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, Conc. HCl, and NH₄OH to load the test tube.",
+          "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, Conc. HCl, MnO₂, and NH₄OH to load the test tube.",
         );
         setTimeout(() => setToastMessage(null), 2500);
         return;
@@ -915,6 +934,18 @@ function ChemicalEquilibriumVirtualLab({
     setSaltDialogError(null);
   };
 
+  const handleMnO2DialogOpen = () => {
+    setMno2Mass(MNO2_DEFAULT_MASS);
+    setMno2DialogError(null);
+    setMno2DialogOpen(true);
+  };
+
+  const handleMnO2DialogClose = () => {
+    setMno2DialogOpen(false);
+    setMno2Mass(MNO2_DEFAULT_MASS);
+    setMno2DialogError(null);
+  };
+
   const handleAcidDialogOpen = (target: AcidTarget = "h2so4") => {
     setAcidVolume("4");
     setAcidDialogError(null);
@@ -954,6 +985,22 @@ function ChemicalEquilibriumVirtualLab({
     },
     [experiment.id, resolvedDryTestMode],
   );
+
+  useEffect(() => {
+    if (
+      isDryTestExperiment &&
+      resolvedDryTestMode === "acid" &&
+      isWorkbenchHeating &&
+      hasMnO2InTestTube
+    ) {
+      setCaseTwoResult(MNO2_CASE_TWO_RESULT);
+    }
+  }, [
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    isWorkbenchHeating,
+    hasMnO2InTestTube,
+  ]);
 
   const handleNaOHDialogOpen = () => {
     setNaohVolume("2.5");
@@ -1125,6 +1172,13 @@ function ChemicalEquilibriumVirtualLab({
     if (equipmentId.startsWith("concentrated-h-so")) {
       return () => handleAcidDialogOpen("h2so4");
     }
+    if (
+      isDryTestExperiment &&
+      resolvedDryTestMode === "acid" &&
+      equipmentId.startsWith("mno")
+    ) {
+      return handleMnO2DialogOpen;
+    }
     if (equipmentId.startsWith("ammonium-hydroxide-nh-oh") ||
       equipmentId.startsWith("ammonium-hydroxide")
     ) {
@@ -1183,6 +1237,58 @@ function ChemicalEquilibriumVirtualLab({
     setToastMessage(`Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`);
     setTimeout(() => setToastMessage(null), 3000);
     handleSaltDialogClose();
+  };
+
+  const handleAddMnO2ToTestTube = () => {
+    const mass = parseFloat(mno2Mass);
+    if (Number.isNaN(mass) || mass <= 0) {
+      setMno2DialogError("Enter a valid amount.");
+      return;
+    }
+
+    if (mass < MIN_MNO2_MASS || mass > MAX_MNO2_MASS) {
+      setMno2DialogError(`Use between ${MNO2_RANGE_LABEL}.`);
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
+      setMno2DialogError("Place the test tube on the workbench first.");
+      return;
+    }
+
+    pushHistorySnapshot();
+
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find((c) => c.id === "mno2");
+        const updatedChemicals = existing
+          ? pos.chemicals.map((c) =>
+              c.id === "mno2"
+                ? { ...c, amount: (c.amount ?? 0) + mass }
+                : c,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: "mno2",
+                name: "MnO₂",
+                color: "#a855f7",
+                amount: mass,
+                concentration: "Dry",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${mass.toFixed(2)} g of MnO₂ to the test tube.`);
+    setTimeout(() => setToastMessage(null), 3000);
+    handleMnO2DialogClose();
   };
 
   const handleAddAcidToTestTube = () => {
@@ -1426,9 +1532,13 @@ function ChemicalEquilibriumVirtualLab({
     setPostMoveFumesEnabled(false);
     setCaseOneResult(DEFAULT_CASE_RESULT);
     setCaseTwoResult(DEFAULT_CASE_RESULT);
+    setShowCase2ResultsModal(false);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
     setGlassAcidDialogError(null);
+    setMno2DialogOpen(false);
+    setMno2Mass(MNO2_DEFAULT_MASS);
+    setMno2DialogError(null);
     if (rinseTimerRef.current) {
       window.clearTimeout(rinseTimerRef.current);
       rinseTimerRef.current = null;
@@ -1445,9 +1555,12 @@ function ChemicalEquilibriumVirtualLab({
     setEquipmentPositions([]);
     setRodMoved(false);
     setPostMoveFumesEnabled(false);
+    setMno2DialogOpen(false);
+    setMno2Mass(MNO2_DEFAULT_MASS);
+    setMno2DialogError(null);
     setHasRinsed(false);
-    setCaseOneResult(DEFAULT_CASE_RESULT);
     setCaseTwoResult(DEFAULT_CASE_RESULT);
+    setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
     setTimeout(() => setToastMessage(null), 2500);
@@ -1499,7 +1612,29 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleViewResults = () => {
-    setToastMessage("Results & analysis will appear after completing the steps.");
+    if (!resultsReady) {
+      const missing = !caseOneReady
+        ? "Case 1 observations"
+        : !caseTwoReady
+          ? "Case 2 observations"
+          : "observations";
+      setToastMessage(`Complete ${missing} before viewing the analysis.`);
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+    setShowCase2ResultsModal(true);
+  };
+
+  const handleReturnToExperiments = () => {
+    setShowCase2ResultsModal(false);
+    setLocation("/");
+    setToastMessage("Return to the experiments list to try another activity.");
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
+  const handleLaunchQuiz = () => {
+    setShowCase2ResultsModal(false);
+    setToastMessage("Quiz coming soon for this experiment.");
     setTimeout(() => setToastMessage(null), 2500);
   };
 
@@ -1608,7 +1743,11 @@ function ChemicalEquilibriumVirtualLab({
                 </button>
                 <button
                   onClick={handleViewResults}
-                  className="w-full px-3 py-2 bg-blue-600 text-white rounded shadow-sm hover:bg-blue-700 transition"
+                  className={`w-full px-3 py-2 rounded shadow-sm transition ${
+                    resultsReady
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "bg-blue-200 text-blue-800 opacity-80"
+                  }`}
                 >
                   View Results &amp; Analysis
                 </button>
@@ -1786,11 +1925,13 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="text-sm font-semibold mb-2">Cases</div>
             <div className="space-y-2">
-              <div className="p-2 border rounded">CASE 1
-                <div className="text-xs text-gray-500">{caseOneResult}</div>
+              <div className="p-3 border rounded bg-white text-slate-900">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">CASE 1</div>
+                <div className="mt-1 text-sm text-slate-800">{caseOneResult}</div>
               </div>
-              <div className="p-2 border rounded">CASE 2
-                <div className="text-xs text-gray-500">{caseTwoResult}</div>
+              <div className="p-3 border rounded bg-white text-slate-900">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">CASE 2</div>
+                <div className="mt-1 text-sm text-slate-800">{caseTwoResult}</div>
               </div>
             </div>
             {caseOneResult !== DEFAULT_CASE_RESULT && (
@@ -2004,6 +2145,53 @@ function ChemicalEquilibriumVirtualLab({
         </Dialog>
       )}
 
+      {isDryTestExperiment && (
+        <Dialog
+          open={mno2DialogOpen}
+          onOpenChange={(open) => !open && handleMnO2DialogClose()}
+        >
+          <DialogContent className="max-w-sm space-y-4">
+            <DialogHeader>
+              <DialogTitle>Enter Mass</DialogTitle>
+              <DialogDescription>
+                Enter the mass of MnO₂ to add to the test tube.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Mass (g)
+              </label>
+              <input
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+                type="number"
+                min={MIN_MNO2_MASS}
+                max={MAX_MNO2_MASS}
+                step="0.1"
+                value={mno2Mass}
+                onChange={(event) => setMno2Mass(event.target.value)}
+                placeholder="1.5"
+              />
+              <p className="text-[11px] text-slate-500">Recommended range: {MNO2_RANGE_LABEL}.</p>
+              {mno2DialogError && (
+                <p className="text-[11px] text-red-500">{mno2DialogError}</p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={handleMnO2DialogClose}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleAddMnO2ToTestTube}>
+                  Add to test tube
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
       {isDryTestExperiment && resolvedDryTestMode === "basic" && (
         <Dialog open={naohDialogOpen} onOpenChange={(open) => !open && handleNaOHDialogClose()}>
           <DialogContent className="max-w-sm space-y-4">
@@ -2177,6 +2365,127 @@ function ChemicalEquilibriumVirtualLab({
                 </Button>
                 <Button size="sm" onClick={handleAddAmmoniumToGlassContainer}>
                   Add to glass container
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {isDryTestExperiment && (
+        <Dialog open={showCase2ResultsModal} onOpenChange={setShowCase2ResultsModal}>
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
+              <DialogTitle className="text-2xl font-bold text-white">Experiment Results &amp; Analysis</DialogTitle>
+              <DialogDescription className="text-white/80">
+                Complete summary of Case 1 and Case 2 observations for the Salt Analysis dry acid radicals test.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="px-6 pb-6 pt-4 space-y-6 text-slate-900">
+              <div className="grid gap-4 md:grid-cols-2">
+                <section className="rounded-lg border border-rose-200 bg-gradient-to-br from-rose-50 to-white p-5 shadow-lg shadow-rose-100">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-rose-500">Case 1 • Initial Clues</div>
+                  <p className="mt-3 text-base font-semibold leading-relaxed text-slate-900">
+                    {caseOneResult}
+                  </p>
+                  <p className="mt-2 text-sm text-slate-700">
+                    White residues and a faint halide scent on the loop suggested the presence of chloride radicals before any heating with MnO₂.
+                  </p>
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-rose-100 bg-rose-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-rose-600">
+                    Residue detected
+                    <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                  </div>
+                </section>
+                <section className="rounded-lg border border-lime-200 bg-gradient-to-br from-lime-50 to-white p-5 shadow-lg shadow-lime-100">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-lime-600">Case 2 • Confirmatory Gas</div>
+                  <p className="mt-3 text-base font-semibold text-slate-900 leading-relaxed">{caseTwoResult}</p>
+                  <p className="mt-2 text-sm text-slate-700">
+                    The greenish-yellow fumes released during heating confirm chlorine evolution from MnO₂-oxidized chloride ions.
+                  </p>
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-lime-100 bg-lime-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-600">
+                    Chlorine gas detected
+                    <span className="h-2.5 w-2.5 rounded-full bg-lime-500" />
+                  </div>
+                </section>
+              </div>
+
+              <div className="rounded-lg border border-indigo-100 bg-gradient-to-br from-sky-50 via-indigo-50 to-white p-5 text-indigo-900 shadow-inner">
+                <div className="font-semibold text-indigo-800">Case Comparison</div>
+                <p className="mt-2 text-sm leading-relaxed text-indigo-900">
+                  Case 1 establishes the likelihood of chloride radicals while Case 2 captures the oxidizing reaction that releases chlorine gas. Together they validate chloride ions in the salt, matching the classic dry test evidence for acid radicals.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-indigo-500">
+                  <span className="rounded-full bg-indigo-100 px-3 py-1">Residue trace</span>
+                  <span className="rounded-full bg-indigo-100 px-3 py-1">Gas evolution</span>
+                  <span className="rounded-full bg-indigo-100 px-3 py-1">Qualitative proof</span>
+                </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
+                  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
+                    <span>Case 1 Indicator</span>
+                    <span>Chloride residue</span>
+                  </div>
+                  <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-300 relative">
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Loop film</span>
+                  </div>
+                </div>
+                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
+                  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
+                    <span>Case 2 Indicator</span>
+                    <span>Greenish-yellow plume</span>
+                  </div>
+                  <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-500 relative">
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Chlorine</span>
+                  </div>
+                </div>
+                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">Final Insight</div>
+                  <p className="mt-2 text-sm text-slate-700">
+                    Saving both case results preserves the entire dry test narrative so you can compare residues, odors, and gas evolution in reported conclusions.
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-white/70 bg-white/90 p-5 text-sm text-slate-900 shadow-xl backdrop-blur">
+                <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
+                <ul className="mt-3 space-y-2 text-sm text-slate-900">
+                  <li className="flex items-start gap-2">
+                    <span className="mt-[2px] h-2 w-2 rounded-full bg-pink-500" />Residues on the loop indicated chloride ions even before the oxidizing reagent was introduced.
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-[2px] h-2 w-2 rounded-full bg-lime-500" />MnO₂ accelerated chloride oxidation under the bunsen flame, releasing pungent greenish chlorine gas.
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-[2px] h-2 w-2 rounded-full bg-sky-500" />Both cases now display a complete qualitative analysis for the acid radical dry test.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <DialogFooter className="px-6 pb-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleReturnToExperiments}
+                    className="bg-white text-slate-800 border border-slate-200 shadow-sm hover:bg-slate-50"
+                  >
+                    Return to Experiments
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleLaunchQuiz}
+                    className="bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-200 hover:opacity-90"
+                  >
+                    QUIZ
+                  </Button>
+                </div>
+                <Button variant="outline" size="sm" onClick={() => setShowCase2ResultsModal(false)}>
+                  Close Analysis
                 </Button>
               </div>
             </DialogFooter>
