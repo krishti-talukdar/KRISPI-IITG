@@ -887,6 +887,11 @@ function ChemicalEquilibriumVirtualLab({
     selectedChemical,
     caseOneResult,
     caseTwoResult,
+    caseThreeResult,
+    caseFourResult,
+    caseFiveResult,
+    caseSixResult,
+    caseSevenResult,
   });
 
   const DRY_TEST_BOTTLE_IDS = [
