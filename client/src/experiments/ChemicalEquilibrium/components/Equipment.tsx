@@ -48,6 +48,7 @@ interface EquipmentProps {
   disabled?: boolean;
   imageUrl?: string;
   isRinseActive?: boolean;
+  observeBlinking?: boolean;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
