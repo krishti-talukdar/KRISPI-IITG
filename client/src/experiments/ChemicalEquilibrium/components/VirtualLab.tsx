@@ -2542,7 +2542,7 @@ function ChemicalEquilibriumVirtualLab({
               </ul>
             </div>
 
-            {!isAcidDryTest && (
+            {showMeasuredPh && (
               <div className="mt-2 mb-4 p-3 bg-gray-50 rounded">
                 <div className="text-xs font-medium text-gray-600">Measured pH</div>
                 <div className="text-2xl font-bold mt-1">{measurements.ph ? measurements.ph : 'No result yet'}</div>
