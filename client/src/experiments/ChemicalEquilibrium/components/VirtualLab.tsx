@@ -2320,7 +2320,6 @@ function ChemicalEquilibriumVirtualLab({
     setMno2Mass(MNO2_DEFAULT_MASS);
     setMno2DialogError(null);
     setHasRinsed(false);
-    setCaseTwoResult(DEFAULT_CASE_RESULT);
     setCaseThreeResult(DEFAULT_CASE_RESULT);
     setCaseFourResult(DEFAULT_CASE_RESULT);
     setCaseFiveResult(DEFAULT_CASE_RESULT);
