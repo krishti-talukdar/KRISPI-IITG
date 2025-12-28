@@ -587,9 +587,15 @@ function ChemicalEquilibriumVirtualLab({
 
   useEffect(() => {
     setTestTubePlacementTracked(false);
+    setSecondTestTubePlacementTracked(false);
     setSampleAddedTracked(false);
+    setSecondSampleAddedTracked(false);
     setAcidAddedTracked(false);
+    setSecondAcidAddedTracked(false);
     setBunsenPlacedTracked(false);
+    setGlassRodContainerTracked(false);
+    setAmmoniumAddedTracked(false);
+    setWorkbenchResetStepTracked(false);
   }, [stepNumber, workbenchResetTrigger]);
 
   const cobaltReactionState: CobaltReactionState = {
