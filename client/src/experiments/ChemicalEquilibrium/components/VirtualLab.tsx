@@ -2405,9 +2405,9 @@ function ChemicalEquilibriumVirtualLab({
                 </section>
               </div>
 
-              <div className="rounded-lg border border-indigo-100 bg-gradient-to-br from-sky-50 via-indigo-50 to-white p-5 text-sm text-indigo-700 shadow-inner">
+              <div className="rounded-lg border border-indigo-100 bg-gradient-to-br from-sky-50 via-indigo-50 to-white p-5 text-indigo-900 shadow-inner">
                 <div className="font-semibold text-indigo-800">Case Comparison</div>
-                <p className="mt-2 leading-relaxed">
+                <p className="mt-2 text-sm leading-relaxed text-indigo-900">
                   Case 1 establishes the likelihood of chloride radicals while Case 2 captures the oxidizing reaction that releases chlorine gas. Together they validate chloride ions in the salt, matching the classic dry test evidence for acid radicals.
                 </p>
                 <div className="mt-3 flex flex-wrap gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-indigo-500">
