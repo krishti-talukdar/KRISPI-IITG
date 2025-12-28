@@ -1555,7 +1555,6 @@ function ChemicalEquilibriumVirtualLab({
     setMno2Mass(MNO2_DEFAULT_MASS);
     setMno2DialogError(null);
     setHasRinsed(false);
-    setCaseOneResult(DEFAULT_CASE_RESULT);
     setCaseTwoResult(DEFAULT_CASE_RESULT);
     setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
