@@ -15,6 +15,16 @@ interface ChemicalEquilibriumAppProps {
 
 const WET_ACID_TEST_EQUIPMENT = [
   "Test Tubes",
+  "Salt Sample",
+  "BaCl₂ Solution",
+  "Sodium Nitroprusside",
+  "Acidified Potassium Dichromate Solution (K₂Cr₂O₇)",
+  "Dil. H₂SO₄",
+  "AgNO₃",
+  "CaCl₂ Solution",
+  "FeSO₄",
+  "FeCl₃",
+  "Bunsen Burner (virtual heat source)",
 ];
 
 const WET_BASIC_TEST_EQUIPMENT = [
