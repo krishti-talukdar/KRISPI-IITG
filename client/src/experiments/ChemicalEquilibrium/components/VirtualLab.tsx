@@ -265,6 +265,9 @@ function ChemicalEquilibriumVirtualLab({
   const [rodMoved, setRodMoved] = useState(false);
   const [postMoveFumesEnabled, setPostMoveFumesEnabled] = useState(false);
   const [testTubePlacementTracked, setTestTubePlacementTracked] = useState(false);
+  const [sampleAddedTracked, setSampleAddedTracked] = useState(false);
+  const [acidAddedTracked, setAcidAddedTracked] = useState(false);
+  const [bunsenPlacedTracked, setBunsenPlacedTracked] = useState(false);
   const [rodMoveAnimationConfig, setRodMoveAnimationConfig] = useState<RodMoveAnimationConfig | null>(null);
   const rodMoveAnimationTimerRef = useRef<number | null>(null);
   const cancelRodMoveAnimation = useCallback(() => {
