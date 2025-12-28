@@ -886,6 +886,24 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     transform: translate(calc(var(--vap-offset-x, 0) + 10px), -120px) scale(calc(var(--vap-scale, 1) * 1.4));
   }
 }
+@keyframes mno2GasDrift {
+  0% {
+    opacity: 0;
+    transform: translate(var(--mno2-offset-x, 0), 0) scale(var(--mno2-scale, 1));
+  }
+  25% {
+    opacity: 0.38;
+    transform: translate(calc(var(--mno2-offset-x, 0) + 2px), -40px) scale(calc(var(--mno2-scale, 1) * 1.05));
+  }
+  60% {
+    opacity: 0.9;
+    transform: translate(calc(var(--mno2-offset-x, 0) + 8px), -80px) scale(calc(var(--mno2-scale, 1) * 1.2));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--mno2-offset-x, 0) + 14px), -140px) scale(calc(var(--mno2-scale, 1) * 1.3));
+  }
+}
 @keyframes bunsenFlame {
   0% { opacity: 0.85; transform: translate(-50%, 0) scaleY(1); }
   50% { opacity: 1; transform: translate(-50%, -6px) scaleY(1.05); }
