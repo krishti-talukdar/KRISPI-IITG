@@ -269,6 +269,8 @@ function ChemicalEquilibriumVirtualLab({
     "No precipitate appears, so sulphate, sulphite, carbonate and sulphide ions are absent.";
   const CASE_TWO_WET_NO_PURPLE_RESULT =
     "Normally a violet/purple colour indicates sulphide; in your table no purple colour forms, so S²⁻ is absent.";
+  const CASE_THREE_WET_NO_GREEN_RESULT =
+    "a green colour would indicate sulphite, but the table shows no green colour, so SO₃²⁻ is absent.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
