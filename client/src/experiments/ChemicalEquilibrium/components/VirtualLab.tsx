@@ -268,6 +268,12 @@ function ChemicalEquilibriumVirtualLab({
   const [sampleAddedTracked, setSampleAddedTracked] = useState(false);
   const [acidAddedTracked, setAcidAddedTracked] = useState(false);
   const [bunsenPlacedTracked, setBunsenPlacedTracked] = useState(false);
+  const [glassRodContainerTracked, setGlassRodContainerTracked] = useState(false);
+  const [ammoniumAddedTracked, setAmmoniumAddedTracked] = useState(false);
+  const [workbenchResetStepTracked, setWorkbenchResetStepTracked] = useState(false);
+  const [secondTestTubePlacementTracked, setSecondTestTubePlacementTracked] = useState(false);
+  const [secondSampleAddedTracked, setSecondSampleAddedTracked] = useState(false);
+  const [secondAcidAddedTracked, setSecondAcidAddedTracked] = useState(false);
   const [rodMoveAnimationConfig, setRodMoveAnimationConfig] = useState<RodMoveAnimationConfig | null>(null);
   const rodMoveAnimationTimerRef = useRef<number | null>(null);
   const cancelRodMoveAnimation = useCallback(() => {
@@ -283,6 +289,7 @@ function ChemicalEquilibriumVirtualLab({
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
+  const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
 
   // Choose chemicals and equipment based on experiment
