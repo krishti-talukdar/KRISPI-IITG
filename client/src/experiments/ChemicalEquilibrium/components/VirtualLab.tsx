@@ -475,6 +475,10 @@ function ChemicalEquilibriumVirtualLab({
     onStepComplete,
   ]);
 
+  useEffect(() => {
+    setTestTubePlacementTracked(false);
+  }, [stepNumber, workbenchResetTrigger]);
+
   const cobaltReactionState: CobaltReactionState = {
     cobaltChlorideAdded,
     distilledWaterAdded,
