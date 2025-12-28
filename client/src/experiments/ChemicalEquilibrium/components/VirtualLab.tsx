@@ -245,6 +245,9 @@ function ChemicalEquilibriumVirtualLab({
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
+  const DEFAULT_CASE_RESULT = "No result yet";
+  const CASE_TWO_BASIC_RESULT =
+    "CASE 2: Strong pungent smell of NH₃ and white fumes with conc. HCl confirm the ammonium radical (NH₄⁺) in the salt.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
@@ -333,9 +336,6 @@ function ChemicalEquilibriumVirtualLab({
   const NAOH_COLOR = "#bfdbfe";
   const NAOH_NAME = "NaOH";
   const NAOH_CONCENTRATION = "Reagent";
-  const DEFAULT_CASE_RESULT = "No result yet";
-  const CASE_TWO_BASIC_RESULT =
-    "CASE 2: Strong pungent smell of NH₃ and white fumes with conc. HCl confirm the ammonium radical (NH₄⁺) in the salt.";
   const NAOH_CHEMICAL_ID = "naoh";
   const NAOH_VOLUME_LABEL = "2ml - 4ml";
   const MIN_NAOH_VOLUME = 2;
