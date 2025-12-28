@@ -1097,6 +1097,29 @@ function ChemicalEquilibriumVirtualLab({
     [currentStep, distilledWaterAdded, experimentStarted, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode, testTubePlacementTracked, totalSteps],
   );
 
+  const handleEquipmentAddButton = useCallback(
+    (equipmentId: string, quickAdd?: () => void) => {
+      if (quickAdd) {
+        quickAdd();
+        return;
+      }
+      const workbenchRect =
+        typeof document !== "undefined"
+          ? document
+              .querySelector('[data-workbench="true"]')
+              ?.getBoundingClientRect() ?? null
+          : null;
+      const targetX = workbenchRect
+        ? workbenchRect.left + workbenchRect.width / 2
+        : 200;
+      const targetY = workbenchRect
+        ? workbenchRect.top + workbenchRect.height / 2
+        : 200;
+      handleEquipmentDrop(equipmentId, targetX, targetY);
+    },
+    [handleEquipmentDrop],
+  );
+
   const handleEquipmentRemove = useCallback((id: string) => {
     pushHistorySnapshot();
     setEquipmentPositions((prev) => prev.filter((pos) => pos.id !== id));
@@ -2245,6 +2268,11 @@ function ChemicalEquilibriumVirtualLab({
                 {equipmentList.map((equipment) => {
                   const quickAddAction = getQuickAddAction(equipment.id);
                   const isQuickAddCard = Boolean(quickAddAction);
+                  const normalizedEquipmentName = equipment.name.toLowerCase();
+                  const hideAddButton =
+                    normalizedEquipmentName.includes("test tube") ||
+                    normalizedEquipmentName.includes("bunsen");
+                  const showAddButton = !hideAddButton;
                   return (
                     <div
                       key={equipment.id}
@@ -2271,13 +2299,13 @@ function ChemicalEquilibriumVirtualLab({
                           </div>
                           <div className="text-sm font-medium text-gray-700">{equipment.name}</div>
                         </div>
-                        {isQuickAddCard && quickAddAction && (
+                        {showAddButton && (
                           <button
                             type="button"
                             onClick={(event) => {
                               event.preventDefault();
                               event.stopPropagation();
-                              quickAddAction();
+                              handleEquipmentAddButton(equipment.id, quickAddAction);
                             }}
                             className="px-3 py-1 text-xs font-semibold text-white bg-orange-500 rounded-full hover:bg-orange-600 transition"
                           >
