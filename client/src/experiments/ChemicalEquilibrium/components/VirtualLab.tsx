@@ -504,7 +504,7 @@ function ChemicalEquilibriumVirtualLab({
     (id: string, x: number, y: number) => {
       if (isDryTestBottleEquipment(id)) {
         setToastMessage(
-          "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, Conc. HCl, and NH₄OH to load the test tube.",
+          "Use the ADD buttons next to Salt Sample, Conc. H₂SO₄, Conc. HCl, MnO₂, and NH₄OH to load the test tube.",
         );
         setTimeout(() => setToastMessage(null), 2500);
         return;
