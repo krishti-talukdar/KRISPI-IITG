@@ -598,6 +598,40 @@ function ChemicalEquilibriumVirtualLab({
     setWorkbenchResetStepTracked(false);
   }, [stepNumber, workbenchResetTrigger]);
 
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      resolvedDryTestMode !== "acid"
+    ) {
+      workbenchResetTriggerRef.current = workbenchResetTrigger;
+      return;
+    }
+
+    if (
+      workbenchResetTrigger !== workbenchResetTriggerRef.current &&
+      currentStep === 7 &&
+      !workbenchResetStepTracked
+    ) {
+      setWorkbenchResetStepTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Workbench reset. Moving to the next step.");
+      setTimeout(() => setToastMessage(null), 3000);
+    }
+
+    workbenchResetTriggerRef.current = workbenchResetTrigger;
+  }, [
+    workbenchResetTrigger,
+    currentStep,
+    workbenchResetStepTracked,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    totalSteps,
+    onStepComplete,
+  ]);
+
   const cobaltReactionState: CobaltReactionState = {
     cobaltChlorideAdded,
     distilledWaterAdded,
