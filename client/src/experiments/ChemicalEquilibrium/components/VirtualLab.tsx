@@ -357,6 +357,9 @@ function ChemicalEquilibriumVirtualLab({
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
   const [saltMass, setSaltMass] = useState("2.0");
   const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
+  const [mno2DialogOpen, setMno2DialogOpen] = useState(false);
+  const [mno2Mass, setMno2Mass] = useState(MNO2_DEFAULT_MASS);
+  const [mno2DialogError, setMno2DialogError] = useState<string | null>(null);
   const [naohDialogOpen, setNaohDialogOpen] = useState(false);
   const [naohVolume, setNaohVolume] = useState("2.5");
   const [naohDialogError, setNaohDialogError] = useState<string | null>(null);
