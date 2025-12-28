@@ -980,6 +980,22 @@ function ChemicalEquilibriumVirtualLab({
     [experiment.id, resolvedDryTestMode],
   );
 
+  useEffect(() => {
+    if (
+      isDryTestExperiment &&
+      resolvedDryTestMode === "acid" &&
+      isWorkbenchHeating &&
+      hasMnO2InTestTube
+    ) {
+      setCaseTwoResult(MNO2_CASE_TWO_RESULT);
+    }
+  }, [
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    isWorkbenchHeating,
+    hasMnO2InTestTube,
+  ]);
+
   const handleNaOHDialogOpen = () => {
     setNaohVolume("2.5");
     setNaohDialogError(null);
