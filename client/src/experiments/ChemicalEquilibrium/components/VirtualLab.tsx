@@ -2792,6 +2792,7 @@ function ChemicalEquilibriumVirtualLab({
               <p className="text-[11px] text-slate-500">
                 Equipment will be placed near the center of the workbench.
               </p>
+              <p className="text-[11px] text-slate-500">Recommended range: 3 - 6 drops.</p>
             </div>
 
             <DialogFooter>
