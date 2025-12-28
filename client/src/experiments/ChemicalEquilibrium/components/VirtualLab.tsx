@@ -2114,7 +2114,7 @@ function ChemicalEquilibriumVirtualLab({
                 step="0.1"
                 value={mno2Mass}
                 onChange={(event) => setMno2Mass(event.target.value)}
-                placeholder="0.2"
+                placeholder="1.5"
               />
               <p className="text-[11px] text-slate-500">Recommended range: {MNO2_RANGE_LABEL}.</p>
               {mno2DialogError && (
