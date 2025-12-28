@@ -1576,15 +1576,23 @@ function ChemicalEquilibriumVirtualLab({
       resolvedDryTestMode === "acid" &&
       currentStep === 9 &&
       !secondSampleAddedTracked;
+    const shouldAdvanceAfterBasicSalt =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "basic" &&
+      currentStep === 6 &&
+      !basicSaltAddedTracked;
 
     const shouldAdvanceAfterSample =
       shouldAdvanceAfterFirstSample || shouldAdvanceAfterSecondSample;
 
-    setToastMessage(
-      shouldAdvanceAfterSample
-        ? "Salt sample added. Moving to the next step."
-        : `Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`,
-    );
+    const toastMessageText = shouldAdvanceAfterSample
+      ? "Salt sample added. Moving to the next step."
+      : shouldAdvanceAfterBasicSalt
+        ? "Salt sample added. Moving to Step 7."
+        : `Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`;
+
+    setToastMessage(toastMessageText);
     setTimeout(() => setToastMessage(null), 3000);
     handleSaltDialogClose();
 
@@ -1594,6 +1602,10 @@ function ChemicalEquilibriumVirtualLab({
       } else {
         setSecondSampleAddedTracked(true);
       }
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    } else if (shouldAdvanceAfterBasicSalt) {
+      setBasicSaltAddedTracked(true);
       onStepComplete();
       setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
     }
