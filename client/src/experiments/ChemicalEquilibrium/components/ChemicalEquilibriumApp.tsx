@@ -165,7 +165,7 @@ export default function ChemicalEquilibriumApp({
     return;
   };
 
-  const currentStepData = experiment.stepDetails[currentStep];
+  const currentStepData = activeStepDetails[currentStep];
   const progressPercentage = Math.round(
     ((currentStep + 1) / activeStepDetails.length) * 100,
   );
