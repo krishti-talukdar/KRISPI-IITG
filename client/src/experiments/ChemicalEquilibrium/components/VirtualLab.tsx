@@ -1259,9 +1259,12 @@ function ChemicalEquilibriumVirtualLab({
   }, [pushHistorySnapshot]);
 
   const handleObserveWetTest = useCallback(() => {
+    if (isBaClAddedToTestTube && caseOneResult === DEFAULT_CASE_RESULT) {
+      setCaseOneResult(CASE_ONE_WET_NO_PRECIPITATE_RESULT);
+    }
     setToastMessage("Observation noted for the Wet Acid Test.");
     setTimeout(() => setToastMessage(null), 2500);
-  }, []);
+  }, [caseOneResult, isBaClAddedToTestTube, setCaseOneResult, setToastMessage]);
 
   useEffect(() => {
     if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
