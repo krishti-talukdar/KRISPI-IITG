@@ -2343,6 +2343,60 @@ function ChemicalEquilibriumVirtualLab({
           </DialogContent>
         </Dialog>
       )}
+
+      {isDryTestExperiment && (
+        <Dialog open={showCase2ResultsModal} onOpenChange={setShowCase2ResultsModal}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader className="bg-gradient-to-r from-emerald-600 to-lime-500 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
+              <DialogTitle className="text-2xl font-bold text-white">Results &amp; Analysis</DialogTitle>
+              <DialogDescription className="text-emerald-100">
+                Chloride confirmation from the Greenish-yellow gas observation.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-6 pt-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="p-4 border-l-4 border-emerald-400 bg-emerald-50 rounded-lg shadow-sm">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-600">
+                    Case 2 Summary
+                  </div>
+                  <p className="mt-2 text-sm text-gray-700">{caseTwoResult}</p>
+                  <p className="mt-3 text-xs text-gray-500">
+                    The greenish-yellow gas evolved while MnO₂ and the cooled salt sample were heated over the bunsen flame.
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Chlorine evolution is a classic confirmatory clue for chloride radicals under oxidizing, acidic conditions.
+                  </p>
+                </div>
+                <div className="p-4 border border-emerald-200 rounded-lg bg-white shadow-sm">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-lime-600">
+                    Gas evidence
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm text-gray-700 list-disc list-inside">
+                    <li>MnO₂ oxidizes chloride ions in the presence of acid, releasing Cl₂ gas.</li>
+                    <li>Greenish-yellow fumes, accompanied by a pungent odor, match chlorine's signature.</li>
+                    <li>Recording the case result saves this observation for analysis and comparison with known radicals.</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-emerald-50 to-lime-50 border border-emerald-200 rounded-lg p-5 shadow-inner">
+                <h5 className="text-base font-semibold text-emerald-800 mb-2">Interpretation</h5>
+                <p className="text-sm text-gray-700">
+                  Case 2 automatically logs this conclusion once the bunsen burner is heating and MnO₂ is in the test tube. The gas evolution ties chloride to its halogen, reaffirming the dry test's qualitative analysis.
+                </p>
+              </div>
+            </div>
+
+            <DialogFooter className="pt-6">
+              <div className="w-full flex justify-end">
+                <Button variant="outline" size="sm" onClick={() => setShowCase2ResultsModal(false)}>
+                  Close Analysis
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </TooltipProvider>
   );
 }
