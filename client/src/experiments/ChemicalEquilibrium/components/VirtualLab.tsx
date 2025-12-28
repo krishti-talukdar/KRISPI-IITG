@@ -1248,6 +1248,11 @@ function ChemicalEquilibriumVirtualLab({
     setTimeout(() => setToastMessage(null), 2000);
   }, [pushHistorySnapshot]);
 
+  const handleObserveWetTest = useCallback(() => {
+    setToastMessage("Observation noted for the Wet Acid Test.");
+    setTimeout(() => setToastMessage(null), 2500);
+  }, []);
+
   useEffect(() => {
     if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
       return;
