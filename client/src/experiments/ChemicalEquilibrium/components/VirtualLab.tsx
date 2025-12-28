@@ -160,6 +160,11 @@ const DRY_TEST_BASIC_GLASS_AUTOPOSITION_IDS = [
   "glass-container",
 ];
 
+const BA_CL_DROP_VOLUME_ML = 0.25;
+const BA_CL_CHEMICAL_ID = "bacl2_solution";
+const BA_CL_CHEMICAL_NAME = "BaCl₂ Solution";
+const BA_CL_CHEMICAL_COLOR = "#38bdf8";
+
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
   const lookupId = stripEquipmentIdSuffix(id);
@@ -397,10 +402,6 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_ACID_DROPS = 3;
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
-  const BA_CL_DROP_VOLUME_ML = 0.25;
-  const BA_CL_CHEMICAL_ID = "bacl2_solution";
-  const BA_CL_CHEMICAL_NAME = "BaCl₂ Solution";
-  const BA_CL_CHEMICAL_COLOR = "#38bdf8";
   const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
   const MIN_GLASS_HCL_VOLUME = 1;
   const MAX_GLASS_HCL_VOLUME = 6;
