@@ -329,6 +329,10 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_SALT_MASS = 3;
   const MAX_SALT_MASS = 5;
   const SALT_RANGE_LABEL = "3g-5g";
+  const MIN_MNO2_MASS = 0.1;
+  const MAX_MNO2_MASS = 0.5;
+  const MNO2_RANGE_LABEL = "0.1g-0.5g";
+  const MNO2_DEFAULT_MASS = "0.2";
   const SALT_HEATING_STEP = 0.35;
   const SALT_HEATING_MIN_REMAINING = 0.5;
   const SALT_HEATING_INTERVAL_MS = 1200;
