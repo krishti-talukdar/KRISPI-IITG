@@ -1526,6 +1526,7 @@ function ChemicalEquilibriumVirtualLab({
     setPostMoveFumesEnabled(false);
     setCaseOneResult(DEFAULT_CASE_RESULT);
     setCaseTwoResult(DEFAULT_CASE_RESULT);
+    setShowCase2ResultsModal(false);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
     setGlassAcidDialogError(null);
@@ -1554,6 +1555,7 @@ function ChemicalEquilibriumVirtualLab({
     setHasRinsed(false);
     setCaseOneResult(DEFAULT_CASE_RESULT);
     setCaseTwoResult(DEFAULT_CASE_RESULT);
+    setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
     setTimeout(() => setToastMessage(null), 2500);
