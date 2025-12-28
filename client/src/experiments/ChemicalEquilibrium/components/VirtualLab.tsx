@@ -1176,11 +1176,70 @@ function ChemicalEquilibriumVirtualLab({
       }
     }
 
+    const isBaClAddition = addDialogEquipment.name.toLowerCase().includes("bacl");
+
+    if (requiresDropValidation && isBaClAddition) {
+      const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === BA_CL_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === BA_CL_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: BA_CL_CHEMICAL_ID,
+                    name: BA_CL_CHEMICAL_NAME,
+                    color: BA_CL_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "0.1 M",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          return updated ? next : prev;
+        });
+      }
+    }
+
     handleEquipmentAddButton(addDialogEquipment.id);
     setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
     setTimeout(() => setToastMessage(null), 2500);
     handleEquipmentAddDialogClose();
-  }, [addDialogAmount, addDialogEquipment, handleEquipmentAddButton, handleEquipmentAddDialogClose, isDryTestExperiment, resolvedDryTestMode]);
+  }, [
+    addDialogAmount,
+    addDialogEquipment,
+    handleEquipmentAddButton,
+    handleEquipmentAddDialogClose,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    setEquipmentPositions,
+  ]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
     pushHistorySnapshot();
