@@ -165,6 +165,10 @@ const BA_CL_DROP_VOLUME_ML = 0.25;
 const BA_CL_CHEMICAL_ID = "bacl2_solution";
 const BA_CL_CHEMICAL_NAME = "BaCl₂ Solution";
 const BA_CL_CHEMICAL_COLOR = "#38bdf8";
+const K2CR2O7_DROP_VOLUME_ML = 0.25;
+const K2CR2O7_CHEMICAL_ID = "k2cr2o7_solution";
+const K2CR2O7_CHEMICAL_NAME = "Acidified Potassium Dichromate Solution (K₂Cr₂O₇)";
+const K2CR2O7_CHEMICAL_COLOR = "#fb923c";
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
