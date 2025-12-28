@@ -39,6 +39,7 @@ interface EquipmentProps {
   ) => void;
   onRemove?: (id: string) => void;
   onInteract?: (id: string) => void;
+  onObserve?: () => void;
   cobaltReactionState?: CobaltReactionState;
   allEquipmentPositions?: EquipmentPosition[];
   currentStep?: number;
