@@ -263,6 +263,10 @@ function ChemicalEquilibriumVirtualLab({
     "CASE 2: Strong pungent smell of NH₃ and white fumes with conc. HCl confirm the ammonium radical (NH₄⁺) in the salt.";
   const CASE_ONE_WET_NO_PRECIPITATE_RESULT =
     "No precipitate appears, so sulphate, sulphite, carbonate and sulphide ions are absent.";
+  const CASE_TWO_WET_NO_PURPLE_RESULT =
+    "Normally a violet/purple colour indicates sulphide; in your table no purple colour forms, so S²⁻ is absent.";
+  const CASE_ONE_WET_NO_PRECIPITATE_RESULT =
+    "No precipitate appears, so sulphate, sulphite, carbonate and sulphide ions are absent.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
