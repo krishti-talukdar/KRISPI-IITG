@@ -275,6 +275,12 @@ function ChemicalEquilibriumVirtualLab({
   const [secondSampleAddedTracked, setSecondSampleAddedTracked] = useState(false);
   const [secondAcidAddedTracked, setSecondAcidAddedTracked] = useState(false);
   const [mno2AddedTracked, setMno2AddedTracked] = useState(false);
+  const [basicSecondTubeTracked, setBasicSecondTubeTracked] = useState(false);
+  const [basicSaltAddedTracked, setBasicSaltAddedTracked] = useState(false);
+  const [basicNaOHAddedTracked, setBasicNaOHAddedTracked] = useState(false);
+  const [basicSecondBunsenTracked, setBasicSecondBunsenTracked] = useState(false);
+  const [basicGlassSetupTracked, setBasicGlassSetupTracked] = useState(false);
+  const [basicGlassAcidAddedTracked, setBasicGlassAcidAddedTracked] = useState(false);
   const [rodMoveAnimationConfig, setRodMoveAnimationConfig] = useState<RodMoveAnimationConfig | null>(null);
   const rodMoveAnimationTimerRef = useRef<number | null>(null);
   const cancelRodMoveAnimation = useCallback(() => {
@@ -531,8 +537,27 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
-    if (!hasPlacedTestTube && testTubePlacementTracked) {
-      setTestTubePlacementTracked(false);
+    const shouldAdvanceSecondTubeStep =
+      hasPlacedTestTube &&
+      !basicSecondTubeTracked &&
+      currentStep === 5;
+
+    if (shouldAdvanceSecondTubeStep) {
+      setBasicSecondTubeTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Test tube placed on the workbench. Moving to Step 6.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!hasPlacedTestTube) {
+      if (testTubePlacementTracked) {
+        setTestTubePlacementTracked(false);
+      }
+      if (basicSecondTubeTracked) {
+        setBasicSecondTubeTracked(false);
+      }
     }
   }, [
     equipmentPositions,
@@ -540,6 +565,7 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment,
     resolvedDryTestMode,
     testTubePlacementTracked,
+    basicSecondTubeTracked,
     currentStep,
     totalSteps,
     onStepComplete,
@@ -633,6 +659,49 @@ function ChemicalEquilibriumVirtualLab({
     if (
       !experimentStarted ||
       !isDryTestExperiment ||
+      resolvedDryTestMode !== "basic"
+    ) {
+      return;
+    }
+
+    if (currentStep !== 8) {
+      if (basicSecondBunsenTracked) {
+        setBasicSecondBunsenTracked(false);
+      }
+      return;
+    }
+
+    const hasBunsen = equipmentPositions.some((pos) =>
+      pos.id.includes("bunsen-burner-virtual-heat-source"),
+    );
+
+    if (hasBunsen && !basicSecondBunsenTracked) {
+      setBasicSecondBunsenTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Bunsen burner placed. Moving to Step 9.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!hasBunsen && basicSecondBunsenTracked) {
+      setBasicSecondBunsenTracked(false);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    basicSecondBunsenTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
       resolvedDryTestMode !== "acid"
     ) {
       return;
@@ -675,6 +744,56 @@ function ChemicalEquilibriumVirtualLab({
   ]);
 
   useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      resolvedDryTestMode !== "basic"
+    ) {
+      return;
+    }
+
+    if (currentStep !== 9) {
+      if (basicGlassSetupTracked) {
+        setBasicGlassSetupTracked(false);
+      }
+      return;
+    }
+
+    const hasGlassRod = equipmentPositions.some((pos) =>
+      stripEquipmentIdSuffix(pos.id) === "glass-rod",
+    );
+    const hasGlassContainer = equipmentPositions.some((pos) =>
+      stripEquipmentIdSuffix(pos.id) === "glass-container",
+    );
+
+    if (
+      hasGlassRod &&
+      hasGlassContainer &&
+      !basicGlassSetupTracked
+    ) {
+      setBasicGlassSetupTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Glass rod and container placed. Moving to Step 10.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (!(hasGlassRod && hasGlassContainer) && basicGlassSetupTracked) {
+      setBasicGlassSetupTracked(false);
+    }
+  }, [
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    basicGlassSetupTracked,
+    currentStep,
+    totalSteps,
+    onStepComplete,
+  ]);
+
+  useEffect(() => {
     setTestTubePlacementTracked(false);
     setSecondTestTubePlacementTracked(false);
     setSampleAddedTracked(false);
@@ -686,6 +805,12 @@ function ChemicalEquilibriumVirtualLab({
     setAmmoniumAddedTracked(false);
     setWorkbenchResetStepTracked(false);
     setMno2AddedTracked(false);
+    setBasicSecondTubeTracked(false);
+    setBasicSaltAddedTracked(false);
+    setBasicNaOHAddedTracked(false);
+    setBasicSecondBunsenTracked(false);
+    setBasicGlassSetupTracked(false);
+    setBasicGlassAcidAddedTracked(false);
   }, [stepNumber, workbenchResetTrigger]);
 
   useEffect(() => {
@@ -807,6 +932,22 @@ function ChemicalEquilibriumVirtualLab({
         );
         setTimeout(() => setToastMessage(null), 2500);
         return;
+      }
+
+      const shouldCaptureBasicStep1Placement =
+        experimentStarted &&
+        isDryTestExperiment &&
+        resolvedDryTestMode === "basic" &&
+        id === "test_tubes" &&
+        !testTubePlacementTracked &&
+        currentStep === 1;
+
+      if (shouldCaptureBasicStep1Placement) {
+        setTestTubePlacementTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
+        setTimeout(() => setToastMessage(null), 3000);
       }
 
       const normalizedId = stripEquipmentIdSuffix(id);
@@ -953,7 +1094,7 @@ function ChemicalEquilibriumVirtualLab({
         return [...prev, { id, x: snappedDrop.x, y: snappedDrop.y, chemicals: [] }];
       });
     },
-    [currentStep, distilledWaterAdded, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode],
+    [currentStep, distilledWaterAdded, experimentStarted, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode, testTubePlacementTracked, totalSteps],
   );
 
   const handleEquipmentRemove = useCallback((id: string) => {
@@ -1349,10 +1490,24 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(
-      `Added ${volume.toFixed(1)} mL of ${acidConfig.label} to the glass container.`,
-    );
+    const shouldAdvanceAfterBasicGlassAcid =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "basic" &&
+      currentStep === 10 &&
+      !basicGlassAcidAddedTracked;
+    const acidToast = shouldAdvanceAfterBasicGlassAcid
+      ? "Concentrated HCl added to the glass container. Moving to Step 11."
+      : `Added ${volume.toFixed(1)} mL of ${acidConfig.label} to the glass container.`;
+
+    setToastMessage(acidToast);
     setTimeout(() => setToastMessage(null), 3000);
+
+    if (shouldAdvanceAfterBasicGlassAcid) {
+      setBasicGlassAcidAddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    }
   };
 
   const handleAddGlassAcidToContainer = () => {
@@ -1433,10 +1588,26 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${volume.toFixed(2)} mL of NaOH to the test tube.`);
+    const shouldAdvanceAfterBasicNaOH =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "basic" &&
+      currentStep === 7 &&
+      !basicNaOHAddedTracked;
+    const naohToast = shouldAdvanceAfterBasicNaOH
+      ? "NaOH solution added. Moving to Step 8."
+      : `Added ${volume.toFixed(2)} mL of NaOH to the test tube.`;
+
+    setToastMessage(naohToast);
     setTimeout(() => setToastMessage(null), 3000);
 
     handleNaOHDialogClose();
+
+    if (shouldAdvanceAfterBasicNaOH) {
+      setBasicNaOHAddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    }
   };
 
   const getQuickAddAction = (equipmentId: string) => {
@@ -1534,15 +1705,23 @@ function ChemicalEquilibriumVirtualLab({
       resolvedDryTestMode === "acid" &&
       currentStep === 9 &&
       !secondSampleAddedTracked;
+    const shouldAdvanceAfterBasicSalt =
+      experimentStarted &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "basic" &&
+      currentStep === 6 &&
+      !basicSaltAddedTracked;
 
     const shouldAdvanceAfterSample =
       shouldAdvanceAfterFirstSample || shouldAdvanceAfterSecondSample;
 
-    setToastMessage(
-      shouldAdvanceAfterSample
-        ? "Salt sample added. Moving to the next step."
-        : `Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`,
-    );
+    const toastMessageText = shouldAdvanceAfterSample
+      ? "Salt sample added. Moving to the next step."
+      : shouldAdvanceAfterBasicSalt
+        ? "Salt sample added. Moving to Step 7."
+        : `Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`;
+
+    setToastMessage(toastMessageText);
     setTimeout(() => setToastMessage(null), 3000);
     handleSaltDialogClose();
 
@@ -1552,6 +1731,10 @@ function ChemicalEquilibriumVirtualLab({
       } else {
         setSecondSampleAddedTracked(true);
       }
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    } else if (shouldAdvanceAfterBasicSalt) {
+      setBasicSaltAddedTracked(true);
       onStepComplete();
       setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
     }
@@ -1875,7 +2058,9 @@ function ChemicalEquilibriumVirtualLab({
       );
       setRodMoved(true);
       setPostMoveFumesEnabled(true);
-      setCaseOneResult("Cl⁻ radical may be present in the given salt.");
+      if (!caseOneReady) {
+        setCaseOneResult("Cl⁻ radical may be present in the given salt.");
+      }
       if (isDryTestExperiment && resolvedDryTestMode === "basic") {
         setCaseTwoResult(CASE_TWO_BASIC_RESULT);
       }
