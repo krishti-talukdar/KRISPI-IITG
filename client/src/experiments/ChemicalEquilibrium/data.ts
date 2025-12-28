@@ -1,4 +1,4 @@
-import type { ChemicalEquilibriumExperiment } from "./types";
+import type { ChemicalEquilibriumExperiment, ExperimentStep } from "./types";
 
 // Complete Chemical Equilibrium experiment data
 const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
