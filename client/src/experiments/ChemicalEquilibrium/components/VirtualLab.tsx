@@ -2619,6 +2619,7 @@ function ChemicalEquilibriumVirtualLab({
                         isDryTest={isDryTestExperiment}
                         dryTestMode={resolvedDryTestMode}
                         isRinseActive={pos.id === glassRodEquipmentId && showRinseAnimation}
+                        onObserve={isDryTestExperiment && resolvedDryTestMode === "wet" ? handleObserveWetTest : undefined}
                         imageUrl={equipment.imageUrl}
                       />
                     ) : null;
