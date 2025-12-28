@@ -501,6 +501,8 @@ function ChemicalEquilibriumVirtualLab({
       setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
       setToastMessage("Bunsen burner placed. Moving to the next step.");
       setTimeout(() => setToastMessage(null), 3000);
+    } else if (!hasBunsen && bunsenPlacedTracked) {
+      setBunsenPlacedTracked(false);
     }
   }, [
     equipmentPositions,
