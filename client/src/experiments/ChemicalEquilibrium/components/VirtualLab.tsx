@@ -74,6 +74,7 @@ type LabSnapshot = {
   caseFiveResult: string;
   caseSixResult: string;
   caseSevenResult: string;
+  sodiumNitroprussideAdded: boolean;
 };
 
 const MAX_HISTORY_ENTRIES = 25;
