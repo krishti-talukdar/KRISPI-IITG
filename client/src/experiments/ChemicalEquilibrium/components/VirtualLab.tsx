@@ -1338,13 +1338,10 @@ function ChemicalEquilibriumVirtualLab({
       setCaseTwoResult(CASE_TWO_WET_NO_PURPLE_RESULT);
       setSodiumNitroprussideAdded(false);
     }
-    const hasDiluteH2SO4InTestTube = testTubeState?.chemicals.some(
+    const hasH2SO4InTestTube = testTubeState?.chemicals.some(
       (chemical) => chemical.id === ACID_CONFIG.h2so4.chemicalId,
     );
-    if (
-      hasDiluteH2SO4InTestTube &&
-      caseThreeResult === DEFAULT_CASE_RESULT
-    ) {
+    if (hasH2SO4InTestTube && caseThreeResult !== CASE_THREE_WET_NO_GREEN_RESULT) {
       setCaseThreeResult(CASE_THREE_WET_NO_GREEN_RESULT);
     }
     setToastMessage("Observation noted for the Wet Acid Test.");
@@ -3295,7 +3292,7 @@ function ChemicalEquilibriumVirtualLab({
             </DialogHeader>
 
             <div className="px-6 pb-6 pt-4 space-y-6 text-slate-900">
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2">
                 <section className="rounded-lg border border-rose-200 bg-gradient-to-br from-rose-50 to-white p-5 shadow-lg shadow-rose-100">
                   <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-rose-500">Case 1 • Initial Clues</div>
                   <p className="mt-3 text-base font-semibold leading-relaxed text-slate-900">
@@ -3320,23 +3317,12 @@ function ChemicalEquilibriumVirtualLab({
                     <span className="h-2.5 w-2.5 rounded-full bg-lime-500" />
                   </div>
                 </section>
-                <section className="rounded-lg border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-lg shadow-emerald-100">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-emerald-600">Case 3 • Sulphite Check</div>
-                  <p className="mt-3 text-base font-semibold text-slate-900 leading-relaxed">{caseThreeResult}</p>
-                  <p className="mt-2 text-sm text-slate-700">
-                    Dilute H₂SO₄ and acidified dichromate were combined without any green colour, showing that SO₃²⁻ is not present in the sample.
-                  </p>
-                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-600">
-                    Sulphite absent
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                  </div>
-                </section>
               </div>
 
               <div className="rounded-lg border border-indigo-100 bg-gradient-to-br from-sky-50 via-indigo-50 to-white p-5 text-indigo-900 shadow-inner">
                 <div className="font-semibold text-indigo-800">Case Comparison</div>
                 <p className="mt-2 text-sm leading-relaxed text-indigo-900">
-                  Case 1 establishes the likelihood of chloride radicals while Case 2 captures the oxidizing reaction that releases chlorine gas. Together they validate chloride ions in the salt, matching the classic dry test evidence for acid radicals.
+                  Case 1 establishes the likelihood of chloride radicals while Case 2 captures the oxidizing reaction that releases chlorine gas. Together they form the complete dry test narrative for identifying acid radicals.
                 </p>
                 <div className="mt-3 flex flex-wrap gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-indigo-500">
                   <span className="rounded-full bg-indigo-100 px-3 py-1">Residue trace</span>
@@ -3380,9 +3366,6 @@ function ChemicalEquilibriumVirtualLab({
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-[2px] h-2 w-2 rounded-full bg-lime-500" />MnO₂ accelerated chloride oxidation under the bunsen flame, releasing pungent greenish chlorine gas.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-[2px] h-2 w-2 rounded-full bg-emerald-500" />No green hue formed when H₂SO₄ and acidified dichromate were mixed, confirming sulphite ions are absent.
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-[2px] h-2 w-2 rounded-full bg-sky-500" />Both cases now display a complete qualitative analysis for the acid radical dry test.
