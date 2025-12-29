@@ -365,11 +365,18 @@ function ChemicalEquilibriumVirtualLab({
   const baClChemical = testTubeState?.chemicals.find((chemical) => chemical.id === BA_CL_CHEMICAL_ID);
   const baClAmountInTestTube = baClChemical?.amount ?? 0;
   const isBaClAddedToTestTube = baClAmountInTestTube > 0;
-  const shouldBlinkObserveButton =
+  const shouldBlinkObserveButtonForBaCl =
     isDryTestExperiment &&
     resolvedDryTestMode === "wet" &&
     isBaClAddedToTestTube &&
     caseOneResult === DEFAULT_CASE_RESULT;
+  const shouldBlinkObserveButtonForSodiumNitroprusside =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "wet" &&
+    sodiumNitroprussideAdded &&
+    caseTwoResult === DEFAULT_CASE_RESULT;
+  const shouldBlinkObserveButton =
+    shouldBlinkObserveButtonForBaCl || shouldBlinkObserveButtonForSodiumNitroprusside;
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
       "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
