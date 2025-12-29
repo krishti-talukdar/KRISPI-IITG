@@ -3371,9 +3371,6 @@ function ChemicalEquilibriumVirtualLab({
                     <span className="mt-[2px] h-2 w-2 rounded-full bg-lime-500" />MnO₂ accelerated chloride oxidation under the bunsen flame, releasing pungent greenish chlorine gas.
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="mt-[2px] h-2 w-2 rounded-full bg-emerald-500" />No green hue formed when H₂SO₄ and acidified dichromate were mixed, confirming sulphite ions are absent.
-                  </li>
-                  <li className="flex items-start gap-2">
                     <span className="mt-[2px] h-2 w-2 rounded-full bg-sky-500" />Both cases now display a complete qualitative analysis for the acid radical dry test.
                   </li>
                 </ul>
