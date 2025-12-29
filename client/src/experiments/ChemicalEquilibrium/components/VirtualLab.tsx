@@ -1338,13 +1338,10 @@ function ChemicalEquilibriumVirtualLab({
       setCaseTwoResult(CASE_TWO_WET_NO_PURPLE_RESULT);
       setSodiumNitroprussideAdded(false);
     }
-    const hasDiluteH2SO4InTestTube = testTubeState?.chemicals.some(
+    const hasH2SO4InTestTube = testTubeState?.chemicals.some(
       (chemical) => chemical.id === ACID_CONFIG.h2so4.chemicalId,
     );
-    if (
-      hasDiluteH2SO4InTestTube &&
-      caseThreeResult === DEFAULT_CASE_RESULT
-    ) {
+    if (hasH2SO4InTestTube && caseThreeResult !== CASE_THREE_WET_NO_GREEN_RESULT) {
       setCaseThreeResult(CASE_THREE_WET_NO_GREEN_RESULT);
     }
     setToastMessage("Observation noted for the Wet Acid Test.");
