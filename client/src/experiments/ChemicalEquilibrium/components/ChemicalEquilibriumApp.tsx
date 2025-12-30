@@ -18,8 +18,6 @@ const WET_ACID_TEST_EQUIPMENT = [
   "Salt Sample",
   "BaCl₂ Solution",
   "Sodium Nitroprusside",
-  "Acidified Potassium Dichromate Solution (K₂Cr₂O₇)",
-  "Dil. H₂SO₄",
   "AgNO₃",
   "CaCl₂ Solution",
   "FeSO₄",
