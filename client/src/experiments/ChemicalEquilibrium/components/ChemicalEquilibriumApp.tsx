@@ -18,6 +18,7 @@ const WET_ACID_TEST_EQUIPMENT = [
   "Salt Sample",
   "BaCl₂ Solution",
   "Sodium Nitroprusside",
+  "dil. HNO₃",
   "AgNO₃",
   "CaCl₂ Solution",
   "FeSO₄",
