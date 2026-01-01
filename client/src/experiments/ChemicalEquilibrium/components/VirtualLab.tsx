@@ -417,9 +417,15 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_NAOH_VOLUME = 2;
   const MAX_NAOH_VOLUME = 4;
   const MIN_ACID_DROPS = 3;
-  const MAX_ACID_DROPS = 5;
-  const ACID_RANGE_LABEL = "3-5 drops";
-  const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
+const MAX_ACID_DROPS = 5;
+const ACID_RANGE_LABEL = "3-5 drops";
+
+const DILUTE_HNO3_CHEMICAL_ID = "dil_hno3";
+const DILUTE_HNO3_LABEL = "Dil. HNO₃";
+const DILUTE_HNO3_COLOR = "#f472b6";
+const DILUTE_HNO3_VOLUME_INCREMENT = 4;
+
+const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
   const MIN_GLASS_HCL_VOLUME = 1;
   const MAX_GLASS_HCL_VOLUME = 6;
   const GLASS_CONTAINER_HCL_VOLUME_LABEL = "1 - 6 mL";
@@ -2156,6 +2162,69 @@ function ChemicalEquilibriumVirtualLab({
     }
   };
 
+  const handleAddDiluteHNO3ToTestTube = useCallback(() => {
+    if (!isDryTestExperiment || resolvedDryTestMode !== "wet") {
+      return;
+    }
+
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+    if (!testTube) {
+      setToastMessage("Place the test tube on the workbench first.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    const hasSaltSample = testTube.chemicals.some(
+      (chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+    );
+    if (!hasSaltSample) {
+      setToastMessage("Add the salt sample before dil. HNO₃.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    pushHistorySnapshot();
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find(
+          (chemical) => chemical.id === DILUTE_HNO3_CHEMICAL_ID,
+        );
+        const updatedChemicals = existing
+          ? pos.chemicals.map((chemical) =>
+              chemical.id === DILUTE_HNO3_CHEMICAL_ID
+                ? { ...chemical, amount: chemical.amount + DILUTE_HNO3_VOLUME_INCREMENT }
+                : chemical,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: DILUTE_HNO3_CHEMICAL_ID,
+                name: DILUTE_HNO3_LABEL,
+                color: DILUTE_HNO3_COLOR,
+                amount: DILUTE_HNO3_VOLUME_INCREMENT,
+                concentration: "Dilute",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${DILUTE_HNO3_VOLUME_INCREMENT} mL of dil. HNO₃ to the test tube.`);
+    setTimeout(() => setToastMessage(null), 2500);
+  }, [
+    equipmentPositions,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    pushHistorySnapshot,
+    setEquipmentPositions,
+    setToastMessage,
+  ]);
+
   const handleAddAmmoniumToGlassContainer = () => {
     const volume = parseFloat(ammoniumVolume);
     if (Number.isNaN(volume)) {
@@ -2703,7 +2772,25 @@ function ChemicalEquilibriumVirtualLab({
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
                   .map((pos) => {
                     const equipment = equipmentList.find((eq) => eq.id === pos.id);
-                    return equipment ? (
+      const normalizedEquipmentName = equipment.name.toLowerCase();
+      const interactHandler = experimentStarted
+        ? normalizedEquipmentName.includes("salt sample")
+          ? handleSaltDialogOpen
+          : normalizedEquipmentName.includes("dil") && normalizedEquipmentName.includes("hno")
+            ? handleAddDiluteHNO3ToTestTube
+            : normalizedEquipmentName.includes("ammonium") ||
+              normalizedEquipmentName.includes("nh₄oh") ||
+              normalizedEquipmentName.includes("nh4oh")
+              ? handleAmmoniumDialogOpen
+              : normalizedEquipmentName.includes("hcl")
+                ? () => handleAcidDialogOpen("hcl")
+                : normalizedEquipmentName.includes("h2so4") ||
+                  normalizedEquipmentName.includes("h₂so₄") ||
+                  normalizedEquipmentName.includes("sulfuric")
+                  ? () => handleAcidDialogOpen("h2so4")
+                  : undefined
+        : undefined;
+      return equipment ? (
                       <Equipment
                         key={pos.id}
                         id={pos.id}
@@ -2714,23 +2801,7 @@ function ChemicalEquilibriumVirtualLab({
                         chemicals={pos.chemicals}
                         onChemicalDrop={experimentStarted ? handleChemicalDrop : () => {}}
                         onRemove={experimentStarted ? handleEquipmentRemove : () => {}}
-                        onInteract={
-                          experimentStarted
-                            ? equipment.name.toLowerCase().includes("salt sample")
-                              ? handleSaltDialogOpen
-                              : equipment.name.toLowerCase().includes("ammonium") ||
-                                equipment.name.toLowerCase().includes("nh₄oh") ||
-                                equipment.name.toLowerCase().includes("nh4oh")
-                              ? handleAmmoniumDialogOpen
-                              : equipment.name.toLowerCase().includes("hcl")
-                                ? () => handleAcidDialogOpen("hcl")
-                                : equipment.name.toLowerCase().includes("h2so4") ||
-                                  equipment.name.toLowerCase().includes("h₂so₄") ||
-                                  equipment.name.toLowerCase().includes("sulfuric")
-                                ? () => handleAcidDialogOpen("h2so4")
-                                : undefined
-                            : undefined
-                        }
+                        onInteract={interactHandler}
                         cobaltReactionState={cobaltReactionState}
                         allEquipmentPositions={equipmentPositions}
                         currentStep={currentStep}
