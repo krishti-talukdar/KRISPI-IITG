@@ -416,7 +416,7 @@ function ChemicalEquilibriumVirtualLab({
   const NAOH_VOLUME_LABEL = "2ml - 4ml";
   const MIN_NAOH_VOLUME = 2;
   const MAX_NAOH_VOLUME = 4;
-   const MIN_ACID_DROPS = 3;
+  const MIN_ACID_DROPS = 3;
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
 
