@@ -416,7 +416,7 @@ function ChemicalEquilibriumVirtualLab({
   const NAOH_VOLUME_LABEL = "2ml - 4ml";
   const MIN_NAOH_VOLUME = 2;
   const MAX_NAOH_VOLUME = 4;
-    const MIN_ACID_DROPS = 3;
+   const MIN_ACID_DROPS = 3;
   const MAX_ACID_DROPS = 5;
   const ACID_RANGE_LABEL = "3-5 drops";
 
@@ -425,7 +425,7 @@ function ChemicalEquilibriumVirtualLab({
   const DILUTE_HNO3_COLOR = "#f472b6";
   const DILUTE_HNO3_VOLUME_INCREMENT = 4;
 
-const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
+  const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
   const MIN_GLASS_HCL_VOLUME = 1;
   const MAX_GLASS_HCL_VOLUME = 6;
   const GLASS_CONTAINER_HCL_VOLUME_LABEL = "1 - 6 mL";
