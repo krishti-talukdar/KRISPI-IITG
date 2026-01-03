@@ -335,6 +335,7 @@ function ChemicalEquilibriumVirtualLab({
   const [sodiumNitroprussideAdded, setSodiumNitroprussideAdded] = useState(false);
   const [magnesiaAdded, setMagnesiaAdded] = useState(false);
   const [caClAdded, setCaClAdded] = useState(false);
+  const [dilH2SO4HeatingTriggered, setDilH2SO4HeatingTriggered] = useState(false);
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
