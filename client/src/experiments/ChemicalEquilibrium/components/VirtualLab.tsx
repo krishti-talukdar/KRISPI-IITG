@@ -3752,6 +3752,24 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
+              <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
+                <div className="text-sm font-semibold text-slate-900">Full Case Results</div>
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  {[
+                    { label: "Case 1", result: caseOneResult },
+                    { label: "Case 2", result: caseTwoResult },
+                    { label: "Case 3", result: caseThreeResult },
+                    { label: "Case 4", result: caseFourResult },
+                    { label: "Case 5", result: caseFiveResult },
+                  ].map((entry) => (
+                    <div key={entry.label} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
+                      <p className="mt-1 text-sm text-slate-800">{entry.result}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                   <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
