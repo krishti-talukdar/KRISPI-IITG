@@ -3753,18 +3753,6 @@ function ChemicalEquilibriumVirtualLab({
             </DialogHeader>
 
             <div className="px-6 pb-6 pt-4 space-y-6 text-slate-900">
-              <div className="rounded-lg border border-indigo-100 bg-gradient-to-br from-sky-50 via-indigo-50 to-white p-5 text-indigo-900 shadow-inner">
-                <div className="font-semibold text-indigo-800">Case Comparison</div>
-                <p className="mt-2 text-sm leading-relaxed text-indigo-900">
-                  Case 1 establishes the likelihood of chloride radicals while Case 2 captures the oxidizing reaction that releases chlorine gas. Together they form the complete dry test narrative for identifying acid radicals.
-                </p>
-                <div className="mt-3 flex flex-wrap gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-indigo-500">
-                  <span className="rounded-full bg-indigo-100 px-3 py-1">Residue trace</span>
-                  <span className="rounded-full bg-indigo-100 px-3 py-1">Gas evolution</span>
-                  <span className="rounded-full bg-indigo-100 px-3 py-1">Qualitative proof</span>
-                </div>
-              </div>
-
               <div className="rounded-lg border border-slate-900 bg-slate-900 p-5 text-white shadow-2xl">
                 <div className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">Detailed Insights</div>
                 <p className="mt-2 text-sm text-white/80">
