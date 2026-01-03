@@ -3023,7 +3023,9 @@ function ChemicalEquilibriumVirtualLab({
                     const interactHandler = experimentStarted
                       ? normalizedEquipmentName.includes("salt sample")
                         ? handleSaltDialogOpen
-                        : normalizedEquipmentName.includes("dil") && normalizedEquipmentName.includes("h2so4")
+                        : normalizedEquipmentName.includes("dil") &&
+                          (normalizedEquipmentName.includes("h2so4") ||
+                            normalizedEquipmentName.includes("h₂so₄"))
                           ? handleAddDiluteH2SO4ToTestTube
                           : normalizedEquipmentName.includes("dil") && normalizedEquipmentName.includes("hno")
                             ? handleAddDiluteHNO3ToTestTube
