@@ -1320,6 +1320,56 @@ function ChemicalEquilibriumVirtualLab({
       }
     }
 
+    if (requiresDropValidation && isMagnesiaAddition) {
+      const dropVolume = parsedAmount * MAGNESIA_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === MAGNESIA_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === MAGNESIA_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: MAGNESIA_CHEMICAL_ID,
+                    name: MAGNESIA_CHEMICAL_NAME,
+                    color: MAGNESIA_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "Reagent",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          return updated ? next : prev;
+        });
+        setMagnesiaAdded(true);
+      }
+    }
+
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
       setSodiumNitroprussideAdded(true);
     }
