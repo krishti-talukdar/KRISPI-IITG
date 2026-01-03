@@ -1614,6 +1614,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult,
     setSodiumNitroprussideAdded,
     setMagnesiaAdded,
+    setFeCl3Added,
     setCaClAdded,
     setDilH2SO4HeatingTriggered,
     setToastMessage,
