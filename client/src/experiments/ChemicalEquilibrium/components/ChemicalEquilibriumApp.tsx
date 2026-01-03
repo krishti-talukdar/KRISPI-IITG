@@ -25,15 +25,14 @@ const WET_ACID_TEST_EQUIPMENT = [
 ];
 
 const WET_BASIC_TEST_EQUIPMENT = [
-  "Test Tubes",
-  "Dropper Pipettes",
-  "Indicator Solution (Universal Indicator)",
-  "Dilute NaOH (0.1 M)",
-  "Distilled Water",
+  "Salt Sample",
+  "Dilute HCl",
+  "H₂S Gas",
+  "Solid NH₄Cl",
+  "NH₄OH Solution",
+  "Solid (NH₄)₂CO₃",
+  "Na₂HPO₄ Solution",
   "Bunsen Burner (virtual heat source)",
-  "Glass Rod",
-  "Glass Beaker (25 mL)",
-  "pH Paper Strips",
 ];
 
 const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
