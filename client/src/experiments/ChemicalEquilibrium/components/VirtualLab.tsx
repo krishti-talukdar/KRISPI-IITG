@@ -1493,18 +1493,28 @@ function ChemicalEquilibriumVirtualLab({
     } else if (hasH2SO4InTestTube && caseThreeResult !== CASE_THREE_WET_NO_GREEN_RESULT) {
       setCaseThreeResult(CASE_THREE_WET_NO_GREEN_RESULT);
     }
+    if (caClAdded && caseFourResult === DEFAULT_CASE_RESULT) {
+      setCaseFourResult(CASE_FOUR_WET_CACL_RESULT);
+      setCaClAdded(false);
+    }
     setToastMessage("Observation noted for the Wet Acid Test.");
     setTimeout(() => setToastMessage(null), 2500);
   }, [
     caseOneResult,
     caseTwoResult,
     caseThreeResult,
+    caseFourResult,
     isBaClAddedToTestTube,
     sodiumNitroprussideAdded,
+    magnesiaAdded,
+    caClAdded,
     setCaseOneResult,
     setCaseTwoResult,
     setCaseThreeResult,
+    setCaseFourResult,
     setSodiumNitroprussideAdded,
+    setMagnesiaAdded,
+    setCaClAdded,
     setToastMessage,
     testTubeState,
   ]);
