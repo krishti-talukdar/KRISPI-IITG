@@ -1464,6 +1464,7 @@ function ChemicalEquilibriumVirtualLab({
     setEquipmentPositions,
     setSodiumNitroprussideAdded,
     setMagnesiaAdded,
+    setCaClAdded,
   ]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
