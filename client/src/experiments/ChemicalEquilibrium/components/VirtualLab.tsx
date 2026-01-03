@@ -162,7 +162,6 @@ const DRY_TEST_BASIC_GLASS_AUTOPOSITION_IDS = [
   "glass-container",
 ];
 
-const BA_CL_DROP_VOLUME_ML = 0.25;
 const BA_CL_CHEMICAL_ID = "bacl2_solution";
 const BA_CL_CHEMICAL_NAME = "BaCl₂ Solution";
 const BA_CL_CHEMICAL_COLOR = "#38bdf8";
