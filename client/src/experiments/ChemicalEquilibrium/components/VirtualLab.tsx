@@ -286,6 +286,8 @@ function ChemicalEquilibriumVirtualLab({
     "A white precipitate would show PO₄³⁻; the table reports no precipitate, so phosphate is absent";
   const CASE_FOUR_WET_CACL_RESULT =
     "A white precipitate would indicate oxalate; the table shows no precipitate, so C₂O₄²⁻ is absent.";
+  const CASE_FIVE_WET_NO_BROWN_RESULT =
+    "A brown colour of NO gas or complex would indicate nitrite; observation says no brown colour, so NO₂⁻ is absent.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
