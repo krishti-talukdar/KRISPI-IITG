@@ -2534,6 +2534,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
     setSodiumNitroprussideAdded(false);
+    setMagnesiaAdded(false);
     setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
