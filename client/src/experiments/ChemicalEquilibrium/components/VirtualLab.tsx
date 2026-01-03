@@ -1216,13 +1216,11 @@ function ChemicalEquilibriumVirtualLab({
       }
     }
 
-    const isBaClAddition = addDialogEquipment.name.toLowerCase().includes("bacl");
-    const isSodiumNitroprussideAddition = addDialogEquipment.name
-      .toLowerCase()
-      .includes("nitroprusside");
-    const isDichromateAddition = addDialogEquipment.name
-      .toLowerCase()
-      .includes("dichromate");
+    const lowerName = addDialogEquipment.name.toLowerCase();
+    const isBaClAddition = lowerName.includes("bacl");
+    const isSodiumNitroprussideAddition = lowerName.includes("nitroprusside");
+    const isDichromateAddition = lowerName.includes("dichromate");
+    const isMagnesiaAddition = lowerName.includes("magnesia");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
