@@ -25,6 +25,7 @@ const WET_ACID_TEST_EQUIPMENT = [
 ];
 
 const WET_BASIC_TEST_EQUIPMENT = [
+  "Test Tube",
   "Salt Sample",
   "Dilute HCl",
   "H₂S Gas",
