@@ -3812,22 +3812,23 @@ function ChemicalEquilibriumVirtualLab({
       {isDryTestExperiment && (
         <Dialog open={showCase2ResultsModal} onOpenChange={setShowCase2ResultsModal}>
           <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
-              <DialogTitle className="text-2xl font-bold text-white">Experiment Results &amp; Analysis</DialogTitle>
-              <DialogDescription className="text-white/80">
-                Complete summary of Case 1 and Case 2 observations for the Salt Analysis dry acid radicals test.
-              </DialogDescription>
-            </DialogHeader>
+          <DialogHeader className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
+            <DialogTitle className="text-2xl font-bold text-white">Experiment Results &amp; Analysis</DialogTitle>
+            <DialogDescription className="text-white/80">
+              Overview of the Salt Analysis acid radical narrative across the dry and wet tests.
+            </DialogDescription>
+          </DialogHeader>
 
-            <div className="px-6 pb-6 pt-4 space-y-6 text-slate-900">
-              <div className="rounded-lg border border-slate-900 bg-slate-900 p-5 text-white shadow-2xl">
+          <div className="px-6 pb-6 pt-4 text-slate-900">
+            <div className="space-y-6 rounded-[32px] border border-white/70 bg-gradient-to-br from-white to-slate-100 p-6 shadow-2xl shadow-indigo-200/30">
+              <div className="rounded-2xl border border-white/10 bg-slate-900 p-5 text-white shadow-xl">
                 <div className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">Detailed Insights</div>
                 <p className="mt-2 text-sm text-white/80">
                   These focused notes highlight how the additional wet-case drop-injections confirm which acid radicals remain absent after the primary dry tests.
                 </p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
                   {detailedInsights.map((insight) => (
-                    <div key={insight.title} className="rounded-lg border border-white/10 bg-white/5 p-3">
+                    <div key={insight.title} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
                       <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{insight.hint}</div>
                       <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
                       <p className="mt-1 text-xs text-white/70 leading-tight">{insight.description}</p>
@@ -3836,20 +3837,32 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
+              <div className="grid gap-4 md:grid-cols-3">
+                {analysisGuidance.map((note) => (
+                  <div
+                    key={note.label}
+                    className={`rounded-2xl border border-white/30 bg-gradient-to-br ${note.accent} bg-opacity-80 p-4 shadow-lg shadow-slate-200/60`}
+                  >
+                    <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${note.textColor}`}>{note.label}</div>
+                    <p className="mt-2 text-sm font-semibold text-slate-900 leading-relaxed">{note.description}</p>
+                  </div>
+                ))}
+              </div>
+
               <div className="rounded-2xl border border-slate-300 bg-gradient-to-br from-slate-50 via-white to-slate-50 p-5 shadow-lg">
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries.map((entry) => (
                     <div
-                    key={entry.label}
-                    className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
-                  >
-                    <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{entry.label}</div>
-                    <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed`}>{entry.result}</p>
-                    <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
-                      {entry.indicator}
+                      key={entry.label}
+                      className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
+                    >
+                      <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{entry.label}</div>
+                      <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed`}>{entry.result}</p>
+                      <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
+                        {entry.indicator}
+                      </div>
                     </div>
-                  </div>
                   ))}
                 </div>
               </div>
@@ -3893,6 +3906,7 @@ function ChemicalEquilibriumVirtualLab({
                 </ul>
               </div>
             </div>
+          </div>
 
             <DialogFooter className="px-6 pb-6">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
