@@ -1604,6 +1604,7 @@ function ChemicalEquilibriumVirtualLab({
     isBaClAddedToTestTube,
     sodiumNitroprussideAdded,
     magnesiaAdded,
+    feCl3Added,
     caClAdded,
     dilH2SO4HeatingTriggered,
     setCaseOneResult,
