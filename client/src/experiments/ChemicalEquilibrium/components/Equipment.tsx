@@ -15,6 +15,7 @@ const MAX_NAOH_VOLUME_DISPLAY = 6;
 const K2CR2O7_CHEMICAL_ID = "k2cr2o7_solution";
 const K2CR2O7_SOLUTION_COLOR = "#fb923c";
 const DILUTE_HNO3_WET_SOLUTION_COLOR = "rgba(14, 165, 233, 0.95)";
+const NH4OH_WET_SOLUTION_COLOR = "rgba(191, 219, 254, 0.95)";
 const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
 const GLASS_CONTAINER_MAX_VOLUME_ML = 12;
 const GLASS_CONTAINER_MIN_OVERLAY_HEIGHT = 16;
