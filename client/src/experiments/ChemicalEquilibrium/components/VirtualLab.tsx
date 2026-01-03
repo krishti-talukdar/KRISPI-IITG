@@ -277,7 +277,7 @@ function ChemicalEquilibriumVirtualLab({
   const CASE_THREE_WET_NO_GREEN_RESULT =
     "a green colour would indicate sulphite, but the table shows no green colour, so SO₃²⁻ is absent.";
 const CASE_THREE_WET_MAGNESIA_RESULT =
-    "When magnesia mixture (PO₄³⁻) is added in the test tube";
+    "A white precipitate would show PO₄³⁻; the table reports no precipitate, so phosphate is absent";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
