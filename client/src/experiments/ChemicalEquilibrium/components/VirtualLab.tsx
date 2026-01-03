@@ -3812,7 +3812,7 @@ function ChemicalEquilibriumVirtualLab({
       {isDryTestExperiment && (
         <Dialog open={showCase2ResultsModal} onOpenChange={setShowCase2ResultsModal}>
           <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
+            <DialogHeader className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
             <DialogTitle className="text-2xl font-bold text-white">Experiment Results &amp; Analysis</DialogTitle>
             <DialogDescription className="text-white/80">
               Overview of the Salt Analysis acid radical narrative across the dry and wet tests.
