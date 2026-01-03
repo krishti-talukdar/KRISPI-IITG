@@ -1510,6 +1510,7 @@ function ChemicalEquilibriumVirtualLab({
       setCaseFourResult(CASE_FOUR_WET_CACL_RESULT);
       setCaClAdded(false);
     }
+    setDilH2SO4HeatingTriggered(false);
     setToastMessage("Observation noted for the Wet Acid Test.");
     setTimeout(() => setToastMessage(null), 2500);
   }, [
