@@ -181,6 +181,10 @@ const K2CR2O7_DROP_VOLUME_ML = 0.25;
 const K2CR2O7_CHEMICAL_ID = "k2cr2o7_solution";
 const K2CR2O7_CHEMICAL_NAME = "Acidified Potassium Dichromate Solution (K₂Cr₂O₇)";
 const K2CR2O7_CHEMICAL_COLOR = "#fb923c";
+const FE_CL3_DROP_VOLUME_ML = 0.25;
+const FE_CL3_CHEMICAL_ID = "fecl3_solution";
+const FE_CL3_CHEMICAL_NAME = "FeCl₃ Solution";
+const FE_CL3_CHEMICAL_COLOR = "#ef4444";
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
