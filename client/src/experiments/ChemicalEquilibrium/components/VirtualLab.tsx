@@ -2591,6 +2591,7 @@ function ChemicalEquilibriumVirtualLab({
     setSodiumNitroprussideAdded(false);
     setMagnesiaAdded(false);
     setCaClAdded(false);
+    setDilH2SO4HeatingTriggered(false);
     setShowCase2ResultsModal(false);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
