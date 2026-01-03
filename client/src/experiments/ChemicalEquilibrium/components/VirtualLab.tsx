@@ -990,6 +990,7 @@ function ChemicalEquilibriumVirtualLab({
     magnesiaAdded,
     caClAdded,
     dilH2SO4HeatingTriggered,
+    feCl3Added,
   });
 
   const DRY_TEST_BOTTLE_IDS = [
