@@ -21,22 +21,19 @@ const WET_ACID_TEST_EQUIPMENT = [
   "NH₄OH (Ammonium hydroxide)",
   "Magnesia mixture (PO₄³⁻)",
   "CaCl₂ Solution",
-  "Dil. H₂SO₄",
-  "FeSO₄",
   "FeCl₃",
-  "Bunsen Burner (virtual heat source)",
 ];
 
 const WET_BASIC_TEST_EQUIPMENT = [
-  "Test Tubes",
-  "Dropper Pipettes",
-  "Indicator Solution (Universal Indicator)",
-  "Dilute NaOH (0.1 M)",
-  "Distilled Water",
+  "Test Tube",
+  "Salt Sample",
+  "Dilute HCl",
+  "H₂S Gas",
+  "Solid NH₄Cl",
+  "NH₄OH Solution",
+  "Solid (NH₄)₂CO₃",
+  "Na₂HPO₄ Solution",
   "Bunsen Burner (virtual heat source)",
-  "Glass Rod",
-  "Glass Beaker (25 mL)",
-  "pH Paper Strips",
 ];
 
 const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {

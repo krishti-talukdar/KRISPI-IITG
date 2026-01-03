@@ -78,6 +78,7 @@ type LabSnapshot = {
   magnesiaAdded: boolean;
   caClAdded: boolean;
   dilH2SO4HeatingTriggered: boolean;
+  feCl3Added: boolean;
 };
 
 const MAX_HISTORY_ENTRIES = 25;
@@ -180,6 +181,10 @@ const K2CR2O7_DROP_VOLUME_ML = 0.25;
 const K2CR2O7_CHEMICAL_ID = "k2cr2o7_solution";
 const K2CR2O7_CHEMICAL_NAME = "Acidified Potassium Dichromate Solution (K₂Cr₂O₇)";
 const K2CR2O7_CHEMICAL_COLOR = "#fb923c";
+const FE_CL3_DROP_VOLUME_ML = 0.25;
+const FE_CL3_CHEMICAL_ID = "fecl3_solution";
+const FE_CL3_CHEMICAL_NAME = "FeCl₃ Solution";
+const FE_CL3_CHEMICAL_COLOR = "#ef4444";
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
@@ -288,6 +293,8 @@ function ChemicalEquilibriumVirtualLab({
     "A white precipitate would indicate oxalate; the table shows no precipitate, so C₂O₄²⁻ is absent.";
   const CASE_FIVE_WET_NO_BROWN_RESULT =
     "A brown colour of NO gas or complex would indicate nitrite; observation says no brown colour, so NO₂⁻ is absent.";
+  const CASE_FIVE_WET_ACETATE_RESULT =
+    "A red or reddish-brown colour would indicate acetate due to ferric acetate; according to your table no red colour appears, so CH₃COO⁻ is absent.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
@@ -339,6 +346,7 @@ function ChemicalEquilibriumVirtualLab({
   const [magnesiaAdded, setMagnesiaAdded] = useState(false);
   const [caClAdded, setCaClAdded] = useState(false);
   const [dilH2SO4HeatingTriggered, setDilH2SO4HeatingTriggered] = useState(false);
+  const [feCl3Added, setFeCl3Added] = useState(false);
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
@@ -408,12 +416,18 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment &&
     resolvedDryTestMode === "wet" &&
     dilH2SO4HeatingTriggered;
+  const shouldBlinkObserveButtonForFeCl3 =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "wet" &&
+    feCl3Added &&
+    caseFiveResult === DEFAULT_CASE_RESULT;
   const shouldBlinkObserveButton =
     shouldBlinkObserveButtonForBaCl ||
     shouldBlinkObserveButtonForSodiumNitroprusside ||
     shouldBlinkObserveButtonForMagnesia ||
     shouldBlinkObserveButtonForCaCl ||
-    shouldBlinkObserveButtonForDilH2SO4Heat;
+    shouldBlinkObserveButtonForDilH2SO4Heat ||
+    shouldBlinkObserveButtonForFeCl3;
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
       "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
@@ -431,6 +445,113 @@ function ChemicalEquilibriumVirtualLab({
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const resultsReady = caseOneReady && caseTwoReady;
+  const caseSummaryEntries = [
+    {
+      label: "CASE 1",
+      result: caseOneResult,
+      indicator: "Residue",
+      borderClass: "border-rose-200",
+      bgClass: "from-white via-rose-50 to-rose-100",
+      titleColorClass: "text-rose-400",
+      resultTextClass: "text-rose-900",
+      indicatorColorClass: "text-rose-500",
+    },
+    {
+      label: "CASE 2",
+      result: caseTwoResult,
+      indicator: "Gas evolution",
+      borderClass: "border-amber-200",
+      bgClass: "from-white via-amber-50 to-orange-100",
+      titleColorClass: "text-amber-500",
+      resultTextClass: "text-orange-900",
+      indicatorColorClass: "text-orange-500",
+    },
+    {
+      label: "CASE 3",
+      result: caseThreeResult,
+      indicator: "Phosphate",
+      borderClass: "border-emerald-200",
+      bgClass: "from-white via-emerald-50 to-emerald-100",
+      titleColorClass: "text-emerald-500",
+      resultTextClass: "text-emerald-900",
+      indicatorColorClass: "text-emerald-500",
+    },
+    {
+      label: "CASE 4",
+      result: caseFourResult,
+      indicator: "Oxalate",
+      borderClass: "border-cyan-200",
+      bgClass: "from-white via-cyan-50 to-sky-100",
+      titleColorClass: "text-cyan-500",
+      resultTextClass: "text-cyan-900",
+      indicatorColorClass: "text-sky-500",
+    },
+    {
+      label: "CASE 5",
+      result: caseFiveResult,
+      indicator: "Acetate",
+      borderClass: "border-purple-200",
+      bgClass: "from-white via-purple-50 to-indigo-100",
+      titleColorClass: "text-purple-500",
+      resultTextClass: "text-purple-900",
+      indicatorColorClass: "text-indigo-500",
+    },
+  ];
+  const detailedInsights = [
+    {
+      title: "Initial chloride clues",
+      hint: "Case 1",
+      description: caseOneResult,
+    },
+    {
+      title: "Chlorine confirmation",
+      hint: "Case 2",
+      description: caseTwoResult,
+    },
+    {
+      title: "Phosphate check",
+      hint: "Case 3",
+      description: caseThreeResult,
+    },
+    {
+      title: "Oxalate check",
+      hint: "Case 4",
+      description: caseFourResult,
+    },
+    {
+      title: "Acetate check",
+      hint: "Case 5",
+      description: caseFiveResult,
+    },
+  ];
+  const observationHighlights = [
+    `Case 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
+    `Case 3 signals phosphate absence: ${caseThreeResult}`,
+    `Case 4 confirms oxalate is absent: ${caseFourResult}`,
+    `Case 5 dismisses acetate radicals: ${caseFiveResult}`,
+  ];
+  const analysisGuidance = [
+    {
+      label: "Wet test focus",
+      description:
+        "Drop-in reagents highlight which acid radicals remain absent even after the dry sequence.",
+      accent: "from-fuchsia-50 to-purple-50",
+      textColor: "text-fuchsia-600",
+    },
+    {
+      label: "Next steps",
+      description:
+        "Record Cases 3–5 while observing color shifts or precipitates to finish the acid radical map.",
+      accent: "from-emerald-50 to-sky-50",
+      textColor: "text-sky-600",
+    },
+    {
+      label: "Confidence",
+      description: "Chloride residue and chlorine gas confirm the identity before reporting conclusions.",
+      accent: "from-amber-50 to-amber-100",
+      textColor: "text-amber-600",
+    },
+  ];
   const isDryTestWorkbench =
     normalizedTitle.includes("dry tests for acid radicals") ||
     normalizedTitle.includes("dry tests for basic radicals") ||
@@ -501,7 +622,6 @@ function ChemicalEquilibriumVirtualLab({
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const saltHeatingIntervalRef = useRef<number | null>(null);
   const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
-  const showMeasuredPh = !isAcidDryTest && resolvedDryTestMode !== "wet";
 
   // Chemical Equilibrium specific states
   const [cobaltChlorideAdded, setCobaltChlorideAdded] = useState(false);
@@ -976,6 +1096,7 @@ function ChemicalEquilibriumVirtualLab({
     magnesiaAdded,
     caClAdded,
     dilH2SO4HeatingTriggered,
+    feCl3Added,
   });
 
   const DRY_TEST_BOTTLE_IDS = [
@@ -1261,6 +1382,7 @@ function ChemicalEquilibriumVirtualLab({
     const isDichromateAddition = lowerName.includes("dichromate");
     const isMagnesiaAddition = lowerName.includes("magnesia");
     const isCaClAddition = lowerName.includes("cacl");
+    const isFeCl3Addition = lowerName.includes("fecl");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -1460,6 +1582,63 @@ function ChemicalEquilibriumVirtualLab({
       }
     }
 
+    if (requiresDropValidation && isFeCl3Addition) {
+      const dropVolume = parsedAmount * FE_CL3_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        let addedFeCl3 = false;
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === FE_CL3_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === FE_CL3_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: FE_CL3_CHEMICAL_ID,
+                    name: FE_CL3_CHEMICAL_NAME,
+                    color: FE_CL3_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "0.1 M",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          if (updated) {
+            addedFeCl3 = true;
+            return next;
+          }
+          return prev;
+        });
+        if (addedFeCl3) {
+          setFeCl3Added(true);
+        }
+      }
+    }
+
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
       setSodiumNitroprussideAdded(true);
     }
@@ -1479,6 +1658,7 @@ function ChemicalEquilibriumVirtualLab({
     setSodiumNitroprussideAdded,
     setMagnesiaAdded,
     setCaClAdded,
+    setFeCl3Added,
   ]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
@@ -1512,6 +1692,10 @@ function ChemicalEquilibriumVirtualLab({
       setCaseFourResult(CASE_FOUR_WET_CACL_RESULT);
       setCaClAdded(false);
     }
+    if (feCl3Added && caseFiveResult === DEFAULT_CASE_RESULT) {
+      setCaseFiveResult(CASE_FIVE_WET_ACETATE_RESULT);
+      setFeCl3Added(false);
+    }
     if (dilH2SO4HeatingTriggered && caseFiveResult === DEFAULT_CASE_RESULT) {
       setCaseFiveResult(CASE_FIVE_WET_NO_BROWN_RESULT);
     }
@@ -1527,6 +1711,7 @@ function ChemicalEquilibriumVirtualLab({
     isBaClAddedToTestTube,
     sodiumNitroprussideAdded,
     magnesiaAdded,
+    feCl3Added,
     caClAdded,
     dilH2SO4HeatingTriggered,
     setCaseOneResult,
@@ -1536,6 +1721,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult,
     setSodiumNitroprussideAdded,
     setMagnesiaAdded,
+    setFeCl3Added,
     setCaClAdded,
     setDilH2SO4HeatingTriggered,
     setToastMessage,
@@ -2684,6 +2870,7 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(false);
     setCaClAdded(false);
     setDilH2SO4HeatingTriggered(false);
+    setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
@@ -2712,7 +2899,6 @@ function ChemicalEquilibriumVirtualLab({
     setMno2Mass(MNO2_DEFAULT_MASS);
     setMno2DialogError(null);
     setHasRinsed(false);
-    setCaseFourResult(DEFAULT_CASE_RESULT);
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
@@ -2720,6 +2906,7 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(false);
     setCaClAdded(false);
     setDilH2SO4HeatingTriggered(false);
+    setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
@@ -2775,6 +2962,7 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(lastSnapshot.magnesiaAdded);
     setCaClAdded(lastSnapshot.caClAdded);
     setDilH2SO4HeatingTriggered(lastSnapshot.dilH2SO4HeatingTriggered);
+    setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
     setTimeout(() => setToastMessage(null), 2500);
@@ -3110,13 +3298,6 @@ function ChemicalEquilibriumVirtualLab({
                 ))}
               </ul>
             </div>
-
-            {showMeasuredPh && (
-              <div className="mt-2 mb-4 p-3 bg-gray-50 rounded">
-                <div className="text-xs font-medium text-gray-600">Measured pH</div>
-                <div className="text-2xl font-bold mt-1">{measurements.ph ? measurements.ph : 'No result yet'}</div>
-              </div>
-            )}
 
             <div className="text-sm font-bold mb-2 text-slate-900">Cases</div>
             <div className="space-y-2">
@@ -3624,49 +3805,57 @@ function ChemicalEquilibriumVirtualLab({
         <Dialog open={showCase2ResultsModal} onOpenChange={setShowCase2ResultsModal}>
           <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
             <DialogHeader className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
-              <DialogTitle className="text-2xl font-bold text-white">Experiment Results &amp; Analysis</DialogTitle>
-              <DialogDescription className="text-white/80">
-                Complete summary of Case 1 and Case 2 observations for the Salt Analysis dry acid radicals test.
-              </DialogDescription>
-            </DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-white">Experiment Results &amp; Analysis</DialogTitle>
+            <DialogDescription className="text-white/80">
+              Overview of the Salt Analysis acid radical narrative across the dry and wet tests.
+            </DialogDescription>
+          </DialogHeader>
 
-            <div className="px-6 pb-6 pt-4 space-y-6 text-slate-900">
-              <div className="grid gap-4 md:grid-cols-2">
-                <section className="rounded-lg border border-rose-200 bg-gradient-to-br from-rose-50 to-white p-5 shadow-lg shadow-rose-100">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-rose-500">Case 1 • Initial Clues</div>
-                  <p className="mt-3 text-base font-semibold leading-relaxed text-slate-900">
-                    {caseOneResult}
-                  </p>
-                  <p className="mt-2 text-sm text-slate-700">
-                    White residues and a faint halide scent on the loop suggested the presence of chloride radicals before any heating with MnO₂.
-                  </p>
-                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-rose-100 bg-rose-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-rose-600">
-                    Residue detected
-                    <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
-                  </div>
-                </section>
-                <section className="rounded-lg border border-lime-200 bg-gradient-to-br from-lime-50 to-white p-5 shadow-lg shadow-lime-100">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-lime-600">Case 2 • Confirmatory Gas</div>
-                  <p className="mt-3 text-base font-semibold text-slate-900 leading-relaxed">{caseTwoResult}</p>
-                  <p className="mt-2 text-sm text-slate-700">
-                    The greenish-yellow fumes released during heating confirm chlorine evolution from MnO₂-oxidized chloride ions.
-                  </p>
-                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-lime-100 bg-lime-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-600">
-                    Chlorine gas detected
-                    <span className="h-2.5 w-2.5 rounded-full bg-lime-500" />
-                  </div>
-                </section>
+          <div className="px-6 pb-6 pt-4 text-slate-900">
+            <div className="space-y-6 rounded-[32px] border border-white/70 bg-gradient-to-br from-white to-slate-100 p-6 shadow-2xl shadow-indigo-200/30">
+              <div className="rounded-2xl border border-white/10 bg-slate-900 p-5 text-white shadow-xl">
+                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">Detailed Insights</div>
+                <p className="mt-2 text-sm text-white/80">
+                  These focused notes highlight how the additional wet-case drop-injections confirm which acid radicals remain absent after the primary dry tests.
+                </p>
+                <div className="mt-4 grid gap-3 md:grid-cols-3">
+                  {detailedInsights.map((insight) => (
+                    <div key={insight.title} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{insight.hint}</div>
+                      <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
+                      <p className="mt-1 text-xs text-white/70 leading-tight">{insight.description}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="rounded-lg border border-indigo-100 bg-gradient-to-br from-sky-50 via-indigo-50 to-white p-5 text-indigo-900 shadow-inner">
-                <div className="font-semibold text-indigo-800">Case Comparison</div>
-                <p className="mt-2 text-sm leading-relaxed text-indigo-900">
-                  Case 1 establishes the likelihood of chloride radicals while Case 2 captures the oxidizing reaction that releases chlorine gas. Together they form the complete dry test narrative for identifying acid radicals.
-                </p>
-                <div className="mt-3 flex flex-wrap gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-indigo-500">
-                  <span className="rounded-full bg-indigo-100 px-3 py-1">Residue trace</span>
-                  <span className="rounded-full bg-indigo-100 px-3 py-1">Gas evolution</span>
-                  <span className="rounded-full bg-indigo-100 px-3 py-1">Qualitative proof</span>
+              <div className="grid gap-4 md:grid-cols-3">
+                {analysisGuidance.map((note) => (
+                  <div
+                    key={note.label}
+                    className={`rounded-2xl border border-white/30 bg-gradient-to-br ${note.accent} bg-opacity-80 p-4 shadow-lg shadow-slate-200/60`}
+                  >
+                    <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${note.textColor}`}>{note.label}</div>
+                    <p className="mt-2 text-sm font-semibold text-slate-900 leading-relaxed">{note.description}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="rounded-2xl border border-slate-300 bg-gradient-to-br from-slate-50 via-white to-slate-50 p-5 shadow-lg">
+                <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
+                <div className="mt-4 grid gap-3 md:grid-cols-2">
+                  {caseSummaryEntries.map((entry) => (
+                    <div
+                      key={entry.label}
+                      className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
+                    >
+                      <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{entry.label}</div>
+                      <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed`}>{entry.result}</p>
+                      <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
+                        {entry.indicator}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -3697,23 +3886,21 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              <div className="rounded-lg border border-white/70 bg-white/90 p-5 text-sm text-slate-900 shadow-xl backdrop-blur">
+              <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-white p-5 shadow-xl">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
-                <ul className="mt-3 space-y-2 text-sm text-slate-900">
-                  <li className="flex items-start gap-2">
-                    <span className="mt-[2px] h-2 w-2 rounded-full bg-pink-500" />Residues on the loop indicated chloride ions even before the oxidizing reagent was introduced.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-[2px] h-2 w-2 rounded-full bg-lime-500" />MnO₂ accelerated chloride oxidation under the bunsen flame, releasing pungent greenish chlorine gas.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-[2px] h-2 w-2 rounded-full bg-sky-500" />Both cases now display a complete qualitative analysis for the acid radical dry test.
-                  </li>
+                <ul className="mt-4 space-y-3">
+                  {observationHighlights.map((highlight) => (
+                    <li key={highlight} className="flex items-start gap-3">
+                      <span className="mt-[3px] h-2.5 w-2.5 rounded-full bg-slate-900" />
+                      <span className="text-base font-bold text-slate-900 leading-snug">{highlight}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
+          </div>
 
-            <DialogFooter className="px-6 pb-6">
+          <DialogFooter className="px-6 pb-6">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full">
                 <div className="flex flex-wrap gap-2">
                   <Button
