@@ -470,8 +470,7 @@ function ChemicalEquilibriumVirtualLab({
     },
   ];
   const observationHighlights = [
-    `Case 1 and 2 collectively confirm chloride radicals via residue and chlorine gas evidence.
-      ${caseOneResult} ${caseTwoResult}`,
+    `Case 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
     `Case 3 signals phosphate absence: ${caseThreeResult}`,
     `Case 4 confirms oxalate is absent: ${caseFourResult}`,
     `Case 5 dismisses acetate radicals: ${caseFiveResult}`,
