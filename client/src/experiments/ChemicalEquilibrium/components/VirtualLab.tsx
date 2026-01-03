@@ -530,6 +530,28 @@ function ChemicalEquilibriumVirtualLab({
     `Case 4 confirms oxalate is absent: ${caseFourResult}`,
     `Case 5 dismisses acetate radicals: ${caseFiveResult}`,
   ];
+  const analysisGuidance = [
+    {
+      label: "Wet test focus",
+      description:
+        "Drop-in reagents highlight which acid radicals remain absent even after the dry sequence.",
+      accent: "from-fuchsia-50 to-purple-50",
+      textColor: "text-fuchsia-600",
+    },
+    {
+      label: "Next steps",
+      description:
+        "Record Cases 3–5 while observing color shifts or precipitates to finish the acid radical map.",
+      accent: "from-emerald-50 to-sky-50",
+      textColor: "text-sky-600",
+    },
+    {
+      label: "Confidence",
+      description: "Chloride residue and chlorine gas confirm the identity before reporting conclusions.",
+      accent: "from-amber-50 to-amber-100",
+      textColor: "text-amber-600",
+    },
+  ];
   const isDryTestWorkbench =
     normalizedTitle.includes("dry tests for acid radicals") ||
     normalizedTitle.includes("dry tests for basic radicals") ||
