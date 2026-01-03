@@ -622,7 +622,6 @@ function ChemicalEquilibriumVirtualLab({
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const saltHeatingIntervalRef = useRef<number | null>(null);
   const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
-  const showMeasuredPh = !isAcidDryTest && resolvedDryTestMode !== "wet";
 
   // Chemical Equilibrium specific states
   const [cobaltChlorideAdded, setCobaltChlorideAdded] = useState(false);
