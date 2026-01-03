@@ -590,9 +590,6 @@ export const Equipment: React.FC<EquipmentProps> = ({
         const hasDiluteHNO3 = chemicals.some(
           (chemical) => chemical.id === "dil_hno3",
         );
-        const hasAmmoniumSample = chemicals.some(
-          (chemical) => chemical.id === "nh4oh",
-        );
         const shouldUseDiluteHNO3Color =
           isDryTest &&
           dryTestMode === "wet" &&
