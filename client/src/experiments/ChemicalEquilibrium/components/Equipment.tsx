@@ -566,9 +566,14 @@ export const Equipment: React.FC<EquipmentProps> = ({
         const totalHeightRatio = Math.min(totalChemicalsAmount, 25) / 25;
         const heightRatio = hasNaOHSample ? naohHeightRatio : totalHeightRatio;
         const saltOverlayMinimumHeight = hasSaltSample ? 60 : 0;
+        const ammoniumAmountInTube = chemicals
+          .filter((chemical) => chemical.id === "nh4oh")
+          .reduce((sum, chemical) => sum + (chemical.amount || 0), 0);
+        const ammoniumHeightBoost = Math.min(60, ammoniumAmountInTube * 15);
+        const baseOverlayHeight = Math.min(150, heightRatio * 150);
         const overlayHeight = Math.max(
           saltOverlayMinimumHeight,
-          Math.min(150, heightRatio * 150),
+          Math.min(150, baseOverlayHeight + (hasAmmoniumSample ? ammoniumHeightBoost : 0)),
         );
         const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
         const nonNaOHChemicals = chemicals.filter((chemical) => chemical.id !== NAOH_CHEMICAL_ID);
