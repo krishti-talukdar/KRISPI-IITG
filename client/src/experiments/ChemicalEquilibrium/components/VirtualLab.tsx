@@ -446,11 +446,56 @@ function ChemicalEquilibriumVirtualLab({
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const resultsReady = caseOneReady && caseTwoReady;
   const caseSummaryEntries = [
-    { label: "CASE 1", result: caseOneResult, indicator: "Residue" },
-    { label: "CASE 2", result: caseTwoResult, indicator: "Gas evolution" },
-    { label: "CASE 3", result: caseThreeResult, indicator: "Phosphate" },
-    { label: "CASE 4", result: caseFourResult, indicator: "Oxalate" },
-    { label: "CASE 5", result: caseFiveResult, indicator: "Acetate" },
+    {
+      label: "CASE 1",
+      result: caseOneResult,
+      indicator: "Residue",
+      borderClass: "border-rose-200",
+      bgClass: "from-white via-rose-50 to-rose-100",
+      titleColorClass: "text-rose-400",
+      resultTextClass: "text-rose-900",
+      indicatorColorClass: "text-rose-500",
+    },
+    {
+      label: "CASE 2",
+      result: caseTwoResult,
+      indicator: "Gas evolution",
+      borderClass: "border-amber-200",
+      bgClass: "from-white via-amber-50 to-orange-100",
+      titleColorClass: "text-amber-500",
+      resultTextClass: "text-orange-900",
+      indicatorColorClass: "text-orange-500",
+    },
+    {
+      label: "CASE 3",
+      result: caseThreeResult,
+      indicator: "Phosphate",
+      borderClass: "border-emerald-200",
+      bgClass: "from-white via-emerald-50 to-emerald-100",
+      titleColorClass: "text-emerald-500",
+      resultTextClass: "text-emerald-900",
+      indicatorColorClass: "text-emerald-500",
+    },
+    {
+      label: "CASE 4",
+      result: caseFourResult,
+      indicator: "Oxalate",
+      borderClass: "border-cyan-200",
+      bgClass: "from-white via-cyan-50 to-sky-100",
+      titleColorClass: "text-cyan-500",
+      resultTextClass: "text-cyan-900",
+      indicatorColorClass: "text-sky-500",
+    },
+    {
+      label: "CASE 5",
+      result: caseFiveResult,
+      indicator: "Acetate",
+      borderClass: "border-purple-200",
+      bgClass: "from-white via-purple-50 to-indigo-100",
+      titleColorClass: "text-purple-500",
+      resultTextClass: "text-purple-900",
+      indicatorColorClass: "text-indigo-500",
+    },
   ];
   const detailedInsights = [
     {
@@ -3773,13 +3818,16 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries.map((entry) => (
-                    <div key={entry.label} className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-100 p-4 shadow-sm">
-                      <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-400">{entry.label}</div>
-                      <p className="mt-2 text-lg font-bold text-slate-900 leading-relaxed">{entry.result}</p>
-                      <div className="mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
-                        {entry.indicator}
-                      </div>
+                    <div
+                    key={entry.label}
+                    className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
+                  >
+                    <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{entry.label}</div>
+                    <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed`}>{entry.result}</p>
+                    <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
+                      {entry.indicator}
                     </div>
+                  </div>
                   ))}
                 </div>
               </div>
