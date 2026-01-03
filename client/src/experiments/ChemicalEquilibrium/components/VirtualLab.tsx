@@ -3743,33 +3743,6 @@ function ChemicalEquilibriumVirtualLab({
             </DialogHeader>
 
             <div className="px-6 pb-6 pt-4 space-y-6 text-slate-900">
-              <div className="grid gap-4 md:grid-cols-2">
-                <section className="rounded-lg border border-rose-200 bg-gradient-to-br from-rose-50 to-white p-5 shadow-lg shadow-rose-100">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-rose-500">Case 1 • Initial Clues</div>
-                  <p className="mt-3 text-base font-semibold leading-relaxed text-slate-900">
-                    {caseOneResult}
-                  </p>
-                  <p className="mt-2 text-sm text-slate-700">
-                    White residues and a faint halide scent on the loop suggested the presence of chloride radicals before any heating with MnO₂.
-                  </p>
-                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-rose-100 bg-rose-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-rose-600">
-                    Residue detected
-                    <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
-                  </div>
-                </section>
-                <section className="rounded-lg border border-lime-200 bg-gradient-to-br from-lime-50 to-white p-5 shadow-lg shadow-lime-100">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-lime-600">Case 2 • Confirmatory Gas</div>
-                  <p className="mt-3 text-base font-semibold text-slate-900 leading-relaxed">{caseTwoResult}</p>
-                  <p className="mt-2 text-sm text-slate-700">
-                    The greenish-yellow fumes released during heating confirm chlorine evolution from MnO₂-oxidized chloride ions.
-                  </p>
-                  <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-lime-100 bg-lime-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-600">
-                    Chlorine gas detected
-                    <span className="h-2.5 w-2.5 rounded-full bg-lime-500" />
-                  </div>
-                </section>
-              </div>
-
               <div className="rounded-lg border border-indigo-100 bg-gradient-to-br from-sky-50 via-indigo-50 to-white p-5 text-indigo-900 shadow-inner">
                 <div className="font-semibold text-indigo-800">Case Comparison</div>
                 <p className="mt-2 text-sm leading-relaxed text-indigo-900">
