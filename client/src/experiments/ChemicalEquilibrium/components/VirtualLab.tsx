@@ -1411,6 +1411,9 @@ function ChemicalEquilibriumVirtualLab({
       setCaseTwoResult(CASE_TWO_WET_NO_PURPLE_RESULT);
       setSodiumNitroprussideAdded(false);
     }
+    if (magnesiaAdded) {
+      setMagnesiaAdded(false);
+    }
     const hasH2SO4InTestTube = testTubeState?.chemicals.some(
       (chemical) => chemical.id === ACID_CONFIG.h2so4.chemicalId,
     );
