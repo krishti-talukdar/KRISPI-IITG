@@ -1529,6 +1529,7 @@ function ChemicalEquilibriumVirtualLab({
     setSodiumNitroprussideAdded,
     setMagnesiaAdded,
     setCaClAdded,
+    setDilH2SO4HeatingTriggered,
     setToastMessage,
     testTubeState,
   ]);
