@@ -348,6 +348,7 @@ function ChemicalEquilibriumVirtualLab({
   const [dilH2SO4HeatingTriggered, setDilH2SO4HeatingTriggered] = useState(false);
   const [feCl3Added, setFeCl3Added] = useState(false);
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
+  const [hasAutoOpenedResults, setHasAutoOpenedResults] = useState(false);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
@@ -357,6 +358,7 @@ function ChemicalEquilibriumVirtualLab({
   // Choose chemicals and equipment based on experiment
   const isPHExperiment = experimentTitle === PHHClExperiment.title;
   const isDryTestExperiment = experimentTitle === ChemicalEquilibriumData.title;
+  const isSaltAnalysisExperiment = experiment.id === ChemicalEquilibriumData.id;
   const usePhStyleLayout = isPHExperiment || isDryTestExperiment;
   const totalGuidedSteps = allSteps.length;
   const dryTestEquipmentNames = dryTestEquipment ?? experiment.equipment;
@@ -445,6 +447,29 @@ function ChemicalEquilibriumVirtualLab({
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const resultsReady = caseOneReady && caseTwoReady;
+
+  useEffect(() => {
+    if (!isSaltAnalysisExperiment) {
+      return;
+    }
+
+    if (!resultsReady) {
+      if (hasAutoOpenedResults) {
+        setHasAutoOpenedResults(false);
+      }
+      return;
+    }
+
+    if (!showCase2ResultsModal && !hasAutoOpenedResults) {
+      setShowCase2ResultsModal(true);
+      setHasAutoOpenedResults(true);
+    }
+  }, [
+    hasAutoOpenedResults,
+    isSaltAnalysisExperiment,
+    resultsReady,
+    showCase2ResultsModal,
+  ]);
   const caseSummaryEntries = [
     {
       label: "CASE 1",
