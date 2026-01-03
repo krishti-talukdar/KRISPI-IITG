@@ -3125,6 +3125,7 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "CASE 2", result: caseTwoResult },
                 { label: "CASE 3", result: caseThreeResult },
                 { label: "CASE 4", result: caseFourResult },
+                { label: "CASE 5", result: caseFiveResult },
               ].map((entry) => (
                 <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
