@@ -452,6 +452,10 @@ function ChemicalEquilibriumVirtualLab({
   const DILUTE_HNO3_LABEL = "Dil. HNO₃";
   const DILUTE_HNO3_COLOR = "#0ea5e9";
   const DILUTE_HNO3_VOLUME_INCREMENT = 4;
+  const DILUTE_H2SO4_CHEMICAL_ID = "dil_h2so4";
+  const DILUTE_H2SO4_LABEL = "Dil. H₂SO₄";
+  const DILUTE_H2SO4_COLOR = "#fb7185";
+  const DILUTE_H2SO4_VOLUME_INCREMENT = 4;
 
   const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
   const MIN_GLASS_HCL_VOLUME = 1;
