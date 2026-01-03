@@ -454,6 +454,16 @@ function ChemicalEquilibriumVirtualLab({
   ];
   const detailedInsights = [
     {
+      title: "Initial chloride clues",
+      hint: "Case 1",
+      description: caseOneResult,
+    },
+    {
+      title: "Chlorine confirmation",
+      hint: "Case 2",
+      description: caseTwoResult,
+    },
+    {
       title: "Phosphate check",
       hint: "Case 3",
       description: caseThreeResult,
