@@ -445,6 +445,37 @@ function ChemicalEquilibriumVirtualLab({
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const resultsReady = caseOneReady && caseTwoReady;
+  const caseSummaryEntries = [
+    { label: "CASE 1", result: caseOneResult, indicator: "Residue" },
+    { label: "CASE 2", result: caseTwoResult, indicator: "Gas evolution" },
+    { label: "CASE 3", result: caseThreeResult, indicator: "Phosphate" },
+    { label: "CASE 4", result: caseFourResult, indicator: "Oxalate" },
+    { label: "CASE 5", result: caseFiveResult, indicator: "Acetate" },
+  ];
+  const detailedInsights = [
+    {
+      title: "Phosphate check",
+      hint: "Case 3",
+      description: caseThreeResult,
+    },
+    {
+      title: "Oxalate check",
+      hint: "Case 4",
+      description: caseFourResult,
+    },
+    {
+      title: "Acetate check",
+      hint: "Case 5",
+      description: caseFiveResult,
+    },
+  ];
+  const observationHighlights = [
+    `Case 1 and 2 collectively confirm chloride radicals via residue and chlorine gas evidence.
+      ${caseOneResult} ${caseTwoResult}`,
+    `Case 3 signals phosphate absence: ${caseThreeResult}`,
+    `Case 4 confirms oxalate is absent: ${caseFourResult}`,
+    `Case 5 dismisses acetate radicals: ${caseFiveResult}`,
+  ];
   const isDryTestWorkbench =
     normalizedTitle.includes("dry tests for acid radicals") ||
     normalizedTitle.includes("dry tests for basic radicals") ||
