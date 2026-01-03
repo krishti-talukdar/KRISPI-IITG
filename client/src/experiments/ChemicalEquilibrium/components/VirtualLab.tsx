@@ -1585,6 +1585,10 @@ function ChemicalEquilibriumVirtualLab({
       setCaseFourResult(CASE_FOUR_WET_CACL_RESULT);
       setCaClAdded(false);
     }
+    if (feCl3Added && caseFiveResult === DEFAULT_CASE_RESULT) {
+      setCaseFiveResult(CASE_FIVE_WET_ACETATE_RESULT);
+      setFeCl3Added(false);
+    }
     if (dilH2SO4HeatingTriggered && caseFiveResult === DEFAULT_CASE_RESULT) {
       setCaseFiveResult(CASE_FIVE_WET_NO_BROWN_RESULT);
     }
