@@ -21,6 +21,7 @@ const WET_ACID_TEST_EQUIPMENT = [
   "NH₄OH (Ammonium hydroxide)",
   "Magnesia mixture (PO₄³⁻)",
   "CaCl₂ Solution",
+  "Dil. H₂SO₄",
   "FeSO₄",
   "FeCl₃",
   "Bunsen Burner (virtual heat source)",
