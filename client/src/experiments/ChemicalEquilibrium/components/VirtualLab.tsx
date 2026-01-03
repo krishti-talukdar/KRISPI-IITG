@@ -2854,6 +2854,7 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(lastSnapshot.magnesiaAdded);
     setCaClAdded(lastSnapshot.caClAdded);
     setDilH2SO4HeatingTriggered(lastSnapshot.dilH2SO4HeatingTriggered);
+    setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
     setTimeout(() => setToastMessage(null), 2500);
