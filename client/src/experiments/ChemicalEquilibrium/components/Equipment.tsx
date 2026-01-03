@@ -590,18 +590,27 @@ export const Equipment: React.FC<EquipmentProps> = ({
         const hasDiluteHNO3 = chemicals.some(
           (chemical) => chemical.id === "dil_hno3",
         );
+        const hasAmmoniumSample = chemicals.some(
+          (chemical) => chemical.id === "nh4oh",
+        );
         const shouldUseDiluteHNO3Color =
           isDryTest &&
           dryTestMode === "wet" &&
           hasDiluteHNO3 &&
           hasSaltSample;
+        const shouldUseAmmoniumColor =
+          isDryTest &&
+          dryTestMode === "wet" &&
+          hasAmmoniumSample;
         const overlayColor = hasDichromate
           ? K2CR2O7_SOLUTION_COLOR
-          : shouldUseDiluteHNO3Color
-            ? DILUTE_HNO3_WET_SOLUTION_COLOR
-            : shouldForceNaOHBlue
-              ? NAOH_SOLUTION_COLOR
-              : baseOverlayColor;
+          : shouldUseAmmoniumColor
+            ? NH4OH_WET_SOLUTION_COLOR
+            : shouldUseDiluteHNO3Color
+              ? DILUTE_HNO3_WET_SOLUTION_COLOR
+              : shouldForceNaOHBlue
+                ? NAOH_SOLUTION_COLOR
+                : baseOverlayColor;
         const showOverlay =
           overlayColor !== "transparent" && totalChemicalsAmount > 0;
         const displayLabel = name.toLowerCase().includes("test tube")
