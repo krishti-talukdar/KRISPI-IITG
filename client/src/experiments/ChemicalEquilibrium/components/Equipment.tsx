@@ -592,7 +592,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
         const shouldUseDiluteHNO3Color =
           isDryTest &&
           dryTestMode === "wet" &&
-          hasDiluteHNO3;
+          hasDiluteHNO3 &&
+          hasSaltSample;
         const overlayColor = hasDichromate
           ? K2CR2O7_SOLUTION_COLOR
           : shouldUseDiluteHNO3Color
