@@ -78,6 +78,7 @@ type LabSnapshot = {
   magnesiaAdded: boolean;
   caClAdded: boolean;
   dilH2SO4HeatingTriggered: boolean;
+  feCl3Added: boolean;
 };
 
 const MAX_HISTORY_ENTRIES = 25;
