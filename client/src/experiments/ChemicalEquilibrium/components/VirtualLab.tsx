@@ -2384,6 +2384,68 @@ function ChemicalEquilibriumVirtualLab({
     setToastMessage,
   ]);
 
+  const handleAddDiluteH2SO4ToTestTube = useCallback(() => {
+    if (!isDryTestExperiment || resolvedDryTestMode !== "wet") {
+      return;
+    }
+
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+    if (!testTube) {
+      setToastMessage("Place the test tube on the workbench first.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    const hasSaltSample = testTube.chemicals.some(
+      (chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+    );
+    if (!hasSaltSample) {
+      setToastMessage("Add the salt sample before Dil. H₂SO₄.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    pushHistorySnapshot();
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find(
+          (chemical) => chemical.id === DILUTE_H2SO4_CHEMICAL_ID,
+        );
+        const updatedChemicals = existing
+          ? pos.chemicals.map((chemical) =>
+              chemical.id === DILUTE_H2SO4_CHEMICAL_ID
+                ? { ...chemical, amount: chemical.amount + DILUTE_H2SO4_VOLUME_INCREMENT }
+                : chemical,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: DILUTE_H2SO4_CHEMICAL_ID,
+                name: DILUTE_H2SO4_LABEL,
+                color: DILUTE_H2SO4_COLOR,
+                amount: DILUTE_H2SO4_VOLUME_INCREMENT,
+                concentration: "Dilute",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${DILUTE_H2SO4_VOLUME_INCREMENT} mL of ${DILUTE_H2SO4_LABEL} to the test tube.`);
+    setTimeout(() => setToastMessage(null), 2500);
+  }, [
+    equipmentPositions,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    pushHistorySnapshot,
+    setEquipmentPositions,
+    setToastMessage,
+  ]);
   const handleAddAmmoniumToGlassContainer = () => {
     const volume = parseFloat(ammoniumVolume);
     if (Number.isNaN(volume)) {
