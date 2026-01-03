@@ -3783,19 +3783,32 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
+              <div className="rounded-lg border border-slate-900 bg-slate-900 p-5 text-white shadow-2xl">
+                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">Detailed Insights</div>
+                <p className="mt-2 text-sm text-white/80">
+                  These focused notes highlight how the additional wet-case drop-injections confirm which acid radicals remain absent after the primary dry tests.
+                </p>
+                <div className="mt-4 grid gap-3 md:grid-cols-3">
+                  {detailedInsights.map((insight) => (
+                    <div key={insight.title} className="rounded-lg border border-white/10 bg-white/5 p-3">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{insight.hint}</div>
+                      <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
+                      <p className="mt-1 text-xs text-white/70 leading-tight">{insight.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                 <div className="text-sm font-semibold text-slate-900">Full Case Results</div>
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  {[
-                    { label: "Case 1", result: caseOneResult },
-                    { label: "Case 2", result: caseTwoResult },
-                    { label: "Case 3", result: caseThreeResult },
-                    { label: "Case 4", result: caseFourResult },
-                    { label: "Case 5", result: caseFiveResult },
-                  ].map((entry) => (
+                  {caseSummaryEntries.map((entry) => (
                     <div key={entry.label} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
                       <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
                       <p className="mt-1 text-sm text-slate-800">{entry.result}</p>
+                      <div className="mt-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                        {entry.indicator}
+                      </div>
                     </div>
                   ))}
                 </div>
