@@ -18,6 +18,8 @@ const WET_ACID_TEST_EQUIPMENT = [
   "Salt Sample",
   "BaCl₂ Solution",
   "Sodium Nitroprusside",
+  "NH₄OH (Ammonium hydroxide)",
+  "Magnesia mixture (PO₄³⁻)",
   "dil. HNO₃",
   "AgNO₃",
   "CaCl₂ Solution",
