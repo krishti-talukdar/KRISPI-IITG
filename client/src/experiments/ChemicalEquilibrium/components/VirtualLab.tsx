@@ -381,8 +381,14 @@ function ChemicalEquilibriumVirtualLab({
     resolvedDryTestMode === "wet" &&
     sodiumNitroprussideAdded &&
     caseTwoResult === DEFAULT_CASE_RESULT;
+  const shouldBlinkObserveButtonForMagnesia =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "wet" &&
+    magnesiaAdded;
   const shouldBlinkObserveButton =
-    shouldBlinkObserveButtonForBaCl || shouldBlinkObserveButtonForSodiumNitroprusside;
+    shouldBlinkObserveButtonForBaCl ||
+    shouldBlinkObserveButtonForSodiumNitroprusside ||
+    shouldBlinkObserveButtonForMagnesia;
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
       "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
