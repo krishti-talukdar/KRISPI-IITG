@@ -1839,8 +1839,23 @@ function ChemicalEquilibriumVirtualLab({
           "Formation of white sublimate (ammonium chloride) shows NH₄⁺ is present.",
         );
       }
+
+      if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
+        const hasDiluteH2SO4InTestTube = Boolean(
+          testTubeState?.chemicals.some(
+            (chemical) => chemical.id === DILUTE_H2SO4_CHEMICAL_ID,
+          ),
+        );
+        if (hasDiluteH2SO4InTestTube) {
+          setDilH2SO4HeatingTriggered(true);
+        }
+      }
+
+      if (!heating) {
+        setDilH2SO4HeatingTriggered(false);
+      }
     },
-    [experiment.id, resolvedDryTestMode],
+    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState],
   );
 
   useEffect(() => {
