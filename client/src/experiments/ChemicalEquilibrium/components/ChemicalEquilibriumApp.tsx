@@ -20,8 +20,6 @@ const WET_ACID_TEST_EQUIPMENT = [
   "Sodium Nitroprusside",
   "NH₄OH (Ammonium hydroxide)",
   "Magnesia mixture (PO₄³⁻)",
-  "dil. HNO₃",
-  "AgNO₃",
   "CaCl₂ Solution",
   "FeSO₄",
   "FeCl₃",
