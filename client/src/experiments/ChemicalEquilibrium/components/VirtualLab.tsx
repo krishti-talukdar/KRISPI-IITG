@@ -1246,6 +1246,7 @@ function ChemicalEquilibriumVirtualLab({
     const isSodiumNitroprussideAddition = lowerName.includes("nitroprusside");
     const isDichromateAddition = lowerName.includes("dichromate");
     const isMagnesiaAddition = lowerName.includes("magnesia");
+    const isCaClAddition = lowerName.includes("cacl");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
