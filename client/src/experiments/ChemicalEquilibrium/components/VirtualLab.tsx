@@ -276,8 +276,10 @@ function ChemicalEquilibriumVirtualLab({
     "Normally a violet/purple colour indicates sulphide; in your table no purple colour forms, so S²⁻ is absent.";
   const CASE_THREE_WET_NO_GREEN_RESULT =
     "a green colour would indicate sulphite, but the table shows no green colour, so SO₃²⁻ is absent.";
-const CASE_THREE_WET_MAGNESIA_RESULT =
+  const CASE_THREE_WET_MAGNESIA_RESULT =
     "A white precipitate would show PO₄³⁻; the table reports no precipitate, so phosphate is absent";
+  const CASE_FOUR_WET_CACL_RESULT =
+    "A white precipitate would indicate oxalate; the table shows no precipitate, so C₂O₄²⁻ is absent.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
