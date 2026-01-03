@@ -276,6 +276,8 @@ function ChemicalEquilibriumVirtualLab({
     "Normally a violet/purple colour indicates sulphide; in your table no purple colour forms, so S²⁻ is absent.";
   const CASE_THREE_WET_NO_GREEN_RESULT =
     "a green colour would indicate sulphite, but the table shows no green colour, so SO₃²⁻ is absent.";
+const CASE_THREE_WET_MAGNESIA_RESULT =
+    "When magnesia mixture (PO₄³⁻) is added in the test tube";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
@@ -1419,7 +1421,10 @@ function ChemicalEquilibriumVirtualLab({
     const hasH2SO4InTestTube = testTubeState?.chemicals.some(
       (chemical) => chemical.id === ACID_CONFIG.h2so4.chemicalId,
     );
-    if (hasH2SO4InTestTube && caseThreeResult !== CASE_THREE_WET_NO_GREEN_RESULT) {
+    if (magnesiaAdded) {
+      setCaseThreeResult(CASE_THREE_WET_MAGNESIA_RESULT);
+      setMagnesiaAdded(false);
+    } else if (hasH2SO4InTestTube && caseThreeResult !== CASE_THREE_WET_NO_GREEN_RESULT) {
       setCaseThreeResult(CASE_THREE_WET_NO_GREEN_RESULT);
     }
     setToastMessage("Observation noted for the Wet Acid Test.");
