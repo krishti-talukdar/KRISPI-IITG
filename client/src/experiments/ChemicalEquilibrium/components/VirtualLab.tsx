@@ -3769,14 +3769,14 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
-                <div className="text-sm font-semibold text-slate-900">Full Case Results</div>
-                <div className="mt-3 grid gap-3 md:grid-cols-2">
+              <div className="rounded-2xl border border-slate-300 bg-gradient-to-br from-slate-50 via-white to-slate-50 p-5 shadow-lg">
+                <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
+                <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries.map((entry) => (
-                    <div key={entry.label} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
-                      <p className="mt-1 text-sm text-slate-800">{entry.result}</p>
-                      <div className="mt-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                    <div key={entry.label} className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-100 p-4 shadow-sm">
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-400">{entry.label}</div>
+                      <p className="mt-2 text-lg font-bold text-slate-900 leading-relaxed">{entry.result}</p>
+                      <div className="mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">
                         {entry.indicator}
                       </div>
                     </div>
