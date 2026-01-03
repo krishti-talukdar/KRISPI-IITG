@@ -968,6 +968,7 @@ function ChemicalEquilibriumVirtualLab({
     sodiumNitroprussideAdded,
     magnesiaAdded,
     caClAdded,
+    dilH2SO4HeatingTriggered,
   });
 
   const DRY_TEST_BOTTLE_IDS = [
