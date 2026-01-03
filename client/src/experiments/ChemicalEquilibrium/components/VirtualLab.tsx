@@ -1512,6 +1512,9 @@ function ChemicalEquilibriumVirtualLab({
       setCaseFourResult(CASE_FOUR_WET_CACL_RESULT);
       setCaClAdded(false);
     }
+    if (dilH2SO4HeatingTriggered && caseFiveResult === DEFAULT_CASE_RESULT) {
+      setCaseFiveResult(CASE_FIVE_WET_NO_BROWN_RESULT);
+    }
     setDilH2SO4HeatingTriggered(false);
     setToastMessage("Observation noted for the Wet Acid Test.");
     setTimeout(() => setToastMessage(null), 2500);
@@ -1520,14 +1523,17 @@ function ChemicalEquilibriumVirtualLab({
     caseTwoResult,
     caseThreeResult,
     caseFourResult,
+    caseFiveResult,
     isBaClAddedToTestTube,
     sodiumNitroprussideAdded,
     magnesiaAdded,
     caClAdded,
+    dilH2SO4HeatingTriggered,
     setCaseOneResult,
     setCaseTwoResult,
     setCaseThreeResult,
     setCaseFourResult,
+    setCaseFiveResult,
     setSodiumNitroprussideAdded,
     setMagnesiaAdded,
     setCaClAdded,
