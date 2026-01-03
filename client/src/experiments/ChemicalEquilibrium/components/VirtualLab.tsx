@@ -77,6 +77,7 @@ type LabSnapshot = {
   sodiumNitroprussideAdded: boolean;
   magnesiaAdded: boolean;
   caClAdded: boolean;
+  dilH2SO4HeatingTriggered: boolean;
 };
 
 const MAX_HISTORY_ENTRIES = 25;
