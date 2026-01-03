@@ -3811,13 +3811,13 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              <div className="rounded-lg border border-white/70 bg-white/90 p-5 text-sm text-slate-900 shadow-xl backdrop-blur">
+              <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-white p-5 shadow-xl">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
-                <ul className="mt-3 space-y-2 text-sm text-slate-900">
+                <ul className="mt-4 space-y-3">
                   {observationHighlights.map((highlight) => (
-                    <li key={highlight} className="flex items-start gap-2">
-                      <span className="mt-[2px] h-2 w-2 rounded-full bg-slate-900" />
-                      <span className="text-slate-900 leading-tight">{highlight}</span>
+                    <li key={highlight} className="flex items-start gap-3">
+                      <span className="mt-[3px] h-2.5 w-2.5 rounded-full bg-slate-900" />
+                      <span className="text-base font-bold text-slate-900 leading-snug">{highlight}</span>
                     </li>
                   ))}
                 </ul>
