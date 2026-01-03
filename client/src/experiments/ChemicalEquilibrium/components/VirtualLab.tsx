@@ -2800,6 +2800,7 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(false);
     setCaClAdded(false);
     setDilH2SO4HeatingTriggered(false);
+    setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
