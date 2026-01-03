@@ -3006,19 +3006,21 @@ function ChemicalEquilibriumVirtualLab({
                     const interactHandler = experimentStarted
                       ? normalizedEquipmentName.includes("salt sample")
                         ? handleSaltDialogOpen
-                        : normalizedEquipmentName.includes("dil") && normalizedEquipmentName.includes("hno")
-                          ? handleAddDiluteHNO3ToTestTube
-                          : normalizedEquipmentName.includes("ammonium") ||
-                            normalizedEquipmentName.includes("nh₄oh") ||
-                            normalizedEquipmentName.includes("nh4oh")
-                            ? handleAmmoniumDialogOpen
-                            : normalizedEquipmentName.includes("hcl")
-                              ? () => handleAcidDialogOpen("hcl")
-                              : normalizedEquipmentName.includes("h2so4") ||
-                                normalizedEquipmentName.includes("h₂so₄") ||
-                                normalizedEquipmentName.includes("sulfuric")
-                                ? () => handleAcidDialogOpen("h2so4")
-                                : undefined
+                        : normalizedEquipmentName.includes("dil") && normalizedEquipmentName.includes("h2so4")
+                          ? handleAddDiluteH2SO4ToTestTube
+                          : normalizedEquipmentName.includes("dil") && normalizedEquipmentName.includes("hno")
+                            ? handleAddDiluteHNO3ToTestTube
+                            : normalizedEquipmentName.includes("ammonium") ||
+                              normalizedEquipmentName.includes("nh₄oh") ||
+                              normalizedEquipmentName.includes("nh4oh")
+                              ? handleAmmoniumDialogOpen
+                              : normalizedEquipmentName.includes("hcl")
+                                ? () => handleAcidDialogOpen("hcl")
+                                : normalizedEquipmentName.includes("h2so4") ||
+                                  normalizedEquipmentName.includes("h₂so₄") ||
+                                  normalizedEquipmentName.includes("sulfuric")
+                                  ? () => handleAcidDialogOpen("h2so4")
+                                  : undefined
                       : undefined;
                     return equipment ? (
                       <Equipment
