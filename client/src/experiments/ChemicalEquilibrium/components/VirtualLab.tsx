@@ -2680,6 +2680,7 @@ function ChemicalEquilibriumVirtualLab({
     setSodiumNitroprussideAdded(lastSnapshot.sodiumNitroprussideAdded);
     setMagnesiaAdded(lastSnapshot.magnesiaAdded);
     setCaClAdded(lastSnapshot.caClAdded);
+    setDilH2SO4HeatingTriggered(lastSnapshot.dilH2SO4HeatingTriggered);
 
     setToastMessage("Reverted the last operation.");
     setTimeout(() => setToastMessage(null), 2500);
