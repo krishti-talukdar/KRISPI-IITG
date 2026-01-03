@@ -289,6 +289,8 @@ function ChemicalEquilibriumVirtualLab({
     "A white precipitate would indicate oxalate; the table shows no precipitate, so C₂O₄²⁻ is absent.";
   const CASE_FIVE_WET_NO_BROWN_RESULT =
     "A brown colour of NO gas or complex would indicate nitrite; observation says no brown colour, so NO₂⁻ is absent.";
+  const CASE_FIVE_WET_ACETATE_RESULT =
+    "A red or reddish-brown colour would indicate acetate due to ferric acetate; according to your table no red colour appears, so CH₃COO⁻ is absent.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
