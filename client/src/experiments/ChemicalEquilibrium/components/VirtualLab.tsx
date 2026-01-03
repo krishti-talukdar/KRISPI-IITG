@@ -1275,6 +1275,7 @@ function ChemicalEquilibriumVirtualLab({
     const isDichromateAddition = lowerName.includes("dichromate");
     const isMagnesiaAddition = lowerName.includes("magnesia");
     const isCaClAddition = lowerName.includes("cacl");
+    const isFeCl3Addition = lowerName.includes("fecl");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -1471,6 +1472,63 @@ function ChemicalEquilibriumVirtualLab({
           return updated ? next : prev;
         });
         setCaClAdded(true);
+      }
+    }
+
+    if (requiresDropValidation && isFeCl3Addition) {
+      const dropVolume = parsedAmount * FE_CL3_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        let addedFeCl3 = false;
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === FE_CL3_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === FE_CL3_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: FE_CL3_CHEMICAL_ID,
+                    name: FE_CL3_CHEMICAL_NAME,
+                    color: FE_CL3_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "0.1 M",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          if (updated) {
+            addedFeCl3 = true;
+            return next;
+          }
+          return prev;
+        });
+        if (addedFeCl3) {
+          setFeCl3Added(true);
+        }
       }
     }
 
