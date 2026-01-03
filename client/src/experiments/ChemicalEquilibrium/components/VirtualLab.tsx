@@ -75,6 +75,9 @@ type LabSnapshot = {
   caseSixResult: string;
   caseSevenResult: string;
   sodiumNitroprussideAdded: boolean;
+  magnesiaAdded: boolean;
+  caClAdded: boolean;
+  dilH2SO4HeatingTriggered: boolean;
 };
 
 const MAX_HISTORY_ENTRIES = 25;
@@ -161,10 +164,18 @@ const DRY_TEST_BASIC_GLASS_AUTOPOSITION_IDS = [
   "glass-container",
 ];
 
-const BA_CL_DROP_VOLUME_ML = 0.25;
 const BA_CL_CHEMICAL_ID = "bacl2_solution";
 const BA_CL_CHEMICAL_NAME = "BaCl₂ Solution";
 const BA_CL_CHEMICAL_COLOR = "#38bdf8";
+const BA_CL_DROP_VOLUME_ML = 0.25;
+const MAGNESIA_CHEMICAL_ID = "magnesia_mixture";
+const MAGNESIA_CHEMICAL_NAME = "Magnesia mixture (PO₄³⁻)";
+const MAGNESIA_CHEMICAL_COLOR = "#7dd3fc";
+const MAGNESIA_DROP_VOLUME_ML = 0.2;
+const CA_CL_CHEMICAL_ID = "cacl2_solution";
+const CA_CL_CHEMICAL_NAME = "CaCl₂ Solution";
+const CA_CL_CHEMICAL_COLOR = "#c4f1f9";
+const CA_CL_DROP_VOLUME_ML = 0.25;
 const K2CR2O7_DROP_VOLUME_ML = 0.25;
 const K2CR2O7_CHEMICAL_ID = "k2cr2o7_solution";
 const K2CR2O7_CHEMICAL_NAME = "Acidified Potassium Dichromate Solution (K₂Cr₂O₇)";
@@ -271,6 +282,12 @@ function ChemicalEquilibriumVirtualLab({
     "Normally a violet/purple colour indicates sulphide; in your table no purple colour forms, so S²⁻ is absent.";
   const CASE_THREE_WET_NO_GREEN_RESULT =
     "a green colour would indicate sulphite, but the table shows no green colour, so SO₃²⁻ is absent.";
+  const CASE_THREE_WET_MAGNESIA_RESULT =
+    "A white precipitate would show PO₄³⁻; the table reports no precipitate, so phosphate is absent";
+  const CASE_FOUR_WET_CACL_RESULT =
+    "A white precipitate would indicate oxalate; the table shows no precipitate, so C₂O₄²⁻ is absent.";
+  const CASE_FIVE_WET_NO_BROWN_RESULT =
+    "A brown colour of NO gas or complex would indicate nitrite; observation says no brown colour, so NO₂⁻ is absent.";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
@@ -319,6 +336,9 @@ function ChemicalEquilibriumVirtualLab({
   const [caseSixResult, setCaseSixResult] = useState(DEFAULT_CASE_RESULT);
   const [caseSevenResult, setCaseSevenResult] = useState(DEFAULT_CASE_RESULT);
   const [sodiumNitroprussideAdded, setSodiumNitroprussideAdded] = useState(false);
+  const [magnesiaAdded, setMagnesiaAdded] = useState(false);
+  const [caClAdded, setCaClAdded] = useState(false);
+  const [dilH2SO4HeatingTriggered, setDilH2SO4HeatingTriggered] = useState(false);
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
@@ -375,8 +395,25 @@ function ChemicalEquilibriumVirtualLab({
     resolvedDryTestMode === "wet" &&
     sodiumNitroprussideAdded &&
     caseTwoResult === DEFAULT_CASE_RESULT;
+  const shouldBlinkObserveButtonForMagnesia =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "wet" &&
+    magnesiaAdded;
+  const shouldBlinkObserveButtonForCaCl =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "wet" &&
+    caClAdded &&
+    caseFourResult === DEFAULT_CASE_RESULT;
+  const shouldBlinkObserveButtonForDilH2SO4Heat =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "wet" &&
+    dilH2SO4HeatingTriggered;
   const shouldBlinkObserveButton =
-    shouldBlinkObserveButtonForBaCl || shouldBlinkObserveButtonForSodiumNitroprusside;
+    shouldBlinkObserveButtonForBaCl ||
+    shouldBlinkObserveButtonForSodiumNitroprusside ||
+    shouldBlinkObserveButtonForMagnesia ||
+    shouldBlinkObserveButtonForCaCl ||
+    shouldBlinkObserveButtonForDilH2SO4Heat;
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
       "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
@@ -422,8 +459,12 @@ function ChemicalEquilibriumVirtualLab({
 
   const DILUTE_HNO3_CHEMICAL_ID = "dil_hno3";
   const DILUTE_HNO3_LABEL = "Dil. HNO₃";
-  const DILUTE_HNO3_COLOR = "#f472b6";
+  const DILUTE_HNO3_COLOR = "#0ea5e9";
   const DILUTE_HNO3_VOLUME_INCREMENT = 4;
+  const DILUTE_H2SO4_CHEMICAL_ID = "dil_h2so4";
+  const DILUTE_H2SO4_LABEL = "Dil. H₂SO₄";
+  const DILUTE_H2SO4_COLOR = "#fb7185";
+  const DILUTE_H2SO4_VOLUME_INCREMENT = 4;
 
   const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
   const MIN_GLASS_HCL_VOLUME = 1;
@@ -932,6 +973,9 @@ function ChemicalEquilibriumVirtualLab({
     caseSixResult,
     caseSevenResult,
     sodiumNitroprussideAdded,
+    magnesiaAdded,
+    caClAdded,
+    dilH2SO4HeatingTriggered,
   });
 
   const DRY_TEST_BOTTLE_IDS = [
@@ -1211,13 +1255,12 @@ function ChemicalEquilibriumVirtualLab({
       }
     }
 
-    const isBaClAddition = addDialogEquipment.name.toLowerCase().includes("bacl");
-    const isSodiumNitroprussideAddition = addDialogEquipment.name
-      .toLowerCase()
-      .includes("nitroprusside");
-    const isDichromateAddition = addDialogEquipment.name
-      .toLowerCase()
-      .includes("dichromate");
+    const lowerName = addDialogEquipment.name.toLowerCase();
+    const isBaClAddition = lowerName.includes("bacl");
+    const isSodiumNitroprussideAddition = lowerName.includes("nitroprusside");
+    const isDichromateAddition = lowerName.includes("dichromate");
+    const isMagnesiaAddition = lowerName.includes("magnesia");
+    const isCaClAddition = lowerName.includes("cacl");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -1317,6 +1360,106 @@ function ChemicalEquilibriumVirtualLab({
       }
     }
 
+    if (requiresDropValidation && isMagnesiaAddition) {
+      const dropVolume = parsedAmount * MAGNESIA_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === MAGNESIA_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === MAGNESIA_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: MAGNESIA_CHEMICAL_ID,
+                    name: MAGNESIA_CHEMICAL_NAME,
+                    color: MAGNESIA_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "Reagent",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          return updated ? next : prev;
+        });
+        setMagnesiaAdded(true);
+      }
+    }
+
+    if (requiresDropValidation && isCaClAddition) {
+      const dropVolume = parsedAmount * CA_CL_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === CA_CL_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === CA_CL_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: CA_CL_CHEMICAL_ID,
+                    name: CA_CL_CHEMICAL_NAME,
+                    color: CA_CL_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "Reagent",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          return updated ? next : prev;
+        });
+        setCaClAdded(true);
+      }
+    }
+
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
       setSodiumNitroprussideAdded(true);
     }
@@ -1334,6 +1477,8 @@ function ChemicalEquilibriumVirtualLab({
     resolvedDryTestMode,
     setEquipmentPositions,
     setSodiumNitroprussideAdded,
+    setMagnesiaAdded,
+    setCaClAdded,
   ]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
@@ -1351,24 +1496,48 @@ function ChemicalEquilibriumVirtualLab({
       setCaseTwoResult(CASE_TWO_WET_NO_PURPLE_RESULT);
       setSodiumNitroprussideAdded(false);
     }
+    if (magnesiaAdded) {
+      setMagnesiaAdded(false);
+    }
     const hasH2SO4InTestTube = testTubeState?.chemicals.some(
       (chemical) => chemical.id === ACID_CONFIG.h2so4.chemicalId,
     );
-    if (hasH2SO4InTestTube && caseThreeResult !== CASE_THREE_WET_NO_GREEN_RESULT) {
+    if (magnesiaAdded) {
+      setCaseThreeResult(CASE_THREE_WET_MAGNESIA_RESULT);
+      setMagnesiaAdded(false);
+    } else if (hasH2SO4InTestTube && caseThreeResult !== CASE_THREE_WET_NO_GREEN_RESULT) {
       setCaseThreeResult(CASE_THREE_WET_NO_GREEN_RESULT);
     }
+    if (caClAdded && caseFourResult === DEFAULT_CASE_RESULT) {
+      setCaseFourResult(CASE_FOUR_WET_CACL_RESULT);
+      setCaClAdded(false);
+    }
+    if (dilH2SO4HeatingTriggered && caseFiveResult === DEFAULT_CASE_RESULT) {
+      setCaseFiveResult(CASE_FIVE_WET_NO_BROWN_RESULT);
+    }
+    setDilH2SO4HeatingTriggered(false);
     setToastMessage("Observation noted for the Wet Acid Test.");
     setTimeout(() => setToastMessage(null), 2500);
   }, [
     caseOneResult,
     caseTwoResult,
     caseThreeResult,
+    caseFourResult,
+    caseFiveResult,
     isBaClAddedToTestTube,
     sodiumNitroprussideAdded,
+    magnesiaAdded,
+    caClAdded,
+    dilH2SO4HeatingTriggered,
     setCaseOneResult,
     setCaseTwoResult,
     setCaseThreeResult,
+    setCaseFourResult,
+    setCaseFiveResult,
     setSodiumNitroprussideAdded,
+    setMagnesiaAdded,
+    setCaClAdded,
+    setDilH2SO4HeatingTriggered,
     setToastMessage,
     testTubeState,
   ]);
@@ -1680,8 +1849,23 @@ function ChemicalEquilibriumVirtualLab({
           "Formation of white sublimate (ammonium chloride) shows NH₄⁺ is present.",
         );
       }
+
+      if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
+        const hasDiluteH2SO4InTestTube = Boolean(
+          testTubeState?.chemicals.some(
+            (chemical) => chemical.id === DILUTE_H2SO4_CHEMICAL_ID,
+          ),
+        );
+        if (hasDiluteH2SO4InTestTube) {
+          setDilH2SO4HeatingTriggered(true);
+        }
+      }
+
+      if (!heating) {
+        setDilH2SO4HeatingTriggered(false);
+      }
     },
-    [experiment.id, resolvedDryTestMode],
+    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState],
   );
 
   useEffect(() => {
@@ -2225,6 +2409,68 @@ function ChemicalEquilibriumVirtualLab({
     setToastMessage,
   ]);
 
+  const handleAddDiluteH2SO4ToTestTube = useCallback(() => {
+    if (!isDryTestExperiment || resolvedDryTestMode !== "wet") {
+      return;
+    }
+
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+    if (!testTube) {
+      setToastMessage("Place the test tube on the workbench first.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    const hasSaltSample = testTube.chemicals.some(
+      (chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+    );
+    if (!hasSaltSample) {
+      setToastMessage("Add the salt sample before Dil. H₂SO₄.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    pushHistorySnapshot();
+    setEquipmentPositions((prev) =>
+      prev.map((pos) => {
+        if (pos.id !== "test_tubes") {
+          return pos;
+        }
+
+        const existing = pos.chemicals.find(
+          (chemical) => chemical.id === DILUTE_H2SO4_CHEMICAL_ID,
+        );
+        const updatedChemicals = existing
+          ? pos.chemicals.map((chemical) =>
+              chemical.id === DILUTE_H2SO4_CHEMICAL_ID
+                ? { ...chemical, amount: chemical.amount + DILUTE_H2SO4_VOLUME_INCREMENT }
+                : chemical,
+            )
+          : [
+              ...pos.chemicals,
+              {
+                id: DILUTE_H2SO4_CHEMICAL_ID,
+                name: DILUTE_H2SO4_LABEL,
+                color: DILUTE_H2SO4_COLOR,
+                amount: DILUTE_H2SO4_VOLUME_INCREMENT,
+                concentration: "Dilute",
+              },
+            ];
+
+        return { ...pos, chemicals: updatedChemicals };
+      }),
+    );
+
+    setToastMessage(`Added ${DILUTE_H2SO4_VOLUME_INCREMENT} mL of ${DILUTE_H2SO4_LABEL} to the test tube.`);
+    setTimeout(() => setToastMessage(null), 2500);
+  }, [
+    equipmentPositions,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    pushHistorySnapshot,
+    setEquipmentPositions,
+    setToastMessage,
+  ]);
   const handleAddAmmoniumToGlassContainer = () => {
     const volume = parseFloat(ammoniumVolume);
     if (Number.isNaN(volume)) {
@@ -2435,6 +2681,9 @@ function ChemicalEquilibriumVirtualLab({
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
     setSodiumNitroprussideAdded(false);
+    setMagnesiaAdded(false);
+    setCaClAdded(false);
+    setDilH2SO4HeatingTriggered(false);
     setShowCase2ResultsModal(false);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
@@ -2468,6 +2717,9 @@ function ChemicalEquilibriumVirtualLab({
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
     setSodiumNitroprussideAdded(false);
+    setMagnesiaAdded(false);
+    setCaClAdded(false);
+    setDilH2SO4HeatingTriggered(false);
     setShowCase2ResultsModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
@@ -2520,6 +2772,9 @@ function ChemicalEquilibriumVirtualLab({
     setCaseSixResult(lastSnapshot.caseSixResult);
     setCaseSevenResult(lastSnapshot.caseSevenResult);
     setSodiumNitroprussideAdded(lastSnapshot.sodiumNitroprussideAdded);
+    setMagnesiaAdded(lastSnapshot.magnesiaAdded);
+    setCaClAdded(lastSnapshot.caClAdded);
+    setDilH2SO4HeatingTriggered(lastSnapshot.dilH2SO4HeatingTriggered);
 
     setToastMessage("Reverted the last operation.");
     setTimeout(() => setToastMessage(null), 2500);
@@ -2776,19 +3031,23 @@ function ChemicalEquilibriumVirtualLab({
                     const interactHandler = experimentStarted
                       ? normalizedEquipmentName.includes("salt sample")
                         ? handleSaltDialogOpen
-                        : normalizedEquipmentName.includes("dil") && normalizedEquipmentName.includes("hno")
-                          ? handleAddDiluteHNO3ToTestTube
-                          : normalizedEquipmentName.includes("ammonium") ||
-                            normalizedEquipmentName.includes("nh₄oh") ||
-                            normalizedEquipmentName.includes("nh4oh")
-                            ? handleAmmoniumDialogOpen
-                            : normalizedEquipmentName.includes("hcl")
-                              ? () => handleAcidDialogOpen("hcl")
-                              : normalizedEquipmentName.includes("h2so4") ||
-                                normalizedEquipmentName.includes("h₂so₄") ||
-                                normalizedEquipmentName.includes("sulfuric")
-                                ? () => handleAcidDialogOpen("h2so4")
-                                : undefined
+                        : normalizedEquipmentName.includes("dil") &&
+                          (normalizedEquipmentName.includes("h2so4") ||
+                            normalizedEquipmentName.includes("h₂so₄"))
+                          ? handleAddDiluteH2SO4ToTestTube
+                          : normalizedEquipmentName.includes("dil") && normalizedEquipmentName.includes("hno")
+                            ? handleAddDiluteHNO3ToTestTube
+                            : normalizedEquipmentName.includes("ammonium") ||
+                              normalizedEquipmentName.includes("nh₄oh") ||
+                              normalizedEquipmentName.includes("nh4oh")
+                              ? handleAmmoniumDialogOpen
+                              : normalizedEquipmentName.includes("hcl")
+                                ? () => handleAcidDialogOpen("hcl")
+                                : normalizedEquipmentName.includes("h2so4") ||
+                                  normalizedEquipmentName.includes("h₂so₄") ||
+                                  normalizedEquipmentName.includes("sulfuric")
+                                  ? () => handleAcidDialogOpen("h2so4")
+                                  : undefined
                       : undefined;
                     return equipment ? (
                       <Equipment
@@ -2865,6 +3124,8 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "CASE 1", result: caseOneResult },
                 { label: "CASE 2", result: caseTwoResult },
                 { label: "CASE 3", result: caseThreeResult },
+                { label: "CASE 4", result: caseFourResult },
+                { label: "CASE 5", result: caseFiveResult },
               ].map((entry) => (
                 <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>

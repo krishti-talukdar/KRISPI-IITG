@@ -14,7 +14,8 @@ const NAOH_SOLUTION_COLOR = "#bfdbfe";
 const MAX_NAOH_VOLUME_DISPLAY = 6;
 const K2CR2O7_CHEMICAL_ID = "k2cr2o7_solution";
 const K2CR2O7_SOLUTION_COLOR = "#fb923c";
-const DILUTE_HNO3_WET_SOLUTION_COLOR = "rgba(155, 205, 255, 0.95)";
+const DILUTE_HNO3_WET_SOLUTION_COLOR = "rgba(14, 165, 233, 0.95)";
+const NH4OH_WET_SOLUTION_COLOR = "rgba(191, 219, 254, 0.95)";
 const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
 const GLASS_CONTAINER_MAX_VOLUME_ML = 12;
 const GLASS_CONTAINER_MIN_OVERLAY_HEIGHT = 16;
@@ -565,9 +566,14 @@ export const Equipment: React.FC<EquipmentProps> = ({
         const totalHeightRatio = Math.min(totalChemicalsAmount, 25) / 25;
         const heightRatio = hasNaOHSample ? naohHeightRatio : totalHeightRatio;
         const saltOverlayMinimumHeight = hasSaltSample ? 60 : 0;
+        const ammoniumAmountInTube = chemicals
+          .filter((chemical) => chemical.id === "nh4oh")
+          .reduce((sum, chemical) => sum + (chemical.amount || 0), 0);
+        const ammoniumHeightBoost = Math.min(60, ammoniumAmountInTube * 15);
+        const baseOverlayHeight = Math.min(150, heightRatio * 150);
         const overlayHeight = Math.max(
           saltOverlayMinimumHeight,
-          Math.min(150, heightRatio * 150),
+          Math.min(150, baseOverlayHeight + (hasAmmoniumSample ? ammoniumHeightBoost : 0)),
         );
         const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
         const nonNaOHChemicals = chemicals.filter((chemical) => chemical.id !== NAOH_CHEMICAL_ID);
@@ -594,13 +600,19 @@ export const Equipment: React.FC<EquipmentProps> = ({
           dryTestMode === "wet" &&
           hasDiluteHNO3 &&
           hasSaltSample;
+        const shouldUseAmmoniumColor =
+          isDryTest &&
+          dryTestMode === "wet" &&
+          hasAmmoniumSample;
         const overlayColor = hasDichromate
           ? K2CR2O7_SOLUTION_COLOR
-          : shouldUseDiluteHNO3Color
-            ? DILUTE_HNO3_WET_SOLUTION_COLOR
-            : shouldForceNaOHBlue
-              ? NAOH_SOLUTION_COLOR
-              : baseOverlayColor;
+          : shouldUseAmmoniumColor
+            ? NH4OH_WET_SOLUTION_COLOR
+            : shouldUseDiluteHNO3Color
+              ? DILUTE_HNO3_WET_SOLUTION_COLOR
+              : shouldForceNaOHBlue
+                ? NAOH_SOLUTION_COLOR
+                : baseOverlayColor;
         const showOverlay =
           overlayColor !== "transparent" && totalChemicalsAmount > 0;
         const displayLabel = name.toLowerCase().includes("test tube")
