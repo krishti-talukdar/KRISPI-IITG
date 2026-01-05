@@ -4092,6 +4092,54 @@ function ChemicalEquilibriumVirtualLab({
           </DialogContent>
         </Dialog>
       )}
+      {isDryTestExperiment && (
+        <Dialog
+          open={showSaltAnalysisQuizModal}
+          onOpenChange={setShowSaltAnalysisQuizModal}
+        >
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader className="bg-gradient-to-r from-amber-400 to-orange-500 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
+              <DialogTitle className="text-xl font-bold text-white">Dry Test for Acid Radicals — Quiz</DialogTitle>
+              <DialogDescription className="text-white/80">
+                Step through the quiz that reinforces the dry-test observations for acid radicals.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="px-6 pb-6 pt-4 space-y-5 text-slate-900">
+              <div className="space-y-4">
+                {SALT_ANALYSIS_ACID_RADICALS_QUIZ.map((item) => (
+                  <article
+                    key={item.label}
+                    className="quiz-section-card rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm shadow-slate-200"
+                  >
+                    <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                      {item.label}
+                    </div>
+                    <p className="mt-2 text-lg font-semibold text-slate-900">{item.prompt}</p>
+                    <div className="mt-3 space-y-1 text-sm text-slate-700">
+                      {item.options.map((option) => (
+                        <p key={option} className="quiz-option-text text-sm text-slate-700">
+                          {option}
+                        </p>
+                      ))}
+                    </div>
+                    <p className="mt-3 text-sm font-semibold text-amber-600">{item.answer}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+            <DialogFooter className="px-6 pb-6">
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full border-slate-300 text-slate-800 hover:border-slate-400"
+                onClick={() => setShowSaltAnalysisQuizModal(false)}
+              >
+                Close Quiz
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </TooltipProvider>
   );
 }
