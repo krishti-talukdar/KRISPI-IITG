@@ -146,7 +146,7 @@
   },
   {
     "title": "Salt Analysis",
-    "description": "A small amount of the dry salt is heated or treated in a test tube, and changes such as color, smell, residue formation, or gas evolution are carefully observed. These simple observations help predict possible radicals like carbonate, nitrate, halide, or sulphate before performing detailed wet tests, making qualitative analysis faster and more systematic.",
+    "description": "To analyse the given salt for acid and basic radical.  **Physical appearance** : White crystalline solid .  **Solubility** : Soluble in water.",
     "category": "Qualitative Analysis",
     "difficulty": "Intermediate",
     "duration": 40,
