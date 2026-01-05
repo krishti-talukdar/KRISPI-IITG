@@ -347,6 +347,12 @@ function ChemicalEquilibriumVirtualLab({
   const [caClAdded, setCaClAdded] = useState(false);
   const [dilH2SO4HeatingTriggered, setDilH2SO4HeatingTriggered] = useState(false);
   const [feCl3Added, setFeCl3Added] = useState(false);
+  const [baClUsed, setBaClUsed] = useState(false);
+  const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
+  const [nh4ohUsed, setNh4ohUsed] = useState(false);
+  const [magnesiaUsed, setMagnesiaUsed] = useState(false);
+  const [caClUsed, setCaClUsed] = useState(false);
+  const [feCl3Used, setFeCl3Used] = useState(false);
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const [hasAutoOpenedResults, setHasAutoOpenedResults] = useState(false);
   const MNO2_CASE_TWO_RESULT =
@@ -430,6 +436,13 @@ function ChemicalEquilibriumVirtualLab({
     shouldBlinkObserveButtonForCaCl ||
     shouldBlinkObserveButtonForDilH2SO4Heat ||
     shouldBlinkObserveButtonForFeCl3;
+  const isWetAcidTestMode = isDryTestExperiment && resolvedDryTestMode === "wet";
+  const hasBaClBeenUsed = isWetAcidTestMode && baClUsed;
+  const hasSodiumNitroprussideBeenUsed = isWetAcidTestMode && sodiumNitroprussideUsed;
+  const hasNH4OHBeenUsed = isWetAcidTestMode && nh4ohUsed;
+  const hasMagnesiaBeenUsed = isWetAcidTestMode && magnesiaUsed;
+  const hasCaClBeenUsed = isWetAcidTestMode && caClUsed;
+  const hasFeCl3BeenUsed = isWetAcidTestMode && feCl3Used;
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
       "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
@@ -1453,7 +1466,11 @@ function ChemicalEquilibriumVirtualLab({
 
             return { ...pos, chemicals: updatedChemicals };
           });
-          return updated ? next : prev;
+          if (updated) {
+            setBaClUsed(true);
+            return next;
+          }
+          return prev;
         });
       }
     }
@@ -1551,6 +1568,9 @@ function ChemicalEquilibriumVirtualLab({
 
             return { ...pos, chemicals: updatedChemicals };
           });
+          if (updated) {
+            setMagnesiaUsed(true);
+          }
           return updated ? next : prev;
         });
         setMagnesiaAdded(true);
@@ -1601,6 +1621,9 @@ function ChemicalEquilibriumVirtualLab({
 
             return { ...pos, chemicals: updatedChemicals };
           });
+          if (updated) {
+            setCaClUsed(true);
+          }
           return updated ? next : prev;
         });
         setCaClAdded(true);
@@ -1654,6 +1677,9 @@ function ChemicalEquilibriumVirtualLab({
           });
           if (updated) {
             addedFeCl3 = true;
+            if (!feCl3Used) {
+              setFeCl3Used(true);
+            }
             return next;
           }
           return prev;
@@ -1666,6 +1692,7 @@ function ChemicalEquilibriumVirtualLab({
 
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
       setSodiumNitroprussideAdded(true);
+      setSodiumNitroprussideUsed(true);
     }
 
     handleEquipmentAddButton(addDialogEquipment.id);
@@ -1680,10 +1707,15 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment,
     resolvedDryTestMode,
     setEquipmentPositions,
+    setBaClUsed,
     setSodiumNitroprussideAdded,
+    setSodiumNitroprussideUsed,
     setMagnesiaAdded,
+    setMagnesiaUsed,
     setCaClAdded,
+    setCaClUsed,
     setFeCl3Added,
+    setFeCl3Used,
   ]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
@@ -2734,6 +2766,7 @@ function ChemicalEquilibriumVirtualLab({
         return { ...pos, chemicals: updatedChemicals };
       }),
     );
+    setNh4ohUsed(true);
 
     const shouldAdvanceAfterAmmonium =
       experimentStarted &&
@@ -2896,6 +2929,12 @@ function ChemicalEquilibriumVirtualLab({
     setCaClAdded(false);
     setDilH2SO4HeatingTriggered(false);
     setFeCl3Added(false);
+    setBaClUsed(false);
+    setSodiumNitroprussideUsed(false);
+    setNh4ohUsed(false);
+    setMagnesiaUsed(false);
+    setCaClUsed(false);
+    setFeCl3Used(false);
     setShowCase2ResultsModal(false);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
@@ -3070,6 +3109,24 @@ function ChemicalEquilibriumVirtualLab({
                       (normalizedEquipmentName.includes("glass rod") ||
                         normalizedEquipmentName.includes("glass container")));
                   const showAddButton = !hideAddButton;
+                  const isBaClCard = normalizedEquipmentName.includes("bacl");
+                  const isSodiumNitroprussideCard = normalizedEquipmentName.includes("nitroprusside");
+                  const isAmmoniumCard =
+                    normalizedEquipmentName.includes("ammonium") ||
+                    normalizedEquipmentName.includes("nh₄oh") ||
+                    normalizedEquipmentName.includes("nh4oh");
+                  const isMagnesiaCard = normalizedEquipmentName.includes("magnesia");
+                  const isCaClCard = normalizedEquipmentName.includes("cacl");
+                  const isFeCl3Card = normalizedEquipmentName.includes("fecl");
+                  const shouldDisableAddButton =
+                    isWetAcidTestMode &&
+                    ((isBaClCard && hasBaClBeenUsed) ||
+                      (isSodiumNitroprussideCard && hasSodiumNitroprussideBeenUsed) ||
+                      (isAmmoniumCard && hasNH4OHBeenUsed) ||
+                      (isMagnesiaCard && hasMagnesiaBeenUsed) ||
+                      (isCaClCard && hasCaClBeenUsed) ||
+                      (isFeCl3Card && hasFeCl3BeenUsed));
+                  const addButtonDisabled = showAddButton && shouldDisableAddButton;
                   return (
                     <div
                       key={equipment.id}
@@ -3099,12 +3156,17 @@ function ChemicalEquilibriumVirtualLab({
                         {showAddButton && (
                           <button
                             type="button"
+                            disabled={addButtonDisabled}
                             onClick={(event) => {
                               event.preventDefault();
                               event.stopPropagation();
                               handleAddButtonClick(equipment, quickAddAction);
                             }}
-                            className="px-3 py-1 text-xs font-semibold text-white bg-orange-500 rounded-full hover:bg-orange-600 transition"
+                            className={`px-3 py-1 text-xs font-semibold text-white rounded-full transition ${
+                              addButtonDisabled
+                                ? "bg-orange-300 opacity-60 cursor-not-allowed"
+                                : "bg-orange-500 hover:bg-orange-600"
+                            }`}
                           >
                             ADD
                           </button>
