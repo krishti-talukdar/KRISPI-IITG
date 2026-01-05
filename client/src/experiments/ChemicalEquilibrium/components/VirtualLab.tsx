@@ -952,6 +952,9 @@ function ChemicalEquilibriumVirtualLab({
     if (resolvedDryTestMode === "basic") {
       return SALT_ANALYSIS_BASIC_RADICALS_QUIZ;
     }
+    if (resolvedDryTestMode === "wet") {
+      return SALT_ANALYSIS_WET_ACID_RADICALS_QUIZ;
+    }
     return SALT_ANALYSIS_ACID_RADICALS_QUIZ;
   }, [resolvedDryTestMode]);
   const saltQuizHeaderTitle =
