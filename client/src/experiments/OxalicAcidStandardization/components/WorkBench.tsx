@@ -1380,13 +1380,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                 </div>
               </div>
 
-              <div className="flex flex-col justify-between">
-                {canProceed && (
-                  <Button onClick={() => onStepAction()} className="w-full mb-2" variant="default">
-                    <FlaskConical className="w-4 h-4 mr-2" /> Complete Step {stepNumber}
-                  </Button>
-                )}
-
+              <div className="flex flex-col gap-4">
                 {/* Additional controls for Step 3: allow user to set amount of oxalic acid to add to weighing boat */}
                 {stepNumber === 3 && (
                   <div className="space-y-3">
