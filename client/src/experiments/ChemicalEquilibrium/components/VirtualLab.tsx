@@ -960,11 +960,15 @@ function ChemicalEquilibriumVirtualLab({
   const saltQuizHeaderTitle =
     resolvedDryTestMode === "basic"
       ? "Dry Test for Basic Radicals — Quiz"
-      : "Dry Test for Acid Radicals — Quiz";
+      : resolvedDryTestMode === "wet"
+        ? "Wet Test for Acid Radicals — Quiz"
+        : "Dry Test for Acid Radicals — Quiz";
   const saltQuizDescription =
     resolvedDryTestMode === "basic"
       ? "Recap the characteristic fumes, colors, and residues that identify basic radicals in the dry test. Select one option per question and submit to reveal the answers."
-      : "Step through the quiz that reinforces the dry-test observations for acid radicals.";
+      : resolvedDryTestMode === "wet"
+        ? "Review the wet test observations and confirmation steps for acid radicals before submitting the answers."
+        : "Step through the quiz that reinforces the dry-test observations for acid radicals.";
 
   useEffect(() => {
     setQuizSelections({});
