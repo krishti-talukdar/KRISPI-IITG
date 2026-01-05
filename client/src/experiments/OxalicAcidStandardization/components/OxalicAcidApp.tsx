@@ -236,6 +236,8 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
                 ))}
               </div>
 
+              <div ref={step3ControlsPortalRef} className="mt-4" />
+
               <h3 className="text-sm font-semibold text-gray-900 mb-3">Chemical Equation</h3>
               <div className="text-xs font-mono bg-gray-50 rounded-lg p-3 border text-center leading-relaxed space-y-1">
                 <div>H₂C₂O₄·2H₂O (s) → H₂C₂O₄ (aq) + 2H₂O</div>
