@@ -437,7 +437,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
   };
 
   const renderSaltSampleBottle = () => renderLabelBottle("Salt Sample", "Dry Test", "amber", () => onInteract?.(id));
-  const renderAmmoniumBottle = (interact?: () => void) => renderLabelBottle("Ammonium hydroxide", "NH₄OH", "emerald", interact);
+  const renderAmmoniumBottle = (interact?: () => void, bottleInteractDisabled?: boolean) =>
+    renderLabelBottle("Ammonium hydroxide", "NH₄OH", "emerald", interact, bottleInteractDisabled);
   const renderHotAcidBottle = (interact?: () => void) => renderLabelBottle("Conc. H₂SO₄", "Corrosive", "red", interact);
 
   const getEquipmentSpecificRendering = () => {
