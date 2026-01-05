@@ -11,6 +11,22 @@ interface ExperimentCardProps {
   onViewDetails: (experiment: Experiment) => void;
 }
 
+const formatDescription = (description: string) => {
+  const segments = description.split(/(\*\*[^*]+\*\*)/g);
+
+  return segments.map((segment, index) => {
+    if (segment.startsWith("**") && segment.endsWith("**")) {
+      return (
+        <strong key={`${segment}-${index}`} className="font-semibold text-gray-900">
+          {segment.slice(2, -2)}
+        </strong>
+      );
+    }
+
+    return <span key={`desc-part-${index}`}>{segment}</span>;
+  });
+};
+
 export default function ExperimentCard({ experiment, progress, onViewDetails }: ExperimentCardProps) {
   const [, navigate] = useLocation();
   
@@ -68,7 +84,7 @@ export default function ExperimentCard({ experiment, progress, onViewDetails }: 
         {/* If title is a short placeholder like "Titration 1", prefer the descriptive sentence from the description for the card overlay */}
         <h4 className="text-xl font-bold text-gray-900 mb-3">{/^Titration\s?\d+$/i.test(experiment.title) ? experiment.description : experiment.title}</h4>
         <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-          {experiment.description}
+          {formatDescription(experiment.description)}
         </p>
         
         <div className="flex items-center justify-between mb-4">
