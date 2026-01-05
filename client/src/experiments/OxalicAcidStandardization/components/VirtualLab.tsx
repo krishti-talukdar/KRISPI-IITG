@@ -43,6 +43,7 @@ interface OxalicAcidVirtualLabProps {
   onResetExperiment: () => void;
   currentStepIndex: number;
   completeStepPortalRef?: React.RefObject<HTMLDivElement>;
+  step3ControlsPortalRef?: React.RefObject<HTMLDivElement>;
 }
 
 function OxalicAcidVirtualLab({
