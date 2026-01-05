@@ -839,6 +839,15 @@ function ChemicalEquilibriumVirtualLab({
     }
     return SALT_ANALYSIS_ACID_RADICALS_QUIZ;
   }, [resolvedDryTestMode]);
+  const saltQuizHeaderTitle =
+    resolvedDryTestMode === "basic"
+      ? "Dry Test for Basic Radicals — Quiz"
+      : "Dry Test for Acid Radicals — Quiz";
+  const saltQuizDescription =
+    resolvedDryTestMode === "basic"
+      ? "Recap the characteristic fumes, colors, and residues that identify basic radicals in the dry test. Select one option per question and submit to reveal the answers."
+      : "Step through the quiz that reinforces the dry-test observations for acid radicals."
+
   useEffect(() => {
     resetSaltQuiz();
   }, [activeSaltQuizItems]);
