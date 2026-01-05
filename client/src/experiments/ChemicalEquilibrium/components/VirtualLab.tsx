@@ -3007,6 +3007,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaClUsed(false);
     setFeCl3Used(false);
     setShowCase2ResultsModal(false);
+    setShowSaltAnalysisQuizModal(false);
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
     setGlassAcidDialogError(null);
