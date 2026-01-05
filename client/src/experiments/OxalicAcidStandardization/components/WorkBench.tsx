@@ -77,6 +77,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const [acidAmount, setAcidAmount] = useState<string>("");
   // show blinking effect on the "Add to Weighing Boat" button when oxalic acid bottle is present
   const [blinkAddButton, setBlinkAddButton] = useState<boolean>(false);
+  const [completeStepPortalHost, setCompleteStepPortalHost] = useState<HTMLDivElement | null>(null);
 
   // pouring animation state when adding acid into the weighing boat
   const [pouring, setPouring] = useState<{ boatId: string; x: number; y: number; active: boolean } | null>(null);
