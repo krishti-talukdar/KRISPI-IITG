@@ -846,7 +846,7 @@ function ChemicalEquilibriumVirtualLab({
   const saltQuizDescription =
     resolvedDryTestMode === "basic"
       ? "Recap the characteristic fumes, colors, and residues that identify basic radicals in the dry test. Select one option per question and submit to reveal the answers."
-      : "Step through the quiz that reinforces the dry-test observations for acid radicals."
+      : "Step through the quiz that reinforces the dry-test observations for acid radicals.";
 
   useEffect(() => {
     resetSaltQuiz();
