@@ -3309,6 +3309,11 @@ function ChemicalEquilibriumVirtualLab({
                   .map((pos) => {
                     const equipment = equipmentList.find((eq) => eq.id === pos.id);
                     const normalizedEquipmentName = equipment.name.toLowerCase();
+                    const isAmmoniumEquipment =
+                      normalizedEquipmentName.includes("ammonium") ||
+                      normalizedEquipmentName.includes("nh₄oh") ||
+                      normalizedEquipmentName.includes("nh4oh");
+                    const shouldDisableAmmoniumInteraction = isAmmoniumEquipment && hasNH4OHBeenUsed;
                     const interactHandler = experimentStarted
                       ? normalizedEquipmentName.includes("salt sample")
                         ? handleSaltDialogOpen
@@ -3352,6 +3357,7 @@ function ChemicalEquilibriumVirtualLab({
                         onObserve={isDryTestExperiment && resolvedDryTestMode === "wet" ? handleObserveWetTest : undefined}
                         observeBlinking={shouldBlinkObserveButton && equipment.id === "test_tubes"}
                         imageUrl={equipment.imageUrl}
+                        interactDisabled={shouldDisableAmmoniumInteraction}
                       />
                     ) : null;
                   })}
