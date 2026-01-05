@@ -1515,12 +1515,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Button onClick={onUndoStep} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100" disabled={stepNumber <= 1}>
-                        Undo Step {currentStepIndex}
-                      </Button>
-                      <Button onClick={onResetExperiment} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100">Reset Experiment</Button>
-                    </div>
                   </div>
                 )}
 
@@ -1541,14 +1535,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                 )}
 
                 {/* default Undo/Reset when not in step 3 */}
-                {stepNumber !== 3 && (
-                  <div className="space-y-2">
-                    <Button onClick={onUndoStep} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100" disabled={stepNumber <= 1}>
-                      Undo Step {currentStepIndex}
-                    </Button>
-                    <Button onClick={onResetExperiment} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100">Reset Experiment</Button>
-                  </div>
-                )}
 
               </div>
             </div>
