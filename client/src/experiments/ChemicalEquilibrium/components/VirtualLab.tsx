@@ -3179,6 +3179,7 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleLaunchQuiz = () => {
     setShowCase2ResultsModal(false);
+    resetSaltQuiz();
     setShowSaltAnalysisQuizModal(true);
   };
 
