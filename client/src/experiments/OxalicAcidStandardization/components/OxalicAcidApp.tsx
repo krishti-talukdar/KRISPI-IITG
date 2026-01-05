@@ -239,6 +239,24 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
                 <div>H₂C₂O₄·2H₂O (s) → H₂C₂O₄ (aq) + 2H₂O</div>
                 <div>H₂C₂O₄ (aq) ⇌ 2H⁺ + C₂O₄²⁻</div>
               </div>
+
+              <div className="mt-4 space-y-2">
+                <Button
+                  onClick={handleUndoStep}
+                  variant="outline"
+                  className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+                  disabled={currentStep === 0}
+                >
+                  Undo Step {currentStep + 1}
+                </Button>
+                <Button
+                  onClick={handleResetExperiment}
+                  variant="outline"
+                  className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+                >
+                  Reset Experiment
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
