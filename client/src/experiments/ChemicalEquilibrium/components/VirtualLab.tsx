@@ -1631,6 +1631,9 @@ function ChemicalEquilibriumVirtualLab({
 
             return { ...pos, chemicals: updatedChemicals };
           });
+          if (updated) {
+            setCaClUsed(true);
+          }
           return updated ? next : prev;
         });
         setCaClAdded(true);
