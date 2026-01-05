@@ -1578,6 +1578,9 @@ function ChemicalEquilibriumVirtualLab({
 
             return { ...pos, chemicals: updatedChemicals };
           });
+          if (updated) {
+            setMagnesiaUsed(true);
+          }
           return updated ? next : prev;
         });
         setMagnesiaAdded(true);
