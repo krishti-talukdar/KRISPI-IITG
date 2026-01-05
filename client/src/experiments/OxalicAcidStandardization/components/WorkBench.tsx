@@ -1534,8 +1534,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   </div>
                 )}
 
-                {/* default Undo/Reset when not in step 3 */}
-
               </div>
             </div>
           </div>
