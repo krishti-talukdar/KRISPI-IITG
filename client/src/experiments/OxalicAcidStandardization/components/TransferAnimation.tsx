@@ -21,8 +21,6 @@ interface LiquidDrop {
 
 export const TransferAnimation: React.FC<TransferAnimationProps> = ({
   isActive,
-  fromContainer,
-  toContainer,
   solutionColor = "#87ceeb",
   transferVolume = 100,
   onTransferComplete,
