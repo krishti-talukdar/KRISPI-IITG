@@ -41,6 +41,7 @@ interface WorkBenchProps {
   onResetExperiment: () => void;
   currentStepIndex: number;
   completeStepPortalRef?: React.RefObject<HTMLDivElement>;
+  step3ControlsPortalRef?: React.RefObject<HTMLDivElement>;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
