@@ -750,6 +750,32 @@ function ChemicalEquilibriumVirtualLab({
   const [ammoniumVolume, setAmmoniumVolume] = useState("5.0");
   const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
   const [showSaltAnalysisQuizModal, setShowSaltAnalysisQuizModal] = useState(false);
+  const [quizSelections, setQuizSelections] = useState<Record<string, string>>({});
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
+  const handleSaltQuizSelect = (questionId: string, optionKey: string) => {
+    if (quizSubmitted) return;
+    setQuizSelections((prev) => ({ ...prev, [questionId]: optionKey }));
+  };
+  const resetSaltQuiz = () => {
+    setQuizSelections({});
+    setQuizSubmitted(false);
+  };
+  const allSaltQuizAnswered = useMemo(
+    () => SALT_ANALYSIS_ACID_RADICALS_QUIZ.every((item) => Boolean(quizSelections[item.id])),
+    [quizSelections],
+  );
+  const saltQuizScore = useMemo(
+    () =>
+      SALT_ANALYSIS_ACID_RADICALS_QUIZ.reduce(
+        (total, item) => (quizSelections[item.id] === item.correctOption ? total + 1 : total),
+        0,
+      ),
+    [quizSelections],
+  );
+  const handleSaltQuizSubmit = () => {
+    if (!allSaltQuizAnswered) return;
+    setQuizSubmitted(true);
+  };
   const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const saltHeatingIntervalRef = useRef<number | null>(null);
