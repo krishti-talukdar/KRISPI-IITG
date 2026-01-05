@@ -345,6 +345,25 @@
   transition: height 350ms ease, background-color 350ms ease;
 }
 
+  .transfer-animation-grid {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  .transfer-funnel-top {
+    clip-path: polygon(20% 0%, 80% 0%, 90% 100%, 10% 100%);
+  }
+  .transfer-solution-fill {
+    background-color: var(--solution-color);
+    transition: background-color 0.2s ease;
+  }
+  .transfer-drop {
+    background-color: var(--solution-color);
+  }
+  .transfer-phase-tip {
+    @apply flex items-center gap-2 rounded-md px-2 py-2 text-xs;
+  }
+
 /* Workbench specific styles (ethanoic buffer experiment)
    Converted inline background and helper classes to descriptive names
 */
