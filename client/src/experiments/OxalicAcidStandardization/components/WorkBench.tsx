@@ -126,6 +126,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     }, 8000);
   }, []);
 
+  const completeStepPortalContent = canProceed ? (
+    <div className="rounded-lg border border-blue-200 bg-white shadow-sm p-3">
+      <Button onClick={() => onStepAction()} className="w-full" variant="default">
+        <FlaskConical className="w-4 h-4 mr-2" /> Complete Step {stepNumber}
+      </Button>
+    </div>
+  ) : null;
+
   // Cleanup for timeouts on unmount
   useEffect(() => {
     return () => {
