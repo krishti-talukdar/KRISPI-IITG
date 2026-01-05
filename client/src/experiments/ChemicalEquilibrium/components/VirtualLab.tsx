@@ -849,7 +849,8 @@ function ChemicalEquilibriumVirtualLab({
       : "Step through the quiz that reinforces the dry-test observations for acid radicals.";
 
   useEffect(() => {
-    resetSaltQuiz();
+    setQuizSelections({});
+    setQuizSubmitted(false);
   }, [activeSaltQuizItems]);
   const allSaltQuizAnswered = useMemo(
     () => activeSaltQuizItems.every((item) => Boolean(quizSelections[item.id])),
