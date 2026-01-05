@@ -726,6 +726,7 @@ function ChemicalEquilibriumVirtualLab({
   const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
   const [ammoniumVolume, setAmmoniumVolume] = useState("5.0");
   const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
+  const [showSaltAnalysisQuizModal, setShowSaltAnalysisQuizModal] = useState(false);
   const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const saltHeatingIntervalRef = useRef<number | null>(null);
