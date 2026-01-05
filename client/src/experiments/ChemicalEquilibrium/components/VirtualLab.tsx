@@ -4147,48 +4147,111 @@ function ChemicalEquilibriumVirtualLab({
       {isDryTestExperiment && (
         <Dialog
           open={showSaltAnalysisQuizModal}
-          onOpenChange={setShowSaltAnalysisQuizModal}
+          onOpenChange={(open) => {
+            if (!open) {
+              resetSaltQuiz();
+            }
+            setShowSaltAnalysisQuizModal(open);
+          }}
         >
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader className="bg-gradient-to-r from-amber-400 to-orange-500 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
-              <DialogTitle className="text-xl font-bold text-white">Dry Test for Acid Radicals — Quiz</DialogTitle>
-              <DialogDescription className="text-white/80">
-                Step through the quiz that reinforces the dry-test observations for acid radicals.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="px-6 pb-6 pt-4 space-y-5 text-slate-900">
-              <div className="space-y-4">
-                {SALT_ANALYSIS_ACID_RADICALS_QUIZ.map((item) => (
-                  <article
-                    key={item.label}
-                    className="quiz-section-card rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm shadow-slate-200"
-                  >
-                    <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">
-                      {item.label}
+            <Card className="shadow-xl">
+              <CardHeader className="space-y-2 pb-0">
+                <div className="flex items-center justify-between w-full">
+                  <CardTitle className="text-2xl text-slate-900">Dry Test for Acid Radicals — Quiz</CardTitle>
+                  {quizSubmitted && (
+                    <div className="text-blue-600 font-semibold">
+                      Marks obtained ({saltQuizScore} / {SALT_ANALYSIS_ACID_RADICALS_QUIZ.length})
                     </div>
-                    <p className="mt-2 text-lg font-semibold text-slate-900">{item.prompt}</p>
-                    <div className="mt-3 space-y-1 text-sm text-slate-700">
-                      {item.options.map((option) => (
-                        <p key={option} className="quiz-option-text text-sm text-slate-700">
-                          {option}
-                        </p>
-                      ))}
+                  )}
+                </div>
+                <p className="text-sm text-slate-500">
+                  Step through the quiz that reinforces the dry-test observations for acid radicals.
+                </p>
+              </CardHeader>
+              <CardContent className="pt-2 text-slate-900">
+                <div className="space-y-6">
+                  {SALT_ANALYSIS_ACID_RADICALS_QUIZ.map((item) => {
+                    const selectedKey = quizSelections[item.id];
+                    const selectedOption = item.options.find((option) => option.key === selectedKey);
+                    const answerColorClass =
+                      selectedKey && selectedKey === item.correctOption ? "text-emerald-700" : "text-rose-600";
+                    const selectionText = selectedOption
+                      ? `${selectedOption.key}) ${selectedOption.text}`
+                      : "No answer selected";
+                    return (
+                      <section
+                        key={item.id}
+                        className="quiz-section-card rounded-2xl border border-slate-200 bg-white/95 p-5 shadow-sm shadow-slate-200"
+                      >
+                        <h3 className="text-base font-semibold text-slate-900">{`${item.label}. ${item.prompt}`}</h3>
+                        <div className="mt-3 space-y-2">
+                          {item.options.map((option) => (
+                            <label
+                              key={option.key}
+                              className="quiz-option flex items-start space-x-2 text-sm text-slate-700"
+                            >
+                              <input
+                                type="radio"
+                                name={item.id}
+                                value={option.key}
+                                className="mt-1"
+                                checked={quizSelections[item.id] === option.key}
+                                onChange={() => handleSaltQuizSelect(item.id, option.key)}
+                                disabled={quizSubmitted}
+                              />
+                              <span>{`${option.key}) ${option.text}`}</span>
+                            </label>
+                          ))}
+                        </div>
+                        {quizSubmitted && (
+                          <>
+                            <div className={`mt-2 text-sm font-semibold ${answerColorClass}`}>
+                              Your answer: {selectionText}
+                            </div>
+                            <div className="mt-1 text-sm font-semibold text-emerald-700">{item.answer}</div>
+                          </>
+                        )}
+                      </section>
+                    );
+                  })}
+                  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        variant="outline"
+                        className="flex items-center space-x-2"
+                        onClick={() => {
+                          setShowSaltAnalysisQuizModal(false);
+                          setShowCase2ResultsModal(true);
+                        }}
+                      >
+                        <ArrowLeft className="w-4 h-4" />
+                        <span>Back to Experiment</span>
+                      </Button>
+                      <Link href="/">
+                        <Button className="bg-gray-700 text-white hover:bg-gray-800">
+                          Return to Experiments
+                        </Button>
+                      </Link>
                     </div>
-                    <p className="mt-3 text-sm font-semibold text-amber-600">{item.answer}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-            <DialogFooter className="px-6 pb-6">
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-full border-slate-300 text-slate-800 hover:border-slate-400"
-                onClick={() => setShowSaltAnalysisQuizModal(false)}
-              >
-                Close Quiz
-              </Button>
-            </DialogFooter>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        onClick={handleSaltQuizSubmit}
+                        className={`bg-amber-600 hover:bg-amber-700 text-white ${
+                          !allSaltQuizAnswered ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                        disabled={!allSaltQuizAnswered || quizSubmitted}
+                      >
+                        Submit
+                      </Button>
+                      <Button variant="outline" onClick={resetSaltQuiz}>
+                        Reset
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </DialogContent>
         </Dialog>
       )}
