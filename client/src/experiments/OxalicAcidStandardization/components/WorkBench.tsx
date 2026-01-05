@@ -100,6 +100,10 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     }
   }, [equipmentPositions, stepNumber]);
 
+  useLayoutEffect(() => {
+    setCompleteStepPortalHost(completeStepPortalRef?.current ?? null);
+  }, [completeStepPortalRef]);
+
   // animation overlay state for moving a weighing boat to the analytical balance
   const [boatMoveOverlay, setBoatMoveOverlay] = useState<{ id: string; x: number; y: number; targetX: number; targetY: number; started: boolean } | null>(null);
   const boatMoveRef = useRef<number | null>(null);
