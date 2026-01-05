@@ -1557,6 +1557,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         </div>
       </div>
 
+      {completeStepPortalContent && completeStepPortalHost && createPortal(completeStepPortalContent, completeStepPortalHost)}
+      {completeStepPortalContent && !completeStepPortalHost && (
+        <div className="mt-4 px-4">
+          {completeStepPortalContent}
+        </div>
+      )}
+
       {/* Calculator Modal */}
       {showCalculator && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
