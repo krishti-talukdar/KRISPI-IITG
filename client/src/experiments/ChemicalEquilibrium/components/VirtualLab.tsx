@@ -1687,6 +1687,9 @@ function ChemicalEquilibriumVirtualLab({
           });
           if (updated) {
             addedFeCl3 = true;
+            if (!feCl3Used) {
+              setFeCl3Used(true);
+            }
             return next;
           }
           return prev;
