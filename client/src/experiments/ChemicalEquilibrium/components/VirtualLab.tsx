@@ -219,6 +219,121 @@ const SALT_ANALYSIS_ACID_RADICALS_QUIZ: SaltAnalysisQuizItem[] = [
   },
 ];
 
+const SALT_ANALYSIS_WET_ACID_RADICALS_QUIZ: SaltAnalysisQuizItem[] = [
+  {
+    id: "wet_q1",
+    label: "Question 1",
+    prompt:
+      "A pinch of salt is treated with dilute H₂SO₄ in a test tube. Colourless, odourless gas evolves which turns lime water milky. This confirms:",
+    options: [
+      { key: "a", text: "Sulphite" },
+      { key: "b", text: "Sulphide" },
+      { key: "c", text: "Carbonate" },
+      { key: "d", text: "Nitrite" },
+    ],
+    correctOption: "c",
+    answer: "Answer: c) Carbonate",
+  },
+  {
+    id: "wet_q2",
+    label: "Question 2",
+    prompt:
+      "Sodium carbonate extract of a salt + acetic acid produces a black ppt. with lead acetate. This indicates:",
+    options: [
+      { key: "a", text: "Chloride" },
+      { key: "b", text: "Sulphide" },
+      { key: "c", text: "Sulphate" },
+      { key: "d", text: "Phosphate" },
+    ],
+    correctOption: "b",
+    answer: "Answer: b) Sulphide",
+  },
+  {
+    id: "wet_q3",
+    label: "Question 3",
+    prompt:
+      "To the original solution of a salt, dilute H₂SO₄ is added, followed by freshly prepared ferrous sulphate. Conc. H₂SO₄ added along the sides forms a brown ring. This confirms:",
+    options: [
+      { key: "a", text: "Nitrite" },
+      { key: "b", text: "Nitrate" },
+      { key: "c", text: "Carbonate" },
+      { key: "d", text: "Acetate" },
+    ],
+    correctOption: "b",
+    answer: "Answer: b) Nitrate",
+  },
+  {
+    id: "wet_q4",
+    label: "Question 4",
+    prompt:
+      "A salt solution + dilute H₂SO₄ gives no gas evolution. On adding barium chloride, a white ppt. insoluble in dil. HCl forms. This confirms:",
+    options: [
+      { key: "a", text: "Sulphate" },
+      { key: "b", text: "Carbonate" },
+      { key: "c", text: "Sulphite" },
+      { key: "d", text: "Phosphate" },
+    ],
+    correctOption: "a",
+    answer: "Answer: a) Sulphate",
+  },
+  {
+    id: "wet_q5",
+    label: "Question 5",
+    prompt:
+      "Sodium carbonate extract + dil. HNO₃ + ammonium molybdate gives a yellow ppt. This indicates the presence of:",
+    options: [
+      { key: "a", text: "Phosphate" },
+      { key: "b", text: "Arsenate" },
+      { key: "c", text: "Borate" },
+      { key: "d", text: "Silicate" },
+    ],
+    correctOption: "a",
+    answer: "Answer: a) Phosphate",
+  },
+  {
+    id: "wet_q6",
+    label: "Question 6",
+    prompt:
+      "Original solution of salt + AgNO₃ gives a white ppt. soluble in dil. NH₄OH but insoluble in dil. HNO₃. This confirms:",
+    options: [
+      { key: "a", text: "Chloride" },
+      { key: "b", text: "Bromide" },
+      { key: "c", text: "Iodide" },
+      { key: "d", text: "Sulphate" },
+    ],
+    correctOption: "a",
+    answer: "Answer: a) Chloride",
+  },
+  {
+    id: "wet_q7",
+    label: "Question 7",
+    prompt:
+      "A solution of salt in dil. H₂SO₄ + KI + starch gives deep blue colour. This indicates:",
+    options: [
+      { key: "a", text: "Nitrate" },
+      { key: "b", text: "Nitrite" },
+      { key: "c", text: "Carbonate" },
+      { key: "d", text: "Sulphite" },
+    ],
+    correctOption: "b",
+    answer: "Answer: b) Nitrite",
+  },
+  {
+    id: "wet_q8",
+    label: "Question 8",
+    prompt:
+      "Chromyl chloride test: Vapours from salt + K₂Cr₂O₇ + conc. H₂SO₄ absorbed in NaOH give yellow solution. Addition of lead acetate + acetic acid gives:",
+    options: [
+      { key: "a", text: "White ppt." },
+      { key: "b", text: "Yellow ppt." },
+      { key: "c", text: "Black ppt." },
+      { key: "d", text: "Red ppt." },
+    ],
+    correctOption: "b",
+    answer: "Answer: b) Yellow ppt.",
+  },
+];
+
 const SALT_ANALYSIS_BASIC_RADICALS_QUIZ: SaltAnalysisQuizItem[] = [
   {
     id: "q1_basic",
