@@ -347,6 +347,12 @@ function ChemicalEquilibriumVirtualLab({
   const [caClAdded, setCaClAdded] = useState(false);
   const [dilH2SO4HeatingTriggered, setDilH2SO4HeatingTriggered] = useState(false);
   const [feCl3Added, setFeCl3Added] = useState(false);
+  const [baClUsed, setBaClUsed] = useState(false);
+  const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
+  const [nh4ohUsed, setNh4ohUsed] = useState(false);
+  const [magnesiaUsed, setMagnesiaUsed] = useState(false);
+  const [caClUsed, setCaClUsed] = useState(false);
+  const [feCl3Used, setFeCl3Used] = useState(false);
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const [hasAutoOpenedResults, setHasAutoOpenedResults] = useState(false);
   const MNO2_CASE_TWO_RESULT =
