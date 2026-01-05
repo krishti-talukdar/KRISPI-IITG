@@ -1476,7 +1476,11 @@ function ChemicalEquilibriumVirtualLab({
 
             return { ...pos, chemicals: updatedChemicals };
           });
-          return updated ? next : prev;
+          if (updated) {
+            setBaClUsed(true);
+            return next;
+          }
+          return prev;
         });
       }
     }
