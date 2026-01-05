@@ -550,7 +550,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isAmmoniumEquipment) {
-      return renderAmmoniumBottle(() => onInteract?.(id));
+      return renderAmmoniumBottle(() => onInteract?.(id), interactDisabled);
     }
 
     if (isAcidEquipment) {
