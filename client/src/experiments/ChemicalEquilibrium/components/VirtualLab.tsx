@@ -1,9 +1,10 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Equipment } from "./Equipment";
 import { WorkBench } from "./WorkBench";
 import { Chemical } from "./Chemical";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { FlaskConical, Atom, BookOpen, List, Play, Pause, TestTube, Droplet, Beaker } from "lucide-react";
+import { ArrowLeft, FlaskConical, Atom, BookOpen, List, Play, Pause, TestTube, Droplet, Beaker } from "lucide-react";
 import {
   CHEMICAL_EQUILIBRIUM_CHEMICALS,
   CHEMICAL_EQUILIBRIUM_EQUIPMENT,
@@ -34,7 +35,7 @@ import type {
   DryTestMode,
   RodMoveAnimationConfig,
 } from "../types";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 
 interface ChemicalEquilibriumVirtualLabProps {
   step: ExperimentStep;
