@@ -3115,12 +3115,12 @@ function ChemicalEquilibriumVirtualLab({
                   const isFeCl3Card = normalizedEquipmentName.includes("fecl");
                   const shouldDisableAddButton =
                     isWetAcidTestMode &&
-                    ((isBaClCard && isBaClAddedToTestTube) ||
-                      (isSodiumNitroprussideCard && hasSodiumNitroprussideInTestTube) ||
-                      (isAmmoniumCard && hasNH4OHInGlassContainerForWetAcid) ||
-                      (isMagnesiaCard && hasMagnesiaInTestTube) ||
-                      (isCaClCard && hasCaClInTestTube) ||
-                      (isFeCl3Card && hasFeCl3InTestTube));
+                    ((isBaClCard && hasBaClBeenUsed) ||
+                      (isSodiumNitroprussideCard && hasSodiumNitroprussideBeenUsed) ||
+                      (isAmmoniumCard && hasNH4OHBeenUsed) ||
+                      (isMagnesiaCard && hasMagnesiaBeenUsed) ||
+                      (isCaClCard && hasCaClBeenUsed) ||
+                      (isFeCl3Card && hasFeCl3BeenUsed));
                   const addButtonDisabled = showAddButton && shouldDisableAddButton;
                   return (
                     <div
