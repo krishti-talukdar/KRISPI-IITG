@@ -2771,6 +2771,7 @@ function ChemicalEquilibriumVirtualLab({
         return { ...pos, chemicals: updatedChemicals };
       }),
     );
+    setNh4ohUsed(true);
 
     const shouldAdvanceAfterAmmonium =
       experimentStarted &&
