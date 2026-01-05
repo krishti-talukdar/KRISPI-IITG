@@ -50,6 +50,7 @@ interface EquipmentProps {
   isDryTest?: boolean;
   dryTestMode?: DryTestMode;
   disabled?: boolean;
+  interactDisabled?: boolean;
   imageUrl?: string;
   isRinseActive?: boolean;
   observeBlinking?: boolean;
@@ -71,6 +72,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   currentStep = 1,
   isDryTest = false,
   disabled = false,
+  interactDisabled = false,
   imageUrl,
   dryTestMode,
   isRinseActive = false,
