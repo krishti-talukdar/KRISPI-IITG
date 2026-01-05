@@ -1702,6 +1702,7 @@ function ChemicalEquilibriumVirtualLab({
 
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
       setSodiumNitroprussideAdded(true);
+      setSodiumNitroprussideUsed(true);
     }
 
     handleEquipmentAddButton(addDialogEquipment.id);
