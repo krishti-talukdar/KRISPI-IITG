@@ -3057,6 +3057,7 @@ function ChemicalEquilibriumVirtualLab({
     setFeCl3Used(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
+    resetSaltQuiz();
     setGlassAcidDialogOpen(false);
     setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
     setGlassAcidDialogError(null);
@@ -3094,6 +3095,7 @@ function ChemicalEquilibriumVirtualLab({
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
+    resetSaltQuiz();
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
     setTimeout(() => setToastMessage(null), 2500);
