@@ -258,6 +258,7 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
                   Reset Experiment
                 </Button>
               </div>
+              <div ref={completeStepPortalRef} className="mt-4"></div>
             </CardContent>
           </Card>
 
