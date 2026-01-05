@@ -833,17 +833,26 @@ function ChemicalEquilibriumVirtualLab({
     setQuizSelections({});
     setQuizSubmitted(false);
   };
+  const activeSaltQuizItems = useMemo(() => {
+    if (resolvedDryTestMode === "basic") {
+      return SALT_ANALYSIS_BASIC_RADICALS_QUIZ;
+    }
+    return SALT_ANALYSIS_ACID_RADICALS_QUIZ;
+  }, [resolvedDryTestMode]);
+  useEffect(() => {
+    resetSaltQuiz();
+  }, [activeSaltQuizItems]);
   const allSaltQuizAnswered = useMemo(
-    () => SALT_ANALYSIS_ACID_RADICALS_QUIZ.every((item) => Boolean(quizSelections[item.id])),
-    [quizSelections],
+    () => activeSaltQuizItems.every((item) => Boolean(quizSelections[item.id])),
+    [activeSaltQuizItems, quizSelections],
   );
   const saltQuizScore = useMemo(
     () =>
-      SALT_ANALYSIS_ACID_RADICALS_QUIZ.reduce(
+      activeSaltQuizItems.reduce(
         (total, item) => (quizSelections[item.id] === item.correctOption ? total + 1 : total),
         0,
       ),
-    [quizSelections],
+    [activeSaltQuizItems, quizSelections],
   );
   const handleSaltQuizSubmit = () => {
     if (!allSaltQuizAnswered) return;
