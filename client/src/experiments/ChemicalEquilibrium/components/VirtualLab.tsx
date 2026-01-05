@@ -3087,6 +3087,24 @@ function ChemicalEquilibriumVirtualLab({
                       (normalizedEquipmentName.includes("glass rod") ||
                         normalizedEquipmentName.includes("glass container")));
                   const showAddButton = !hideAddButton;
+                  const isBaClCard = normalizedEquipmentName.includes("bacl");
+                  const isSodiumNitroprussideCard = normalizedEquipmentName.includes("nitroprusside");
+                  const isAmmoniumCard =
+                    normalizedEquipmentName.includes("ammonium") ||
+                    normalizedEquipmentName.includes("nh₄oh") ||
+                    normalizedEquipmentName.includes("nh4oh");
+                  const isMagnesiaCard = normalizedEquipmentName.includes("magnesia");
+                  const isCaClCard = normalizedEquipmentName.includes("cacl");
+                  const isFeCl3Card = normalizedEquipmentName.includes("fecl");
+                  const shouldDisableAddButton =
+                    isWetAcidTestMode &&
+                    ((isBaClCard && isBaClAddedToTestTube) ||
+                      (isSodiumNitroprussideCard && hasSodiumNitroprussideInTestTube) ||
+                      (isAmmoniumCard && hasNH4OHInGlassContainerForWetAcid) ||
+                      (isMagnesiaCard && hasMagnesiaInTestTube) ||
+                      (isCaClCard && hasCaClInTestTube) ||
+                      (isFeCl3Card && hasFeCl3InTestTube));
+                  const addButtonDisabled = showAddButton && shouldDisableAddButton;
                   return (
                     <div
                       key={equipment.id}
@@ -3116,12 +3134,17 @@ function ChemicalEquilibriumVirtualLab({
                         {showAddButton && (
                           <button
                             type="button"
+                            disabled={addButtonDisabled}
                             onClick={(event) => {
                               event.preventDefault();
                               event.stopPropagation();
                               handleAddButtonClick(equipment, quickAddAction);
                             }}
-                            className="px-3 py-1 text-xs font-semibold text-white bg-orange-500 rounded-full hover:bg-orange-600 transition"
+                            className={`px-3 py-1 text-xs font-semibold text-white rounded-full transition ${
+                              addButtonDisabled
+                                ? "bg-orange-300 opacity-60 cursor-not-allowed"
+                                : "bg-orange-500 hover:bg-orange-600"
+                            }`}
                           >
                             ADD
                           </button>
