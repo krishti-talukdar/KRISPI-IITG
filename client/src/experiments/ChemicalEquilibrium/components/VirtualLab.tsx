@@ -3128,8 +3128,7 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleLaunchQuiz = () => {
     setShowCase2ResultsModal(false);
-    setToastMessage("Quiz coming soon for this experiment.");
-    setTimeout(() => setToastMessage(null), 2500);
+    setShowSaltAnalysisQuizModal(true);
   };
 
   return (
