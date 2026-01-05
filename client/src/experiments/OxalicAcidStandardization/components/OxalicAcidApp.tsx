@@ -23,6 +23,7 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
   const [experimentStarted, setExperimentStarted] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [usedEquipment, setUsedEquipment] = useState<string[]>([]);
+  const completeStepPortalRef = useRef<HTMLDivElement | null>(null);
 
   const handleEquipmentPlaced = (id: string) => {
     setUsedEquipment(prev => (prev.includes(id) ? prev : [...prev, id]));
