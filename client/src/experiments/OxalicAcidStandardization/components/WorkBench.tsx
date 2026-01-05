@@ -68,6 +68,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   onResetExperiment,
   currentStepIndex,
   completeStepPortalRef,
+  step3ControlsPortalRef,
 }) => {
   const [selectedChemical, setSelectedChemical] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
