@@ -430,6 +430,23 @@ function ChemicalEquilibriumVirtualLab({
     shouldBlinkObserveButtonForCaCl ||
     shouldBlinkObserveButtonForDilH2SO4Heat ||
     shouldBlinkObserveButtonForFeCl3;
+  const isWetAcidTestMode = isDryTestExperiment && resolvedDryTestMode === "wet";
+  const testTubeChemicals = testTubeState?.chemicals ?? [];
+  const hasMagnesiaInTestTube =
+    isWetAcidTestMode &&
+    testTubeChemicals.some((chemical) => chemical.id === MAGNESIA_CHEMICAL_ID);
+  const hasCaClInTestTube =
+    isWetAcidTestMode &&
+    testTubeChemicals.some((chemical) => chemical.id === CA_CL_CHEMICAL_ID);
+  const hasFeCl3InTestTube =
+    isWetAcidTestMode &&
+    testTubeChemicals.some((chemical) => chemical.id === FE_CL3_CHEMICAL_ID);
+  const hasSodiumNitroprussideInTestTube =
+    isWetAcidTestMode &&
+    sodiumNitroprussideAdded;
+  const hasNH4OHInGlassContainerForWetAcid =
+    isWetAcidTestMode &&
+    hasAmmoniumInGlassContainer;
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
       "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
