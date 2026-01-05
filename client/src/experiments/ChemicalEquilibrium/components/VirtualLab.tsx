@@ -401,6 +401,12 @@ function ChemicalEquilibriumVirtualLab({
   const baClChemical = testTubeState?.chemicals.find((chemical) => chemical.id === BA_CL_CHEMICAL_ID);
   const baClAmountInTestTube = baClChemical?.amount ?? 0;
   const isBaClAddedToTestTube = baClAmountInTestTube > 0;
+  const ammoniumAmountInTestTube = testTubeState
+    ? testTubeState.chemicals
+        .filter((chemical) => chemical.id === "nh4oh")
+        .reduce((sum, chemical) => sum + (chemical.amount || 0), 0)
+    : 0;
+  const hasAmmoniumInTestTube = ammoniumAmountInTestTube > 0;
   const shouldBlinkObserveButtonForBaCl =
     isDryTestExperiment &&
     resolvedDryTestMode === "wet" &&
@@ -439,7 +445,7 @@ function ChemicalEquilibriumVirtualLab({
   const isWetAcidTestMode = isDryTestExperiment && resolvedDryTestMode === "wet";
   const hasBaClBeenUsed = isWetAcidTestMode && baClUsed;
   const hasSodiumNitroprussideBeenUsed = isWetAcidTestMode && sodiumNitroprussideUsed;
-  const hasNH4OHBeenUsed = isWetAcidTestMode && nh4ohUsed;
+  const hasNH4OHBeenUsed = isWetAcidTestMode && (nh4ohUsed || hasAmmoniumInTestTube);
   const hasMagnesiaBeenUsed = isWetAcidTestMode && magnesiaUsed;
   const hasCaClBeenUsed = isWetAcidTestMode && caClUsed;
   const hasFeCl3BeenUsed = isWetAcidTestMode && feCl3Used;
@@ -3303,6 +3309,11 @@ function ChemicalEquilibriumVirtualLab({
                   .map((pos) => {
                     const equipment = equipmentList.find((eq) => eq.id === pos.id);
                     const normalizedEquipmentName = equipment.name.toLowerCase();
+                    const isAmmoniumEquipment =
+                      normalizedEquipmentName.includes("ammonium") ||
+                      normalizedEquipmentName.includes("nh₄oh") ||
+                      normalizedEquipmentName.includes("nh4oh");
+                    const shouldDisableAmmoniumInteraction = isAmmoniumEquipment && hasNH4OHBeenUsed;
                     const interactHandler = experimentStarted
                       ? normalizedEquipmentName.includes("salt sample")
                         ? handleSaltDialogOpen
@@ -3346,6 +3357,7 @@ function ChemicalEquilibriumVirtualLab({
                         onObserve={isDryTestExperiment && resolvedDryTestMode === "wet" ? handleObserveWetTest : undefined}
                         observeBlinking={shouldBlinkObserveButton && equipment.id === "test_tubes"}
                         imageUrl={equipment.imageUrl}
+                        interactDisabled={shouldDisableAmmoniumInteraction}
                       />
                     ) : null;
                   })}

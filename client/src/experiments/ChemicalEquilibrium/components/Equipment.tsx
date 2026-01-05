@@ -50,6 +50,7 @@ interface EquipmentProps {
   isDryTest?: boolean;
   dryTestMode?: DryTestMode;
   disabled?: boolean;
+  interactDisabled?: boolean;
   imageUrl?: string;
   isRinseActive?: boolean;
   observeBlinking?: boolean;
@@ -71,6 +72,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   currentStep = 1,
   isDryTest = false,
   disabled = false,
+  interactDisabled = false,
   imageUrl,
   dryTestMode,
   isRinseActive = false,
@@ -393,7 +395,13 @@ export const Equipment: React.FC<EquipmentProps> = ({
     },
   };
 
-  const renderLabelBottle = (label: string, tag: string, colorKey: keyof typeof BOTTLE_COLORS, interact?: () => void) => {
+  const renderLabelBottle = (
+    label: string,
+    tag: string,
+    colorKey: keyof typeof BOTTLE_COLORS,
+    interact?: () => void,
+    interactDisabled?: boolean,
+  ) => {
     const colors = BOTTLE_COLORS[colorKey];
 
     return (
@@ -415,10 +423,11 @@ export const Equipment: React.FC<EquipmentProps> = ({
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
-              if (isDragging || disabled) return;
+              if (isDragging || disabled || interactDisabled) return;
               interact();
             }}
-            className="mt-1 w-full rounded border border-slate-200 px-2 py-1 text-[10px] font-semibold text-slate-700 hover:border-slate-400"
+            disabled={interactDisabled}
+            className="mt-1 w-full rounded border border-slate-200 px-2 py-1 text-[10px] font-semibold text-slate-700 hover:border-slate-400 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 disabled:bg-slate-50"
           >
             ADD
           </button>
@@ -428,7 +437,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
   };
 
   const renderSaltSampleBottle = () => renderLabelBottle("Salt Sample", "Dry Test", "amber", () => onInteract?.(id));
-  const renderAmmoniumBottle = (interact?: () => void) => renderLabelBottle("Ammonium hydroxide", "NH₄OH", "emerald", interact);
+  const renderAmmoniumBottle = (interact?: () => void, bottleInteractDisabled?: boolean) =>
+    renderLabelBottle("Ammonium hydroxide", "NH₄OH", "emerald", interact, bottleInteractDisabled);
   const renderHotAcidBottle = (interact?: () => void) => renderLabelBottle("Conc. H₂SO₄", "Corrosive", "red", interact);
 
   const getEquipmentSpecificRendering = () => {
@@ -540,7 +550,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isAmmoniumEquipment) {
-      return renderAmmoniumBottle(() => onInteract?.(id));
+      return renderAmmoniumBottle(() => onInteract?.(id), interactDisabled);
     }
 
     if (isAcidEquipment) {
