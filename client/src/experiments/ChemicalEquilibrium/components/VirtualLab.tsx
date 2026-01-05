@@ -133,65 +133,87 @@ const ACID_CONFIG: Record<AcidTarget, { chemicalId: string; label: string; color
   },
 };
 
-const SALT_ANALYSIS_ACID_RADICALS_QUIZ = [
+type SaltAnalysisQuizItem = {
+  id: string;
+  label: string;
+  prompt: string;
+  options: { key: string; text: string }[];
+  correctOption: string;
+  answer: string;
+};
+
+const SALT_ANALYSIS_ACID_RADICALS_QUIZ: SaltAnalysisQuizItem[] = [
   {
+    id: "q1",
     label: "Question 1",
     prompt:
       "When a solid chloride salt is warmed with concentrated sulphuric acid in a dry test tube, which gas is evolved?",
     options: [
-      "a) Sulphur dioxide",
-      "b) Hydrogen chloride",
-      "c) Chlorine",
-      "d) Oxygen",
+      { key: "a", text: "Sulphur dioxide" },
+      { key: "b", text: "Hydrogen chloride" },
+      { key: "c", text: "Chlorine" },
+      { key: "d", text: "Oxygen" },
     ],
+    correctOption: "b",
     answer: "Answer: b) Hydrogen chloride",
   },
   {
+    id: "q2",
     label: "Question 2",
     prompt:
       "The dense white fumes formed when a glass rod dipped in ammonium hydroxide is brought near the mouth of a test tube containing HCl gas are due to:",
     options: [
-      "a) Ammonium chloride",
-      "b) Ammonium sulphate",
-      "c) Ammonium nitrate",
-      "d) Ammonium carbonate",
+      { key: "a", text: "Ammonium chloride" },
+      { key: "b", text: "Ammonium sulphate" },
+      { key: "c", text: "Ammonium nitrate" },
+      { key: "d", text: "Ammonium carbonate" },
     ],
+    correctOption: "a",
     answer: "Answer: a) Ammonium chloride",
   },
   {
+    id: "q3",
     label: "Question 3",
     prompt:
       "A mixture of a solid chloride salt, manganese dioxide and conc. sulphuric acid is heated in a dry test tube. A greenish-yellow gas is evolved which bleaches moist litmus paper. This confirms the presence of:",
     options: [
-      "a) Bromide ion",
-      "b) Iodide ion",
-      "c) Chloride ion",
-      "d) Nitrate ion",
+      { key: "a", text: "Bromide ion" },
+      { key: "b", text: "Iodide ion" },
+      { key: "c", text: "Chloride ion" },
+      { key: "d", text: "Nitrate ion" },
     ],
+    correctOption: "c",
     answer: "Answer: c) Chloride ion",
   },
   {
+    id: "q4",
     label: "Question 4",
     prompt:
       "In the chromyl chloride test, a chloride salt is heated with potassium dichromate and conc. sulphuric acid. The initial characteristic observation in the test tube is:",
     options: [
-      "a) Colourless pungent gas",
-      "b) Reddish-brown vapours",
-      "c) Violet vapours",
-      "d) Brown ring at liquid–gas interface",
+      { key: "a", text: "Colourless pungent gas" },
+      { key: "b", text: "Reddish-brown vapours" },
+      { key: "c", text: "Violet vapours" },
+      { key: "d", text: "Brown ring at liquid–gas interface" },
     ],
+    correctOption: "b",
     answer: "Answer: b) Reddish-brown vapours",
   },
   {
+    id: "q5",
     label: "Question 5",
     prompt:
       "Which sequence correctly describes the confirmatory steps after obtaining red vapours in the chromyl chloride test for chloride?",
     options: [
-      "a) Absorb vapours in water → add BaCl₂ → white ppt.",
-      "b) Absorb vapours in NaOH → yellow solution → add lead acetate + acetic acid → yellow ppt.",
-      "c) Pass vapours into lime water → milky solution.",
-      "d) Pass vapours into NH₃ → dense white fumes.",
+      { key: "a", text: "Absorb vapours in water → add BaCl₂ → white ppt." },
+      {
+        key: "b",
+        text: "Absorb vapours in NaOH → yellow solution → add lead acetate + acetic acid → yellow ppt.",
+      },
+      { key: "c", text: "Pass vapours into lime water → milky solution." },
+      { key: "d", text: "Pass vapours into NH₃ → dense white fumes." },
     ],
+    correctOption: "b",
     answer:
       "Answer: b) Absorb vapours in NaOH → yellow solution → add lead acetate + acetic acid → yellow ppt.",
   },
