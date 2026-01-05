@@ -219,6 +219,79 @@ const SALT_ANALYSIS_ACID_RADICALS_QUIZ: SaltAnalysisQuizItem[] = [
   },
 ];
 
+const SALT_ANALYSIS_BASIC_RADICALS_QUIZ: SaltAnalysisQuizItem[] = [
+  {
+    id: "q1_basic",
+    label: "Question 1",
+    prompt:
+      "A salt is heated strongly in a dry test tube, and ammonia gas is evolved without any sublimate. This indicates the presence of:",
+    options: [
+      { key: "a", text: "Ammonium carbonate" },
+      { key: "b", text: "Ammonium chloride" },
+      { key: "c", text: "Ammonium sulphate" },
+      { key: "d", text: "Ammonium nitrate" },
+    ],
+    correctOption: "a",
+    answer: "Answer: a) Ammonium carbonate",
+  },
+  {
+    id: "q2_basic",
+    label: "Question 2",
+    prompt:
+      "In the flame test, a small amount of salt moistened with conc. HCl gives a golden yellow colour through cobalt blue glass. This confirms:",
+    options: [
+      { key: "a", text: "Sodium ion" },
+      { key: "b", text: "Potassium ion" },
+      { key: "c", text: "Barium ion" },
+      { key: "d", text: "Calcium ion" },
+    ],
+    correctOption: "a",
+    answer: "Answer: a) Sodium ion",
+  },
+  {
+    id: "q3_basic",
+    label: "Question 3",
+    prompt:
+      "In the charcoal cavity test, a mixture of salt + Na₂CO₃ heated in reducing flame leaves a white infusible mass. This indicates:",
+    options: [
+      { key: "a", text: "Copper ion" },
+      { key: "b", text: "Zinc ion" },
+      { key: "c", text: "Lead ion" },
+      { key: "d", text: "Iron ion" },
+    ],
+    correctOption: "b",
+    answer: "Answer: b) Zinc ion",
+  },
+  {
+    id: "q4_basic",
+    label: "Question 4",
+    prompt:
+      "The white infusible mass from charcoal cavity test turns pink when moistened with cobalt nitrate solution and heated. This confirms:",
+    options: [
+      { key: "a", text: "Aluminium ion" },
+      { key: "b", text: "Magnesium ion" },
+      { key: "c", text: "Zinc ion" },
+      { key: "d", text: "Calcium ion" },
+    ],
+    correctOption: "b",
+    answer: "Answer: b) Magnesium ion",
+  },
+  {
+    id: "q5_basic",
+    label: "Question 5",
+    prompt:
+      "In the borax bead test, the bead is blue when hot and green when cold in oxidising flame. This indicates the presence of:",
+    options: [
+      { key: "a", text: "Iron" },
+      { key: "b", text: "Copper" },
+      { key: "c", text: "Chromium" },
+      { key: "d", text: "Manganese" },
+    ],
+    correctOption: "b",
+    answer: "Answer: b) Copper",
+  },
+];
+
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample": DRY_WORKBENCH_SALT_POSITION,
   "concentrated-h-so": {
