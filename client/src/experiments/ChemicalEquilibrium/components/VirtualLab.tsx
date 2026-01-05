@@ -3044,6 +3044,7 @@ function ChemicalEquilibriumVirtualLab({
     setDilH2SO4HeatingTriggered(false);
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
+    setShowSaltAnalysisQuizModal(false);
     setShowRinseAnimation(false);
     setToastMessage("Workbench cleared.");
     setTimeout(() => setToastMessage(null), 2500);
