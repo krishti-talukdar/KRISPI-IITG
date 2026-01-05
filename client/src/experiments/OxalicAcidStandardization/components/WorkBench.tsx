@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useLayoutEffect, useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +40,8 @@ interface WorkBenchProps {
   onUndoStep: () => void;
   onResetExperiment: () => void;
   currentStepIndex: number;
+  completeStepPortalRef?: React.RefObject<HTMLDivElement>;
+  step3ControlsPortalRef?: React.RefObject<HTMLDivElement>;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -64,6 +67,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   onUndoStep,
   onResetExperiment,
   currentStepIndex,
+  completeStepPortalRef,
+  step3ControlsPortalRef,
 }) => {
   const [selectedChemical, setSelectedChemical] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -74,6 +79,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const [acidAmount, setAcidAmount] = useState<string>("");
   // show blinking effect on the "Add to Weighing Boat" button when oxalic acid bottle is present
   const [blinkAddButton, setBlinkAddButton] = useState<boolean>(false);
+  const [completeStepPortalHost, setCompleteStepPortalHost] = useState<HTMLDivElement | null>(null);
+  const [step3PortalHost, setStep3PortalHost] = useState<HTMLDivElement | null>(null);
 
   // pouring animation state when adding acid into the weighing boat
   const [pouring, setPouring] = useState<{ boatId: string; x: number; y: number; active: boolean } | null>(null);
@@ -96,6 +103,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     }
   }, [equipmentPositions, stepNumber]);
 
+  useLayoutEffect(() => {
+    setCompleteStepPortalHost(completeStepPortalRef?.current ?? null);
+  }, [completeStepPortalRef]);
+
+  useLayoutEffect(() => {
+    setStep3PortalHost(step3ControlsPortalRef?.current ?? null);
+  }, [step3ControlsPortalRef]);
+
   // animation overlay state for moving a weighing boat to the analytical balance
   const [boatMoveOverlay, setBoatMoveOverlay] = useState<{ id: string; x: number; y: number; targetX: number; targetY: number; started: boolean } | null>(null);
   const boatMoveRef = useRef<number | null>(null);
@@ -117,6 +132,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       messageTimeoutRef.current = null;
     }, 8000);
   }, []);
+
+  const completeStepPortalContent = canProceed ? (
+    <div className="rounded-lg border border-blue-200 bg-white shadow-sm p-3">
+      <Button onClick={() => onStepAction()} className="w-full" variant="default">
+        <FlaskConical className="w-4 h-4 mr-2" /> Complete Step {stepNumber}
+      </Button>
+    </div>
+  ) : null;
 
   // Cleanup for timeouts on unmount
   useEffect(() => {
@@ -1364,13 +1387,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                 </div>
               </div>
 
-              <div className="flex flex-col justify-between">
-                {canProceed && (
-                  <Button onClick={() => onStepAction()} className="w-full mb-2" variant="default">
-                    <FlaskConical className="w-4 h-4 mr-2" /> Complete Step {stepNumber}
-                  </Button>
-                )}
-
+              <div className="flex flex-col gap-4">
                 {/* Additional controls for Step 3: allow user to set amount of oxalic acid to add to weighing boat */}
                 {stepNumber === 3 && (
                   <div className="space-y-3">
@@ -1515,12 +1532,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Button onClick={onUndoStep} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100" disabled={stepNumber <= 1}>
-                        Undo Step {currentStepIndex}
-                      </Button>
-                      <Button onClick={onResetExperiment} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100">Reset Experiment</Button>
-                    </div>
                   </div>
                 )}
 
@@ -1540,22 +1551,19 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   </div>
                 )}
 
-                {/* default Undo/Reset when not in step 3 */}
-                {stepNumber !== 3 && (
-                  <div className="space-y-2">
-                    <Button onClick={onUndoStep} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100" disabled={stepNumber <= 1}>
-                      Undo Step {currentStepIndex}
-                    </Button>
-                    <Button onClick={onResetExperiment} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100">Reset Experiment</Button>
-                  </div>
-                )}
-
               </div>
             </div>
           </div>
 
         </div>
       </div>
+
+      {completeStepPortalContent && completeStepPortalHost && createPortal(completeStepPortalContent, completeStepPortalHost)}
+      {completeStepPortalContent && !completeStepPortalHost && (
+        <div className="mt-4 px-4">
+          {completeStepPortalContent}
+        </div>
+      )}
 
       {/* Calculator Modal */}
       {showCalculator && (

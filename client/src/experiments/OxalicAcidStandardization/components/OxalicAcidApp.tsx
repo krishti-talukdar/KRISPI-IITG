@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,8 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
   const [experimentStarted, setExperimentStarted] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [usedEquipment, setUsedEquipment] = useState<string[]>([]);
+  const completeStepPortalRef = useRef<HTMLDivElement | null>(null);
+  const step3ControlsPortalRef = useRef<HTMLDivElement | null>(null);
 
   const handleEquipmentPlaced = (id: string) => {
     setUsedEquipment(prev => (prev.includes(id) ? prev : [...prev, id]));
@@ -234,11 +236,32 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
                 ))}
               </div>
 
+              <div ref={step3ControlsPortalRef} className="mt-4" />
+
               <h3 className="text-sm font-semibold text-gray-900 mb-3">Chemical Equation</h3>
               <div className="text-xs font-mono bg-gray-50 rounded-lg p-3 border text-center leading-relaxed space-y-1">
                 <div>H₂C₂O₄·2H₂O (s) → H₂C₂O₄ (aq) + 2H₂O</div>
                 <div>H₂C₂O₄ (aq) ⇌ 2H⁺ + C₂O₄²⁻</div>
               </div>
+
+              <div className="mt-4 space-y-2">
+                <Button
+                  onClick={handleUndoStep}
+                  variant="outline"
+                  className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+                  disabled={currentStep === 0}
+                >
+                  Undo Step {currentStep + 1}
+                </Button>
+                <Button
+                  onClick={handleResetExperiment}
+                  variant="outline"
+                  className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+                >
+                  Reset Experiment
+                </Button>
+              </div>
+              <div ref={completeStepPortalRef} className="mt-4"></div>
             </CardContent>
           </Card>
 
@@ -261,6 +284,8 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
               onUndoStep={handleUndoStep}
               onResetExperiment={handleResetExperiment}
               currentStepIndex={currentStep + 1}
+              completeStepPortalRef={completeStepPortalRef}
+              step3ControlsPortalRef={step3ControlsPortalRef}
               onEquipmentPlaced={handleEquipmentPlaced}
             />
           </div>

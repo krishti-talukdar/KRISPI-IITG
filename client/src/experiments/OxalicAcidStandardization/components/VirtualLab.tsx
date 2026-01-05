@@ -42,6 +42,8 @@ interface OxalicAcidVirtualLabProps {
   onUndoStep: () => void;
   onResetExperiment: () => void;
   currentStepIndex: number;
+  completeStepPortalRef?: React.RefObject<HTMLDivElement>;
+  step3ControlsPortalRef?: React.RefObject<HTMLDivElement>;
 }
 
 function OxalicAcidVirtualLab({
@@ -60,6 +62,8 @@ function OxalicAcidVirtualLab({
   onUndoStep,
   onResetExperiment,
   currentStepIndex,
+  completeStepPortalRef,
+  step3ControlsPortalRef,
   onEquipmentPlaced,
 }: OxalicAcidVirtualLabProps) {
   const [equipmentPositions, setEquipmentPositions] = useState<
@@ -911,6 +915,8 @@ function OxalicAcidVirtualLab({
           onUndoStep={onUndoStep}
           onResetExperiment={onResetExperiment}
           currentStepIndex={currentStepIndex}
+          completeStepPortalRef={completeStepPortalRef}
+          step3ControlsPortalRef={step3ControlsPortalRef}
           onEquipmentPlaced={onEquipmentPlaced}
         />
       </div>
