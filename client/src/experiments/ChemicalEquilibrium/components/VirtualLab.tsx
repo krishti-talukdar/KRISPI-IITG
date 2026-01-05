@@ -132,6 +132,70 @@ const ACID_CONFIG: Record<AcidTarget, { chemicalId: string; label: string; color
   },
 };
 
+const SALT_ANALYSIS_ACID_RADICALS_QUIZ = [
+  {
+    label: "Question 1",
+    prompt:
+      "When a solid chloride salt is warmed with concentrated sulphuric acid in a dry test tube, which gas is evolved?",
+    options: [
+      "a) Sulphur dioxide",
+      "b) Hydrogen chloride",
+      "c) Chlorine",
+      "d) Oxygen",
+    ],
+    answer: "Answer: b) Hydrogen chloride",
+  },
+  {
+    label: "Question 2",
+    prompt:
+      "The dense white fumes formed when a glass rod dipped in ammonium hydroxide is brought near the mouth of a test tube containing HCl gas are due to:",
+    options: [
+      "a) Ammonium chloride",
+      "b) Ammonium sulphate",
+      "c) Ammonium nitrate",
+      "d) Ammonium carbonate",
+    ],
+    answer: "Answer: a) Ammonium chloride",
+  },
+  {
+    label: "Question 3",
+    prompt:
+      "A mixture of a solid chloride salt, manganese dioxide and conc. sulphuric acid is heated in a dry test tube. A greenish-yellow gas is evolved which bleaches moist litmus paper. This confirms the presence of:",
+    options: [
+      "a) Bromide ion",
+      "b) Iodide ion",
+      "c) Chloride ion",
+      "d) Nitrate ion",
+    ],
+    answer: "Answer: c) Chloride ion",
+  },
+  {
+    label: "Question 4",
+    prompt:
+      "In the chromyl chloride test, a chloride salt is heated with potassium dichromate and conc. sulphuric acid. The initial characteristic observation in the test tube is:",
+    options: [
+      "a) Colourless pungent gas",
+      "b) Reddish-brown vapours",
+      "c) Violet vapours",
+      "d) Brown ring at liquid–gas interface",
+    ],
+    answer: "Answer: b) Reddish-brown vapours",
+  },
+  {
+    label: "Question 5",
+    prompt:
+      "Which sequence correctly describes the confirmatory steps after obtaining red vapours in the chromyl chloride test for chloride?",
+    options: [
+      "a) Absorb vapours in water → add BaCl₂ → white ppt.",
+      "b) Absorb vapours in NaOH → yellow solution → add lead acetate + acetic acid → yellow ppt.",
+      "c) Pass vapours into lime water → milky solution.",
+      "d) Pass vapours into NH₃ → dense white fumes.",
+    ],
+    answer:
+      "Answer: b) Absorb vapours in NaOH → yellow solution → add lead acetate + acetic acid → yellow ppt.",
+  },
+];
+
 const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: number }> = {
   "salt-sample": DRY_WORKBENCH_SALT_POSITION,
   "concentrated-h-so": {
