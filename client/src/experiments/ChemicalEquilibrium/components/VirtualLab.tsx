@@ -4249,20 +4249,18 @@ function ChemicalEquilibriumVirtualLab({
             <Card className="shadow-xl">
               <CardHeader className="space-y-2 pb-0">
                 <div className="flex items-center justify-between w-full">
-                  <CardTitle className="text-2xl text-slate-900">Dry Test for Acid Radicals — Quiz</CardTitle>
+                  <CardTitle className="text-2xl text-slate-900">{saltQuizHeaderTitle}</CardTitle>
                   {quizSubmitted && (
                     <div className="text-blue-600 font-semibold">
-                      Marks obtained ({saltQuizScore} / {SALT_ANALYSIS_ACID_RADICALS_QUIZ.length})
+                      Marks obtained ({saltQuizScore} / {activeSaltQuizItems.length})
                     </div>
                   )}
                 </div>
-                <p className="text-sm text-slate-500">
-                  Step through the quiz that reinforces the dry-test observations for acid radicals.
-                </p>
+                <p className="text-sm text-slate-500">{saltQuizDescription}</p>
               </CardHeader>
               <CardContent className="pt-2 text-slate-900">
                 <div className="space-y-6">
-                  {SALT_ANALYSIS_ACID_RADICALS_QUIZ.map((item) => {
+                  {activeSaltQuizItems.map((item) => {
                     const selectedKey = quizSelections[item.id];
                     const selectedOption = item.options.find((option) => option.key === selectedKey);
                     const answerColorClass =
