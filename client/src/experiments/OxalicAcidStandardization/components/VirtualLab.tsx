@@ -913,6 +913,7 @@ function OxalicAcidVirtualLab({
           onUndoStep={onUndoStep}
           onResetExperiment={onResetExperiment}
           currentStepIndex={currentStepIndex}
+          completeStepPortalRef={completeStepPortalRef}
           onEquipmentPlaced={onEquipmentPlaced}
         />
       </div>
