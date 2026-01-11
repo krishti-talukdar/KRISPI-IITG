@@ -74,6 +74,30 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
 
 const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
 
+const HALIDE_SECTIONS = [
+  {
+    symbol: "Br",
+    label: "Bromide Observations",
+    description:
+      "Watch for creamy precipitates when silver nitrate meets the bromide fraction of your sample.",
+  },
+  {
+    symbol: "I",
+    label: "Iodide Insights",
+    description: "Note the pale yellow precipitation that signals iodide alongside the reference visuals.",
+  },
+  {
+    symbol: "Cl",
+    label: "Chloride Check",
+    description: "Confirm the white AgCl precipitate and how it dissolves in ammonia to complete the chloride callout.",
+  },
+  {
+    symbol: "S",
+    label: "Sulfide Notes",
+    description: "Document the black or dark residues that appear when sulfide radicals react with metal ions.",
+  },
+];
+
 export default function ChemicalEquilibriumApp({
   onBack,
 }: ChemicalEquilibriumAppProps) {
@@ -211,6 +235,20 @@ export default function ChemicalEquilibriumApp({
           <p className="text-gray-600 mb-4">{experiment.description}</p>
 
           {isDryTestExperiment && (
+          <>
+            <div className="halide-section-grid mb-4">
+              {HALIDE_SECTIONS.map((section) => (
+                <article key={section.symbol} className="halide-section-card">
+                  <span className="halide-section-symbol" aria-hidden="true">
+                    {section.symbol}
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">{section.label}</p>
+                    <p className="text-xs text-gray-500 mt-1">{section.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
             <div className="dry-test-button-panel-wrapper mb-6">
               <div className="dry-test-button-panel">
                 {DRY_TEST_MODE_ORDER.map((mode) => {
@@ -234,7 +272,8 @@ export default function ChemicalEquilibriumApp({
                 })}
               </div>
             </div>
-          )}
+          </>
+        )}
 
           {/* Progress Bar - hidden for PH HCl experiment and dry tests (we show per-panel progress) */}
           {experiment.id !== PHHClExperiment.id && !isDryTestExperiment && (
