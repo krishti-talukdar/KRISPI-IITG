@@ -659,16 +659,6 @@
   gap: 0.75rem;
   justify-content: flex-start;
 }
-.dry-test-action-card {
-  flex: 1 1 auto;
-  min-width: 180px;
-}
-.dry-test-action-card + .dry-test-action-card {
-  margin-left: 0;
-}
-.dry-test-action-card {
-  padding: 1rem 1.25rem;
-}
 
 .halide-section-symbol {
   width: 46px;
