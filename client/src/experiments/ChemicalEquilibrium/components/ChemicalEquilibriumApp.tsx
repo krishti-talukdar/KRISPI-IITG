@@ -74,7 +74,13 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
 
 const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
 
-const CHLORIDE_ACID_EQUIPMENT = "Acidified Potassium Dichromate (K₂Cr₂O₇)";
+const CHLORIDE_ACID_EQUIPMENT = [
+  "Acidified Potassium Dichromate (K₂Cr₂O₇)",
+  "NaOH Solution",
+  "Acetic Acid",
+  "Acetate Solution",
+];
+const CHLORIDE_ACID_EQUIPMENT_LABEL = CHLORIDE_ACID_EQUIPMENT.join(", ");
 
 const HALIDE_SECTIONS = [
   {
