@@ -276,30 +276,37 @@ export default function ChemicalEquilibriumApp({
                     </div>
                   </div>
                   {isActiveHalide && (
-                    <div className="dry-test-button-panel halide-section-card__dry-test-panel">
-                      {DRY_TEST_MODE_ORDER.map((mode) => {
-                        const modeConfig = DRY_TEST_MODE_CONFIG[mode];
-                        const isActive = activeDryTestMode === mode;
-                        return (
-                          <button
-                            key={mode}
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              setActiveDryTestMode(mode);
-                            }}
-                            className={`dry-test-action-card ${isActive ? "dry-test-action-card--active" : ""}`}
-                            aria-pressed={isActive}
-                            aria-label={`Select ${modeConfig.label}`}
-                          >
-                            <span className="dry-test-action-letter" aria-hidden="true">
-                              {modeConfig.letter}
-                            </span>
-                            <p className="dry-test-action-title">{modeConfig.label}</p>
-                          </button>
-                        );
-                      })}
-                    </div>
+                    <>
+                      <div className="dry-test-button-panel halide-section-card__dry-test-panel">
+                        {DRY_TEST_MODE_ORDER.map((mode) => {
+                          const modeConfig = DRY_TEST_MODE_CONFIG[mode];
+                          const isActive = activeDryTestMode === mode;
+                          return (
+                            <button
+                              key={mode}
+                              type="button"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setActiveDryTestMode(mode);
+                              }}
+                              className={`dry-test-action-card ${isActive ? "dry-test-action-card--active" : ""}`}
+                              aria-pressed={isActive}
+                              aria-label={`Select ${modeConfig.label}`}
+                            >
+                              <span className="dry-test-action-letter" aria-hidden="true">
+                                {modeConfig.letter}
+                              </span>
+                              <p className="dry-test-action-title">{modeConfig.label}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {isChlorideDryAcidFlow && (
+                        <div className="halide-section-card__equipment-note">
+                          Equipments include: {CHLORIDE_ACID_EQUIPMENT}
+                        </div>
+                      )}
+                    </>
                   )}
                 </article>
               );
