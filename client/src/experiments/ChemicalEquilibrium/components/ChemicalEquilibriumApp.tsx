@@ -303,7 +303,7 @@ export default function ChemicalEquilibriumApp({
                       </div>
                       {isChlorideDryAcidFlow && (
                         <div className="halide-section-card__equipment-note">
-                          Equipments include: {CHLORIDE_ACID_EQUIPMENT}
+                          Equipment highlight: {CHLORIDE_ACID_EQUIPMENT}
                         </div>
                       )}
                     </>
