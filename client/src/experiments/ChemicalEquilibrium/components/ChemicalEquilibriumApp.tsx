@@ -118,6 +118,13 @@ export default function ChemicalEquilibriumApp({
   const isDryTestExperiment = experiment.id === ChemicalEquilibriumData.id;
   const updateProgress = useUpdateProgress();
   const activeDryTestConfig = DRY_TEST_MODE_CONFIG[activeDryTestMode];
+  const baseDryTestEquipment = activeDryTestConfig.equipment;
+  const isChlorideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Cl";
+  const dryTestEquipmentToUse = isChlorideDryAcidFlow
+    ? baseDryTestEquipment.includes(CHLORIDE_ACID_EQUIPMENT)
+      ? baseDryTestEquipment
+      : [...baseDryTestEquipment, CHLORIDE_ACID_EQUIPMENT]
+    : baseDryTestEquipment;
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
       ? BASIC_DRY_TEST_STEPS
