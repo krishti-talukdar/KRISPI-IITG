@@ -726,7 +726,7 @@ function ChemicalEquilibriumVirtualLab({
   const hasFeCl3BeenUsed = isWetAcidTestMode && feCl3Used;
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
-      "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇) with a clean loop to compare color, smell, and residues after heating.",
+      "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇, NaOH solution, acetic acid, acetate solution) with a clean loop to compare color, smell, and residues after heating.",
     basic:
       "Arrange anhydrous Na₂CO₃ and NaOH on the clean loop, heat gently, and observe the characteristic fumes, residues, and colors of basic radicals.",
     wet:

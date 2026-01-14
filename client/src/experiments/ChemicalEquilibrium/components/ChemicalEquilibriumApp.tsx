@@ -74,6 +74,14 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
 
 const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
 
+const CHLORIDE_ACID_EQUIPMENT = [
+  "Acidified Potassium Dichromate (K₂Cr₂O₇)",
+  "NaOH Solution",
+  "Acetic Acid",
+  "Acetate Solution",
+];
+const CHLORIDE_ACID_EQUIPMENT_LABEL = CHLORIDE_ACID_EQUIPMENT.join(", ");
+
 const HALIDE_SECTIONS = [
   {
     symbol: "Br",
@@ -106,6 +114,9 @@ export default function ChemicalEquilibriumApp({
   const [timer, setTimer] = useState(0);
   const [experimentStarted, setExperimentStarted] = useState(false);
   const [activeDryTestMode, setActiveDryTestMode] = useState<DryTestMode>("acid");
+  const [activeHalide, setActiveHalide] = useState(
+    HALIDE_SECTIONS[0]?.symbol ?? "Br",
+  );
 
   const [match, params] = useRoute("/experiment/:id");
   const experimentId = Number(params?.id ?? 4);
@@ -113,6 +124,11 @@ export default function ChemicalEquilibriumApp({
   const isDryTestExperiment = experiment.id === ChemicalEquilibriumData.id;
   const updateProgress = useUpdateProgress();
   const activeDryTestConfig = DRY_TEST_MODE_CONFIG[activeDryTestMode];
+  const baseDryTestEquipment = activeDryTestConfig.equipment;
+  const isChlorideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Cl";
+  const dryTestEquipmentToUse = isChlorideDryAcidFlow
+    ? Array.from(new Set([...(baseDryTestEquipment ?? []), ...CHLORIDE_ACID_EQUIPMENT]))
+    : baseDryTestEquipment;
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
       ? BASIC_DRY_TEST_STEPS
@@ -235,44 +251,71 @@ export default function ChemicalEquilibriumApp({
           <p className="text-gray-600 mb-4">{experiment.description}</p>
 
           {isDryTestExperiment && (
-          <>
-            <div className="halide-section-grid mb-4">
-              {HALIDE_SECTIONS.map((section) => (
-                <article key={section.symbol} className="halide-section-card">
-                  <span className="halide-section-symbol" aria-hidden="true">
-                    {section.symbol}
-                  </span>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900">{section.label}</p>
-                    <p className="text-xs text-gray-500 mt-1">{section.description}</p>
+          <div className="halide-section-grid mb-6">
+            {HALIDE_SECTIONS.map((section) => {
+              const isActiveHalide = activeHalide === section.symbol;
+              return (
+                <article
+                  key={section.symbol}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setActiveHalide(section.symbol)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setActiveHalide(section.symbol);
+                    }
+                  }}
+                  className={`halide-section-card ${isActiveHalide ? "halide-section-card--active" : ""}`}
+                  aria-pressed={isActiveHalide}
+                  aria-expanded={isActiveHalide}
+                >
+                  <div className="halide-section-card__header">
+                    <span className="halide-section-symbol" aria-hidden="true">
+                      {section.symbol}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">{section.label}</p>
+                      <p className="text-xs text-gray-500 mt-1">{section.description}</p>
+                    </div>
                   </div>
+                  {isActiveHalide && (
+                    <>
+                      <div className="dry-test-button-panel halide-section-card__dry-test-panel">
+                        {DRY_TEST_MODE_ORDER.map((mode) => {
+                          const modeConfig = DRY_TEST_MODE_CONFIG[mode];
+                          const isActive = activeDryTestMode === mode;
+                          return (
+                            <button
+                              key={mode}
+                              type="button"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setActiveDryTestMode(mode);
+                              }}
+                              className={`dry-test-action-card ${isActive ? "dry-test-action-card--active" : ""}`}
+                              aria-pressed={isActive}
+                              aria-label={`Select ${modeConfig.label}`}
+                            >
+                              <span className="dry-test-action-letter" aria-hidden="true">
+                                {modeConfig.letter}
+                              </span>
+                              <p className="dry-test-action-title">{modeConfig.label}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {isChlorideDryAcidFlow && (
+                        <div className="halide-section-card__equipment-note">
+                          Equipment highlight: {CHLORIDE_ACID_EQUIPMENT_LABEL}
+                        </div>
+                      )}
+                    </>
+                  )}
                 </article>
-              ))}
-            </div>
-            <div className="dry-test-button-panel-wrapper mb-6">
-              <div className="dry-test-button-panel">
-                {DRY_TEST_MODE_ORDER.map((mode) => {
-                  const modeConfig = DRY_TEST_MODE_CONFIG[mode];
-                  const isActive = activeDryTestMode === mode;
-                  return (
-                    <button
-                      key={mode}
-                      type="button"
-                      onClick={() => setActiveDryTestMode(mode)}
-                      className={`dry-test-action-card ${isActive ? "dry-test-action-card--active" : ""}`}
-                      aria-pressed={isActive}
-                      aria-label={`Select ${modeConfig.label}`}
-                    >
-                      <span className="dry-test-action-letter" aria-hidden="true">
-                        {modeConfig.letter}
-                      </span>
-                      <p className="dry-test-action-title">{modeConfig.label}</p>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </>
+              );
+            })}
+          </div>
         )}
 
           {/* Progress Bar - hidden for PH HCl experiment and dry tests (we show per-panel progress) */}
@@ -413,7 +456,7 @@ export default function ChemicalEquilibriumApp({
             <CardContent className="p-0">
               <ChemicalEquilibriumVirtualLab
                 key={`dry-test-${activeDryTestMode}`}
-                dryTestEquipment={activeDryTestConfig.equipment}
+                dryTestEquipment={dryTestEquipmentToUse}
                 dryTestMode={activeDryTestMode}
                 step={currentStepData}
                 onStepComplete={handleCompleteStep}
