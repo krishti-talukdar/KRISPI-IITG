@@ -74,6 +74,8 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
 
 const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
 
+const CHLORIDE_ACID_EQUIPMENT = "Acidified Potassium Dichromate (K₂Cr₂O₇)";
+
 const HALIDE_SECTIONS = [
   {
     symbol: "Br",
