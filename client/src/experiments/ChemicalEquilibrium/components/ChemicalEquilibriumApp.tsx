@@ -16,6 +16,9 @@ interface ChemicalEquilibriumAppProps {
 const WET_ACID_TEST_EQUIPMENT = [
   "Test Tubes",
   "Salt Sample",
+  "Dilute HNO₃",
+  "AgNO₃",
+  "Soda extract",
   "BaCl₂ Solution",
   "Sodium Nitroprusside",
   "NH₄OH (Ammonium hydroxide)",
@@ -79,6 +82,9 @@ const CHLORIDE_ACID_EQUIPMENT = [
   "NaOH Solution",
   "Acetic Acid",
   "Acetate Solution",
+  "Dilute HNO₃",
+  "AgNO₃",
+  "Soda extract",
 ];
 const CHLORIDE_ACID_EQUIPMENT_LABEL = CHLORIDE_ACID_EQUIPMENT.join(", ");
 
