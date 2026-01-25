@@ -20,7 +20,6 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     "Bunsen Burner (virtual heat source)",
     "Glass Rod",
     "Glass container",
-    "Ammonium hydroxide (NH₄OH)",
     "MnO₂",
   ],
   stepDetails: [
