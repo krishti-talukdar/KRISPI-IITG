@@ -311,7 +311,7 @@ export default function ChemicalEquilibriumApp({
                           );
                         })}
                       </div>
-                      {isChlorideDryAcidFlow && (
+                      {isChlorideDryAcidFlow && experiment.id !== ChemicalEquilibriumData.id && (
                         <div className="halide-section-card__equipment-note">
                           Equipment highlight: {CHLORIDE_ACID_EQUIPMENT_LABEL}
                         </div>
