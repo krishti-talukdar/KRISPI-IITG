@@ -85,6 +85,7 @@ const CHLORIDE_ACID_EQUIPMENT = [
   "Acetate Solution",
   "Dilute HNO₃",
   "AgNO₃",
+  "NH₄OH (Ammonium hydroxide)",
   "Soda extract",
 ];
 const CHLORIDE_ACID_EQUIPMENT_LABEL = CHLORIDE_ACID_EQUIPMENT.join(", ");
