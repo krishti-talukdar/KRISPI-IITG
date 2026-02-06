@@ -15,6 +15,7 @@ interface ChemicalEquilibriumAppProps {
 
 const WET_ACID_TEST_EQUIPMENT = [
   "Test Tubes",
+  "Bunsen Burner (virtual heat source)",
   "Salt Sample",
   "Dilute HNO₃",
   "AgNO₃",
@@ -25,7 +26,6 @@ const WET_ACID_TEST_EQUIPMENT = [
   "Magnesia mixture (PO₄³⁻)",
   "CaCl₂ Solution",
   "FeCl₃",
-  "Bunsen Burner (virtual heat source)",
 ];
 
 const WET_BASIC_TEST_EQUIPMENT = [
