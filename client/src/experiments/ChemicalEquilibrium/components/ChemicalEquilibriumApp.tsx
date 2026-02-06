@@ -21,7 +21,7 @@ const WET_ACID_TEST_EQUIPMENT = [
   "AgNO₃",
   "Soda extract",
   "BaCl₂ Solution",
-  "Sodium Nitroprusside",
+  "Sodium Nitroprusside Solution",
   "NH₄OH (Ammonium hydroxide)",
   "Magnesia mixture (PO₄³⁻)",
   "CaCl₂ Solution",
