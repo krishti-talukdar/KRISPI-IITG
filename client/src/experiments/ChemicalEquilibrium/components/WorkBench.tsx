@@ -81,7 +81,15 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   showPostMoveFumes = true,
   workbenchResetTrigger = 0,
   onHeatingStateChange,
+  activeHalide,
+  dryTestMode,
 }) => {
+  // Determine whether to use reddish-brown fumes based on context (Bromide + dry acid mode)
+  const shouldUseReddishFumes =
+    (experimentTitle?.toLowerCase().includes("salt analysis") ||
+      experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
+    dryTestMode === "acid" &&
+    activeHalide === "Br";
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
   const [rinseLayout, setRinseLayout] = useState<RinseLayout | null>(null);
