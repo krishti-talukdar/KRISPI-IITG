@@ -1722,12 +1722,13 @@ function ChemicalEquilibriumVirtualLab({
       }
 
       // Special-case: when performing Dry Tests for Acid Radicals in the Bromide Check,
-      // clicking ADD on the Test Tubes should immediately place the test tube on the
-      // workbench without opening the amount dialog. This applies only to the test tube
-      // equipment and no other equipment.
+      // clicking ADD on the Test Tubes or the Bunsen burner should immediately place the
+      // equipment on the workbench without opening the amount dialog. This applies only to
+      // these two pieces of equipment and no others.
       const isTestTubeId = equipment.id === "test_tubes";
+      const isBunsenId = equipment.id === "bunsen-burner-virtual-heat-source" || equipment.name.toLowerCase().includes("bunsen");
       const isBromideDryAcid = isDryTestExperiment && (dryTestMode === "acid") && (activeHalide ?? "").toLowerCase() === "br";
-      if (isTestTubeId && isBromideDryAcid) {
+      if ((isTestTubeId || isBunsenId) && isBromideDryAcid) {
         handleEquipmentAddButton(equipment.id);
         return;
       }
@@ -3456,8 +3457,8 @@ function ChemicalEquilibriumVirtualLab({
                   const normalizedEquipmentName = equipment.name.toLowerCase();
                   const hideAddButton = (() => {
     // Normally hide add button for test tubes and bunsen burners, and for some glass items
-    // during dry test flows. However, allow adding Test Tubes when performing the
-    // Dry Tests for Acid Radicals specifically for the Bromide Check (Br).
+    // during dry test flows. However, allow adding Test Tubes and the Bunsen burner when
+    // performing the Dry Tests for Acid Radicals specifically for the Bromide Check (Br).
     const isTestTube = normalizedEquipmentName.includes("test tube");
     const isBunsen = normalizedEquipmentName.includes("bunsen");
     const isGlassLimit =
@@ -3470,7 +3471,12 @@ function ChemicalEquilibriumVirtualLab({
       dryTestMode === "acid" &&
       (activeHalide ?? "").toLowerCase() === "br" &&
       isTestTube;
-    return (isTestTube && !allowTestTubeInBromideDryAcid) || isBunsen || isGlassLimit;
+    const allowBunsenInBromideDryAcid =
+      isDryTestExperiment &&
+      dryTestMode === "acid" &&
+      (activeHalide ?? "").toLowerCase() === "br" &&
+      isBunsen;
+    return (isTestTube && !allowTestTubeInBromideDryAcid) || (isBunsen && !allowBunsenInBromideDryAcid) || isGlassLimit;
   })();
                   const showAddButton = !hideAddButton;
                   const isBaClCard = normalizedEquipmentName.includes("bacl");
