@@ -57,6 +57,9 @@ interface WorkBenchProps {
   isRodMoving?: boolean;
   workbenchResetTrigger?: number;
   onHeatingStateChange?: (isHeating: boolean) => void;
+  // New props for contextual fume coloring
+  activeHalide?: string;
+  dryTestMode?: string;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
