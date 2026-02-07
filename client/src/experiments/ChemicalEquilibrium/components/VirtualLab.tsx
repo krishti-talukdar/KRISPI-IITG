@@ -3704,7 +3704,7 @@ function ChemicalEquilibriumVirtualLab({
                           isWorkbenchHeating &&
                           pos.chemicals.some((c) => c.id === "salt_sample") &&
                           pos.chemicals.some((c) => c.id === "conc_h2so4")
-                            ? "#8B2500"
+                            ? "#A52A2A"
                             : undefined
                         }
                         volume={
@@ -3893,7 +3893,7 @@ function ChemicalEquilibriumVirtualLab({
                           isWorkbenchHeating &&
                           pos.chemicals.some((c) => c.id === "salt_sample") &&
                           pos.chemicals.some((c) => c.id === "conc_h2so4")
-                            ? "#8B2500"
+                            ? "#A52A2A"
                             : undefined
                         }
                       volume={
