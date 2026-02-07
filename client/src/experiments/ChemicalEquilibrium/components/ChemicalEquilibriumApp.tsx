@@ -487,6 +487,7 @@ export default function ChemicalEquilibriumApp({
                 }}
                 timer={timer}
                 toggleTimer={toggleTimer}
+                activeHalide={activeHalide}
               />
             </CardContent>
           </Card>
