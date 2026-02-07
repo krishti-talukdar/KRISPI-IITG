@@ -56,6 +56,7 @@ interface ChemicalEquilibriumVirtualLabProps {
   toggleTimer?: () => void;
   dryTestEquipment?: string[];
   dryTestMode?: DryTestMode;
+  activeHalide?: string;
 }
 
 type LabSnapshot = {
@@ -546,6 +547,7 @@ function ChemicalEquilibriumVirtualLab({
   toggleTimer = () => {},
   dryTestEquipment,
   dryTestMode,
+  activeHalide,
 }: ChemicalEquilibriumVirtualLabProps) {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -3635,6 +3637,9 @@ function ChemicalEquilibriumVirtualLab({
                 showPostMoveFumes={postMoveFumesEnabled}
                 onHeatingStateChange={handleBunsenHeatingChange}
                 workbenchResetTrigger={workbenchResetTrigger}
+                // Pass dry test context for fume coloring
+                activeHalide={activeHalide}
+                dryTestMode={resolvedDryTestMode}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -3690,6 +3695,23 @@ function ChemicalEquilibriumVirtualLab({
                         observeBlinking={shouldBlinkObserveButton && equipment.id === "test_tubes"}
                         imageUrl={equipment.imageUrl}
                         interactDisabled={shouldDisableAmmoniumInteraction}
+                        // Special: show reddish-brown reaction color when heating conc H2SO4 with salt present under Bromide Check
+                        color={
+                          pos.id === "test_tubes" &&
+                          isDryTestExperiment &&
+                          resolvedDryTestMode === "acid" &&
+                          activeHalide === "Br" &&
+                          isWorkbenchHeating &&
+                          pos.chemicals.some((c) => c.id === "salt_sample") &&
+                          pos.chemicals.some((c) => c.id === "conc_h2so4")
+                            ? "#A52A2A"
+                            : undefined
+                        }
+                        volume={
+                          pos.id === "test_tubes"
+                            ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
+                            : undefined
+                        }
                       />
                     ) : null;
                   })}
@@ -3830,6 +3852,9 @@ function ChemicalEquilibriumVirtualLab({
                 showPostMoveFumes={postMoveFumesEnabled}
                 onHeatingStateChange={handleBunsenHeatingChange}
                 workbenchResetTrigger={workbenchResetTrigger}
+                // Pass dry test context for fume coloring
+                activeHalide={activeHalide}
+                dryTestMode={resolvedDryTestMode}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
@@ -3859,6 +3884,23 @@ function ChemicalEquilibriumVirtualLab({
                       isDryTest={isDryTestExperiment}
                       dryTestMode={resolvedDryTestMode}
                       imageUrl={equipment.imageUrl}
+                      // Special: color/volume for test tube reaction when heating conc H2SO4 with salt under Bromide Check
+                      color={
+                          pos.id === "test_tubes" &&
+                          isDryTestExperiment &&
+                          resolvedDryTestMode === "acid" &&
+                          activeHalide === "Br" &&
+                          isWorkbenchHeating &&
+                          pos.chemicals.some((c) => c.id === "salt_sample") &&
+                          pos.chemicals.some((c) => c.id === "conc_h2so4")
+                            ? "#A52A2A"
+                            : undefined
+                        }
+                      volume={
+                        pos.id === "test_tubes"
+                          ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
+                          : undefined
+                      }
                     />
                   ) : null;
                 })}

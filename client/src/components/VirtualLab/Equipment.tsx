@@ -764,14 +764,15 @@ export const Equipment: React.FC<EquipmentProps> = ({
           />
           {/* Liquid overlay for simple test-tube use (e.g., HCl pH experiment) */}
           {typeof volume === 'number' && volume > 0 && color && (
-            <div className="absolute left-1/2 -translate-x-1/2" style={{ bottom: '28px', width: '28px', height: '150px', overflow: 'hidden', borderRadius: '0 0 14px 14px' }}>
+            <div className="absolute left-1/2 -translate-x-1/2" style={{ bottom: '40px', width: '120px', height: '220px', overflow: 'hidden', borderRadius: '0 0 28px 28px' }}>
               <div
                 className="absolute left-0 right-0 bottom-0 transition-all duration-500"
                 style={{
-                  height: `${Math.max(0, Math.min(150, ((Math.min(Math.max(volume, 0), 20) / 20) * 150)))}px`,
+                  height: `${Math.max(0, Math.min(220, ((Math.min(Math.max(volume, 0), 100) / 100) * 220)))}px`,
                   backgroundColor: color,
-                  boxShadow: 'inset 0 0 6px rgba(0,0,0,0.25), 0 0 3px rgba(0,0,0,0.1)',
-                  opacity: 0.85,
+                  boxShadow: 'inset 0 0 12px rgba(0,0,0,0.25), 0 0 6px rgba(0,0,0,0.12)',
+                  opacity: 0.95,
+                  mixBlendMode: 'multiply',
                 }}
               />
             </div>

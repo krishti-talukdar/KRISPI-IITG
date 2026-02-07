@@ -93,13 +93,13 @@ const CHLORIDE_ACID_EQUIPMENT_LABEL = CHLORIDE_ACID_EQUIPMENT.join(", ");
 const HALIDE_SECTIONS = [
   {
     symbol: "Br",
-    label: "Bromide Observations",
+    label: "Bromide Check",
     description:
       "Watch for creamy precipitates when silver nitrate meets the bromide fraction of your sample.",
   },
   {
     symbol: "I",
-    label: "Iodide Insights",
+    label: "Iodide Check",
     description: "Note the pale yellow precipitation that signals iodide alongside the reference visuals.",
   },
   {
@@ -487,6 +487,7 @@ export default function ChemicalEquilibriumApp({
                 }}
                 timer={timer}
                 toggleTimer={toggleTimer}
+                activeHalide={activeHalide}
               />
             </CardContent>
           </Card>
