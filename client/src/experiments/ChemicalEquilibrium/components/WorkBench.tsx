@@ -609,17 +609,29 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   {POST_MOVE_FUME_CONFIG.map((fume, index) => {
                     const horizontalOffset =
                       (index - (POST_MOVE_FUME_CONFIG.length - 1) / 2) * 8;
+                    {
+                    const fumeStyle = {
+                      "--fume-delay": fume.delay,
+                      "--fume-scale": `${fume.scale}`,
+                      "--fume-offset-x": `${horizontalOffset}px`,
+                    } as React.CSSProperties;
+
+                    if (shouldUseReddishFumes && isBunsenHeating) {
+                      Object.assign(fumeStyle, {
+                        background: "radial-gradient(circle, rgba(139,37,0,1) 0%, rgba(139,37,0,0.65) 70%)",
+                        boxShadow: "0 0 30px rgba(139,37,0,0.9)",
+                        filter: "blur(0.5px)",
+                      });
+                    }
+
                     return (
                       <span
                         key={`${index}-${fume.delay}`}
                         className="post-move-fume"
-                        style={{
-                          "--fume-delay": fume.delay,
-                          "--fume-scale": `${fume.scale}`,
-                          "--fume-offset-x": `${horizontalOffset}px`,
-                        } as React.CSSProperties}
+                        style={fumeStyle}
                       />
                     );
+                  }
                   })}
                 </div>
               )}
@@ -642,18 +654,29 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   } as React.CSSProperties}
                   aria-hidden="true"
                 >
-                  {DRY_TEST_VAPOR_PUFFS.map((puff, index) => (
-                    <span
-                      key={`${index}-${puff.delay}`}
-                      className="dry-test-vapor-puff"
-                      style={{
-                        "--vap-offset-x": `${puff.offsetX}px`,
-                        "--vap-duration": puff.duration,
-                        "--vap-delay": puff.delay,
-                        "--vap-scale": puff.scale,
-                      } as React.CSSProperties}
-                    />
-                  ))}
+                  {DRY_TEST_VAPOR_PUFFS.map((puff, index) => {
+                    const puffStyle = {
+                      "--vap-offset-x": `${puff.offsetX}px`,
+                      "--vap-duration": puff.duration,
+                      "--vap-delay": puff.delay,
+                      "--vap-scale": puff.scale,
+                    } as React.CSSProperties;
+
+                    if (shouldUseReddishFumes && isBunsenHeating) {
+                      Object.assign(puffStyle, {
+                        background: "linear-gradient(180deg, rgba(139,37,0,0.95), rgba(139,37,0,0.4))",
+                        boxShadow: "0 8px 25px rgba(139,37,0,0.6)",
+                      });
+                    }
+
+                    return (
+                      <span
+                        key={`${index}-${puff.delay}`}
+                        className="dry-test-vapor-puff"
+                        style={puffStyle}
+                      />
+                    );
+                  })}
                 </div>
               )}
               {isBunsenHeating && hasMnO2InTestTube && vaporAnchorCoords && (
