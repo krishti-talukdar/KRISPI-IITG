@@ -1715,15 +1715,28 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleAddButtonClick = useCallback(
     (equipment: EquipmentDefinition, quickAdd?: () => void) => {
+      // If a quickAdd is provided, prefer that behavior
       if (quickAdd) {
         quickAdd();
         return;
       }
+
+      // Special-case: when performing Dry Tests for Acid Radicals in the Bromide Check,
+      // clicking ADD on the Test Tubes should immediately place the test tube on the
+      // workbench without opening the amount dialog. This applies only to the test tube
+      // equipment and no other equipment.
+      const isTestTubeId = equipment.id === "test_tubes";
+      const isBromideDryAcid = isDryTestExperiment && (dryTestMode === "acid") && (activeHalide ?? "").toLowerCase() === "br";
+      if (isTestTubeId && isBromideDryAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
     },
-    [],
+    [handleEquipmentAddButton, isDryTestExperiment, dryTestMode, activeHalide],
   );
 
   const handleEquipmentAddDialogClose = useCallback(() => {
