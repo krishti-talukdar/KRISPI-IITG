@@ -3441,13 +3441,24 @@ function ChemicalEquilibriumVirtualLab({
                   const quickAddAction = getQuickAddAction(equipment.id);
                   const isQuickAddCard = Boolean(quickAddAction);
                   const normalizedEquipmentName = equipment.name.toLowerCase();
-                  const hideAddButton =
-                    normalizedEquipmentName.includes("test tube") ||
-                    normalizedEquipmentName.includes("bunsen") ||
-                    (isDryTestExperiment &&
-                      (dryTestMode === "acid" || dryTestMode === "basic") &&
-                      (normalizedEquipmentName.includes("glass rod") ||
-                        normalizedEquipmentName.includes("glass container")));
+                  const hideAddButton = (() => {
+    // Normally hide add button for test tubes and bunsen burners, and for some glass items
+    // during dry test flows. However, allow adding Test Tubes when performing the
+    // Dry Tests for Acid Radicals specifically for the Bromide Check (Br).
+    const isTestTube = normalizedEquipmentName.includes("test tube");
+    const isBunsen = normalizedEquipmentName.includes("bunsen");
+    const isGlassLimit =
+      isDryTestExperiment &&
+      (dryTestMode === "acid" || dryTestMode === "basic") &&
+      (normalizedEquipmentName.includes("glass rod") ||
+        normalizedEquipmentName.includes("glass container"));
+    const allowTestTubeInBromideDryAcid =
+      isDryTestExperiment &&
+      dryTestMode === "acid" &&
+      (activeHalide ?? "").toLowerCase() === "br" &&
+      isTestTube;
+    return (isTestTube && !allowTestTubeInBromideDryAcid) || isBunsen || isGlassLimit;
+  })();
                   const showAddButton = !hideAddButton;
                   const isBaClCard = normalizedEquipmentName.includes("bacl");
                   const isSodiumNitroprussideCard = normalizedEquipmentName.includes("nitroprusside");
