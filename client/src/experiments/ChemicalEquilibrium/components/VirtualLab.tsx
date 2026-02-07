@@ -3637,6 +3637,9 @@ function ChemicalEquilibriumVirtualLab({
                 showPostMoveFumes={postMoveFumesEnabled}
                 onHeatingStateChange={handleBunsenHeatingChange}
                 workbenchResetTrigger={workbenchResetTrigger}
+                // Pass dry test context for fume coloring
+                activeHalide={activeHalide}
+                dryTestMode={resolvedDryTestMode}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -3849,6 +3852,9 @@ function ChemicalEquilibriumVirtualLab({
                 showPostMoveFumes={postMoveFumesEnabled}
                 onHeatingStateChange={handleBunsenHeatingChange}
                 workbenchResetTrigger={workbenchResetTrigger}
+                // Pass dry test context for fume coloring
+                activeHalide={activeHalide}
+                dryTestMode={resolvedDryTestMode}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
