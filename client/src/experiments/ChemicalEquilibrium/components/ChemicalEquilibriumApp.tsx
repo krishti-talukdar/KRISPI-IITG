@@ -109,7 +109,7 @@ const HALIDE_SECTIONS = [
   },
   {
     symbol: "S",
-    label: "Sulfide Notes",
+    label: "Sulfide Check",
     description: "Document the black or dark residues that appear when sulfide radicals react with metal ions.",
   },
 ];
