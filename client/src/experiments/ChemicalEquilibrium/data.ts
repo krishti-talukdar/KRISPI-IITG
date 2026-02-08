@@ -21,6 +21,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     "Glass Rod",
     "Glass container",
     "Dilute HCl",
+    "Dilute HNO₃",
     "Soda extract",
     "CHCl3",
     "Acidified KMnO4",
