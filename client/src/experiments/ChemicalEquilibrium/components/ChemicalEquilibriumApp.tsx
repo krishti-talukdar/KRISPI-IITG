@@ -90,6 +90,12 @@ const CHLORIDE_ACID_EQUIPMENT = [
 ];
 const CHLORIDE_ACID_EQUIPMENT_LABEL = CHLORIDE_ACID_EQUIPMENT.join(", ");
 
+// Equipment additions specific to Bromide dry acid flow
+const BROMIDE_ACID_EQUIPMENT = [
+  "AgNO₃",
+];
+const BROMIDE_ACID_EQUIPMENT_LABEL = BROMIDE_ACID_EQUIPMENT.join(", ");
+
 const HALIDE_SECTIONS = [
   {
     symbol: "Br",
@@ -134,8 +140,14 @@ export default function ChemicalEquilibriumApp({
   const activeDryTestConfig = DRY_TEST_MODE_CONFIG[activeDryTestMode];
   const baseDryTestEquipment = activeDryTestConfig.equipment;
   const isChlorideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Cl";
-  const dryTestEquipmentToUse = isChlorideDryAcidFlow
-    ? Array.from(new Set([...(baseDryTestEquipment ?? []), ...CHLORIDE_ACID_EQUIPMENT]))
+  const isBromideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Br";
+  const extraDryAcidEquipment = isChlorideDryAcidFlow
+    ? CHLORIDE_ACID_EQUIPMENT
+    : isBromideDryAcidFlow
+    ? BROMIDE_ACID_EQUIPMENT
+    : [];
+  const dryTestEquipmentToUse = extraDryAcidEquipment.length
+    ? Array.from(new Set([...(baseDryTestEquipment ?? []), ...extraDryAcidEquipment]))
     : baseDryTestEquipment;
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
