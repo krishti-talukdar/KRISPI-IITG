@@ -636,6 +636,21 @@
   align-items: center;
   gap: 1rem;
   width: 100%;
+  transition: flex-direction 0.18s ease, align-items 0.18s ease, text-align 0.18s ease;
+}
+
+/* Default: stack the symbol above the text for non-active cards (mobile/tall card look).
+   When the card is active (pressed), return to the horizontal layout. */
+.halide-section-card:not(.halide-section-card--active) .halide-section-card__header {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.halide-section-card:not(.halide-section-card--active) .halide-section-symbol {
+  margin: 0 auto;
+}
+.halide-section-card:not(.halide-section-card--active) .halide-section-card__header > div {
+  width: 100%;
 }
 
 .halide-section-card--active {
