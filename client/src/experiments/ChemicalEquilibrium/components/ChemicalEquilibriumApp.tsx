@@ -76,6 +76,16 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
   },
 };
 
+const SPECIAL_CASES_ACID_EQUIPMENT = [
+  "Test Tubes",
+  "Salt Sample",
+  "Bunsen Burner (virtual heat source)",
+  "Glass container",
+  "Glass Rod",
+  "Soda extract",
+  "Dilute H2SO4",
+];
+
 const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
 
 const CHLORIDE_ACID_EQUIPMENT = [
@@ -143,7 +153,12 @@ export default function ChemicalEquilibriumApp({
   const isDryTestExperiment = experiment.id === ChemicalEquilibriumData.id;
   const updateProgress = useUpdateProgress();
   const activeDryTestConfig = DRY_TEST_MODE_CONFIG[activeDryTestMode];
-  const baseDryTestEquipment = activeDryTestConfig.equipment;
+  let baseDryTestEquipment = activeDryTestConfig.equipment;
+  // If this is the Salt Analysis experiment and user selected "Special Cases" in dry acid mode,
+  // restrict equipment to the curated minimal list specified above.
+  if (activeDryTestMode === "acid" && activeHalide === "SC" && experiment.id === ChemicalEquilibriumData.id) {
+    baseDryTestEquipment = SPECIAL_CASES_ACID_EQUIPMENT;
+  }
   const isChlorideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Cl";
   const isBromideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Br";
   const extraDryAcidEquipment = isChlorideDryAcidFlow
