@@ -603,9 +603,13 @@
 }
 
 .halide-section-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
   gap: 1rem;
+  align-items: stretch;
+  /* Keep all section cards on a single row; allow horizontal scrolling on small screens */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
 }
 
 .halide-section-card {
