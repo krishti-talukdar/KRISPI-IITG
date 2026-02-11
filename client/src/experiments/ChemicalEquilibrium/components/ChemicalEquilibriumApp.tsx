@@ -118,6 +118,11 @@ const HALIDE_SECTIONS = [
     label: "Sulfide Check",
     description: "Document the black or dark residues that appear when sulfide radicals react with metal ions.",
   },
+  {
+    symbol: "SC",
+    label: "Special Cases",
+    description: "Handle unusual or edge-case salts and procedures specific to this experiment.",
+  },
 ];
 
 export default function ChemicalEquilibriumApp({

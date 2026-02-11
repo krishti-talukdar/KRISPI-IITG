@@ -3459,8 +3459,14 @@ function ChemicalEquilibriumVirtualLab({
     // Normally hide add button for test tubes and bunsen burners, and for some glass items
     // during dry test flows. However, allow adding Test Tubes and the Bunsen burner when
     // performing the Dry Tests for Acid Radicals specifically for the Bromide Check (Br).
-    const isTestTube = normalizedEquipmentName.includes("test tube");
-    const isBunsen = normalizedEquipmentName.includes("bunsen");
+    // Only hide Test Tubes and Bunsen burners during the *dry* test flows (acid/basic).
+    // For wet test flows (e.g. "Wet Test for Acid Radicals") we want the ADD button to be available
+    // (the wet test equipment list explicitly includes the Bunsen burner), so include the
+    // dry-test check here.
+    const isTestTube =
+      isDryTestExperiment && (dryTestMode === "acid" || dryTestMode === "basic") && normalizedEquipmentName.includes("test tube");
+    const isBunsen =
+      isDryTestExperiment && (dryTestMode === "acid" || dryTestMode === "basic") && normalizedEquipmentName.includes("bunsen");
     const isGlassLimit =
       isDryTestExperiment &&
       (dryTestMode === "acid" || dryTestMode === "basic") &&
@@ -3470,12 +3476,12 @@ function ChemicalEquilibriumVirtualLab({
       isDryTestExperiment &&
       dryTestMode === "acid" &&
       (activeHalide ?? "").toLowerCase() === "br" &&
-      isTestTube;
+      normalizedEquipmentName.includes("test tube");
     const allowBunsenInBromideDryAcid =
       isDryTestExperiment &&
       dryTestMode === "acid" &&
       (activeHalide ?? "").toLowerCase() === "br" &&
-      isBunsen;
+      normalizedEquipmentName.includes("bunsen");
     return (isTestTube && !allowTestTubeInBromideDryAcid) || (isBunsen && !allowBunsenInBromideDryAcid) || isGlassLimit;
   })();
                   const showAddButton = !hideAddButton;
