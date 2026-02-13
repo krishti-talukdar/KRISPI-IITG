@@ -18,6 +18,7 @@ const WET_ACID_TEST_EQUIPMENT = [
   "Bunsen Burner (virtual heat source)",
   "Salt Sample",
   "Dilute HNO₃",
+  "Dil. HCL",
   "AgNO₃",
   "Soda extract",
   "BaCl₂ Solution",
