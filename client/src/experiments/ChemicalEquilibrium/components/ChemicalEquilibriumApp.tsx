@@ -160,6 +160,11 @@ export default function ChemicalEquilibriumApp({
   if (activeDryTestMode === "acid" && activeHalide === "SC" && experiment.id === ChemicalEquilibriumData.id) {
     baseDryTestEquipment = SPECIAL_CASES_ACID_EQUIPMENT;
   }
+  // For Salt Analysis special cases, when Wet Test for Acid Radicals is selected,
+  // add NaOH to the equipment list (only for this wet test and this experiment).
+  if (activeDryTestMode === "wet" && activeHalide === "SC" && experiment.id === ChemicalEquilibriumData.id) {
+    baseDryTestEquipment = Array.from(new Set([...(baseDryTestEquipment ?? []), "NaOH"]));
+  }
   const isChlorideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Cl";
   const isBromideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Br";
   const extraDryAcidEquipment = isChlorideDryAcidFlow
