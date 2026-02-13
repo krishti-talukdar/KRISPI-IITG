@@ -18,6 +18,7 @@ const WET_ACID_TEST_EQUIPMENT = [
   "Bunsen Burner (virtual heat source)",
   "Salt Sample",
   "Dilute HNO₃",
+  "Dil. HCL",
   "AgNO₃",
   "Soda extract",
   "BaCl₂ Solution",
@@ -158,6 +159,11 @@ export default function ChemicalEquilibriumApp({
   // restrict equipment to the curated minimal list specified above.
   if (activeDryTestMode === "acid" && activeHalide === "SC" && experiment.id === ChemicalEquilibriumData.id) {
     baseDryTestEquipment = SPECIAL_CASES_ACID_EQUIPMENT;
+  }
+  // For Salt Analysis special cases, when Wet Test for Acid Radicals is selected,
+  // add NaOH to the equipment list (only for this wet test and this experiment).
+  if (activeDryTestMode === "wet" && activeHalide === "SC" && experiment.id === ChemicalEquilibriumData.id) {
+    baseDryTestEquipment = Array.from(new Set([...(baseDryTestEquipment ?? []), "NaOH"]));
   }
   const isChlorideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Cl";
   const isBromideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Br";
