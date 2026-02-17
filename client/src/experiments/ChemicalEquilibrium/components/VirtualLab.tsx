@@ -597,6 +597,7 @@ function ChemicalEquilibriumVirtualLab({
   const [secondSampleAddedTracked, setSecondSampleAddedTracked] = useState(false);
   const [secondAcidAddedTracked, setSecondAcidAddedTracked] = useState(false);
   const [mno2AddedTracked, setMno2AddedTracked] = useState(false);
+  const [mno2AddedDuringHeating, setMno2AddedDuringHeating] = useState(false);
   const [basicSecondTubeTracked, setBasicSecondTubeTracked] = useState(false);
   const [basicSaltAddedTracked, setBasicSaltAddedTracked] = useState(false);
   const [basicNaOHAddedTracked, setBasicNaOHAddedTracked] = useState(false);
@@ -1392,6 +1393,7 @@ function ChemicalEquilibriumVirtualLab({
     setAmmoniumAddedTracked(false);
     setWorkbenchResetStepTracked(false);
     setMno2AddedTracked(false);
+    setMno2AddedDuringHeating(false);
     setBasicSecondTubeTracked(false);
     setBasicSaltAddedTracked(false);
     setBasicNaOHAddedTracked(false);
@@ -2833,6 +2835,9 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
+    // Track whether MnO2 was added while the bunsen burner was already heating
+    setMno2AddedDuringHeating(isWorkbenchHeating);
+
     const shouldAdvanceAfterMnO2 =
       experimentStarted &&
       isDryTestExperiment &&
@@ -3676,6 +3681,7 @@ function ChemicalEquilibriumVirtualLab({
                 // Pass dry test context for fume coloring
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
+                mno2AddedDuringHeating={mno2AddedDuringHeating}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -3891,6 +3897,7 @@ function ChemicalEquilibriumVirtualLab({
                 // Pass dry test context for fume coloring
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
+                mno2AddedDuringHeating={mno2AddedDuringHeating}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
