@@ -213,6 +213,7 @@ export default function ChemicalEquilibriumApp({
       "Soda extract",
       "Dil. HCL",
       "CHCl3",
+      "KMnO4",
       "Acidified KMnO4",
     ];
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
