@@ -60,6 +60,7 @@ interface WorkBenchProps {
   // New props for contextual fume coloring
   activeHalide?: string;
   dryTestMode?: string;
+  mno2AddedDuringHeating?: boolean;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -83,6 +84,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   onHeatingStateChange,
   activeHalide,
   dryTestMode,
+  mno2AddedDuringHeating,
 }) => {
   // Determine whether to use reddish-brown fumes based on context (Bromide + dry acid mode)
   const shouldUseReddishFumes =
@@ -689,18 +691,31 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   role="status"
                   aria-label="Greenish-yellow gas rising from MnO₂ heated in the test tube"
                 >
-                  {MNO2_GAS_PUFFS.map((puff, index) => (
-                    <span
-                      key={`mno2-${index}-${puff.delay}`}
-                      className="mno2-gas-puff"
-                      style={{
-                        "--mno2-offset-x": `${puff.offsetX}px`,
-                        "--mno2-duration": puff.duration,
-                        "--mno2-delay": puff.delay,
-                        "--mno2-scale": puff.scale,
-                      } as React.CSSProperties}
-                    />
-                  ))}
+                  {(
+                    mno2AddedDuringHeating && shouldUseReddishFumes
+                      ? [...MNO2_GAS_PUFFS, ...MNO2_GAS_PUFFS.map((p) => ({ ...p, offsetX: p.offsetX + 6, scale: p.scale * 1.25 }))]
+                      : MNO2_GAS_PUFFS
+                  ).map((puff, index) => {
+                    const puffStyle: React.CSSProperties = {
+                      "--mno2-offset-x": `${puff.offsetX}px`,
+                      "--mno2-duration": puff.duration,
+                      "--mno2-delay": puff.delay,
+                      "--mno2-scale": puff.scale,
+                    } as React.CSSProperties;
+                    if (shouldUseReddishFumes && mno2AddedDuringHeating) {
+                      Object.assign(puffStyle, {
+                        background: "radial-gradient(circle, rgba(139,37,0,0.95) 0%, rgba(139,37,0,0.4) 70%)",
+                        boxShadow: "0 12px 30px rgba(139,37,0,0.6)",
+                      });
+                    }
+                    return (
+                      <span
+                        key={`mno2-${index}-${puff.delay}`}
+                        className="mno2-gas-puff"
+                        style={puffStyle}
+                      />
+                    );
+                  })}
                 </div>
               )}
               {heatButtonCoords && (
