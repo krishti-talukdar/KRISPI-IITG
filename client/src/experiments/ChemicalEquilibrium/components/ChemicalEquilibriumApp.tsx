@@ -204,6 +204,8 @@ export default function ChemicalEquilibriumApp({
   // keep only the requested equipment and remove the rest.
   const isBromideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "Br";
   if (isBromideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Ensure CHCl3 and KMnO4 are available in the equipment list for bromide wet acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "CHCl3", "KMnO4"]));
     const BROMIDE_WET_KEEP = [
       "Test Tubes",
       "Salt Sample",
