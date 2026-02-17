@@ -1735,6 +1735,15 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // Additionally, for the Salt Analysis bromide check in the *wet* acid test,
+      // clicking ADD on the Test Tubes should also immediately place the test tube
+      // on the workbench (skip the amount dialog) — mirror the dry-acid behaviour for test tubes.
+      const isBromideWetAcid = isDryTestExperiment && (dryTestMode === "wet") && (activeHalide ?? "").toLowerCase() === "br";
+      if (isTestTubeId && isBromideWetAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
@@ -2109,6 +2118,50 @@ function ChemicalEquilibriumVirtualLab({
       setCaseFiveResult(CASE_FIVE_WET_NO_BROWN_RESULT);
     }
     setDilH2SO4HeatingTriggered(false);
+
+    // Additional behavior for Bromide check: if the test tube contains a salt sample,
+    // dilute HNO3 and silver nitrate (AgNO3), pressing OBSERVE should produce a yellow
+    // AgBr precipitate that appears at the bottom of the test tube (wet acid test).
+    try {
+      const isBromideWet = isDryTestExperiment && resolvedDryTestMode === "wet" && (activeHalide ?? "").toLowerCase() === "br";
+      const hasSalt = testTubeState?.chemicals.some((c) => c.id === "salt_sample");
+      const hasDilHNO3 = testTubeState?.chemicals.some((c) => c.id === DILUTE_HNO3_CHEMICAL_ID);
+      const hasAgNO3 = testTubeState?.chemicals.some(
+        (c) =>
+          (c.id && c.id.toLowerCase().includes("ag")) ||
+          (c.name && c.name.toLowerCase().includes("agno")) ||
+          (c.name && c.name.toLowerCase().includes("silver")),
+      );
+
+      if (isBromideWet && hasSalt && hasDilHNO3 && hasAgNO3) {
+        setEquipmentPositions((prev) =>
+          prev.map((pos) => {
+            if (pos.id !== "test_tubes") return pos;
+            const alreadyHas = pos.chemicals.some((c) => c.id === "ag_br_precipitate");
+            if (alreadyHas) return pos;
+            return {
+              ...pos,
+              chemicals: [
+                ...pos.chemicals,
+                {
+                  id: "ag_br_precipitate",
+                  name: "Silver bromide (AgBr) precipitate",
+                  color: "#FDE68A",
+                  amount: 8,
+                  concentration: "Precipitate",
+                },
+              ],
+            };
+          }),
+        );
+        setToastMessage("Yellow precipitate (AgBr) formed at the bottom of the test tube.");
+        setTimeout(() => setToastMessage(null), 2500);
+      }
+    } catch (e) {
+      // swallow any unexpected errors — this is a UI enhancement only
+      // console.warn(e);
+    }
+
     setToastMessage("Observation noted for the Wet Acid Test.");
     setTimeout(() => setToastMessage(null), 2500);
   }, [
