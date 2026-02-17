@@ -1735,6 +1735,15 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // Additionally, for the Salt Analysis bromide check in the *wet* acid test,
+      // clicking ADD on the Test Tubes should also immediately place the test tube
+      // on the workbench (skip the amount dialog) — mirror the dry-acid behaviour for test tubes.
+      const isBromideWetAcid = isDryTestExperiment && (dryTestMode === "wet") && (activeHalide ?? "").toLowerCase() === "br";
+      if (isTestTubeId && isBromideWetAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
