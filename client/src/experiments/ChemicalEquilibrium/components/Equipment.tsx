@@ -647,6 +647,29 @@ export const Equipment: React.FC<EquipmentProps> = ({
                     }}
                   />
                 )}
+
+                {/* Render a precipitate layer at the bottom when a precipitate chemical is present (eg. AgBr) */}
+                {chemicals.some((c) => c.id === "ag_br_precipitate") && (
+                  (() => {
+                    const precip = chemicals.find((c) => c.id === "ag_br_precipitate")!;
+                    const precipHeight = Math.min(20, Math.max(8, overlayHeight * 0.12));
+                    return (
+                      <div
+                        className="absolute left-1/2 -translate-x-1/2"
+                        style={{
+                          bottom: `28px`,
+                          width: "28px",
+                          height: `${precipHeight}px`,
+                          backgroundColor: precip.color,
+                          borderRadius: "0 0 8px 8px",
+                          boxShadow: "inset 0 6px 10px rgba(0,0,0,0.12)",
+                          zIndex: 40,
+                          transition: "height 350ms ease, background-color 350ms ease",
+                        }}
+                      />
+                    );
+                  })()
+                )}
               </div>
             </div>
             {!isDryTest && (
