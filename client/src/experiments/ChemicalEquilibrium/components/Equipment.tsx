@@ -624,17 +624,26 @@ export const Equipment: React.FC<EquipmentProps> = ({
           activeHalide === "Br" &&
           isHeating &&
           hasSaltSample;
-        const overlayColor = shouldUseBromideHeatingColor
-          ? "#8B6939"
-          : hasDichromate
-            ? K2CR2O7_SOLUTION_COLOR
-            : shouldUseAmmoniumColor
-              ? NH4OH_WET_SOLUTION_COLOR
-              : shouldUseDiluteHNO3Color
-                ? DILUTE_HNO3_WET_SOLUTION_COLOR
-                : shouldForceNaOHBlue
-                  ? NAOH_SOLUTION_COLOR
-                  : baseOverlayColor;
+        // Check if ag_br_precipitate has been added (which happens when OBSERVE is pressed)
+        const hasAgBrPrecipitate = chemicals.some((c) => c.id === "ag_br_precipitate");
+        const shouldUseBromideWetPaleYellow =
+          isDryTest &&
+          dryTestMode === "wet" &&
+          activeHalide === "Br" &&
+          hasAgBrPrecipitate;
+        const overlayColor = shouldUseBromideWetPaleYellow
+          ? "#FDE68A"
+          : shouldUseBromideHeatingColor
+            ? "#8B6939"
+            : hasDichromate
+              ? K2CR2O7_SOLUTION_COLOR
+              : shouldUseAmmoniumColor
+                ? NH4OH_WET_SOLUTION_COLOR
+                : shouldUseDiluteHNO3Color
+                  ? DILUTE_HNO3_WET_SOLUTION_COLOR
+                  : shouldForceNaOHBlue
+                    ? NAOH_SOLUTION_COLOR
+                    : baseOverlayColor;
         const showOverlay =
           overlayColor !== "transparent" && totalChemicalsAmount > 0;
         const displayLabel = name.toLowerCase().includes("test tube")
