@@ -221,6 +221,15 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
       BROMIDE_WET_KEEP.includes(name)
     );
+
+    // Move Bunsen Burner to the bottom of the equipment list for this specific flow
+    const bunsenIdx = (dryTestEquipmentToUse as string[]).findIndex((n) => n.includes("Bunsen Burner"));
+    if (bunsenIdx > -1) {
+      const arr = [...(dryTestEquipmentToUse as string[])];
+      const [bunsen] = arr.splice(bunsenIdx, 1);
+      arr.push(bunsen);
+      dryTestEquipmentToUse = arr;
+    }
   }
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
