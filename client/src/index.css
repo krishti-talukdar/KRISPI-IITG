@@ -322,18 +322,37 @@
   margin: 0.5rem 0 0;
   width: 8rem;
   border-radius: 0.375rem;
-  padding: 0.25rem 0;
+  padding: 0.375rem 0.5rem;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 0.3em;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #80b48c;
-  border: none;
+  background-color: #4a9d6f;
+  border: 2px solid #4a9d6f;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 12px rgba(74, 157, 111, 0.3);
+}
+
+.lab-observe-button:hover {
+  background-color: #3d8b5f;
+  border-color: #3d8b5f;
+  box-shadow: 0 6px 16px rgba(74, 157, 111, 0.4);
+  transform: translateY(-2px);
+}
+
+.lab-observe-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(74, 157, 111, 0.3);
+}
+
+.lab-observe-button:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
 }
 
 .test-tube-solution-overlay {
