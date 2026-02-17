@@ -188,6 +188,16 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
       (name) => !BROMIDE_EXCLUDE_EQUIPMENT.includes(name)
     );
+
+    // Ensure MnO2 appears above the Bunsen Burner in the equipment list for bromide dry acid flow
+    const mnIndex = (dryTestEquipmentToUse as string[]).findIndex((n) => n.includes("MnO"));
+    const bunsenIndex = (dryTestEquipmentToUse as string[]).findIndex((n) => n.includes("Bunsen Burner"));
+    if (mnIndex > -1 && bunsenIndex > -1 && mnIndex > bunsenIndex) {
+      const arr = [...(dryTestEquipmentToUse as string[])];
+      const [mnItem] = arr.splice(mnIndex, 1);
+      arr.splice(bunsenIndex, 0, mnItem);
+      dryTestEquipmentToUse = arr;
+    }
   }
 
   // For Salt Analysis, Bromide check in the WET test for Acid Radicals,
