@@ -189,6 +189,23 @@ export default function ChemicalEquilibriumApp({
       (name) => !BROMIDE_EXCLUDE_EQUIPMENT.includes(name)
     );
   }
+
+  // For Salt Analysis, Bromide check in the WET test for Acid Radicals,
+  // keep only the requested equipment and remove the rest.
+  const isBromideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "Br";
+  if (isBromideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    const BROMIDE_WET_KEEP = [
+      "Test Tubes",
+      "Salt Sample",
+      "Bunsen Burner (virtual heat source)",
+      "Dilute HNO₃",
+      "AgNO₃",
+      "Soda extract",
+    ];
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
+      BROMIDE_WET_KEEP.includes(name)
+    );
+  }
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
       ? BASIC_DRY_TEST_STEPS
