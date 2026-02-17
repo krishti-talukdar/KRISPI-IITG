@@ -172,9 +172,23 @@ export default function ChemicalEquilibriumApp({
     : isBromideDryAcidFlow
     ? BROMIDE_ACID_EQUIPMENT
     : [];
-  const dryTestEquipmentToUse = extraDryAcidEquipment.length
+  // For bromide dry acid flow, remove reagents that are not used in this specific section
+  const BROMIDE_EXCLUDE_EQUIPMENT = [
+    "AgNO₃",
+    "Acidified KMnO4",
+    "CHCl3",
+    "Soda extract",
+    "Dilute HCl",
+    "Dilute HNO₃",
+  ];
+  let dryTestEquipmentToUse = extraDryAcidEquipment.length
     ? Array.from(new Set([...(baseDryTestEquipment ?? []), ...extraDryAcidEquipment]))
     : baseDryTestEquipment;
+  if (isBromideDryAcidFlow && dryTestEquipmentToUse) {
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+      (name) => !BROMIDE_EXCLUDE_EQUIPMENT.includes(name)
+    );
+  }
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
       ? BASIC_DRY_TEST_STEPS
