@@ -622,8 +622,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
           isDryTest &&
           dryTestMode === "acid" &&
           activeHalide === "Br" &&
-          isHeating &&
-          hasSaltSample;
+          hasSaltSample &&
+          hasAcidSample;
         // Check if ag_br_precipitate has been added (which happens when OBSERVE is pressed)
         const hasAgBrPrecipitate = chemicals.some((c) => c.id === "ag_br_precipitate");
         const shouldUseBromideWetPaleYellow =

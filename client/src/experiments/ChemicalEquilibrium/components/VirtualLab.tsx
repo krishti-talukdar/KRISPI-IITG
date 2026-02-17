@@ -713,13 +713,30 @@ function ChemicalEquilibriumVirtualLab({
     resolvedDryTestMode === "wet" &&
     feCl3Added &&
     caseFiveResult === DEFAULT_CASE_RESULT;
+
+  // Check for bromide + AgNO3 combination to trigger blinking
+  const hasAgNO3InTestTube = testTubeState?.chemicals.some(
+    (c) =>
+      (c.id && c.id.toLowerCase().includes("ag")) ||
+      (c.name && c.name.toLowerCase().includes("agno")) ||
+      (c.name && c.name.toLowerCase().includes("silver")),
+  ) ?? false;
+  const hasAgBrPrecipitate = testTubeState?.chemicals.some((c) => c.id === "ag_br_precipitate") ?? false;
+  const shouldBlinkObserveButtonForBromideAgNO3 =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "wet" &&
+    (activeHalide ?? "").toLowerCase() === "br" &&
+    hasAgNO3InTestTube &&
+    !hasAgBrPrecipitate;
+
   const shouldBlinkObserveButton =
     shouldBlinkObserveButtonForBaCl ||
     shouldBlinkObserveButtonForSodiumNitroprusside ||
     shouldBlinkObserveButtonForMagnesia ||
     shouldBlinkObserveButtonForCaCl ||
     shouldBlinkObserveButtonForDilH2SO4Heat ||
-    shouldBlinkObserveButtonForFeCl3;
+    shouldBlinkObserveButtonForFeCl3 ||
+    shouldBlinkObserveButtonForBromideAgNO3;
   const isWetAcidTestMode = isDryTestExperiment && resolvedDryTestMode === "wet";
   const hasBaClBeenUsed = isWetAcidTestMode && baClUsed;
   const hasSodiumNitroprussideBeenUsed = isWetAcidTestMode && sodiumNitroprussideUsed;
