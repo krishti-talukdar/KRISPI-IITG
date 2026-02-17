@@ -211,6 +211,9 @@ export default function ChemicalEquilibriumApp({
       "Dilute HNO₃",
       "AgNO₃",
       "Soda extract",
+      "Dil. HCL",
+      "CHCl3",
+      "Acidified KMnO4",
     ];
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
       BROMIDE_WET_KEEP.includes(name)
