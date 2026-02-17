@@ -181,9 +181,21 @@ export default function ChemicalEquilibriumApp({
     "Dilute HCl",
     "Dilute HNO₃",
   ];
+
+  // For iodide dry acid flow, remove specified reagents from the equipment list
+  const IODIDE_EXCLUDE_EQUIPMENT = [
+    "MnO₂",
+    "Acidified KMnO4",
+    "CHCl3",
+    "Soda extract",
+    "Dilute HNO₃",
+    "Dilute HCl",
+  ];
+
   let dryTestEquipmentToUse = extraDryAcidEquipment.length
     ? Array.from(new Set([...(baseDryTestEquipment ?? []), ...extraDryAcidEquipment]))
     : baseDryTestEquipment;
+
   if (isBromideDryAcidFlow && dryTestEquipmentToUse) {
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
       (name) => !BROMIDE_EXCLUDE_EQUIPMENT.includes(name)
@@ -198,6 +210,14 @@ export default function ChemicalEquilibriumApp({
       arr.splice(bunsenIndex, 0, mnItem);
       dryTestEquipmentToUse = arr;
     }
+  }
+
+  // For iodide dry acid flow, remove reagents that are not used in this specific section
+  const isIodideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "I";
+  if (isIodideDryAcidFlow && dryTestEquipmentToUse) {
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+      (name) => !IODIDE_EXCLUDE_EQUIPMENT.includes(name)
+    );
   }
 
   // For Salt Analysis, Bromide check in the WET test for Acid Radicals,
