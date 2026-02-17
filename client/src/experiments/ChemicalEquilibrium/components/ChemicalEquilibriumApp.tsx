@@ -172,9 +172,54 @@ export default function ChemicalEquilibriumApp({
     : isBromideDryAcidFlow
     ? BROMIDE_ACID_EQUIPMENT
     : [];
-  const dryTestEquipmentToUse = extraDryAcidEquipment.length
+  // For bromide dry acid flow, remove reagents that are not used in this specific section
+  const BROMIDE_EXCLUDE_EQUIPMENT = [
+    "AgNO₃",
+    "Acidified KMnO4",
+    "CHCl3",
+    "Soda extract",
+    "Dilute HCl",
+    "Dilute HNO₃",
+  ];
+  let dryTestEquipmentToUse = extraDryAcidEquipment.length
     ? Array.from(new Set([...(baseDryTestEquipment ?? []), ...extraDryAcidEquipment]))
     : baseDryTestEquipment;
+  if (isBromideDryAcidFlow && dryTestEquipmentToUse) {
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+      (name) => !BROMIDE_EXCLUDE_EQUIPMENT.includes(name)
+    );
+
+    // Ensure MnO2 appears above the Bunsen Burner in the equipment list for bromide dry acid flow
+    const mnIndex = (dryTestEquipmentToUse as string[]).findIndex((n) => n.includes("MnO"));
+    const bunsenIndex = (dryTestEquipmentToUse as string[]).findIndex((n) => n.includes("Bunsen Burner"));
+    if (mnIndex > -1 && bunsenIndex > -1 && mnIndex > bunsenIndex) {
+      const arr = [...(dryTestEquipmentToUse as string[])];
+      const [mnItem] = arr.splice(mnIndex, 1);
+      arr.splice(bunsenIndex, 0, mnItem);
+      dryTestEquipmentToUse = arr;
+    }
+  }
+
+  // For Salt Analysis, Bromide check in the WET test for Acid Radicals,
+  // keep only the requested equipment and remove the rest.
+  const isBromideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "Br";
+  if (isBromideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    const BROMIDE_WET_KEEP = [
+      "Test Tubes",
+      "Salt Sample",
+      "Bunsen Burner (virtual heat source)",
+      "Dilute HNO₃",
+      "AgNO₃",
+      "Soda extract",
+      "Dil. HCL",
+      "CHCl3",
+      "KMnO4",
+      "Acidified KMnO4",
+    ];
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
+      BROMIDE_WET_KEEP.includes(name)
+    );
+  }
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
       ? BASIC_DRY_TEST_STEPS
