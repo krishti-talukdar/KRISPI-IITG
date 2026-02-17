@@ -204,6 +204,8 @@ export default function ChemicalEquilibriumApp({
   // keep only the requested equipment and remove the rest.
   const isBromideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "Br";
   if (isBromideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Ensure CHCl3 and KMnO4 are available in the equipment list for bromide wet acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "CHCl3", "KMnO4"]));
     const BROMIDE_WET_KEEP = [
       "Test Tubes",
       "Salt Sample",
@@ -219,6 +221,15 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
       BROMIDE_WET_KEEP.includes(name)
     );
+
+    // Move Bunsen Burner to the bottom of the equipment list for this specific flow
+    const bunsenIdx = (dryTestEquipmentToUse as string[]).findIndex((n) => n.includes("Bunsen Burner"));
+    if (bunsenIdx > -1) {
+      const arr = [...(dryTestEquipmentToUse as string[])];
+      const [bunsen] = arr.splice(bunsenIdx, 1);
+      arr.push(bunsen);
+      dryTestEquipmentToUse = arr;
+    }
   }
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
