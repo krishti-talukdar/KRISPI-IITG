@@ -3790,18 +3790,8 @@ function ChemicalEquilibriumVirtualLab({
                         observeBlinking={shouldBlinkObserveButton && equipment.id === "test_tubes"}
                         imageUrl={equipment.imageUrl}
                         interactDisabled={shouldDisableAmmoniumInteraction}
-                        // Special: show reddish-brown reaction color when heating conc H2SO4 with salt present under Bromide Check
-                        color={
-                          pos.id === "test_tubes" &&
-                          isDryTestExperiment &&
-                          resolvedDryTestMode === "acid" &&
-                          activeHalide === "Br" &&
-                          isWorkbenchHeating &&
-                          pos.chemicals.some((c) => c.id === "salt_sample") &&
-                          pos.chemicals.some((c) => c.id === "conc_h2so4")
-                            ? "#A52A2A"
-                            : undefined
-                        }
+                        isHeating={isWorkbenchHeating}
+                        activeHalide={activeHalide}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))

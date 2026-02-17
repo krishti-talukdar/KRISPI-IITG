@@ -181,9 +181,21 @@ export default function ChemicalEquilibriumApp({
     "Dilute HCl",
     "Dilute HNO₃",
   ];
+
+  // For iodide dry acid flow, remove specified reagents from the equipment list
+  const IODIDE_EXCLUDE_EQUIPMENT = [
+    "MnO₂",
+    "Acidified KMnO4",
+    "CHCl3",
+    "Soda extract",
+    "Dilute HNO₃",
+    "Dilute HCl",
+  ];
+
   let dryTestEquipmentToUse = extraDryAcidEquipment.length
     ? Array.from(new Set([...(baseDryTestEquipment ?? []), ...extraDryAcidEquipment]))
     : baseDryTestEquipment;
+
   if (isBromideDryAcidFlow && dryTestEquipmentToUse) {
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
       (name) => !BROMIDE_EXCLUDE_EQUIPMENT.includes(name)
@@ -200,12 +212,22 @@ export default function ChemicalEquilibriumApp({
     }
   }
 
+  // For iodide dry acid flow, remove reagents that are not used in this specific section
+  const isIodideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "I";
+  if (isIodideDryAcidFlow && dryTestEquipmentToUse) {
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+      (name) => !IODIDE_EXCLUDE_EQUIPMENT.includes(name)
+    );
+  }
+
   // For Salt Analysis, Bromide check in the WET test for Acid Radicals,
   // keep only the requested equipment and remove the rest.
   const isBromideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "Br";
   if (isBromideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
     // Ensure CHCl3 and KMnO4 are available in the equipment list for bromide wet acid flow
     dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "CHCl3", "KMnO4"]));
+
+    // Keep only the requested equipment for the bromide wet acid flow
     const BROMIDE_WET_KEEP = [
       "Test Tubes",
       "Salt Sample",
@@ -222,14 +244,23 @@ export default function ChemicalEquilibriumApp({
       BROMIDE_WET_KEEP.includes(name)
     );
 
-    // Move Bunsen Burner to the bottom of the equipment list for this specific flow
-    const bunsenIdx = (dryTestEquipmentToUse as string[]).findIndex((n) => n.includes("Bunsen Burner"));
-    if (bunsenIdx > -1) {
-      const arr = [...(dryTestEquipmentToUse as string[])];
-      const [bunsen] = arr.splice(bunsenIdx, 1);
-      arr.push(bunsen);
-      dryTestEquipmentToUse = arr;
-    }
+    // Enforce the exact requested order for bromide wet acid flow
+    const desiredOrder = [
+      "Test Tubes",
+      "Salt Sample",
+      "Soda extract",
+      "Dilute HNO₃",
+      "AgNO₃",
+      "Dil. HCL",
+      "CHCl3",
+      "KMnO4",
+      "Bunsen Burner (virtual heat source)",
+    ];
+
+    const ordered = desiredOrder.filter((n) => (dryTestEquipmentToUse as string[]).includes(n));
+    // Also include any remaining items that might be present but not in desiredOrder after the ordered ones
+    const remaining = (dryTestEquipmentToUse as string[]).filter((n) => !ordered.includes(n));
+    dryTestEquipmentToUse = [...ordered, ...remaining];
   }
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
