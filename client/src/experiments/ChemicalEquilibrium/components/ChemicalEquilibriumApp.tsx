@@ -251,6 +251,7 @@ export default function ChemicalEquilibriumApp({
       "Soda extract",
       "Dilute HNO₃",
       "AgNO₃",
+      "Dil. HCL",
       "CHCl3",
       "KMnO4",
       "Bunsen Burner (virtual heat source)",
