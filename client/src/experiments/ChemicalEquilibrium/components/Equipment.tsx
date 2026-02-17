@@ -54,6 +54,8 @@ interface EquipmentProps {
   imageUrl?: string;
   isRinseActive?: boolean;
   observeBlinking?: boolean;
+  isHeating?: boolean;
+  activeHalide?: string;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -77,6 +79,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
   dryTestMode,
   isRinseActive = false,
   observeBlinking = false,
+  isHeating = false,
+  activeHalide,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
@@ -614,15 +618,23 @@ export const Equipment: React.FC<EquipmentProps> = ({
           isDryTest &&
           dryTestMode === "wet" &&
           hasAmmoniumSample;
-        const overlayColor = hasDichromate
-          ? K2CR2O7_SOLUTION_COLOR
-          : shouldUseAmmoniumColor
-            ? NH4OH_WET_SOLUTION_COLOR
-            : shouldUseDiluteHNO3Color
-              ? DILUTE_HNO3_WET_SOLUTION_COLOR
-              : shouldForceNaOHBlue
-                ? NAOH_SOLUTION_COLOR
-                : baseOverlayColor;
+        const shouldUseBromideHeatingColor =
+          isDryTest &&
+          dryTestMode === "acid" &&
+          activeHalide === "Br" &&
+          isHeating &&
+          hasSaltSample;
+        const overlayColor = shouldUseBromideHeatingColor
+          ? "#8B6939"
+          : hasDichromate
+            ? K2CR2O7_SOLUTION_COLOR
+            : shouldUseAmmoniumColor
+              ? NH4OH_WET_SOLUTION_COLOR
+              : shouldUseDiluteHNO3Color
+                ? DILUTE_HNO3_WET_SOLUTION_COLOR
+                : shouldForceNaOHBlue
+                  ? NAOH_SOLUTION_COLOR
+                  : baseOverlayColor;
         const showOverlay =
           overlayColor !== "transparent" && totalChemicalsAmount > 0;
         const displayLabel = name.toLowerCase().includes("test tube")
