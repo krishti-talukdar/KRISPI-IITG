@@ -405,6 +405,42 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = [...ordered, ...remaining];
   }
 
+  // For Salt Analysis, Sulfide check in the WET test for Acid Radicals,
+  // keep only the requested equipment and add NaOH.
+  const isSulfideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "S";
+  if (isSulfideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Add NaOH to the equipment list for sulfide wet acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "NaOH"]));
+
+    // Keep only the requested equipment for the sulfide wet acid flow
+    const SULFIDE_WET_KEEP = [
+      "Test Tubes",
+      "Salt Sample",
+      "Bunsen Burner (virtual heat source)",
+      "Soda extract",
+      "Sodium Nitroprusside Solution",
+      "NaOH",
+    ];
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
+      SULFIDE_WET_KEEP.includes(name)
+    );
+
+    // Enforce the exact requested order for sulfide wet acid flow
+    const desiredOrder = [
+      "Test Tubes",
+      "Salt Sample",
+      "Soda extract",
+      "Sodium Nitroprusside Solution",
+      "NaOH",
+      "Bunsen Burner (virtual heat source)",
+    ];
+
+    const ordered = desiredOrder.filter((n) => (dryTestEquipmentToUse as string[]).includes(n));
+    // Also include any remaining items that might be present but not in desiredOrder after the ordered ones
+    const remaining = (dryTestEquipmentToUse as string[]).filter((n) => !ordered.includes(n));
+    dryTestEquipmentToUse = [...ordered, ...remaining];
+  }
+
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
       ? BASIC_DRY_TEST_STEPS
