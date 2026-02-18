@@ -635,6 +635,7 @@ function ChemicalEquilibriumVirtualLab({
   const [feCl3Used, setFeCl3Used] = useState(false);
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const [hasAutoOpenedResults, setHasAutoOpenedResults] = useState(false);
+  const [iodideAgNO3Observed, setIodideAgNO3Observed] = useState(false);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
@@ -731,6 +732,15 @@ function ChemicalEquilibriumVirtualLab({
     hasAgNO3InTestTube &&
     !hasAgBrPrecipitate;
 
+  // Check for iodide + AgNO3 combination to trigger blinking
+  const hasAgIPrecipitate = testTubeState?.chemicals.some((c) => c.id === "ag_i_precipitate") ?? false;
+  const shouldBlinkObserveButtonForIodideAgNO3 =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "wet" &&
+    (activeHalide ?? "").toLowerCase() === "i" &&
+    hasAgNO3InTestTube &&
+    !iodideAgNO3Observed;
+
   const shouldBlinkObserveButton =
     shouldBlinkObserveButtonForBaCl ||
     shouldBlinkObserveButtonForSodiumNitroprusside ||
@@ -738,7 +748,8 @@ function ChemicalEquilibriumVirtualLab({
     shouldBlinkObserveButtonForCaCl ||
     shouldBlinkObserveButtonForDilH2SO4Heat ||
     shouldBlinkObserveButtonForFeCl3 ||
-    shouldBlinkObserveButtonForBromideAgNO3;
+    shouldBlinkObserveButtonForBromideAgNO3 ||
+    shouldBlinkObserveButtonForIodideAgNO3;
   const isWetAcidTestMode = isDryTestExperiment && resolvedDryTestMode === "wet";
   const hasBaClBeenUsed = isWetAcidTestMode && baClUsed;
   const hasSodiumNitroprussideBeenUsed = isWetAcidTestMode && sodiumNitroprussideUsed;
@@ -2190,6 +2201,51 @@ function ChemicalEquilibriumVirtualLab({
       // console.warn(e);
     }
 
+    // Additional behavior for Iodide check: if the test tube contains a salt sample,
+    // dilute HNO3 and silver nitrate (AgNO3), pressing OBSERVE should produce a pale
+    // yellow AgI precipitate that appears at the bottom of the test tube (wet acid test).
+    try {
+      const isIodideWet = isDryTestExperiment && resolvedDryTestMode === "wet" && (activeHalide ?? "").toLowerCase() === "i";
+      const hasSalt = testTubeState?.chemicals.some((c) => c.id === "salt_sample");
+      const hasDilHNO3 = testTubeState?.chemicals.some((c) => c.id === DILUTE_HNO3_CHEMICAL_ID);
+      const hasAgNO3 = testTubeState?.chemicals.some(
+        (c) =>
+          (c.id && c.id.toLowerCase().includes("ag")) ||
+          (c.name && c.name.toLowerCase().includes("agno")) ||
+          (c.name && c.name.toLowerCase().includes("silver")),
+      );
+
+      if (isIodideWet && hasSalt && hasDilHNO3 && hasAgNO3) {
+        setEquipmentPositions((prev) =>
+          prev.map((pos) => {
+            if (pos.id !== "test_tubes") return pos;
+            const alreadyHas = pos.chemicals.some((c) => c.id === "ag_i_precipitate");
+            if (alreadyHas) return pos;
+            return {
+              ...pos,
+              chemicals: [
+                ...pos.chemicals,
+                {
+                  id: "ag_i_precipitate",
+                  name: "Silver iodide (AgI) precipitate",
+                  color: "#FBBF24",
+                  amount: 8,
+                  concentration: "Precipitate",
+                },
+              ],
+            };
+          }),
+        );
+        setToastMessage("Pale yellow precipitate (AgI) formed at the bottom of the test tube.");
+        setTimeout(() => setToastMessage(null), 2500);
+        // Stop the blinking effect
+        setIodideAgNO3Observed(true);
+      }
+    } catch (e) {
+      // swallow any unexpected errors — this is a UI enhancement only
+      // console.warn(e);
+    }
+
     setToastMessage("Observation noted for the Wet Acid Test.");
     setTimeout(() => setToastMessage(null), 2500);
   }, [
@@ -2216,6 +2272,12 @@ function ChemicalEquilibriumVirtualLab({
     setDilH2SO4HeatingTriggered,
     setToastMessage,
     testTubeState,
+    setEquipmentPositions,
+    setIodideAgNO3Observed,
+    isDryTestExperiment,
+    resolvedDryTestMode,
+    activeHalide,
+    DILUTE_HNO3_CHEMICAL_ID,
   ]);
 
   useEffect(() => {
