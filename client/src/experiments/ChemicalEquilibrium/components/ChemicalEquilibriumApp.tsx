@@ -98,6 +98,8 @@ const CHLORIDE_ACID_EQUIPMENT = [
   "AgNO₃",
   "NH₄OH (Ammonium hydroxide)",
   "Soda extract",
+  "Dil. H2SO4",
+  "Chromyl Chloride",
 ];
 const CHLORIDE_ACID_EQUIPMENT_LABEL = CHLORIDE_ACID_EQUIPMENT.join(", ");
 
