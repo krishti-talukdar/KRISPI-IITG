@@ -98,6 +98,8 @@ const CHLORIDE_ACID_EQUIPMENT = [
   "AgNO₃",
   "NH₄OH (Ammonium hydroxide)",
   "Soda extract",
+  "Dil. H2SO4",
+  "Chromyl Chloride",
 ];
 const CHLORIDE_ACID_EQUIPMENT_LABEL = CHLORIDE_ACID_EQUIPMENT.join(", ");
 
@@ -106,6 +108,26 @@ const BROMIDE_ACID_EQUIPMENT = [
   "AgNO₃",
 ];
 const BROMIDE_ACID_EQUIPMENT_LABEL = BROMIDE_ACID_EQUIPMENT.join(", ");
+
+// Equipment items to exclude for Chloride dry acid flow
+const CHLORIDE_EXCLUDE_EQUIPMENT = [
+  "NH₄OH (Ammonium hydroxide)",
+  "AgNO₃",
+  "Acetate Solution",
+  "NaOH Solution",
+  "NaOH",
+  "CHCl3",
+  "Dilute HNO₃",
+  "Dil. HNO₃",
+  "Dil. HCL",
+  "Dil. HCl",
+  "Dilute HCl",
+  "Soda extract",
+  "KMnO4",
+  "Acidified KMnO4",
+  "Acetic Acid",
+  "Acetic acid",
+];
 
 const HALIDE_SECTIONS = [
   {
@@ -208,6 +230,22 @@ export default function ChemicalEquilibriumApp({
       const arr = [...(dryTestEquipmentToUse as string[])];
       const [mnItem] = arr.splice(mnIndex, 1);
       arr.splice(bunsenIndex, 0, mnItem);
+      dryTestEquipmentToUse = arr;
+    }
+  }
+
+  // For chloride dry acid flow, remove specified reagents from the equipment list
+  if (isChlorideDryAcidFlow && dryTestEquipmentToUse) {
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+      (name) => !CHLORIDE_EXCLUDE_EQUIPMENT.includes(name)
+    );
+
+    // Move Bunsen Burner to the bottom of the equipment list for chloride dry acid flow
+    const arr = [...(dryTestEquipmentToUse as string[])];
+    const bunsenIndex = arr.findIndex((n) => n.includes("Bunsen Burner"));
+    if (bunsenIndex > -1) {
+      const [bunsenItem] = arr.splice(bunsenIndex, 1);
+      arr.push(bunsenItem);
       dryTestEquipmentToUse = arr;
     }
   }
