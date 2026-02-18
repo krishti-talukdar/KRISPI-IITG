@@ -182,9 +182,19 @@ export default function ChemicalEquilibriumApp({
     baseDryTestEquipment = SPECIAL_CASES_ACID_EQUIPMENT;
   }
   // For Salt Analysis special cases, when Wet Test for Acid Radicals is selected,
-  // add NaOH to the equipment list (only for this wet test and this experiment).
+  // remove specific reagents not used in special cases.
   if (activeDryTestMode === "wet" && activeHalide === "SC" && experiment.id === ChemicalEquilibriumData.id) {
-    baseDryTestEquipment = Array.from(new Set([...(baseDryTestEquipment ?? []), "NaOH"]));
+    const SPECIAL_CASES_WET_EXCLUDE = [
+      "AgNO₃",
+      "Sodium Nitroprusside Solution",
+      "NH₄OH (Ammonium hydroxide)",
+      "CaCl₂ Solution",
+      "FeCl₃",
+      "NaOH",
+    ];
+    baseDryTestEquipment = (baseDryTestEquipment as string[]).filter((name) =>
+      !SPECIAL_CASES_WET_EXCLUDE.includes(name)
+    );
   }
   const isChlorideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Cl";
   const isBromideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Br";
