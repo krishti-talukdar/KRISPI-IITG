@@ -1763,6 +1763,15 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // Additionally, for the Salt Analysis iodide check in the *wet* acid test,
+      // clicking ADD on the Test Tubes should also immediately place the test tube
+      // on the workbench (skip the amount dialog) — mirror the dry-acid behaviour for test tubes.
+      const isIodideWetAcid = isDryTestExperiment && (dryTestMode === "wet") && (activeHalide ?? "").toLowerCase() === "i";
+      if (isTestTubeId && isIodideWetAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
