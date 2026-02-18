@@ -92,6 +92,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
     dryTestMode === "acid" &&
     activeHalide === "Br";
+
+  // Determine whether to use purple fumes based on context (Iodide + dry acid mode)
+  const shouldUsePurpleFumes =
+    (experimentTitle?.toLowerCase().includes("salt analysis") ||
+      experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
+    dryTestMode === "acid" &&
+    activeHalide === "I";
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
   const [rinseLayout, setRinseLayout] = useState<RinseLayout | null>(null);
@@ -669,6 +676,11 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                         background: "linear-gradient(180deg, rgba(139,37,0,0.95), rgba(139,37,0,0.4))",
                         boxShadow: "0 8px 25px rgba(139,37,0,0.6)",
                       });
+                    } else if (shouldUsePurpleFumes && isBunsenHeating) {
+                      Object.assign(puffStyle, {
+                        background: "linear-gradient(180deg, rgba(147,51,234,0.95), rgba(147,51,234,0.4))",
+                        boxShadow: "0 8px 25px rgba(147,51,234,0.8)",
+                      });
                     }
 
                     return (
@@ -706,6 +718,11 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                       Object.assign(puffStyle, {
                         background: "radial-gradient(circle, rgba(139,37,0,0.95) 0%, rgba(139,37,0,0.4) 70%)",
                         boxShadow: "0 12px 30px rgba(139,37,0,0.6)",
+                      });
+                    } else if (shouldUsePurpleFumes && mno2AddedDuringHeating) {
+                      Object.assign(puffStyle, {
+                        background: "radial-gradient(circle, rgba(147,51,234,0.95) 0%, rgba(147,51,234,0.4) 70%)",
+                        boxShadow: "0 12px 30px rgba(147,51,234,0.8)",
                       });
                     }
                     return (
