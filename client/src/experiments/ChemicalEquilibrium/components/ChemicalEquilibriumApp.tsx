@@ -264,11 +264,11 @@ export default function ChemicalEquilibriumApp({
   }
 
   // For Salt Analysis, Iodide check in the WET test for Acid Radicals,
-  // remove specific equipment items that are not used in this section.
+  // manage equipment items and enforce specific ordering.
   const isIodideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "I";
   if (isIodideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
-    // Ensure CHCl3 is available in the equipment list for iodide wet acid flow
-    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "CHCl3"]));
+    // Ensure CHCl3 and KMnO4 are available in the equipment list for iodide wet acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "CHCl3", "KMnO4"]));
 
     // Remove specific equipment items for iodide wet acid flow
     const IODIDE_WET_EXCLUDE = [
@@ -282,6 +282,24 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
       !IODIDE_WET_EXCLUDE.includes(name)
     );
+
+    // Enforce the exact requested order for iodide wet acid flow
+    const desiredOrder = [
+      "Test Tubes",
+      "Salt Sample",
+      "Soda extract",
+      "Dilute HNO₃",
+      "AgNO₃",
+      "Dil. HCL",
+      "CHCl3",
+      "KMnO4",
+      "Bunsen Burner (virtual heat source)",
+    ];
+
+    const ordered = desiredOrder.filter((n) => (dryTestEquipmentToUse as string[]).includes(n));
+    // Also include any remaining items that might be present but not in desiredOrder after the ordered ones
+    const remaining = (dryTestEquipmentToUse as string[]).filter((n) => !ordered.includes(n));
+    dryTestEquipmentToUse = [...ordered, ...remaining];
   }
 
   const activeStepDetails =
