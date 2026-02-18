@@ -117,6 +117,14 @@ const CHLORIDE_EXCLUDE_EQUIPMENT = [
   "CHCl3",
   "Dilute HNO₃",
   "Dil. HNO₃",
+  "Dil. HCL",
+  "Dil. HCl",
+  "Dilute HCl",
+  "Soda extract",
+  "KMnO4",
+  "Acidified KMnO4",
+  "Acetic Acid",
+  "Acetic acid",
 ];
 
 const HALIDE_SECTIONS = [
