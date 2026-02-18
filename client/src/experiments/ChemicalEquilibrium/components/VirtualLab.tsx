@@ -1783,6 +1783,14 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // Additionally, for the Salt Analysis iodide check in the *wet* acid test,
+      // clicking ADD on the Bunsen Burner should also immediately place it on the workbench
+      // (skip the amount dialog) — mirror the dry-acid behaviour for bunsen burner.
+      if (isBunsenId && isIodideWetAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
