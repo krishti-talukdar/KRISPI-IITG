@@ -83,7 +83,6 @@ const SPECIAL_CASES_ACID_EQUIPMENT = [
   "Bunsen Burner (virtual heat source)",
   "Glass container",
   "Glass Rod",
-  "Soda extract",
   "Dilute H2SO4",
 ];
 
@@ -183,9 +182,19 @@ export default function ChemicalEquilibriumApp({
     baseDryTestEquipment = SPECIAL_CASES_ACID_EQUIPMENT;
   }
   // For Salt Analysis special cases, when Wet Test for Acid Radicals is selected,
-  // add NaOH to the equipment list (only for this wet test and this experiment).
+  // remove specific reagents not used in special cases.
   if (activeDryTestMode === "wet" && activeHalide === "SC" && experiment.id === ChemicalEquilibriumData.id) {
-    baseDryTestEquipment = Array.from(new Set([...(baseDryTestEquipment ?? []), "NaOH"]));
+    const SPECIAL_CASES_WET_EXCLUDE = [
+      "AgNO₃",
+      "Sodium Nitroprusside Solution",
+      "NH₄OH (Ammonium hydroxide)",
+      "CaCl₂ Solution",
+      "FeCl₃",
+      "NaOH",
+    ];
+    baseDryTestEquipment = (baseDryTestEquipment as string[]).filter((name) =>
+      !SPECIAL_CASES_WET_EXCLUDE.includes(name)
+    );
   }
   const isChlorideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Cl";
   const isBromideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Br";
@@ -256,6 +265,39 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
       (name) => !IODIDE_EXCLUDE_EQUIPMENT.includes(name)
     );
+  }
+
+  // For Salt Analysis, Sulfide check in the DRY test for Acid Radicals,
+  // keep only the requested equipment.
+  const isSulfideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "S";
+  if (isSulfideDryAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Keep only the requested equipment for the sulfide dry acid flow
+    const SULFIDE_DRY_KEEP = [
+      "Test Tubes",
+      "Salt Sample",
+      "Bunsen Burner (virtual heat source)",
+      "Glass Rod",
+      "Glass container",
+      "Concentrated H₂SO₄",
+    ];
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
+      SULFIDE_DRY_KEEP.includes(name)
+    );
+
+    // Enforce the exact requested order for sulfide dry acid flow
+    const desiredOrder = [
+      "Test Tubes",
+      "Salt Sample",
+      "Concentrated H₂SO₄",
+      "Glass Rod",
+      "Glass container",
+      "Bunsen Burner (virtual heat source)",
+    ];
+
+    const ordered = desiredOrder.filter((n) => (dryTestEquipmentToUse as string[]).includes(n));
+    // Also include any remaining items that might be present but not in desiredOrder after the ordered ones
+    const remaining = (dryTestEquipmentToUse as string[]).filter((n) => !ordered.includes(n));
+    dryTestEquipmentToUse = [...ordered, ...remaining];
   }
 
   // For Salt Analysis, Bromide check in the WET test for Acid Radicals,
@@ -331,6 +373,76 @@ export default function ChemicalEquilibriumApp({
       "Dil. HCL",
       "CHCl3",
       "KMnO4",
+      "Bunsen Burner (virtual heat source)",
+    ];
+
+    const ordered = desiredOrder.filter((n) => (dryTestEquipmentToUse as string[]).includes(n));
+    // Also include any remaining items that might be present but not in desiredOrder after the ordered ones
+    const remaining = (dryTestEquipmentToUse as string[]).filter((n) => !ordered.includes(n));
+    dryTestEquipmentToUse = [...ordered, ...remaining];
+  }
+
+  // For Salt Analysis, Chloride check in the WET test for Acid Radicals,
+  // keep only the requested equipment and add Acidified Potassium Dichromate.
+  const isChlorideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "Cl";
+  if (isChlorideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Add Acidified Potassium Dichromate to the equipment list for chloride wet acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Acidified Potassium Dichromate (K₂Cr₂O₇)"]));
+
+    // Keep only the requested equipment for the chloride wet acid flow
+    const CHLORIDE_WET_KEEP = [
+      "Test Tubes",
+      "Salt Sample",
+      "Bunsen Burner (virtual heat source)",
+      "AgNO₃",
+      "Acidified Potassium Dichromate (K₂Cr₂O₇)",
+    ];
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
+      CHLORIDE_WET_KEEP.includes(name)
+    );
+
+    // Enforce the exact requested order for chloride wet acid flow
+    const desiredOrder = [
+      "Test Tubes",
+      "Salt Sample",
+      "AgNO₃",
+      "Acidified Potassium Dichromate (K₂Cr₂O₇)",
+      "Bunsen Burner (virtual heat source)",
+    ];
+
+    const ordered = desiredOrder.filter((n) => (dryTestEquipmentToUse as string[]).includes(n));
+    // Also include any remaining items that might be present but not in desiredOrder after the ordered ones
+    const remaining = (dryTestEquipmentToUse as string[]).filter((n) => !ordered.includes(n));
+    dryTestEquipmentToUse = [...ordered, ...remaining];
+  }
+
+  // For Salt Analysis, Sulfide check in the WET test for Acid Radicals,
+  // keep only the requested equipment and add NaOH.
+  const isSulfideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "S";
+  if (isSulfideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Add NaOH to the equipment list for sulfide wet acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "NaOH"]));
+
+    // Keep only the requested equipment for the sulfide wet acid flow
+    const SULFIDE_WET_KEEP = [
+      "Test Tubes",
+      "Salt Sample",
+      "Bunsen Burner (virtual heat source)",
+      "Soda extract",
+      "Sodium Nitroprusside Solution",
+      "NaOH",
+    ];
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
+      SULFIDE_WET_KEEP.includes(name)
+    );
+
+    // Enforce the exact requested order for sulfide wet acid flow
+    const desiredOrder = [
+      "Test Tubes",
+      "Salt Sample",
+      "Soda extract",
+      "Sodium Nitroprusside Solution",
+      "NaOH",
       "Bunsen Burner (virtual heat source)",
     ];
 
