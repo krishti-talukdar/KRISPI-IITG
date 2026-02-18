@@ -259,12 +259,9 @@ export default function ChemicalEquilibriumApp({
   }
 
   // For Salt Analysis, Sulfide check in the DRY test for Acid Radicals,
-  // keep only the requested equipment and add Dil H2SO4.
+  // keep only the requested equipment.
   const isSulfideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "S";
   if (isSulfideDryAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
-    // Add Dil H2SO4 to the equipment list for sulfide dry acid flow
-    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Dil. H2SO4"]));
-
     // Keep only the requested equipment for the sulfide dry acid flow
     const SULFIDE_DRY_KEEP = [
       "Test Tubes",
@@ -272,7 +269,7 @@ export default function ChemicalEquilibriumApp({
       "Bunsen Burner (virtual heat source)",
       "Glass Rod",
       "Glass container",
-      "Dil. H2SO4",
+      "Concentrated H₂SO₄",
     ];
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
       SULFIDE_DRY_KEEP.includes(name)
@@ -282,7 +279,7 @@ export default function ChemicalEquilibriumApp({
     const desiredOrder = [
       "Test Tubes",
       "Salt Sample",
-      "Dil. H2SO4",
+      "Concentrated H₂SO₄",
       "Glass Rod",
       "Glass container",
       "Bunsen Burner (virtual heat source)",
