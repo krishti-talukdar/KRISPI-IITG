@@ -239,6 +239,15 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
       (name) => !CHLORIDE_EXCLUDE_EQUIPMENT.includes(name)
     );
+
+    // Move Bunsen Burner to the bottom of the equipment list for chloride dry acid flow
+    const arr = [...(dryTestEquipmentToUse as string[])];
+    const bunsenIndex = arr.findIndex((n) => n.includes("Bunsen Burner"));
+    if (bunsenIndex > -1) {
+      const [bunsenItem] = arr.splice(bunsenIndex, 1);
+      arr.push(bunsenItem);
+      dryTestEquipmentToUse = arr;
+    }
   }
 
   // For iodide dry acid flow, remove reagents that are not used in this specific section
