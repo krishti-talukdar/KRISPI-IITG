@@ -107,6 +107,18 @@ const BROMIDE_ACID_EQUIPMENT = [
 ];
 const BROMIDE_ACID_EQUIPMENT_LABEL = BROMIDE_ACID_EQUIPMENT.join(", ");
 
+// Equipment items to exclude for Chloride dry acid flow
+const CHLORIDE_EXCLUDE_EQUIPMENT = [
+  "NH₄OH (Ammonium hydroxide)",
+  "AgNO₃",
+  "Acetate Solution",
+  "NaOH Solution",
+  "NaOH",
+  "CHCl3",
+  "Dilute HNO₃",
+  "Dil. HNO₃",
+];
+
 const HALIDE_SECTIONS = [
   {
     symbol: "Br",
@@ -210,6 +222,13 @@ export default function ChemicalEquilibriumApp({
       arr.splice(bunsenIndex, 0, mnItem);
       dryTestEquipmentToUse = arr;
     }
+  }
+
+  // For chloride dry acid flow, remove specified reagents from the equipment list
+  if (isChlorideDryAcidFlow && dryTestEquipmentToUse) {
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+      (name) => !CHLORIDE_EXCLUDE_EQUIPMENT.includes(name)
+    );
   }
 
   // For iodide dry acid flow, remove reagents that are not used in this specific section
