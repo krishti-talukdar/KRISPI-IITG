@@ -383,15 +383,19 @@ export default function ChemicalEquilibriumApp({
   }
 
   // For Salt Analysis, Chloride check in the WET test for Acid Radicals,
-  // keep only the requested equipment and remove the rest.
+  // keep only the requested equipment and add Acidified Potassium Dichromate.
   const isChlorideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "Cl";
   if (isChlorideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Add Acidified Potassium Dichromate to the equipment list for chloride wet acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Acidified Potassium Dichromate (K₂Cr₂O₇)"]));
+
     // Keep only the requested equipment for the chloride wet acid flow
     const CHLORIDE_WET_KEEP = [
       "Test Tubes",
       "Salt Sample",
       "Bunsen Burner (virtual heat source)",
       "AgNO₃",
+      "Acidified Potassium Dichromate (K₂Cr₂O₇)",
     ];
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
       CHLORIDE_WET_KEEP.includes(name)
@@ -402,6 +406,7 @@ export default function ChemicalEquilibriumApp({
       "Test Tubes",
       "Salt Sample",
       "AgNO₃",
+      "Acidified Potassium Dichromate (K₂Cr₂O₇)",
       "Bunsen Burner (virtual heat source)",
     ];
 
