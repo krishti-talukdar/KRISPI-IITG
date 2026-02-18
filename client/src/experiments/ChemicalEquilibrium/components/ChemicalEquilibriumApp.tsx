@@ -83,7 +83,6 @@ const SPECIAL_CASES_ACID_EQUIPMENT = [
   "Bunsen Burner (virtual heat source)",
   "Glass container",
   "Glass Rod",
-  "Soda extract",
   "Dilute H2SO4",
 ];
 
