@@ -267,6 +267,9 @@ export default function ChemicalEquilibriumApp({
   // remove specific equipment items that are not used in this section.
   const isIodideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "I";
   if (isIodideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Ensure CHCl3 is available in the equipment list for iodide wet acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "CHCl3"]));
+
     // Remove specific equipment items for iodide wet acid flow
     const IODIDE_WET_EXCLUDE = [
       "BaCl₂ Solution",
