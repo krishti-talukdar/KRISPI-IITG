@@ -262,6 +262,25 @@ export default function ChemicalEquilibriumApp({
     const remaining = (dryTestEquipmentToUse as string[]).filter((n) => !ordered.includes(n));
     dryTestEquipmentToUse = [...ordered, ...remaining];
   }
+
+  // For Salt Analysis, Iodide check in the WET test for Acid Radicals,
+  // remove specific equipment items that are not used in this section.
+  const isIodideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "I";
+  if (isIodideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Remove specific equipment items for iodide wet acid flow
+    const IODIDE_WET_EXCLUDE = [
+      "BaCl₂ Solution",
+      "Sodium Nitroprusside Solution",
+      "NH₄OH (Ammonium hydroxide)",
+      "Magnesia mixture (PO₄³⁻)",
+      "CaCl₂ Solution",
+      "FeCl₃",
+    ];
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
+      !IODIDE_WET_EXCLUDE.includes(name)
+    );
+  }
+
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
       ? BASIC_DRY_TEST_STEPS
