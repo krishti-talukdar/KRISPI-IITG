@@ -340,6 +340,35 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = [...ordered, ...remaining];
   }
 
+  // For Salt Analysis, Chloride check in the WET test for Acid Radicals,
+  // keep only the requested equipment and remove the rest.
+  const isChlorideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "Cl";
+  if (isChlorideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Keep only the requested equipment for the chloride wet acid flow
+    const CHLORIDE_WET_KEEP = [
+      "Test Tubes",
+      "Salt Sample",
+      "Bunsen Burner (virtual heat source)",
+      "AgNO₃",
+    ];
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
+      CHLORIDE_WET_KEEP.includes(name)
+    );
+
+    // Enforce the exact requested order for chloride wet acid flow
+    const desiredOrder = [
+      "Test Tubes",
+      "Salt Sample",
+      "AgNO₃",
+      "Bunsen Burner (virtual heat source)",
+    ];
+
+    const ordered = desiredOrder.filter((n) => (dryTestEquipmentToUse as string[]).includes(n));
+    // Also include any remaining items that might be present but not in desiredOrder after the ordered ones
+    const remaining = (dryTestEquipmentToUse as string[]).filter((n) => !ordered.includes(n));
+    dryTestEquipmentToUse = [...ordered, ...remaining];
+  }
+
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
       ? BASIC_DRY_TEST_STEPS
