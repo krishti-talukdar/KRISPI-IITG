@@ -258,6 +258,42 @@ export default function ChemicalEquilibriumApp({
     );
   }
 
+  // For Salt Analysis, Sulfide check in the DRY test for Acid Radicals,
+  // keep only the requested equipment and add Dil H2SO4.
+  const isSulfideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "S";
+  if (isSulfideDryAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
+    // Add Dil H2SO4 to the equipment list for sulfide dry acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Dil. H2SO4"]));
+
+    // Keep only the requested equipment for the sulfide dry acid flow
+    const SULFIDE_DRY_KEEP = [
+      "Test Tubes",
+      "Salt Sample",
+      "Bunsen Burner (virtual heat source)",
+      "Glass Rod",
+      "Glass container",
+      "Dil. H2SO4",
+    ];
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
+      SULFIDE_DRY_KEEP.includes(name)
+    );
+
+    // Enforce the exact requested order for sulfide dry acid flow
+    const desiredOrder = [
+      "Test Tubes",
+      "Salt Sample",
+      "Glass Rod",
+      "Glass container",
+      "Dil. H2SO4",
+      "Bunsen Burner (virtual heat source)",
+    ];
+
+    const ordered = desiredOrder.filter((n) => (dryTestEquipmentToUse as string[]).includes(n));
+    // Also include any remaining items that might be present but not in desiredOrder after the ordered ones
+    const remaining = (dryTestEquipmentToUse as string[]).filter((n) => !ordered.includes(n));
+    dryTestEquipmentToUse = [...ordered, ...remaining];
+  }
+
   // For Salt Analysis, Bromide check in the WET test for Acid Radicals,
   // keep only the requested equipment and remove the rest.
   const isBromideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "Br";
