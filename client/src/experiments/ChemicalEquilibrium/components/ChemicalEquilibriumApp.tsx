@@ -282,9 +282,9 @@ export default function ChemicalEquilibriumApp({
     const desiredOrder = [
       "Test Tubes",
       "Salt Sample",
+      "Dil. H2SO4",
       "Glass Rod",
       "Glass container",
-      "Dil. H2SO4",
       "Bunsen Burner (virtual heat source)",
     ];
 
