@@ -59,6 +59,7 @@ interface EquipmentProps {
   bromideWetHeatingTriggered?: boolean;
   bromideWetHeatingCount?: number;
   iodideWetHeatingTriggered?: boolean;
+  iodideWetHeatingCount?: number;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -87,6 +88,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   bromideWetHeatingTriggered = false,
   bromideWetHeatingCount = 0,
   iodideWetHeatingTriggered = false,
+  iodideWetHeatingCount = 0,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
@@ -646,10 +648,17 @@ export const Equipment: React.FC<EquipmentProps> = ({
           isDryTest &&
           dryTestMode === "wet" &&
           activeHalide === "I" &&
-          iodideWetHeatingTriggered;
-        const overlayColor = shouldUseIodideWetYellow
-          ? "#FCD34D"
-          : shouldUseBromideWetOrangeBrown
+          (iodideWetHeatingTriggered && iodideWetHeatingCount < 2);
+        const shouldUseIodideWetViolet =
+          isDryTest &&
+          dryTestMode === "wet" &&
+          activeHalide === "I" &&
+          iodideWetHeatingCount >= 2;
+        const overlayColor = shouldUseIodideWetViolet
+          ? "#8B5CF6"
+          : shouldUseIodideWetYellow
+            ? "#FCD34D"
+            : shouldUseBromideWetOrangeBrown
             ? "#D97706"
             : shouldUseBromideWetPaleYellow
               ? "#FDE68A"

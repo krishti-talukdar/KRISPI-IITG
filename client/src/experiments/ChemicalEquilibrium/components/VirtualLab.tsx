@@ -83,6 +83,7 @@ type LabSnapshot = {
   bromideWetHeatingTriggered: boolean;
   bromideWetHeatingCount: number;
   iodideWetHeatingTriggered: boolean;
+  iodideWetHeatingCount: number;
   feCl3Added: boolean;
 };
 
@@ -632,6 +633,7 @@ function ChemicalEquilibriumVirtualLab({
   const [bromideWetHeatingTriggered, setBromideWetHeatingTriggered] = useState(false);
   const [bromideWetHeatingCount, setBromideWetHeatingCount] = useState(0);
   const [iodideWetHeatingTriggered, setIodideWetHeatingTriggered] = useState(false);
+  const [iodideWetHeatingCount, setIodideWetHeatingCount] = useState(0);
   const [feCl3Added, setFeCl3Added] = useState(false);
   const [baClUsed, setBaClUsed] = useState(false);
   const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
@@ -1520,6 +1522,7 @@ function ChemicalEquilibriumVirtualLab({
     bromideWetHeatingTriggered,
     bromideWetHeatingCount,
     iodideWetHeatingTriggered,
+    iodideWetHeatingCount,
     feCl3Added,
   });
 
@@ -2710,10 +2713,16 @@ function ChemicalEquilibriumVirtualLab({
         }
 
         if (activeHalide === "I") {
-          setIodideWetHeatingTriggered(true);
-          setCaseOneResult(
-            "Yellow coloured precipitate insoluble in HNO3 and NH4OH is formed , therefore I⁻ is present",
-          );
+          setIodideWetHeatingCount((prev) => {
+            const newCount = prev + 1;
+            if (newCount === 1) {
+              setIodideWetHeatingTriggered(true);
+              setCaseOneResult(
+                "Yellow coloured precipitate insoluble in HNO3 and NH4OH is formed , therefore I⁻ is present",
+              );
+            }
+            return newCount;
+          });
         }
       }
 
@@ -3549,6 +3558,7 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingTriggered(false);
     setBromideWetHeatingCount(0);
     setIodideWetHeatingTriggered(false);
+    setIodideWetHeatingCount(0);
     setFeCl3Added(false);
     setBaClUsed(false);
     setSodiumNitroprussideUsed(false);
@@ -3608,6 +3618,7 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingTriggered(false);
     setBromideWetHeatingCount(0);
     setIodideWetHeatingTriggered(false);
+    setIodideWetHeatingCount(0);
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
@@ -3669,6 +3680,7 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingTriggered(lastSnapshot.bromideWetHeatingTriggered);
     setBromideWetHeatingCount(lastSnapshot.bromideWetHeatingCount);
     setIodideWetHeatingTriggered(lastSnapshot.iodideWetHeatingTriggered);
+    setIodideWetHeatingCount(lastSnapshot.iodideWetHeatingCount);
     setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
@@ -4027,6 +4039,7 @@ function ChemicalEquilibriumVirtualLab({
                         bromideWetHeatingTriggered={bromideWetHeatingTriggered}
                         bromideWetHeatingCount={bromideWetHeatingCount}
                         iodideWetHeatingTriggered={iodideWetHeatingTriggered}
+                        iodideWetHeatingCount={iodideWetHeatingCount}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
