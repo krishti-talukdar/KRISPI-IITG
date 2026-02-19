@@ -3865,6 +3865,7 @@ function ChemicalEquilibriumVirtualLab({
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
+                specialCasesHeatingCount={specialCasesHeatingCount}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -4071,6 +4072,7 @@ function ChemicalEquilibriumVirtualLab({
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
+                specialCasesHeatingCount={specialCasesHeatingCount}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(
