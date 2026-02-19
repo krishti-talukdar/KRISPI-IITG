@@ -2711,6 +2711,9 @@ function ChemicalEquilibriumVirtualLab({
 
         if (activeHalide === "I") {
           setIodideWetHeatingTriggered(true);
+          setCaseOneResult(
+            "Yellow coloured precipitate insoluble in HNO3 and NH4OH is formed , therefore I⁻ is present",
+          );
         }
       }
 
