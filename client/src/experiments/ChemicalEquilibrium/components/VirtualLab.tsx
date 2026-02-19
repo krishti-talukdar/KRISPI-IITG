@@ -2634,6 +2634,10 @@ function ChemicalEquilibriumVirtualLab({
             setCaseThreeResult(
               "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO3^2- is present",
             );
+          } else if (newCount === 4) {
+            setCaseFourResult(
+              "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO3^- is present",
+            );
           }
           return newCount;
         });
@@ -3522,13 +3526,13 @@ function ChemicalEquilibriumVirtualLab({
     // Clear Special Cases results - special handling for each case
     if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
       if (specialCasesResetCount === 0) {
-        // First reset: clear Case 1 and 2, but preserve Case 3, reset heating count
+        // First reset: clear Case 1 and 2, but preserve Case 3 and 4, reset heating count
         setCaseOneResult(DEFAULT_CASE_RESULT);
         setCaseTwoResult(DEFAULT_CASE_RESULT);
-        // Case 3 is NOT cleared on any reset - only set when heating is pressed 3rd time
+        // Case 3 and 4 are NOT cleared on any reset - only set when heating is pressed 3rd and 4th time
         setSpecialCasesHeatingCount(0);
       }
-      // Increment reset count (on 2nd reset and beyond, Case 2 is preserved and Case 3 is never cleared)
+      // Increment reset count (on 2nd reset and beyond, Case 2 is preserved and Case 3, 4 are never cleared)
       setSpecialCasesResetCount((prev) => prev + 1);
     }
     setSodiumNitroprussideAdded(false);
