@@ -2685,6 +2685,17 @@ function ChemicalEquilibriumVirtualLab({
         );
       }
 
+      if (
+        heating &&
+        isDryTestExperiment &&
+        activeHalide === "Cl" &&
+        resolvedDryTestMode === "acid"
+      ) {
+        setCaseOneResult(
+          "Colourless gas vapours produced",
+        );
+      }
+
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
         const hasDiluteH2SO4InTestTube = Boolean(
           testTubeState?.chemicals.some(
