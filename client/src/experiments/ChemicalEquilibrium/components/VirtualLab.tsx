@@ -80,6 +80,7 @@ type LabSnapshot = {
   magnesiaAdded: boolean;
   caClAdded: boolean;
   dilH2SO4HeatingTriggered: boolean;
+  bromideWetHeatingTriggered: boolean;
   feCl3Added: boolean;
 };
 
@@ -626,6 +627,7 @@ function ChemicalEquilibriumVirtualLab({
   const [magnesiaAdded, setMagnesiaAdded] = useState(false);
   const [caClAdded, setCaClAdded] = useState(false);
   const [dilH2SO4HeatingTriggered, setDilH2SO4HeatingTriggered] = useState(false);
+  const [bromideWetHeatingTriggered, setBromideWetHeatingTriggered] = useState(false);
   const [feCl3Added, setFeCl3Added] = useState(false);
   const [baClUsed, setBaClUsed] = useState(false);
   const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
@@ -1511,6 +1513,7 @@ function ChemicalEquilibriumVirtualLab({
     magnesiaAdded,
     caClAdded,
     dilH2SO4HeatingTriggered,
+    bromideWetHeatingTriggered,
     feCl3Added,
   });
 
@@ -2663,6 +2666,10 @@ function ChemicalEquilibriumVirtualLab({
         if (hasDiluteH2SO4InTestTube) {
           setDilH2SO4HeatingTriggered(true);
         }
+
+        if (activeHalide === "Br") {
+          setBromideWetHeatingTriggered(true);
+        }
       }
 
       if (!heating) {
@@ -3494,6 +3501,7 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(false);
     setCaClAdded(false);
     setDilH2SO4HeatingTriggered(false);
+    setBromideWetHeatingTriggered(false);
     setFeCl3Added(false);
     setBaClUsed(false);
     setSodiumNitroprussideUsed(false);
@@ -3550,6 +3558,7 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(false);
     setCaClAdded(false);
     setDilH2SO4HeatingTriggered(false);
+    setBromideWetHeatingTriggered(false);
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
@@ -3608,6 +3617,7 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(lastSnapshot.magnesiaAdded);
     setCaClAdded(lastSnapshot.caClAdded);
     setDilH2SO4HeatingTriggered(lastSnapshot.dilH2SO4HeatingTriggered);
+    setBromideWetHeatingTriggered(lastSnapshot.bromideWetHeatingTriggered);
     setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
@@ -3963,6 +3973,7 @@ function ChemicalEquilibriumVirtualLab({
                         interactDisabled={shouldDisableAmmoniumInteraction}
                         isHeating={isWorkbenchHeating}
                         activeHalide={activeHalide}
+                        bromideWetHeatingTriggered={bromideWetHeatingTriggered}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
