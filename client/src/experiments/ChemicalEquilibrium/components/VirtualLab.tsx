@@ -3519,7 +3519,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
-    // Clear Special Cases results only on the first reset, preserve on subsequent resets
+    // Clear Special Cases results - special handling for each case
     if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
       if (specialCasesResetCount === 0) {
         // First reset: clear all results and reset heating count
@@ -3527,8 +3527,11 @@ function ChemicalEquilibriumVirtualLab({
         setCaseTwoResult(DEFAULT_CASE_RESULT);
         setCaseThreeResult(DEFAULT_CASE_RESULT);
         setSpecialCasesHeatingCount(0);
+      } else {
+        // On 2nd reset and beyond: preserve Case 2, but always clear Case 3
+        setCaseThreeResult(DEFAULT_CASE_RESULT);
       }
-      // Increment reset count (on 2nd reset and beyond, results are preserved)
+      // Increment reset count (on 2nd reset and beyond, Case 2 is preserved but Case 3 is cleared)
       setSpecialCasesResetCount((prev) => prev + 1);
     }
     setSodiumNitroprussideAdded(false);
