@@ -81,6 +81,7 @@ type LabSnapshot = {
   caClAdded: boolean;
   dilH2SO4HeatingTriggered: boolean;
   bromideWetHeatingTriggered: boolean;
+  bromideWetHeatingCount: number;
   feCl3Added: boolean;
 };
 
@@ -628,6 +629,7 @@ function ChemicalEquilibriumVirtualLab({
   const [caClAdded, setCaClAdded] = useState(false);
   const [dilH2SO4HeatingTriggered, setDilH2SO4HeatingTriggered] = useState(false);
   const [bromideWetHeatingTriggered, setBromideWetHeatingTriggered] = useState(false);
+  const [bromideWetHeatingCount, setBromideWetHeatingCount] = useState(0);
   const [feCl3Added, setFeCl3Added] = useState(false);
   const [baClUsed, setBaClUsed] = useState(false);
   const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
@@ -1514,6 +1516,7 @@ function ChemicalEquilibriumVirtualLab({
     caClAdded,
     dilH2SO4HeatingTriggered,
     bromideWetHeatingTriggered,
+    bromideWetHeatingCount,
     feCl3Added,
   });
 
@@ -2676,10 +2679,16 @@ function ChemicalEquilibriumVirtualLab({
         }
 
         if (activeHalide === "Br") {
-          setBromideWetHeatingTriggered(true);
-          setCaseOneResult(
-            "pale yellow Precipitation insoluble in HNO3 but sparingly soluble in NH4OH , therefore Br⁻ is present",
-          );
+          setBromideWetHeatingCount((prev) => {
+            const newCount = prev + 1;
+            if (newCount === 1) {
+              setBromideWetHeatingTriggered(true);
+              setCaseOneResult(
+                "pale yellow Precipitation insoluble in HNO3 but sparingly soluble in NH4OH , therefore Br⁻ is present",
+              );
+            }
+            return newCount;
+          });
         }
       }
 
@@ -3513,6 +3522,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaClAdded(false);
     setDilH2SO4HeatingTriggered(false);
     setBromideWetHeatingTriggered(false);
+    setBromideWetHeatingCount(0);
     setFeCl3Added(false);
     setBaClUsed(false);
     setSodiumNitroprussideUsed(false);
@@ -3570,6 +3580,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaClAdded(false);
     setDilH2SO4HeatingTriggered(false);
     setBromideWetHeatingTriggered(false);
+    setBromideWetHeatingCount(0);
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
@@ -3629,6 +3640,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaClAdded(lastSnapshot.caClAdded);
     setDilH2SO4HeatingTriggered(lastSnapshot.dilH2SO4HeatingTriggered);
     setBromideWetHeatingTriggered(lastSnapshot.bromideWetHeatingTriggered);
+    setBromideWetHeatingCount(lastSnapshot.bromideWetHeatingCount);
     setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
@@ -3985,6 +3997,7 @@ function ChemicalEquilibriumVirtualLab({
                         isHeating={isWorkbenchHeating}
                         activeHalide={activeHalide}
                         bromideWetHeatingTriggered={bromideWetHeatingTriggered}
+                        bromideWetHeatingCount={bromideWetHeatingCount}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
