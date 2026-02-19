@@ -84,6 +84,7 @@ type LabSnapshot = {
   bromideWetHeatingCount: number;
   iodideWetHeatingTriggered: boolean;
   iodideWetHeatingCount: number;
+  chlorideHeatingCount: number;
   feCl3Added: boolean;
 };
 
@@ -634,6 +635,7 @@ function ChemicalEquilibriumVirtualLab({
   const [bromideWetHeatingCount, setBromideWetHeatingCount] = useState(0);
   const [iodideWetHeatingTriggered, setIodideWetHeatingTriggered] = useState(false);
   const [iodideWetHeatingCount, setIodideWetHeatingCount] = useState(0);
+  const [chlorideHeatingCount, setChlorideHeatingCount] = useState(0);
   const [feCl3Added, setFeCl3Added] = useState(false);
   const [baClUsed, setBaClUsed] = useState(false);
   const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
@@ -1523,6 +1525,7 @@ function ChemicalEquilibriumVirtualLab({
     bromideWetHeatingCount,
     iodideWetHeatingTriggered,
     iodideWetHeatingCount,
+    chlorideHeatingCount,
     feCl3Added,
   });
 
@@ -2691,9 +2694,19 @@ function ChemicalEquilibriumVirtualLab({
         activeHalide === "Cl" &&
         resolvedDryTestMode === "acid"
       ) {
-        setCaseOneResult(
-          "Colourless gas vapours produced",
-        );
+        setChlorideHeatingCount((prev) => {
+          const newCount = prev + 1;
+          if (newCount === 1) {
+            setCaseOneResult(
+              "Colourless gas vapours produced",
+            );
+          } else if (newCount === 2) {
+            setCaseThreeResult(
+              "Deep red colour vapour is produced , therefore Cl⁻ is present",
+            );
+          }
+          return newCount;
+        });
       }
 
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
@@ -3574,6 +3587,7 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingCount(0);
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
+    setChlorideHeatingCount(0);
     setFeCl3Added(false);
     setBaClUsed(false);
     setSodiumNitroprussideUsed(false);
@@ -3634,6 +3648,7 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingCount(0);
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
+    setChlorideHeatingCount(0);
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
@@ -3696,6 +3711,7 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingCount(lastSnapshot.bromideWetHeatingCount);
     setIodideWetHeatingTriggered(lastSnapshot.iodideWetHeatingTriggered);
     setIodideWetHeatingCount(lastSnapshot.iodideWetHeatingCount);
+    setChlorideHeatingCount(lastSnapshot.chlorideHeatingCount);
     setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
@@ -3994,6 +4010,7 @@ function ChemicalEquilibriumVirtualLab({
                 dryTestMode={resolvedDryTestMode}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
+                chlorideHeatingCount={chlorideHeatingCount}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -4205,6 +4222,7 @@ function ChemicalEquilibriumVirtualLab({
                 dryTestMode={resolvedDryTestMode}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
+                chlorideHeatingCount={chlorideHeatingCount}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(

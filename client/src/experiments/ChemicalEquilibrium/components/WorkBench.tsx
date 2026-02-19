@@ -62,6 +62,7 @@ interface WorkBenchProps {
   dryTestMode?: string;
   mno2AddedDuringHeating?: boolean;
   specialCasesHeatingCount?: number;
+  chlorideHeatingCount?: number;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -87,6 +88,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   dryTestMode,
   mno2AddedDuringHeating,
   specialCasesHeatingCount = 0,
+  chlorideHeatingCount = 0,
 }) => {
   // Determine whether to use reddish-brown fumes based on context (Bromide + dry acid mode, or Special Cases + dry acid mode on 2nd and 4th heating)
   const shouldUseReddishFumes =
@@ -94,6 +96,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
     dryTestMode === "acid" &&
     (activeHalide === "Br" || (activeHalide === "SC" && (specialCasesHeatingCount === 2 || specialCasesHeatingCount === 4)));
+
+  // Determine whether to use deep red fumes based on context (Chloride + dry acid mode on 2nd heating)
+  const shouldUseDeepRedFumes =
+    (experimentTitle?.toLowerCase().includes("salt analysis") ||
+      experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
+    dryTestMode === "acid" &&
+    activeHalide === "Cl" &&
+    chlorideHeatingCount === 2;
 
   // Determine whether to use purple fumes based on context (Iodide + dry acid mode)
   const shouldUsePurpleFumes =
@@ -677,6 +687,11 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                       Object.assign(puffStyle, {
                         background: "linear-gradient(180deg, rgba(139,37,0,0.95), rgba(139,37,0,0.4))",
                         boxShadow: "0 8px 25px rgba(139,37,0,0.6)",
+                      });
+                    } else if (shouldUseDeepRedFumes && isBunsenHeating) {
+                      Object.assign(puffStyle, {
+                        background: "linear-gradient(180deg, rgba(220,20,60,0.95), rgba(220,20,60,0.4))",
+                        boxShadow: "0 8px 25px rgba(220,20,60,0.8)",
                       });
                     } else if (shouldUsePurpleFumes && isBunsenHeating) {
                       Object.assign(puffStyle, {
