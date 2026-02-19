@@ -2761,6 +2761,12 @@ function ChemicalEquilibriumVirtualLab({
             return newCount;
           });
         }
+
+        if ((activeHalide ?? "").toLowerCase() === "sc") {
+          setCaseOneResult(
+            "Heavy white precipitate is formed , therefore SO4^2- is present",
+          );
+        }
       }
 
       if (!heating) {
