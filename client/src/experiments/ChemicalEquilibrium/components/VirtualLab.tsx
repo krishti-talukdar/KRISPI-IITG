@@ -2686,6 +2686,10 @@ function ChemicalEquilibriumVirtualLab({
               setCaseOneResult(
                 "pale yellow Precipitation insoluble in HNO3 but sparingly soluble in NH4OH , therefore Br⁻ is present",
               );
+            } else if (newCount === 2) {
+              setCaseTwoResult(
+                "Organic layer becomes orange-brown in colour , therefore Br⁻ is present",
+              );
             }
             return newCount;
           });
