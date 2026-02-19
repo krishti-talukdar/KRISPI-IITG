@@ -1832,6 +1832,15 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // Additionally, for the Salt Analysis special cases check in the *wet* acid test,
+      // clicking ADD on the Test Tubes should immediately place the test tube
+      // on the workbench (skip the amount dialog).
+      const isSpecialCasesWetAcid = isDryTestExperiment && (dryTestMode === "wet") && (activeHalide ?? "").toLowerCase() === "sc";
+      if (isTestTubeId && isSpecialCasesWetAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);

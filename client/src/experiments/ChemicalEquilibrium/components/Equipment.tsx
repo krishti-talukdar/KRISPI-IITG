@@ -680,7 +680,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
           : name;
         const isBromideWetAcid = dryTestMode === "wet" && activeHalide === "Br";
         const isIodideWetAcid = dryTestMode === "wet" && activeHalide === "I";
-        const showObserve = Boolean(onObserve) && dryTestMode === "wet" && !isBromideWetAcid && !isIodideWetAcid;
+        const isSpecialCasesWetAcid = dryTestMode === "wet" && (activeHalide ?? "").toLowerCase() === "sc";
+        const showObserve = Boolean(onObserve) && dryTestMode === "wet" && !isBromideWetAcid && !isIodideWetAcid && !isSpecialCasesWetAcid;
         return (
           <div className="relative flex flex-col items-center">
             <div className="relative">
