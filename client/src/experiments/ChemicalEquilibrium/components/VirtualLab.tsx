@@ -80,6 +80,10 @@ type LabSnapshot = {
   magnesiaAdded: boolean;
   caClAdded: boolean;
   dilH2SO4HeatingTriggered: boolean;
+  bromideWetHeatingTriggered: boolean;
+  bromideWetHeatingCount: number;
+  iodideWetHeatingTriggered: boolean;
+  iodideWetHeatingCount: number;
   feCl3Added: boolean;
 };
 
@@ -626,6 +630,10 @@ function ChemicalEquilibriumVirtualLab({
   const [magnesiaAdded, setMagnesiaAdded] = useState(false);
   const [caClAdded, setCaClAdded] = useState(false);
   const [dilH2SO4HeatingTriggered, setDilH2SO4HeatingTriggered] = useState(false);
+  const [bromideWetHeatingTriggered, setBromideWetHeatingTriggered] = useState(false);
+  const [bromideWetHeatingCount, setBromideWetHeatingCount] = useState(0);
+  const [iodideWetHeatingTriggered, setIodideWetHeatingTriggered] = useState(false);
+  const [iodideWetHeatingCount, setIodideWetHeatingCount] = useState(0);
   const [feCl3Added, setFeCl3Added] = useState(false);
   const [baClUsed, setBaClUsed] = useState(false);
   const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
@@ -639,7 +647,7 @@ function ChemicalEquilibriumVirtualLab({
   const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
   const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
   const MNO2_CASE_TWO_RESULT =
-    "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
+    "Addition of small amount of MnO2 accelerates the formation of brown fumes";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
@@ -1511,6 +1519,10 @@ function ChemicalEquilibriumVirtualLab({
     magnesiaAdded,
     caClAdded,
     dilH2SO4HeatingTriggered,
+    bromideWetHeatingTriggered,
+    bromideWetHeatingCount,
+    iodideWetHeatingTriggered,
+    iodideWetHeatingCount,
     feCl3Added,
   });
 
@@ -1779,6 +1791,14 @@ function ChemicalEquilibriumVirtualLab({
       // on the workbench (skip the amount dialog) — mirror the dry-acid behaviour for test tubes.
       const isBromideWetAcid = isDryTestExperiment && (dryTestMode === "wet") && (activeHalide ?? "").toLowerCase() === "br";
       if (isTestTubeId && isBromideWetAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
+      // Additionally, for the Salt Analysis bromide check in the *wet* acid test,
+      // clicking ADD on the Bunsen Burner should also immediately place it on the workbench
+      // (skip the amount dialog) — mirror the dry-acid behaviour for bunsen burner.
+      if (isBunsenId && isBromideWetAcid) {
         handleEquipmentAddButton(equipment.id);
         return;
       }
@@ -2643,6 +2663,28 @@ function ChemicalEquilibriumVirtualLab({
         });
       }
 
+      if (
+        heating &&
+        isDryTestExperiment &&
+        activeHalide === "Br" &&
+        resolvedDryTestMode === "acid"
+      ) {
+        setCaseOneResult(
+          "A reddish-brown solution is formed which on warming produces reddish-brown fumes with irritating smell",
+        );
+      }
+
+      if (
+        heating &&
+        isDryTestExperiment &&
+        activeHalide === "I" &&
+        resolvedDryTestMode === "acid"
+      ) {
+        setCaseOneResult(
+          "A thick violet vapour is produced , therefore I⁻ is present",
+        );
+      }
+
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
         const hasDiluteH2SO4InTestTube = Boolean(
           testTubeState?.chemicals.some(
@@ -2651,6 +2693,40 @@ function ChemicalEquilibriumVirtualLab({
         );
         if (hasDiluteH2SO4InTestTube) {
           setDilH2SO4HeatingTriggered(true);
+        }
+
+        if (activeHalide === "Br") {
+          setBromideWetHeatingCount((prev) => {
+            const newCount = prev + 1;
+            if (newCount === 1) {
+              setBromideWetHeatingTriggered(true);
+              setCaseOneResult(
+                "pale yellow Precipitation insoluble in HNO3 but sparingly soluble in NH4OH , therefore Br⁻ is present",
+              );
+            } else if (newCount === 2) {
+              setCaseTwoResult(
+                "Organic layer becomes orange-brown in colour , therefore Br⁻ is present",
+              );
+            }
+            return newCount;
+          });
+        }
+
+        if (activeHalide === "I") {
+          setIodideWetHeatingCount((prev) => {
+            const newCount = prev + 1;
+            if (newCount === 1) {
+              setIodideWetHeatingTriggered(true);
+              setCaseOneResult(
+                "Yellow coloured precipitate insoluble in HNO3 and NH4OH is formed , therefore I⁻ is present",
+              );
+            } else if (newCount === 2) {
+              setCaseTwoResult(
+                "Organic layer turns violet in colour",
+              );
+            }
+            return newCount;
+          });
         }
       }
 
@@ -3483,6 +3559,10 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(false);
     setCaClAdded(false);
     setDilH2SO4HeatingTriggered(false);
+    setBromideWetHeatingTriggered(false);
+    setBromideWetHeatingCount(0);
+    setIodideWetHeatingTriggered(false);
+    setIodideWetHeatingCount(0);
     setFeCl3Added(false);
     setBaClUsed(false);
     setSodiumNitroprussideUsed(false);
@@ -3539,6 +3619,10 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(false);
     setCaClAdded(false);
     setDilH2SO4HeatingTriggered(false);
+    setBromideWetHeatingTriggered(false);
+    setBromideWetHeatingCount(0);
+    setIodideWetHeatingTriggered(false);
+    setIodideWetHeatingCount(0);
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
@@ -3597,6 +3681,10 @@ function ChemicalEquilibriumVirtualLab({
     setMagnesiaAdded(lastSnapshot.magnesiaAdded);
     setCaClAdded(lastSnapshot.caClAdded);
     setDilH2SO4HeatingTriggered(lastSnapshot.dilH2SO4HeatingTriggered);
+    setBromideWetHeatingTriggered(lastSnapshot.bromideWetHeatingTriggered);
+    setBromideWetHeatingCount(lastSnapshot.bromideWetHeatingCount);
+    setIodideWetHeatingTriggered(lastSnapshot.iodideWetHeatingTriggered);
+    setIodideWetHeatingCount(lastSnapshot.iodideWetHeatingCount);
     setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
@@ -3952,6 +4040,10 @@ function ChemicalEquilibriumVirtualLab({
                         interactDisabled={shouldDisableAmmoniumInteraction}
                         isHeating={isWorkbenchHeating}
                         activeHalide={activeHalide}
+                        bromideWetHeatingTriggered={bromideWetHeatingTriggered}
+                        bromideWetHeatingCount={bromideWetHeatingCount}
+                        iodideWetHeatingTriggered={iodideWetHeatingTriggered}
+                        iodideWetHeatingCount={iodideWetHeatingCount}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))

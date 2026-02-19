@@ -56,6 +56,10 @@ interface EquipmentProps {
   observeBlinking?: boolean;
   isHeating?: boolean;
   activeHalide?: string;
+  bromideWetHeatingTriggered?: boolean;
+  bromideWetHeatingCount?: number;
+  iodideWetHeatingTriggered?: boolean;
+  iodideWetHeatingCount?: number;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -81,6 +85,10 @@ export const Equipment: React.FC<EquipmentProps> = ({
   observeBlinking = false,
   isHeating = false,
   activeHalide,
+  bromideWetHeatingTriggered = false,
+  bromideWetHeatingCount = 0,
+  iodideWetHeatingTriggered = false,
+  iodideWetHeatingCount = 0,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
@@ -630,10 +638,31 @@ export const Equipment: React.FC<EquipmentProps> = ({
           isDryTest &&
           dryTestMode === "wet" &&
           activeHalide === "Br" &&
-          hasAgBrPrecipitate;
-        const overlayColor = shouldUseBromideWetPaleYellow
-          ? "#FDE68A"
-          : shouldUseBromideHeatingColor
+          (hasAgBrPrecipitate || (bromideWetHeatingTriggered && bromideWetHeatingCount < 2));
+        const shouldUseBromideWetOrangeBrown =
+          isDryTest &&
+          dryTestMode === "wet" &&
+          activeHalide === "Br" &&
+          bromideWetHeatingCount >= 2;
+        const shouldUseIodideWetYellow =
+          isDryTest &&
+          dryTestMode === "wet" &&
+          activeHalide === "I" &&
+          (iodideWetHeatingTriggered && iodideWetHeatingCount < 2);
+        const shouldUseIodideWetViolet =
+          isDryTest &&
+          dryTestMode === "wet" &&
+          activeHalide === "I" &&
+          iodideWetHeatingCount >= 2;
+        const overlayColor = shouldUseIodideWetViolet
+          ? "#8B5CF6"
+          : shouldUseIodideWetYellow
+            ? "#FCD34D"
+            : shouldUseBromideWetOrangeBrown
+            ? "#D97706"
+            : shouldUseBromideWetPaleYellow
+              ? "#FDE68A"
+              : shouldUseBromideHeatingColor
             ? "#8B6939"
             : hasDichromate
               ? K2CR2O7_SOLUTION_COLOR
@@ -649,7 +678,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
         const displayLabel = name.toLowerCase().includes("test tube")
           ? "25ml Test Tube"
           : name;
-        const showObserve = Boolean(onObserve) && dryTestMode === "wet";
+        const isBromideWetAcid = dryTestMode === "wet" && activeHalide === "Br";
+        const isIodideWetAcid = dryTestMode === "wet" && activeHalide === "I";
+        const showObserve = Boolean(onObserve) && dryTestMode === "wet" && !isBromideWetAcid && !isIodideWetAcid;
         return (
           <div className="relative flex flex-col items-center">
             <div className="relative">
