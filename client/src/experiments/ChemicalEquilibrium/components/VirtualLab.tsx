@@ -2720,6 +2720,10 @@ function ChemicalEquilibriumVirtualLab({
               setCaseOneResult(
                 "Yellow coloured precipitate insoluble in HNO3 and NH4OH is formed , therefore I⁻ is present",
               );
+            } else if (newCount === 2) {
+              setCaseTwoResult(
+                "Organic layer turns violet in colour",
+              );
             }
             return newCount;
           });
