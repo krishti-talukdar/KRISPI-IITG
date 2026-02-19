@@ -1786,6 +1786,14 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // Additionally, for the Salt Analysis bromide check in the *wet* acid test,
+      // clicking ADD on the Bunsen Burner should also immediately place it on the workbench
+      // (skip the amount dialog) — mirror the dry-acid behaviour for bunsen burner.
+      if (isBunsenId && isBromideWetAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       // Additionally, for the Salt Analysis iodide check in the *wet* acid test,
       // clicking ADD on the Test Tubes should also immediately place the test tube
       // on the workbench (skip the amount dialog) — mirror the dry-acid behaviour for test tubes.
