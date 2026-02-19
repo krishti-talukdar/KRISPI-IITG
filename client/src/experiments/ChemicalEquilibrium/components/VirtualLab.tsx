@@ -2643,6 +2643,17 @@ function ChemicalEquilibriumVirtualLab({
         });
       }
 
+      if (
+        heating &&
+        isDryTestExperiment &&
+        activeHalide === "Br" &&
+        resolvedDryTestMode === "acid"
+      ) {
+        setCaseOneResult(
+          "A reddish-brown solution is formed which on warming produces reddish-brown fumes with irritating smell",
+        );
+      }
+
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
         const hasDiluteH2SO4InTestTube = Boolean(
           testTubeState?.chemicals.some(
