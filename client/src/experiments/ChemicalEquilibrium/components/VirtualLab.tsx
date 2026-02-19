@@ -2605,6 +2605,17 @@ function ChemicalEquilibriumVirtualLab({
         );
       }
 
+      if (
+        heating &&
+        isDryTestExperiment &&
+        activeHalide === "SC" &&
+        resolvedDryTestMode === "acid"
+      ) {
+        setCaseOneResult(
+          "Rapid effervescence of colourless and odourless gas , therefore CO 3 ^2- is present",
+        );
+      }
+
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
         const hasDiluteH2SO4InTestTube = Boolean(
           testTubeState?.chemicals.some(
@@ -2620,7 +2631,7 @@ function ChemicalEquilibriumVirtualLab({
         setDilH2SO4HeatingTriggered(false);
       }
     },
-    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState],
+    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide],
   );
 
   useEffect(() => {
