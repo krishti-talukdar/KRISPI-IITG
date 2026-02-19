@@ -86,12 +86,12 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   dryTestMode,
   mno2AddedDuringHeating,
 }) => {
-  // Determine whether to use reddish-brown fumes based on context (Bromide + dry acid mode)
+  // Determine whether to use reddish-brown fumes based on context (Bromide + dry acid mode, or Special Cases + dry acid mode)
   const shouldUseReddishFumes =
     (experimentTitle?.toLowerCase().includes("salt analysis") ||
       experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
     dryTestMode === "acid" &&
-    activeHalide === "Br";
+    (activeHalide === "Br" || activeHalide === "SC");
 
   // Determine whether to use purple fumes based on context (Iodide + dry acid mode)
   const shouldUsePurpleFumes =

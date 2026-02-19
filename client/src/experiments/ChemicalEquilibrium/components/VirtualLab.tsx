@@ -636,6 +636,7 @@ function ChemicalEquilibriumVirtualLab({
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const [hasAutoOpenedResults, setHasAutoOpenedResults] = useState(false);
   const [iodideAgNO3Observed, setIodideAgNO3Observed] = useState(false);
+  const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
@@ -2611,9 +2612,19 @@ function ChemicalEquilibriumVirtualLab({
         activeHalide === "SC" &&
         resolvedDryTestMode === "acid"
       ) {
-        setCaseOneResult(
-          "Rapid effervescence of colourless and odourless gas , therefore CO 3 ^2- is present",
-        );
+        setSpecialCasesHeatingCount((prev) => {
+          const newCount = prev + 1;
+          if (newCount === 1) {
+            setCaseOneResult(
+              "Rapid effervescence of colourless and odourless gas , therefore CO 3 ^2- is present",
+            );
+          } else if (newCount === 2) {
+            setCaseTwoResult(
+              "Reddish-Brown vapour is produced in the cold condition, therefore NO2^- is present",
+            );
+          }
+          return newCount;
+        });
       }
 
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
@@ -3450,6 +3461,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
+    setSpecialCasesHeatingCount(0);
     setSodiumNitroprussideAdded(false);
     setMagnesiaAdded(false);
     setCaClAdded(false);
