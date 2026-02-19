@@ -84,6 +84,7 @@ const SPECIAL_CASES_ACID_EQUIPMENT = [
   "Glass container",
   "Glass Rod",
   "Dilute H2SO4",
+  "Conc. H2SO4",
 ];
 
 const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
