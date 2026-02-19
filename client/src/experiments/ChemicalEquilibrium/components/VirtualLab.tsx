@@ -788,6 +788,11 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
+    // Don't auto-open results modal for Special Cases
+    if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+      return;
+    }
+
     if (!showCase2ResultsModal && !hasAutoOpenedResults) {
       setShowCase2ResultsModal(true);
       setHasAutoOpenedResults(true);
@@ -797,6 +802,8 @@ function ChemicalEquilibriumVirtualLab({
     isSaltAnalysisExperiment,
     resultsReady,
     showCase2ResultsModal,
+    activeHalide,
+    resolvedDryTestMode,
   ]);
   const caseSummaryEntries = [
     {
