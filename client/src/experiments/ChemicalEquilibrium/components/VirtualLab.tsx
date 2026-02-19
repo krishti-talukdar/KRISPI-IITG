@@ -3517,6 +3517,13 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
+    // Clear Special Cases results when workbench is cleared
+    if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+      setCaseOneResult(DEFAULT_CASE_RESULT);
+      setCaseTwoResult(DEFAULT_CASE_RESULT);
+      setCaseThreeResult(DEFAULT_CASE_RESULT);
+      setSpecialCasesHeatingCount(0);
+    }
     setSodiumNitroprussideAdded(false);
     setMagnesiaAdded(false);
     setCaClAdded(false);
