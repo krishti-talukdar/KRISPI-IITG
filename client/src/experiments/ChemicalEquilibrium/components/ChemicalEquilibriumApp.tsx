@@ -195,6 +195,8 @@ export default function ChemicalEquilibriumApp({
     baseDryTestEquipment = (baseDryTestEquipment as string[]).filter((name) =>
       !SPECIAL_CASES_WET_EXCLUDE.includes(name)
     );
+    // Add Acidified Potassium Dichromate to the equipment list for special cases wet acid flow
+    baseDryTestEquipment = Array.from(new Set([...(baseDryTestEquipment as string[]), "Acidified Potassium Dichromate (K₂Cr₂O₇)"]));
   }
   const isChlorideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Cl";
   const isBromideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Br";
