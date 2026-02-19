@@ -637,6 +637,7 @@ function ChemicalEquilibriumVirtualLab({
   const [hasAutoOpenedResults, setHasAutoOpenedResults] = useState(false);
   const [iodideAgNO3Observed, setIodideAgNO3Observed] = useState(false);
   const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
+  const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
@@ -3473,6 +3474,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
     setSpecialCasesHeatingCount(0);
+    setSpecialCasesResetCount(0);
     setSodiumNitroprussideAdded(false);
     setMagnesiaAdded(false);
     setCaClAdded(false);
@@ -3517,12 +3519,17 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
-    // Clear Special Cases results when workbench is cleared
+    // Clear Special Cases results only on the first reset, preserve on subsequent resets
     if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
-      setCaseOneResult(DEFAULT_CASE_RESULT);
-      setCaseTwoResult(DEFAULT_CASE_RESULT);
-      setCaseThreeResult(DEFAULT_CASE_RESULT);
-      setSpecialCasesHeatingCount(0);
+      if (specialCasesResetCount === 0) {
+        // First reset: clear all results and reset heating count
+        setCaseOneResult(DEFAULT_CASE_RESULT);
+        setCaseTwoResult(DEFAULT_CASE_RESULT);
+        setCaseThreeResult(DEFAULT_CASE_RESULT);
+        setSpecialCasesHeatingCount(0);
+      }
+      // Increment reset count (on 2nd reset and beyond, results are preserved)
+      setSpecialCasesResetCount((prev) => prev + 1);
     }
     setSodiumNitroprussideAdded(false);
     setMagnesiaAdded(false);
