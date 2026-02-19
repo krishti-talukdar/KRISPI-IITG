@@ -626,11 +626,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
           hasAcidSample;
         // Check if ag_br_precipitate has been added (which happens when OBSERVE is pressed)
         const hasAgBrPrecipitate = chemicals.some((c) => c.id === "ag_br_precipitate");
+        // Check if AgNO3 is present in the test tube
+        const hasAgNO3 = chemicals.some(
+          (c) =>
+            (c.id && c.id.toLowerCase().includes("ag")) ||
+            (c.name && c.name.toLowerCase().includes("agno")) ||
+            (c.name && c.name.toLowerCase().includes("silver")),
+        );
         const shouldUseBromideWetPaleYellow =
           isDryTest &&
           dryTestMode === "wet" &&
           activeHalide === "Br" &&
-          hasAgBrPrecipitate;
+          (hasAgBrPrecipitate || hasAgNO3);
         const overlayColor = shouldUseBromideWetPaleYellow
           ? "#FDE68A"
           : shouldUseBromideHeatingColor
