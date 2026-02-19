@@ -62,6 +62,7 @@ interface WorkBenchProps {
   dryTestMode?: string;
   mno2AddedDuringHeating?: boolean;
   specialCasesHeatingCount?: number;
+  chlorideHeatingCount?: number;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -87,13 +88,22 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   dryTestMode,
   mno2AddedDuringHeating,
   specialCasesHeatingCount = 0,
+  chlorideHeatingCount = 0,
 }) => {
-  // Determine whether to use reddish-brown fumes based on context (Bromide + dry acid mode, or Special Cases + dry acid mode only on 2nd heating)
+  // Determine whether to use reddish-brown fumes based on context (Bromide + dry acid mode, or Special Cases + dry acid mode on 2nd and 4th heating)
   const shouldUseReddishFumes =
     (experimentTitle?.toLowerCase().includes("salt analysis") ||
       experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
     dryTestMode === "acid" &&
-    (activeHalide === "Br" || (activeHalide === "SC" && specialCasesHeatingCount === 2));
+    (activeHalide === "Br" || (activeHalide === "SC" && (specialCasesHeatingCount === 2 || specialCasesHeatingCount === 4)));
+
+  // Determine whether to use deep red fumes based on context (Chloride + dry acid mode on 2nd heating)
+  const shouldUseDeepRedFumes =
+    (experimentTitle?.toLowerCase().includes("salt analysis") ||
+      experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
+    dryTestMode === "acid" &&
+    activeHalide === "Cl" &&
+    chlorideHeatingCount === 2;
 
   // Determine whether to use purple fumes based on context (Iodide + dry acid mode)
   const shouldUsePurpleFumes =
@@ -678,6 +688,11 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                         background: "linear-gradient(180deg, rgba(139,37,0,0.95), rgba(139,37,0,0.4))",
                         boxShadow: "0 8px 25px rgba(139,37,0,0.6)",
                       });
+                    } else if (shouldUseDeepRedFumes && isBunsenHeating) {
+                      Object.assign(puffStyle, {
+                        background: "linear-gradient(180deg, rgba(220,20,60,0.95), rgba(220,20,60,0.4))",
+                        boxShadow: "0 8px 25px rgba(220,20,60,0.8)",
+                      });
                     } else if (shouldUsePurpleFumes && isBunsenHeating) {
                       Object.assign(puffStyle, {
                         background: "linear-gradient(180deg, rgba(147,51,234,0.95), rgba(147,51,234,0.4))",
@@ -706,7 +721,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   aria-label="Greenish-yellow gas rising from MnO₂ heated in the test tube"
                 >
                   {(
-                    mno2AddedDuringHeating && shouldUseReddishFumes
+                    mno2AddedDuringHeating && shouldUseReddishFumes && !shouldUseDeepRedFumes
                       ? [...MNO2_GAS_PUFFS, ...MNO2_GAS_PUFFS.map((p) => ({ ...p, offsetX: p.offsetX + 6, scale: p.scale * 1.25 }))]
                       : MNO2_GAS_PUFFS
                   ).map((puff, index) => {
@@ -716,12 +731,12 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                       "--mno2-delay": puff.delay,
                       "--mno2-scale": puff.scale,
                     } as React.CSSProperties;
-                    if (shouldUseReddishFumes && mno2AddedDuringHeating) {
+                    if (shouldUseReddishFumes && mno2AddedDuringHeating && !shouldUseDeepRedFumes) {
                       Object.assign(puffStyle, {
                         background: "radial-gradient(circle, rgba(139,37,0,0.95) 0%, rgba(139,37,0,0.4) 70%)",
                         boxShadow: "0 12px 30px rgba(139,37,0,0.6)",
                       });
-                    } else if (shouldUsePurpleFumes && mno2AddedDuringHeating) {
+                    } else if (shouldUsePurpleFumes && mno2AddedDuringHeating && !shouldUseDeepRedFumes) {
                       Object.assign(puffStyle, {
                         background: "radial-gradient(circle, rgba(147,51,234,0.95) 0%, rgba(147,51,234,0.4) 70%)",
                         boxShadow: "0 12px 30px rgba(147,51,234,0.8)",
