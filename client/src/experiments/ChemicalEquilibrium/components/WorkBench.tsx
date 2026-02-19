@@ -61,6 +61,7 @@ interface WorkBenchProps {
   activeHalide?: string;
   dryTestMode?: string;
   mno2AddedDuringHeating?: boolean;
+  specialCasesHeatingCount?: number;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -85,13 +86,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   activeHalide,
   dryTestMode,
   mno2AddedDuringHeating,
+  specialCasesHeatingCount = 0,
 }) => {
-  // Determine whether to use reddish-brown fumes based on context (Bromide + dry acid mode)
+  // Determine whether to use reddish-brown fumes based on context (Bromide + dry acid mode, or Special Cases + dry acid mode only on 2nd heating)
   const shouldUseReddishFumes =
     (experimentTitle?.toLowerCase().includes("salt analysis") ||
       experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
     dryTestMode === "acid" &&
-    activeHalide === "Br";
+    (activeHalide === "Br" || (activeHalide === "SC" && specialCasesHeatingCount === 2));
 
   // Determine whether to use purple fumes based on context (Iodide + dry acid mode)
   const shouldUsePurpleFumes =

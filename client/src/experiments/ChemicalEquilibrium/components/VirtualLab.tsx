@@ -636,6 +636,8 @@ function ChemicalEquilibriumVirtualLab({
   const [showCase2ResultsModal, setShowCase2ResultsModal] = useState(false);
   const [hasAutoOpenedResults, setHasAutoOpenedResults] = useState(false);
   const [iodideAgNO3Observed, setIodideAgNO3Observed] = useState(false);
+  const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
+  const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
   const MNO2_CASE_TWO_RESULT =
     "CASE 2: Evolution of chlorine gas supports the presence of chloride ion in the salt.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
@@ -787,6 +789,11 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
+    // Don't auto-open results modal for Special Cases
+    if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+      return;
+    }
+
     if (!showCase2ResultsModal && !hasAutoOpenedResults) {
       setShowCase2ResultsModal(true);
       setHasAutoOpenedResults(true);
@@ -796,6 +803,8 @@ function ChemicalEquilibriumVirtualLab({
     isSaltAnalysisExperiment,
     resultsReady,
     showCase2ResultsModal,
+    activeHalide,
+    resolvedDryTestMode,
   ]);
   const caseSummaryEntries = [
     {
@@ -2605,6 +2614,35 @@ function ChemicalEquilibriumVirtualLab({
         );
       }
 
+      if (
+        heating &&
+        isDryTestExperiment &&
+        activeHalide === "SC" &&
+        resolvedDryTestMode === "acid"
+      ) {
+        setSpecialCasesHeatingCount((prev) => {
+          const newCount = prev + 1;
+          if (newCount === 1) {
+            setCaseOneResult(
+              "Rapid effervescence of colourless and odourless gas , therefore CO 3 ^2- is present",
+            );
+          } else if (newCount === 2) {
+            setCaseTwoResult(
+              "Reddish-Brown vapour is produced in the cold condition, therefore NO2^- is present",
+            );
+          } else if (newCount === 3) {
+            setCaseThreeResult(
+              "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO3^2- is present",
+            );
+          } else if (newCount === 4) {
+            setCaseFourResult(
+              "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO3^- is present",
+            );
+          }
+          return newCount;
+        });
+      }
+
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
         const hasDiluteH2SO4InTestTube = Boolean(
           testTubeState?.chemicals.some(
@@ -2620,7 +2658,7 @@ function ChemicalEquilibriumVirtualLab({
         setDilH2SO4HeatingTriggered(false);
       }
     },
-    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState],
+    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide],
   );
 
   useEffect(() => {
@@ -3439,6 +3477,8 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
+    setSpecialCasesHeatingCount(0);
+    setSpecialCasesResetCount(0);
     setSodiumNitroprussideAdded(false);
     setMagnesiaAdded(false);
     setCaClAdded(false);
@@ -3483,6 +3523,18 @@ function ChemicalEquilibriumVirtualLab({
     setCaseFiveResult(DEFAULT_CASE_RESULT);
     setCaseSixResult(DEFAULT_CASE_RESULT);
     setCaseSevenResult(DEFAULT_CASE_RESULT);
+    // Clear Special Cases results - special handling for each case
+    if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+      if (specialCasesResetCount === 0) {
+        // First reset: clear Case 1 and 2, but preserve Case 3 and 4, reset heating count
+        setCaseOneResult(DEFAULT_CASE_RESULT);
+        setCaseTwoResult(DEFAULT_CASE_RESULT);
+        // Case 3 and 4 are NOT cleared on any reset - only set when heating is pressed 3rd and 4th time
+        setSpecialCasesHeatingCount(0);
+      }
+      // Increment reset count (on 2nd reset and beyond, Case 2 is preserved and Case 3, 4 are never cleared)
+      setSpecialCasesResetCount((prev) => prev + 1);
+    }
     setSodiumNitroprussideAdded(false);
     setMagnesiaAdded(false);
     setCaClAdded(false);
@@ -3842,6 +3894,7 @@ function ChemicalEquilibriumVirtualLab({
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
+                specialCasesHeatingCount={specialCasesHeatingCount}
               >
                 {equipmentPositions
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
@@ -4048,6 +4101,7 @@ function ChemicalEquilibriumVirtualLab({
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
+                specialCasesHeatingCount={specialCasesHeatingCount}
               >
                 {equipmentPositions.map((pos) => {
                   const equipment = equipmentList.find(

@@ -80,10 +80,11 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
 const SPECIAL_CASES_ACID_EQUIPMENT = [
   "Test Tubes",
   "Salt Sample",
-  "Bunsen Burner (virtual heat source)",
+  "Dilute H2SO4",
+  "Conc. H2SO4",
   "Glass container",
   "Glass Rod",
-  "Dilute H2SO4",
+  "Bunsen Burner (virtual heat source)",
 ];
 
 const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
@@ -195,6 +196,8 @@ export default function ChemicalEquilibriumApp({
     baseDryTestEquipment = (baseDryTestEquipment as string[]).filter((name) =>
       !SPECIAL_CASES_WET_EXCLUDE.includes(name)
     );
+    // Add Acidified Potassium Dichromate to the equipment list for special cases wet acid flow
+    baseDryTestEquipment = Array.from(new Set([...(baseDryTestEquipment as string[]), "Acidified Potassium Dichromate (K₂Cr₂O₇)"]));
   }
   const isChlorideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Cl";
   const isBromideDryAcidFlow = activeDryTestMode === "acid" && activeHalide === "Br";
