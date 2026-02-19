@@ -2622,6 +2622,10 @@ function ChemicalEquilibriumVirtualLab({
             setCaseTwoResult(
               "Reddish-Brown vapour is produced in the cold condition, therefore NO2^- is present",
             );
+          } else if (newCount === 3) {
+            setCaseThreeResult(
+              "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO3^2- is present",
+            );
           }
           return newCount;
         });
