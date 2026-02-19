@@ -2668,6 +2668,17 @@ function ChemicalEquilibriumVirtualLab({
         );
       }
 
+      if (
+        heating &&
+        isDryTestExperiment &&
+        activeHalide === "I" &&
+        resolvedDryTestMode === "acid"
+      ) {
+        setCaseOneResult(
+          "A thick violet vapour is produced , therefore I⁻ is present",
+        );
+      }
+
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
         const hasDiluteH2SO4InTestTube = Boolean(
           testTubeState?.chemicals.some(
