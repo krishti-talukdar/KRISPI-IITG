@@ -649,7 +649,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
         const displayLabel = name.toLowerCase().includes("test tube")
           ? "25ml Test Tube"
           : name;
-        const showObserve = Boolean(onObserve) && dryTestMode === "wet";
+        const isBromideWetAcid = dryTestMode === "wet" && activeHalide === "Br";
+        const showObserve = Boolean(onObserve) && dryTestMode === "wet" && !isBromideWetAcid;
         return (
           <div className="relative flex flex-col items-center">
             <div className="relative">
