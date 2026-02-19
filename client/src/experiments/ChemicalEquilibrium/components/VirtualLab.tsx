@@ -82,6 +82,7 @@ type LabSnapshot = {
   dilH2SO4HeatingTriggered: boolean;
   bromideWetHeatingTriggered: boolean;
   bromideWetHeatingCount: number;
+  iodideWetHeatingTriggered: boolean;
   feCl3Added: boolean;
 };
 
@@ -630,6 +631,7 @@ function ChemicalEquilibriumVirtualLab({
   const [dilH2SO4HeatingTriggered, setDilH2SO4HeatingTriggered] = useState(false);
   const [bromideWetHeatingTriggered, setBromideWetHeatingTriggered] = useState(false);
   const [bromideWetHeatingCount, setBromideWetHeatingCount] = useState(0);
+  const [iodideWetHeatingTriggered, setIodideWetHeatingTriggered] = useState(false);
   const [feCl3Added, setFeCl3Added] = useState(false);
   const [baClUsed, setBaClUsed] = useState(false);
   const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
@@ -1517,6 +1519,7 @@ function ChemicalEquilibriumVirtualLab({
     dilH2SO4HeatingTriggered,
     bromideWetHeatingTriggered,
     bromideWetHeatingCount,
+    iodideWetHeatingTriggered,
     feCl3Added,
   });
 
@@ -2705,6 +2708,10 @@ function ChemicalEquilibriumVirtualLab({
             return newCount;
           });
         }
+
+        if (activeHalide === "I") {
+          setIodideWetHeatingTriggered(true);
+        }
       }
 
       if (!heating) {
@@ -3538,6 +3545,7 @@ function ChemicalEquilibriumVirtualLab({
     setDilH2SO4HeatingTriggered(false);
     setBromideWetHeatingTriggered(false);
     setBromideWetHeatingCount(0);
+    setIodideWetHeatingTriggered(false);
     setFeCl3Added(false);
     setBaClUsed(false);
     setSodiumNitroprussideUsed(false);
@@ -3596,6 +3604,7 @@ function ChemicalEquilibriumVirtualLab({
     setDilH2SO4HeatingTriggered(false);
     setBromideWetHeatingTriggered(false);
     setBromideWetHeatingCount(0);
+    setIodideWetHeatingTriggered(false);
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
@@ -3656,6 +3665,7 @@ function ChemicalEquilibriumVirtualLab({
     setDilH2SO4HeatingTriggered(lastSnapshot.dilH2SO4HeatingTriggered);
     setBromideWetHeatingTriggered(lastSnapshot.bromideWetHeatingTriggered);
     setBromideWetHeatingCount(lastSnapshot.bromideWetHeatingCount);
+    setIodideWetHeatingTriggered(lastSnapshot.iodideWetHeatingTriggered);
     setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
@@ -4013,6 +4023,7 @@ function ChemicalEquilibriumVirtualLab({
                         activeHalide={activeHalide}
                         bromideWetHeatingTriggered={bromideWetHeatingTriggered}
                         bromideWetHeatingCount={bromideWetHeatingCount}
+                        iodideWetHeatingTriggered={iodideWetHeatingTriggered}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
