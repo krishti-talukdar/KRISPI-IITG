@@ -80,11 +80,11 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
 const SPECIAL_CASES_ACID_EQUIPMENT = [
   "Test Tubes",
   "Salt Sample",
-  "Bunsen Burner (virtual heat source)",
-  "Glass container",
-  "Glass Rod",
   "Dilute H2SO4",
   "Conc. H2SO4",
+  "Glass container",
+  "Glass Rod",
+  "Bunsen Burner (virtual heat source)",
 ];
 
 const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
