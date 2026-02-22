@@ -4708,10 +4708,18 @@ function ChemicalEquilibriumVirtualLab({
               <div className="rounded-2xl border border-white/10 bg-slate-900 p-5 text-white shadow-xl">
                 <div className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">Detailed Insights</div>
                 <p className="mt-2 text-sm text-white/80">
-                  These focused notes highlight how the additional wet-case drop-injections confirm which acid radicals remain absent after the primary dry tests.
+                  {(activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid"
+                    ? `These observations confirm the presence of ${activeHalide === "Br" ? "bromide" : "iodide"} radicals through characteristic color and physical changes.`
+                    : "These focused notes highlight how the additional wet-case drop-injections confirm which acid radicals remain absent after the primary dry tests."}
                 </p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
-                  {detailedInsights.map((insight) => (
+                  {detailedInsights.filter((insight) => {
+                    // Hide Inference 3, 4, 5 for Bromide and Iodide checks under Dry Tests for Acid Radicals
+                    if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                      return !["Inference 3", "Inference 4", "Inference 5"].includes(insight.hint);
+                    }
+                    return true;
+                  }).map((insight) => (
                     <div key={insight.title} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
                       <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{insight.hint}</div>
                       <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
@@ -4722,7 +4730,13 @@ function ChemicalEquilibriumVirtualLab({
               </div>
 
               <div className="grid gap-4 md:grid-cols-3">
-                {analysisGuidance.map((note) => (
+                {analysisGuidance.filter((note) => {
+                  // For Bromide and Iodide checks, only show the Wet test focus note
+                  if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                    return note.label === "Wet test focus";
+                  }
+                  return true;
+                }).map((note) => (
                   <div
                     key={note.label}
                     className={`rounded-2xl border border-white/30 bg-gradient-to-br ${note.accent} bg-opacity-80 p-4 shadow-lg shadow-slate-200/60`}
@@ -4737,6 +4751,10 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries.filter((entry) => {
+                    // Hide INFERENCE 3, 4, 5 for Bromide and Iodide checks
+                    if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5"].includes(entry.label);
+                    }
                     // Hide INFERENCE 3, 4, 5 for Special Cases until the appropriate heating count is reached and result is set
                     if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
                       if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
@@ -4765,37 +4783,45 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-3">
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
-                  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
-                    <span>Case 1 Indicator</span>
-                    <span>Chloride residue</span>
+              {!((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") && (
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
+                    <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
+                      <span>Case 1 Indicator</span>
+                      <span>Chloride residue</span>
+                    </div>
+                    <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-300 relative">
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Loop film</span>
+                    </div>
                   </div>
-                  <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-300 relative">
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Loop film</span>
+                  <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
+                    <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
+                      <span>Case 2 Indicator</span>
+                      <span>Greenish-yellow plume</span>
+                    </div>
+                    <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-500 relative">
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Chlorine</span>
+                    </div>
+                  </div>
+                  <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
+                    <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">Final Insight</div>
+                    <p className="mt-2 text-sm text-slate-700">
+                      Saving both case results preserves the entire dry test narrative so you can compare residues, odors, and gas evolution in reported conclusions.
+                    </p>
                   </div>
                 </div>
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
-                  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
-                    <span>Case 2 Indicator</span>
-                    <span>Greenish-yellow plume</span>
-                  </div>
-                  <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-500 relative">
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Chlorine</span>
-                  </div>
-                </div>
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">Final Insight</div>
-                  <p className="mt-2 text-sm text-slate-700">
-                    Saving both case results preserves the entire dry test narrative so you can compare residues, odors, and gas evolution in reported conclusions.
-                  </p>
-                </div>
-              </div>
+              )}
 
               <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-white p-5 shadow-xl">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
                 <ul className="mt-4 space-y-3">
-                  {observationHighlights.map((highlight) => (
+                  {observationHighlights.filter((highlight) => {
+                    // Hide Inference 3, 4, 5 highlights for Bromide and Iodide checks
+                    if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5");
+                    }
+                    return true;
+                  }).map((highlight) => (
                     <li key={highlight} className="flex items-start gap-3">
                       <span className="mt-[3px] h-2.5 w-2.5 rounded-full bg-slate-900" />
                       <span className="text-base font-bold text-slate-900 leading-snug">{highlight}</span>
