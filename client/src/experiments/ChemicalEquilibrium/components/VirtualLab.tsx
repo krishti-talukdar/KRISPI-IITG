@@ -4142,8 +4142,8 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "INFERENCE 5", result: caseFiveResult },
               ]
                 .filter((entry) => {
-                  // Hide INFERENCE 3, 4, 5 for Bromide Check under Dry Tests for Acid Radicals
-                  if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                  // Hide INFERENCE 3, 4, 5 for Bromide Check and Iodide Check under Dry Tests for Acid Radicals
+                  if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                     return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5"].includes(entry.label);
                   }
                   return true;
