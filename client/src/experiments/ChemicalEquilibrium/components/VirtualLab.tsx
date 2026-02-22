@@ -1777,14 +1777,15 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
-      // Special-case: when performing Dry Tests for Acid Radicals in the Bromide Check,
+      // Special-case: when performing Dry Tests for Acid Radicals in the Bromide Check or Iodide Check,
       // clicking ADD on the Test Tubes or the Bunsen burner should immediately place the
       // equipment on the workbench without opening the amount dialog. This applies only to
       // these two pieces of equipment and no others.
       const isTestTubeId = equipment.id === "test_tubes";
       const isBunsenId = equipment.id === "bunsen-burner-virtual-heat-source" || equipment.name.toLowerCase().includes("bunsen");
       const isBromideDryAcid = isDryTestExperiment && (dryTestMode === "acid") && (activeHalide ?? "").toLowerCase() === "br";
-      if ((isTestTubeId || isBunsenId) && isBromideDryAcid) {
+      const isIodideDryAcid = isDryTestExperiment && (dryTestMode === "acid") && (activeHalide ?? "").toLowerCase() === "i";
+      if ((isTestTubeId || isBunsenId) && (isBromideDryAcid || isIodideDryAcid)) {
         handleEquipmentAddButton(equipment.id);
         return;
       }
@@ -3829,7 +3830,17 @@ function ChemicalEquilibriumVirtualLab({
       dryTestMode === "acid" &&
       (activeHalide ?? "").toLowerCase() === "br" &&
       normalizedEquipmentName.includes("bunsen");
-    return (isTestTube && !allowTestTubeInBromideDryAcid) || (isBunsen && !allowBunsenInBromideDryAcid) || isGlassLimit;
+    const allowTestTubeInIodideDryAcid =
+      isDryTestExperiment &&
+      dryTestMode === "acid" &&
+      (activeHalide ?? "").toLowerCase() === "i" &&
+      normalizedEquipmentName.includes("test tube");
+    const allowBunsenInIodideDryAcid =
+      isDryTestExperiment &&
+      dryTestMode === "acid" &&
+      (activeHalide ?? "").toLowerCase() === "i" &&
+      normalizedEquipmentName.includes("bunsen");
+    return (isTestTube && !allowTestTubeInBromideDryAcid && !allowTestTubeInIodideDryAcid) || (isBunsen && !allowBunsenInBromideDryAcid && !allowBunsenInIodideDryAcid) || isGlassLimit;
   })();
                   const showAddButton = !hideAddButton;
                   const isBaClCard = normalizedEquipmentName.includes("bacl");
