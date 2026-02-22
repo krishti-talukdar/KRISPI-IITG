@@ -673,9 +673,9 @@ function ChemicalEquilibriumVirtualLab({
       : mapDryTestEquipment(dryTestEquipmentNames)
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const glassContainerEquipmentId =
-    equipmentList.find((eq) => eq.name.toLowerCase().includes("glass container"))?.id ?? null;
+    equipmentList.find((eq) => eq.name?.toLowerCase().includes("glass container"))?.id ?? null;
   const glassRodEquipmentId =
-    equipmentList.find((eq) => eq.name.toLowerCase().includes("glass rod"))?.id ?? null;
+    equipmentList.find((eq) => eq.name?.toLowerCase().includes("glass rod"))?.id ?? null;
   const glassContainerState = equipmentPositions.find((pos) => pos.id === glassContainerEquipmentId);
   const ammoniumAmountInGlassContainer = glassContainerState
     ? glassContainerState.chemicals
@@ -1783,7 +1783,7 @@ function ChemicalEquilibriumVirtualLab({
       // equipment on the workbench without opening the amount dialog. This applies only to
       // these two pieces of equipment and no others.
       const isTestTubeId = equipment.id === "test_tubes";
-      const isBunsenId = equipment.id === "bunsen-burner-virtual-heat-source" || equipment.name.toLowerCase().includes("bunsen");
+      const isBunsenId = equipment.id === "bunsen-burner-virtual-heat-source" || equipment.name?.toLowerCase().includes("bunsen");
       const activeHalideLower = (activeHalide ?? "").toLowerCase();
       const isDryAcidTest = isDryTestExperiment && dryTestMode === "acid";
       const isAnyHalideDryAcid = isDryAcidTest && ["br", "i", "cl", "s", "sc"].includes(activeHalideLower);
@@ -3802,11 +3802,13 @@ function ChemicalEquilibriumVirtualLab({
             <div className="flex-1 overflow-auto">
               <div className="space-y-3">
                 {equipmentList
-                  .filter((eq): eq is EquipmentDefinition => eq != null)
+                  .filter((eq): eq is EquipmentDefinition => eq != null && eq.name != null)
                   .sort((a, b) => {
                     // Move Bunsen Burner to the bottom
-                    const aIsBunsen = a.name.toLowerCase().includes("bunsen");
-                    const bIsBunsen = b.name.toLowerCase().includes("bunsen");
+                    const aName = a.name?.toLowerCase() ?? "";
+                    const bName = b.name?.toLowerCase() ?? "";
+                    const aIsBunsen = aName.includes("bunsen");
+                    const bIsBunsen = bName.includes("bunsen");
                     if (aIsBunsen && !bIsBunsen) return 1;
                     if (!aIsBunsen && bIsBunsen) return -1;
                     return 0;
