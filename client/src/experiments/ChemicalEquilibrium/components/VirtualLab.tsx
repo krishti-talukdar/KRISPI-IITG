@@ -898,7 +898,7 @@ function ChemicalEquilibriumVirtualLab({
   ];
   const observationHighlights = [
     activeHalide === "Br" && resolvedDryTestMode === "acid"
-      ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult} ${caseTwoResult}`
+      ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
       : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
     `Inference 3 signals phosphate absence: ${caseThreeResult}`,
     `Inference 4 confirms oxalate is absent: ${caseFourResult}`,
@@ -4828,7 +4828,7 @@ function ChemicalEquilibriumVirtualLab({
                   }).map((highlight) => (
                     <li key={highlight} className="flex items-start gap-3">
                       <span className="mt-[3px] h-2.5 w-2.5 rounded-full bg-slate-900" />
-                      <span className="text-base font-bold text-slate-900 leading-snug">{highlight}</span>
+                      <span className="text-base font-bold text-slate-900 leading-snug whitespace-pre-wrap">{highlight}</span>
                     </li>
                   ))}
                 </ul>
