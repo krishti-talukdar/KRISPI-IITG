@@ -4049,6 +4049,7 @@ function ChemicalEquilibriumVirtualLab({
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
                   .map((pos) => {
                     const equipment = equipmentList.find((eq) => eq.id === pos.id);
+                    if (!equipment) return null;
                     const normalizedEquipmentName = equipment.name.toLowerCase();
                     const isAmmoniumEquipment =
                       normalizedEquipmentName.includes("ammonium") ||
