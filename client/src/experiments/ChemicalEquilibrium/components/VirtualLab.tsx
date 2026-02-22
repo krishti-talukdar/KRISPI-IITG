@@ -3800,7 +3800,7 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="flex-1 overflow-auto">
               <div className="space-y-3">
-                {equipmentList.map((equipment) => {
+                {equipmentList.filter((eq): eq is EquipmentDefinition => eq != null).map((equipment) => {
                   const quickAddAction = getQuickAddAction(equipment.id);
                   const isQuickAddCard = Boolean(quickAddAction);
                   const normalizedEquipmentName = equipment.name.toLowerCase();
