@@ -3800,11 +3800,21 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="flex-1 overflow-auto">
               <div className="space-y-3">
-                {equipmentList.filter((eq): eq is EquipmentDefinition => eq != null).map((equipment) => {
-                  const quickAddAction = getQuickAddAction(equipment.id);
-                  const isQuickAddCard = Boolean(quickAddAction);
-                  const normalizedEquipmentName = equipment.name.toLowerCase();
-                  const hideAddButton = (() => {
+                {equipmentList
+                  .filter((eq): eq is EquipmentDefinition => eq != null)
+                  .sort((a, b) => {
+                    // Move Bunsen Burner to the bottom
+                    const aIsBunsen = a.name.toLowerCase().includes("bunsen");
+                    const bIsBunsen = b.name.toLowerCase().includes("bunsen");
+                    if (aIsBunsen && !bIsBunsen) return 1;
+                    if (!aIsBunsen && bIsBunsen) return -1;
+                    return 0;
+                  })
+                  .map((equipment) => {
+                    const quickAddAction = getQuickAddAction(equipment.id);
+                    const isQuickAddCard = Boolean(quickAddAction);
+                    const normalizedEquipmentName = equipment.name.toLowerCase();
+                    const hideAddButton = (() => {
     // Normally hide add button for test tubes and bunsen burners, and for some glass items
     // during dry test flows. However, allow adding Test Tubes and the Bunsen burner when
     // performing the Dry Tests for Acid Radicals specifically for the Bromide Check (Br).
