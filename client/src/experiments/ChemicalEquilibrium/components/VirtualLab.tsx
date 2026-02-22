@@ -861,12 +861,22 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "INFERENCE 5",
       result: caseFiveResult,
-      indicator: "Acetate",
+      indicator: "Nitrate",
       borderClass: "border-purple-200",
       bgClass: "from-white via-purple-50 to-indigo-100",
       titleColorClass: "text-purple-500",
       resultTextClass: "text-purple-900",
       indicatorColorClass: "text-indigo-500",
+    },
+    {
+      label: "INFERENCE 6",
+      result: caseSixResult,
+      indicator: "Oxalate",
+      borderClass: "border-pink-200",
+      bgClass: "from-white via-pink-50 to-rose-100",
+      titleColorClass: "text-pink-500",
+      resultTextClass: "text-pink-900",
+      indicatorColorClass: "text-rose-500",
     },
   ];
   const detailedInsights = [
@@ -891,9 +901,14 @@ function ChemicalEquilibriumVirtualLab({
       description: caseFourResult,
     },
     {
-      title: "Acetate check",
+      title: "Nitrate check",
       hint: "Inference 5",
       description: caseFiveResult,
+    },
+    {
+      title: "Oxalate check",
+      hint: "Inference 6",
+      description: caseSixResult,
     },
   ];
   const observationHighlights = [
@@ -902,7 +917,8 @@ function ChemicalEquilibriumVirtualLab({
       : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
     `Inference 3 signals phosphate absence: ${caseThreeResult}`,
     `Inference 4 confirms oxalate is absent: ${caseFourResult}`,
-    `Inference 5 dismisses acetate radicals: ${caseFiveResult}`,
+    `Inference 5 confirms nitrate presence: ${caseFiveResult}`,
+    `Inference 6 confirms oxalate presence: ${caseSixResult}`,
   ];
   const analysisGuidance = [
     {
@@ -2675,6 +2691,14 @@ function ChemicalEquilibriumVirtualLab({
             setCaseFourResult(
               "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO₃²⁻ is present",
             );
+          } else if (newCount === 5) {
+            setCaseFiveResult(
+              "Reddish-brown fumes evolve and solution turns blue in colour , therefore NO₃⁻ is present",
+            );
+          } else if (newCount === 6) {
+            setCaseSixResult(
+              "Colourless and odourless gas is evolved , on burning the gas at the mouth of the test tube , a blue flame is obtained , therefore C₂O₄²⁻ is present",
+            );
           }
           return newCount;
         });
@@ -4159,13 +4183,14 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "INFERENCE 3", result: caseThreeResult },
                 { label: "INFERENCE 4", result: caseFourResult },
                 { label: "INFERENCE 5", result: caseFiveResult },
+                { label: "INFERENCE 6", result: caseSixResult },
               ]
                 .filter((entry) => {
-                  // Hide INFERENCE 3, 4, 5 for Bromide Check and Iodide Check under Dry Tests for Acid Radicals
+                  // Hide INFERENCE 3, 4, 5, 6 for Bromide Check and Iodide Check under Dry Tests for Acid Radicals
                   if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
-                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5"].includes(entry.label);
+                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
-                  // Hide INFERENCE 3, 4, 5 for Special Cases until the respective heating count is reached
+                  // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the respective heating count is reached
                   if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
                     if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
                       return false;
@@ -4174,6 +4199,9 @@ function ChemicalEquilibriumVirtualLab({
                       return false;
                     }
                     if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
+                      return false;
+                    }
+                    if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
                       return false;
                     }
                   }
@@ -4719,9 +4747,9 @@ function ChemicalEquilibriumVirtualLab({
                 </p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
                   {detailedInsights.filter((insight) => {
-                    // Hide Inference 3, 4, 5 for Bromide and Iodide checks under Dry Tests for Acid Radicals
+                    // Hide Inference 3, 4, 5, 6 for Bromide and Iodide checks under Dry Tests for Acid Radicals
                     if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
-                      return !["Inference 3", "Inference 4", "Inference 5"].includes(insight.hint);
+                      return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
                     }
                     return true;
                   }).map((insight) => (
@@ -4756,11 +4784,11 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries.filter((entry) => {
-                    // Hide INFERENCE 3, 4, 5 for Bromide and Iodide checks
+                    // Hide INFERENCE 3, 4, 5, 6 for Bromide and Iodide checks
                     if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
-                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5"].includes(entry.label);
+                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                     }
-                    // Hide INFERENCE 3, 4, 5 for Special Cases until the appropriate heating count is reached and result is set
+                    // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
                     if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
                       if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
                         return false;
@@ -4769,6 +4797,9 @@ function ChemicalEquilibriumVirtualLab({
                         return false;
                       }
                       if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
+                        return false;
+                      }
+                      if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
                         return false;
                       }
                     }
@@ -4821,9 +4852,9 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
                 <ul className="mt-4 space-y-3">
                   {observationHighlights.filter((highlight) => {
-                    // Hide Inference 3, 4, 5 highlights for Bromide and Iodide checks
+                    // Hide Inference 3, 4, 5, 6 highlights for Bromide and Iodide checks
                     if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
-                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5");
+                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                     }
                     return true;
                   }).map((highlight) => (
