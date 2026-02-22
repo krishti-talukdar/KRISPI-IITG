@@ -650,7 +650,7 @@ function ChemicalEquilibriumVirtualLab({
   const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
   const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
   const MNO2_CASE_TWO_RESULT =
-    "Addition of small amount of MnO₂ accelerates the formation of brown fumes";
+    "MnO₂ accelerates the rate of production of Br₂ gas. 2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
@@ -821,7 +821,7 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "INFERENCE 1",
       result: caseOneResult,
-      indicator: "Residue",
+      indicator: (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas" : "Residue",
       borderClass: "border-rose-200",
       bgClass: "from-white via-rose-50 to-rose-100",
       titleColorClass: "text-rose-400",
@@ -831,7 +831,7 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "INFERENCE 2",
       result: caseTwoResult,
-      indicator: "Gas evolution",
+      indicator: (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas acceleration" : "Gas evolution",
       borderClass: "border-amber-200",
       bgClass: "from-white via-amber-50 to-orange-100",
       titleColorClass: "text-amber-500",
@@ -871,12 +871,12 @@ function ChemicalEquilibriumVirtualLab({
   ];
   const detailedInsights = [
     {
-      title: "Initial chloride clues",
+      title: activeHalide === "Br" && resolvedDryTestMode === "acid" ? "Bromide gas formation" : "Initial chloride clues",
       hint: "Inference 1",
       description: caseOneResult,
     },
     {
-      title: "Chlorine confirmation",
+      title: activeHalide === "Br" && resolvedDryTestMode === "acid" ? "Bromide gas acceleration" : "Chlorine confirmation",
       hint: "Inference 2",
       description: caseTwoResult,
     },
@@ -897,7 +897,9 @@ function ChemicalEquilibriumVirtualLab({
     },
   ];
   const observationHighlights = [
-    `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
+    activeHalide === "Br" && resolvedDryTestMode === "acid"
+      ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult} ${caseTwoResult}`
+      : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
     `Inference 3 signals phosphate absence: ${caseThreeResult}`,
     `Inference 4 confirms oxalate is absent: ${caseFourResult}`,
     `Inference 5 dismisses acetate radicals: ${caseFiveResult}`,
@@ -2685,7 +2687,7 @@ function ChemicalEquilibriumVirtualLab({
         resolvedDryTestMode === "acid"
       ) {
         setCaseOneResult(
-          "A reddish-brown solution is formed which on warming produces reddish-brown fumes with irritating smell",
+          "Reddish-brown Br₂ gas is produced. 2KBr + 3H₂SO₄ → 2KHSO₄ + H₂O + SO₂ + Br₂",
         );
       }
 
@@ -4708,8 +4710,10 @@ function ChemicalEquilibriumVirtualLab({
               <div className="rounded-2xl border border-white/10 bg-slate-900 p-5 text-white shadow-xl">
                 <div className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">Detailed Insights</div>
                 <p className="mt-2 text-sm text-white/80">
-                  {(activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid"
-                    ? `These observations confirm the presence of ${activeHalide === "Br" ? "bromide" : "iodide"} radicals through characteristic color and physical changes.`
+                  {activeHalide === "Br" && resolvedDryTestMode === "acid"
+                    ? "Bromide detection through reddish-brown Br₂ gas production on heating with concentrated H₂SO₄, accelerated by MnO₂ catalyst."
+                    : activeHalide === "I" && resolvedDryTestMode === "acid"
+                    ? "These observations confirm the presence of iodide radicals through characteristic color and physical changes."
                     : "These focused notes highlight how the additional wet-case drop-injections confirm which acid radicals remain absent after the primary dry tests."}
                 </p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
