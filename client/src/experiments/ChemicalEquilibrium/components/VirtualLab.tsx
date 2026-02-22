@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ArrowLeft, FlaskConical, Atom, BookOpen, List, Play, Pause, TestTube, Droplet, Beaker, Fire } from "lucide-react";
+import { ArrowLeft, FlaskConical, Atom, BookOpen, List, Play, Pause, TestTube, Droplet, Beaker, Flame } from "lucide-react";
 import {
   CHEMICAL_EQUILIBRIUM_CHEMICALS,
   CHEMICAL_EQUILIBRIUM_EQUIPMENT,
@@ -498,7 +498,7 @@ const getEquipmentIcon = (name: string) => {
   if (key.includes("test tube")) return <TestTube size={36} className="text-blue-600" />;
   if (key.includes("beaker")) return <Beaker size={36} className="text-cyan-600" />;
   if (key.includes("pipette") || key.includes("dropper")) return <Droplet size={36} className="text-amber-500" />;
-  if (key.includes("bunsen")) return <Fire size={36} className="text-orange-600" />;
+  if (key.includes("bunsen")) return <Flame size={36} className="text-orange-600" />;
   if (key.includes("stirrer")) return <Atom size={36} className="text-purple-600" />;
   if (key.includes("ph") || key.includes("indicator") || key.includes("meter")) return <FlaskConical size={36} className="text-emerald-600" />;
   return <Atom size={36} className="text-slate-500" />;
