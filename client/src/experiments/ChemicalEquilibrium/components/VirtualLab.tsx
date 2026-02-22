@@ -4162,15 +4162,15 @@ function ChemicalEquilibriumVirtualLab({
                   if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                     return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5"].includes(entry.label);
                   }
-                  // Hide INFERENCE 3, 4, 5 for Special Cases until the 3rd heating
+                  // Hide INFERENCE 3, 4, 5 for Special Cases until the respective heating count is reached
                   if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
-                    if (entry.label === "INFERENCE 3" && specialCasesHeatingCount < 3) {
+                    if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
                       return false;
                     }
-                    if (entry.label === "INFERENCE 4" && specialCasesHeatingCount < 4) {
+                    if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
                       return false;
                     }
-                    if (entry.label === "INFERENCE 5" && specialCasesHeatingCount < 5) {
+                    if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
                       return false;
                     }
                   }
@@ -4737,15 +4737,15 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries.filter((entry) => {
-                    // Hide INFERENCE 3, 4, 5 for Special Cases until the appropriate heating count is reached
+                    // Hide INFERENCE 3, 4, 5 for Special Cases until the appropriate heating count is reached and result is set
                     if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
-                      if (entry.label === "INFERENCE 3" && specialCasesHeatingCount < 3) {
+                      if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
                         return false;
                       }
-                      if (entry.label === "INFERENCE 4" && specialCasesHeatingCount < 4) {
+                      if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
                         return false;
                       }
-                      if (entry.label === "INFERENCE 5" && specialCasesHeatingCount < 5) {
+                      if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
                         return false;
                       }
                     }
