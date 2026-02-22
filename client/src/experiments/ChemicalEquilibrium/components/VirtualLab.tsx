@@ -650,7 +650,7 @@ function ChemicalEquilibriumVirtualLab({
   const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
   const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
   const MNO2_CASE_TWO_RESULT =
-    "Addition of small amount of MnO2 accelerates the formation of brown fumes";
+    "Addition of small amount of MnO₂ accelerates the formation of brown fumes";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
