@@ -650,7 +650,7 @@ function ChemicalEquilibriumVirtualLab({
   const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
   const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
   const MNO2_CASE_TWO_RESULT =
-    "MnO₂ accelerates the rate of production of Br₂ gas. 2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
+    "MnO₂ accelerates the rate of production of Br₂ gas.\n\n2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
@@ -2687,7 +2687,7 @@ function ChemicalEquilibriumVirtualLab({
         resolvedDryTestMode === "acid"
       ) {
         setCaseOneResult(
-          "Reddish-brown Br₂ gas is produced. 2KBr + 3H₂SO₄ → 2KHSO₄ + H₂O + SO₂ + Br₂",
+          "Reddish-brown Br₂ gas is produced.\n\n2KBr + 3H₂SO₄ → 2KHSO₄ + H₂O + SO₂ + Br₂",
         );
       }
 
