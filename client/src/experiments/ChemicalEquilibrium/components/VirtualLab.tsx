@@ -4140,7 +4140,15 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "INFERENCE 3", result: caseThreeResult },
                 { label: "INFERENCE 4", result: caseFourResult },
                 { label: "INFERENCE 5", result: caseFiveResult },
-              ].map((entry) => (
+              ]
+                .filter((entry) => {
+                  // Hide INFERENCE 3, 4, 5 for Bromide Check under Dry Tests for Acid Radicals
+                  if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5"].includes(entry.label);
+                  }
+                  return true;
+                })
+                .map((entry) => (
                 <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
                   <div className="mt-1 text-sm text-slate-800">{entry.result}</div>
