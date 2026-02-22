@@ -818,7 +818,7 @@ function ChemicalEquilibriumVirtualLab({
   ]);
   const caseSummaryEntries = [
     {
-      label: "CASE 1",
+      label: "INFERENCE 1",
       result: caseOneResult,
       indicator: "Residue",
       borderClass: "border-rose-200",
@@ -828,7 +828,7 @@ function ChemicalEquilibriumVirtualLab({
       indicatorColorClass: "text-rose-500",
     },
     {
-      label: "CASE 2",
+      label: "INFERENCE 2",
       result: caseTwoResult,
       indicator: "Gas evolution",
       borderClass: "border-amber-200",
@@ -838,7 +838,7 @@ function ChemicalEquilibriumVirtualLab({
       indicatorColorClass: "text-orange-500",
     },
     {
-      label: "CASE 3",
+      label: "INFERENCE 3",
       result: caseThreeResult,
       indicator: "Phosphate",
       borderClass: "border-emerald-200",
@@ -848,7 +848,7 @@ function ChemicalEquilibriumVirtualLab({
       indicatorColorClass: "text-emerald-500",
     },
     {
-      label: "CASE 4",
+      label: "INFERENCE 4",
       result: caseFourResult,
       indicator: "Oxalate",
       borderClass: "border-cyan-200",
@@ -858,7 +858,7 @@ function ChemicalEquilibriumVirtualLab({
       indicatorColorClass: "text-sky-500",
     },
     {
-      label: "CASE 5",
+      label: "INFERENCE 5",
       result: caseFiveResult,
       indicator: "Acetate",
       borderClass: "border-purple-200",
@@ -871,35 +871,35 @@ function ChemicalEquilibriumVirtualLab({
   const detailedInsights = [
     {
       title: "Initial chloride clues",
-      hint: "Case 1",
+      hint: "Inference 1",
       description: caseOneResult,
     },
     {
       title: "Chlorine confirmation",
-      hint: "Case 2",
+      hint: "Inference 2",
       description: caseTwoResult,
     },
     {
       title: "Phosphate check",
-      hint: "Case 3",
+      hint: "Inference 3",
       description: caseThreeResult,
     },
     {
       title: "Oxalate check",
-      hint: "Case 4",
+      hint: "Inference 4",
       description: caseFourResult,
     },
     {
       title: "Acetate check",
-      hint: "Case 5",
+      hint: "Inference 5",
       description: caseFiveResult,
     },
   ];
   const observationHighlights = [
-    `Case 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
-    `Case 3 signals phosphate absence: ${caseThreeResult}`,
-    `Case 4 confirms oxalate is absent: ${caseFourResult}`,
-    `Case 5 dismisses acetate radicals: ${caseFiveResult}`,
+    `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
+    `Inference 3 signals phosphate absence: ${caseThreeResult}`,
+    `Inference 4 confirms oxalate is absent: ${caseFourResult}`,
+    `Inference 5 dismisses acetate radicals: ${caseFiveResult}`,
   ];
   const analysisGuidance = [
     {
@@ -912,7 +912,7 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "Next steps",
       description:
-        "Record Cases 3–5 while observing color shifts or precipitates to finish the acid radical map.",
+        "Record INFERENCE 3–5 while observing color shifts or precipitates to finish the acid radical map.",
       accent: "from-emerald-50 to-sky-50",
       textColor: "text-sky-600",
     },
@@ -4132,14 +4132,14 @@ function ChemicalEquilibriumVirtualLab({
               </ul>
             </div>
 
-            <div className="text-sm font-bold mb-2 text-slate-900">Cases</div>
+            <div className="text-sm font-bold mb-2 text-slate-900">INFERENCE</div>
             <div className="space-y-2">
               {[
-                { label: "CASE 1", result: caseOneResult },
-                { label: "CASE 2", result: caseTwoResult },
-                { label: "CASE 3", result: caseThreeResult },
-                { label: "CASE 4", result: caseFourResult },
-                { label: "CASE 5", result: caseFiveResult },
+                { label: "INFERENCE 1", result: caseOneResult },
+                { label: "INFERENCE 2", result: caseTwoResult },
+                { label: "INFERENCE 3", result: caseThreeResult },
+                { label: "INFERENCE 4", result: caseFourResult },
+                { label: "INFERENCE 5", result: caseFiveResult },
               ].map((entry) => (
                 <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
