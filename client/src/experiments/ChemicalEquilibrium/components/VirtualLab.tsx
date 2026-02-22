@@ -650,7 +650,7 @@ function ChemicalEquilibriumVirtualLab({
   const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
   const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
   const MNO2_CASE_TWO_RESULT =
-    "Addition of small amount of MnO2 accelerates the formation of brown fumes";
+    "MnO₂ accelerates the rate of production of Br₂ gas.\n\n2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
@@ -673,9 +673,9 @@ function ChemicalEquilibriumVirtualLab({
       : mapDryTestEquipment(dryTestEquipmentNames)
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const glassContainerEquipmentId =
-    equipmentList.find((eq) => eq.name.toLowerCase().includes("glass container"))?.id ?? null;
+    equipmentList.find((eq) => eq.name?.toLowerCase().includes("glass container"))?.id ?? null;
   const glassRodEquipmentId =
-    equipmentList.find((eq) => eq.name.toLowerCase().includes("glass rod"))?.id ?? null;
+    equipmentList.find((eq) => eq.name?.toLowerCase().includes("glass rod"))?.id ?? null;
   const glassContainerState = equipmentPositions.find((pos) => pos.id === glassContainerEquipmentId);
   const ammoniumAmountInGlassContainer = glassContainerState
     ? glassContainerState.chemicals
@@ -821,7 +821,7 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "INFERENCE 1",
       result: caseOneResult,
-      indicator: "Residue",
+      indicator: (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas" : "Residue",
       borderClass: "border-rose-200",
       bgClass: "from-white via-rose-50 to-rose-100",
       titleColorClass: "text-rose-400",
@@ -831,7 +831,7 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "INFERENCE 2",
       result: caseTwoResult,
-      indicator: "Gas evolution",
+      indicator: (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas acceleration" : "Gas evolution",
       borderClass: "border-amber-200",
       bgClass: "from-white via-amber-50 to-orange-100",
       titleColorClass: "text-amber-500",
@@ -861,22 +861,32 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "INFERENCE 5",
       result: caseFiveResult,
-      indicator: "Acetate",
+      indicator: "Nitrate",
       borderClass: "border-purple-200",
       bgClass: "from-white via-purple-50 to-indigo-100",
       titleColorClass: "text-purple-500",
       resultTextClass: "text-purple-900",
       indicatorColorClass: "text-indigo-500",
     },
+    {
+      label: "INFERENCE 6",
+      result: caseSixResult,
+      indicator: "Oxalate",
+      borderClass: "border-pink-200",
+      bgClass: "from-white via-pink-50 to-rose-100",
+      titleColorClass: "text-pink-500",
+      resultTextClass: "text-pink-900",
+      indicatorColorClass: "text-rose-500",
+    },
   ];
   const detailedInsights = [
     {
-      title: "Initial chloride clues",
+      title: activeHalide === "Br" && resolvedDryTestMode === "acid" ? "Bromide gas formation" : "Initial chloride clues",
       hint: "Inference 1",
       description: caseOneResult,
     },
     {
-      title: "Chlorine confirmation",
+      title: activeHalide === "Br" && resolvedDryTestMode === "acid" ? "Bromide gas acceleration" : "Chlorine confirmation",
       hint: "Inference 2",
       description: caseTwoResult,
     },
@@ -891,16 +901,24 @@ function ChemicalEquilibriumVirtualLab({
       description: caseFourResult,
     },
     {
-      title: "Acetate check",
+      title: "Nitrate check",
       hint: "Inference 5",
       description: caseFiveResult,
     },
+    {
+      title: "Oxalate check",
+      hint: "Inference 6",
+      description: caseSixResult,
+    },
   ];
   const observationHighlights = [
-    `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
+    activeHalide === "Br" && resolvedDryTestMode === "acid"
+      ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
+      : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
     `Inference 3 signals phosphate absence: ${caseThreeResult}`,
     `Inference 4 confirms oxalate is absent: ${caseFourResult}`,
-    `Inference 5 dismisses acetate radicals: ${caseFiveResult}`,
+    `Inference 5 confirms nitrate presence: ${caseFiveResult}`,
+    `Inference 6 confirms oxalate presence: ${caseSixResult}`,
   ];
   const analysisGuidance = [
     {
@@ -1783,7 +1801,7 @@ function ChemicalEquilibriumVirtualLab({
       // equipment on the workbench without opening the amount dialog. This applies only to
       // these two pieces of equipment and no others.
       const isTestTubeId = equipment.id === "test_tubes";
-      const isBunsenId = equipment.id === "bunsen-burner-virtual-heat-source" || equipment.name.toLowerCase().includes("bunsen");
+      const isBunsenId = equipment.id === "bunsen-burner-virtual-heat-source" || equipment.name?.toLowerCase().includes("bunsen");
       const activeHalideLower = (activeHalide ?? "").toLowerCase();
       const isDryAcidTest = isDryTestExperiment && dryTestMode === "acid";
       const isAnyHalideDryAcid = isDryAcidTest && ["br", "i", "cl", "s", "sc"].includes(activeHalideLower);
@@ -2659,19 +2677,27 @@ function ChemicalEquilibriumVirtualLab({
           const newCount = prev + 1;
           if (newCount === 1) {
             setCaseOneResult(
-              "Rapid effervescence of colourless and odourless gas , therefore CO 3 ^2- is present",
+              "Rapid effervescence of colourless and odourless gas , therefore CO₃²⁻ is present",
             );
           } else if (newCount === 2) {
             setCaseTwoResult(
-              "Reddish-Brown vapour is produced in the cold condition, therefore NO2^- is present",
+              "Reddish-Brown vapour is produced in the cold condition, therefore NO₂⁻ is present",
             );
           } else if (newCount === 3) {
             setCaseThreeResult(
-              "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO3^2- is present",
+              "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO₃⁻ is present",
             );
           } else if (newCount === 4) {
             setCaseFourResult(
-              "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO3^- is present",
+              "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO₃²⁻ is present",
+            );
+          } else if (newCount === 5) {
+            setCaseFiveResult(
+              "Reddish-brown fumes evolve and solution turns blue in colour , therefore NO₃⁻ is present",
+            );
+          } else if (newCount === 6) {
+            setCaseSixResult(
+              "Colourless and odourless gas is evolved , on burning the gas at the mouth of the test tube , a blue flame is obtained , therefore C₂O₄²⁻ is present",
             );
           }
           return newCount;
@@ -2685,7 +2711,7 @@ function ChemicalEquilibriumVirtualLab({
         resolvedDryTestMode === "acid"
       ) {
         setCaseOneResult(
-          "A reddish-brown solution is formed which on warming produces reddish-brown fumes with irritating smell",
+          "Reddish-brown Br₂ gas is produced.\n\n2KBr + 3H₂SO₄ → 2KHSO₄ + H₂O + SO₂ + Br₂",
         );
       }
 
@@ -3802,11 +3828,13 @@ function ChemicalEquilibriumVirtualLab({
             <div className="flex-1 overflow-auto">
               <div className="space-y-3">
                 {equipmentList
-                  .filter((eq): eq is EquipmentDefinition => eq != null)
+                  .filter((eq): eq is EquipmentDefinition => eq != null && eq.name != null)
                   .sort((a, b) => {
                     // Move Bunsen Burner to the bottom
-                    const aIsBunsen = a.name.toLowerCase().includes("bunsen");
-                    const bIsBunsen = b.name.toLowerCase().includes("bunsen");
+                    const aName = a.name?.toLowerCase() ?? "";
+                    const bName = b.name?.toLowerCase() ?? "";
+                    const aIsBunsen = aName.includes("bunsen");
+                    const bIsBunsen = bName.includes("bunsen");
                     if (aIsBunsen && !bIsBunsen) return 1;
                     if (!aIsBunsen && bIsBunsen) return -1;
                     return 0;
@@ -4045,6 +4073,7 @@ function ChemicalEquilibriumVirtualLab({
                   .filter((pos) => !isDryTestBottleEquipment(pos.id))
                   .map((pos) => {
                     const equipment = equipmentList.find((eq) => eq.id === pos.id);
+                    if (!equipment) return null;
                     const normalizedEquipmentName = equipment.name.toLowerCase();
                     const isAmmoniumEquipment =
                       normalizedEquipmentName.includes("ammonium") ||
@@ -4101,6 +4130,7 @@ function ChemicalEquilibriumVirtualLab({
                         bromideWetHeatingCount={bromideWetHeatingCount}
                         iodideWetHeatingTriggered={iodideWetHeatingTriggered}
                         iodideWetHeatingCount={iodideWetHeatingCount}
+                        specialCasesHeatingCount={specialCasesHeatingCount}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
@@ -4154,18 +4184,34 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "INFERENCE 3", result: caseThreeResult },
                 { label: "INFERENCE 4", result: caseFourResult },
                 { label: "INFERENCE 5", result: caseFiveResult },
+                { label: "INFERENCE 6", result: caseSixResult },
               ]
                 .filter((entry) => {
-                  // Hide INFERENCE 3, 4, 5 for Bromide Check and Iodide Check under Dry Tests for Acid Radicals
+                  // Hide INFERENCE 3, 4, 5, 6 for Bromide Check and Iodide Check under Dry Tests for Acid Radicals
                   if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
-                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5"].includes(entry.label);
+                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
+                  // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the respective heating count is reached
+                  if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+                    if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
+                      return false;
+                    }
+                    if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
+                      return false;
+                    }
+                    if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
+                      return false;
+                    }
+                    if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
+                      return false;
+                    }
                   }
                   return true;
                 })
                 .map((entry) => (
                 <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
-                  <div className="mt-1 text-sm text-slate-800">{entry.result}</div>
+                  <div className="mt-1 text-sm text-slate-800 whitespace-pre-wrap">{entry.result}</div>
                 </div>
               ))}
             </div>
@@ -4694,21 +4740,37 @@ function ChemicalEquilibriumVirtualLab({
               <div className="rounded-2xl border border-white/10 bg-slate-900 p-5 text-white shadow-xl">
                 <div className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">Detailed Insights</div>
                 <p className="mt-2 text-sm text-white/80">
-                  These focused notes highlight how the additional wet-case drop-injections confirm which acid radicals remain absent after the primary dry tests.
+                  {activeHalide === "Br" && resolvedDryTestMode === "acid"
+                    ? "Bromide detection through reddish-brown Br₂ gas production on heating with concentrated H₂SO₄, accelerated by MnO₂ catalyst."
+                    : activeHalide === "I" && resolvedDryTestMode === "acid"
+                    ? "These observations confirm the presence of iodide radicals through characteristic color and physical changes."
+                    : "These focused notes highlight how the additional wet-case drop-injections confirm which acid radicals remain absent after the primary dry tests."}
                 </p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
-                  {detailedInsights.map((insight) => (
+                  {detailedInsights.filter((insight) => {
+                    // Hide Inference 3, 4, 5, 6 for Bromide and Iodide checks under Dry Tests for Acid Radicals
+                    if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                      return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
+                    }
+                    return true;
+                  }).map((insight) => (
                     <div key={insight.title} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
                       <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{insight.hint}</div>
                       <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
-                      <p className="mt-1 text-xs text-white/70 leading-tight">{insight.description}</p>
+                      <p className="mt-1 text-xs text-white/70 leading-tight whitespace-pre-wrap">{insight.description}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-3">
-                {analysisGuidance.map((note) => (
+                {analysisGuidance.filter((note) => {
+                  // For Bromide and Iodide checks, only show the Wet test focus note
+                  if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                    return note.label === "Wet test focus";
+                  }
+                  return true;
+                }).map((note) => (
                   <div
                     key={note.label}
                     className={`rounded-2xl border border-white/30 bg-gradient-to-br ${note.accent} bg-opacity-80 p-4 shadow-lg shadow-slate-200/60`}
@@ -4722,13 +4784,34 @@ function ChemicalEquilibriumVirtualLab({
               <div className="rounded-2xl border border-slate-300 bg-gradient-to-br from-slate-50 via-white to-slate-50 p-5 shadow-lg">
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
-                  {caseSummaryEntries.map((entry) => (
+                  {caseSummaryEntries.filter((entry) => {
+                    // Hide INFERENCE 3, 4, 5, 6 for Bromide and Iodide checks
+                    if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                    }
+                    // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
+                    if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+                      if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
+                        return false;
+                      }
+                      if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
+                        return false;
+                      }
+                      if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
+                        return false;
+                      }
+                      if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
+                        return false;
+                      }
+                    }
+                    return true;
+                  }).map((entry) => (
                     <div
                       key={entry.label}
                       className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
                     >
                       <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{entry.label}</div>
-                      <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed`}>{entry.result}</p>
+                      <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed whitespace-pre-wrap`}>{entry.result}</p>
                       <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
                         {entry.indicator}
                       </div>
@@ -4737,40 +4820,48 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-3">
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
-                  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
-                    <span>Case 1 Indicator</span>
-                    <span>Chloride residue</span>
+              {!((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") && (
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
+                    <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
+                      <span>Case 1 Indicator</span>
+                      <span>Chloride residue</span>
+                    </div>
+                    <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-300 relative">
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Loop film</span>
+                    </div>
                   </div>
-                  <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-300 relative">
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Loop film</span>
+                  <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
+                    <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
+                      <span>Case 2 Indicator</span>
+                      <span>Greenish-yellow plume</span>
+                    </div>
+                    <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-500 relative">
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Chlorine</span>
+                    </div>
+                  </div>
+                  <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
+                    <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">Final Insight</div>
+                    <p className="mt-2 text-sm text-slate-700">
+                      Saving both case results preserves the entire dry test narrative so you can compare residues, odors, and gas evolution in reported conclusions.
+                    </p>
                   </div>
                 </div>
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
-                  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
-                    <span>Case 2 Indicator</span>
-                    <span>Greenish-yellow plume</span>
-                  </div>
-                  <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-lime-300 via-emerald-400 to-cyan-500 relative">
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Chlorine</span>
-                  </div>
-                </div>
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">Final Insight</div>
-                  <p className="mt-2 text-sm text-slate-700">
-                    Saving both case results preserves the entire dry test narrative so you can compare residues, odors, and gas evolution in reported conclusions.
-                  </p>
-                </div>
-              </div>
+              )}
 
               <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-white p-5 shadow-xl">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
                 <ul className="mt-4 space-y-3">
-                  {observationHighlights.map((highlight) => (
+                  {observationHighlights.filter((highlight) => {
+                    // Hide Inference 3, 4, 5, 6 highlights for Bromide and Iodide checks
+                    if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                    }
+                    return true;
+                  }).map((highlight) => (
                     <li key={highlight} className="flex items-start gap-3">
                       <span className="mt-[3px] h-2.5 w-2.5 rounded-full bg-slate-900" />
-                      <span className="text-base font-bold text-slate-900 leading-snug">{highlight}</span>
+                      <span className="text-base font-bold text-slate-900 leading-snug whitespace-pre-wrap">{highlight}</span>
                     </li>
                   ))}
                 </ul>

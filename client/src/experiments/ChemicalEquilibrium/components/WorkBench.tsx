@@ -97,6 +97,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     dryTestMode === "acid" &&
     (activeHalide === "Br" || (activeHalide === "SC" && (specialCasesHeatingCount === 2 || specialCasesHeatingCount === 4)));
 
+  // Determine whether to use white fumes based on context (Special Cases + dry acid mode on 3rd heating)
+  const shouldUseWhiteFumes =
+    (experimentTitle?.toLowerCase().includes("salt analysis") ||
+      experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
+    dryTestMode === "acid" &&
+    activeHalide === "SC" &&
+    specialCasesHeatingCount === 3;
+
   // Determine whether to use deep red fumes based on context (Chloride + dry acid mode on 2nd heating)
   const shouldUseDeepRedFumes =
     (experimentTitle?.toLowerCase().includes("salt analysis") ||
@@ -111,6 +119,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
     dryTestMode === "acid" &&
     activeHalide === "I";
+
+  // Determine whether to use reddish-brown fumes based on context (Special Cases + dry acid mode on 5th heating)
+  const shouldUseReddishBrownFumes =
+    (experimentTitle?.toLowerCase().includes("salt analysis") ||
+      experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
+    dryTestMode === "acid" &&
+    activeHalide === "SC" &&
+    specialCasesHeatingCount === 5;
   const [isDragOver, setIsDragOver] = useState(false);
   const [temperature, setTemperature] = useState(25);
   const [rinseLayout, setRinseLayout] = useState<RinseLayout | null>(null);
@@ -637,10 +653,22 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                       "--fume-offset-x": `${horizontalOffset}px`,
                     } as React.CSSProperties;
 
-                    if (shouldUseReddishFumes && isBunsenHeating) {
+                    if (shouldUseReddishBrownFumes && isBunsenHeating) {
+                      Object.assign(fumeStyle, {
+                        background: "radial-gradient(circle, rgba(165,42,42,0.95) 0%, rgba(165,42,42,0.65) 70%)",
+                        boxShadow: "0 0 30px rgba(165,42,42,0.8)",
+                        filter: "blur(0.5px)",
+                      });
+                    } else if (shouldUseReddishFumes && isBunsenHeating) {
                       Object.assign(fumeStyle, {
                         background: "radial-gradient(circle, rgba(139,37,0,1) 0%, rgba(139,37,0,0.65) 70%)",
                         boxShadow: "0 0 30px rgba(139,37,0,0.9)",
+                        filter: "blur(0.5px)",
+                      });
+                    } else if (shouldUseWhiteFumes && isBunsenHeating) {
+                      Object.assign(fumeStyle, {
+                        background: "radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.5) 70%)",
+                        boxShadow: "0 0 30px rgba(200,200,200,0.5)",
                         filter: "blur(0.5px)",
                       });
                     }
@@ -683,10 +711,20 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                       "--vap-scale": puff.scale,
                     } as React.CSSProperties;
 
-                    if (shouldUseReddishFumes && isBunsenHeating) {
+                    if (shouldUseReddishBrownFumes && isBunsenHeating) {
+                      Object.assign(puffStyle, {
+                        background: "linear-gradient(180deg, rgba(165,42,42,0.95), rgba(165,42,42,0.4))",
+                        boxShadow: "0 8px 25px rgba(165,42,42,0.7)",
+                      });
+                    } else if (shouldUseReddishFumes && isBunsenHeating) {
                       Object.assign(puffStyle, {
                         background: "linear-gradient(180deg, rgba(139,37,0,0.95), rgba(139,37,0,0.4))",
                         boxShadow: "0 8px 25px rgba(139,37,0,0.6)",
+                      });
+                    } else if (shouldUseWhiteFumes && isBunsenHeating) {
+                      Object.assign(puffStyle, {
+                        background: "linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.35))",
+                        boxShadow: "0 8px 25px rgba(200,200,200,0.5)",
                       });
                     } else if (shouldUseDeepRedFumes && isBunsenHeating) {
                       Object.assign(puffStyle, {
