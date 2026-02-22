@@ -4181,7 +4181,7 @@ function ChemicalEquilibriumVirtualLab({
                 .map((entry) => (
                 <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
-                  <div className="mt-1 text-sm text-slate-800">{entry.result}</div>
+                  <div className="mt-1 text-sm text-slate-800 whitespace-pre-wrap">{entry.result}</div>
                 </div>
               ))}
             </div>
@@ -4727,7 +4727,7 @@ function ChemicalEquilibriumVirtualLab({
                     <div key={insight.title} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
                       <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{insight.hint}</div>
                       <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
-                      <p className="mt-1 text-xs text-white/70 leading-tight">{insight.description}</p>
+                      <p className="mt-1 text-xs text-white/70 leading-tight whitespace-pre-wrap">{insight.description}</p>
                     </div>
                   ))}
                 </div>
@@ -4778,7 +4778,7 @@ function ChemicalEquilibriumVirtualLab({
                       className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
                     >
                       <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{entry.label}</div>
-                      <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed`}>{entry.result}</p>
+                      <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed whitespace-pre-wrap`}>{entry.result}</p>
                       <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
                         {entry.indicator}
                       </div>
