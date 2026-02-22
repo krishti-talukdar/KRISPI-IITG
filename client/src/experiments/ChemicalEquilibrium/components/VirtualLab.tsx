@@ -4162,6 +4162,18 @@ function ChemicalEquilibriumVirtualLab({
                   if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                     return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5"].includes(entry.label);
                   }
+                  // Hide INFERENCE 3, 4, 5 for Special Cases until the 3rd heating
+                  if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+                    if (entry.label === "INFERENCE 3" && specialCasesHeatingCount < 3) {
+                      return false;
+                    }
+                    if (entry.label === "INFERENCE 4" && specialCasesHeatingCount < 4) {
+                      return false;
+                    }
+                    if (entry.label === "INFERENCE 5" && specialCasesHeatingCount < 5) {
+                      return false;
+                    }
+                  }
                   return true;
                 })
                 .map((entry) => (
@@ -4724,7 +4736,21 @@ function ChemicalEquilibriumVirtualLab({
               <div className="rounded-2xl border border-slate-300 bg-gradient-to-br from-slate-50 via-white to-slate-50 p-5 shadow-lg">
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
-                  {caseSummaryEntries.map((entry) => (
+                  {caseSummaryEntries.filter((entry) => {
+                    // Hide INFERENCE 3, 4, 5 for Special Cases until the appropriate heating count is reached
+                    if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+                      if (entry.label === "INFERENCE 3" && specialCasesHeatingCount < 3) {
+                        return false;
+                      }
+                      if (entry.label === "INFERENCE 4" && specialCasesHeatingCount < 4) {
+                        return false;
+                      }
+                      if (entry.label === "INFERENCE 5" && specialCasesHeatingCount < 5) {
+                        return false;
+                      }
+                    }
+                    return true;
+                  }).map((entry) => (
                     <div
                       key={entry.label}
                       className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
