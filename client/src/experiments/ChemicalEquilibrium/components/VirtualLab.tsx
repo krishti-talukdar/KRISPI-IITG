@@ -2659,19 +2659,19 @@ function ChemicalEquilibriumVirtualLab({
           const newCount = prev + 1;
           if (newCount === 1) {
             setCaseOneResult(
-              "Rapid effervescence of colourless and odourless gas , therefore CO 3 ^2- is present",
+              "Rapid effervescence of colourless and odourless gas , therefore CO₃²⁻ is present",
             );
           } else if (newCount === 2) {
             setCaseTwoResult(
-              "Reddish-Brown vapour is produced in the cold condition, therefore NO2^- is present",
+              "Reddish-Brown vapour is produced in the cold condition, therefore NO₂⁻ is present",
             );
           } else if (newCount === 3) {
             setCaseThreeResult(
-              "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO3^- is present",
+              "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO₃⁻ is present",
             );
           } else if (newCount === 4) {
             setCaseFourResult(
-              "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO3^2- is present",
+              "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO₃²⁻ is present",
             );
           }
           return newCount;
