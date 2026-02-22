@@ -60,6 +60,7 @@ interface EquipmentProps {
   bromideWetHeatingCount?: number;
   iodideWetHeatingTriggered?: boolean;
   iodideWetHeatingCount?: number;
+  specialCasesHeatingCount?: number;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -89,6 +90,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   bromideWetHeatingCount = 0,
   iodideWetHeatingTriggered = false,
   iodideWetHeatingCount = 0,
+  specialCasesHeatingCount = 0,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
@@ -101,6 +103,12 @@ export const Equipment: React.FC<EquipmentProps> = ({
   const isGlassRodEquipment = normalizedName.includes("glass rod");
   const isBunsenBurnerEquipment = normalizedName.includes("bunsen");
   const isGlassContainerEquipment = normalizedName.includes("glass container");
+  const isSpecialCasesFifthHeating =
+    id === "test_tubes" &&
+    activeHalide === "SC" &&
+    dryTestMode === "acid" &&
+    specialCasesHeatingCount === 5 &&
+    isHeating;
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -960,13 +968,33 @@ export const Equipment: React.FC<EquipmentProps> = ({
             }}
           />
 
+          {isSpecialCasesFifthHeating && (
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                bottom: "15%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "70%",
+                height: "45%",
+                background: "radial-gradient(circle, rgba(173, 216, 230, 0.6) 0%, rgba(135, 206, 250, 0.5) 100%)",
+                borderRadius: "20px",
+                boxShadow: "inset 0 4px 8px rgba(135, 206, 250, 0.3)",
+              }}
+            />
+          )}
+
           {heating && (
             <>
               <div className="absolute inset-0 pointer-events-none">
                 {[...Array(3)].map((_, i) => (
                   <div
                     key={i}
-                    className="absolute w-2 h-8 bg-gradient-to-t from-orange-400 to-transparent opacity-70 rounded-full"
+                    className={`absolute w-2 h-8 bg-gradient-to-t opacity-70 rounded-full ${
+                      isSpecialCasesFifthHeating
+                        ? "from-amber-700 to-transparent"
+                        : "from-orange-400 to-transparent"
+                    }`}
                     style={{
                       left: `${45 + i * 15}%`,
                       bottom: "60%",
@@ -981,7 +1009,11 @@ export const Equipment: React.FC<EquipmentProps> = ({
                 🔥
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-orange-400/20 to-transparent rounded-full animate-pulse pointer-events-none" />
+              <div className={`absolute inset-0 rounded-full animate-pulse pointer-events-none ${
+                isSpecialCasesFifthHeating
+                  ? "bg-gradient-to-t from-amber-700/20 to-transparent"
+                  : "bg-gradient-to-t from-orange-400/20 to-transparent"
+              }`} />
             </>
           )}
 

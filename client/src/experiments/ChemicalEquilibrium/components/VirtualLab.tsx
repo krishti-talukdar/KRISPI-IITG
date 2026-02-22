@@ -4130,6 +4130,7 @@ function ChemicalEquilibriumVirtualLab({
                         bromideWetHeatingCount={bromideWetHeatingCount}
                         iodideWetHeatingTriggered={iodideWetHeatingTriggered}
                         iodideWetHeatingCount={iodideWetHeatingCount}
+                        specialCasesHeatingCount={specialCasesHeatingCount}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
