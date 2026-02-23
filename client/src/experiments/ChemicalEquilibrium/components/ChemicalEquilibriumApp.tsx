@@ -88,6 +88,7 @@ const SPECIAL_CASES_ACID_EQUIPMENT = [
 ];
 
 const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
+const SALT_ANALYSIS_DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "wet"];
 
 const CHLORIDE_ACID_EQUIPMENT = [
   "Acidified Potassium Dichromate (K₂Cr₂O₇)",
@@ -158,6 +159,34 @@ const HALIDE_SECTIONS = [
   },
 ];
 
+const FLAME_TEST_SECTIONS = [
+  {
+    symbol: "Fl",
+    label: "Flame Test",
+    description: "Observe distinctive flame colors indicating presence of various metal ions.",
+  },
+  {
+    symbol: "BB",
+    label: "Borax Bead Test",
+    description: "Use borax beads to identify metal ions through characteristic color changes.",
+  },
+  {
+    symbol: "Ch",
+    label: "Charcoal Test",
+    description: "Apply the charcoal test to detect metal ions and their oxidation states.",
+  },
+  {
+    symbol: "Co",
+    label: "Cobalt Nitrate Test",
+    description: "Use cobalt nitrate reagent to identify basic radicals through color reactions.",
+  },
+  {
+    symbol: "Am",
+    label: "Ammonium Radical Test",
+    description: "Detect ammonium radicals using appropriate reagents and heating techniques.",
+  },
+];
+
 export default function ChemicalEquilibriumApp({
   onBack,
 }: ChemicalEquilibriumAppProps) {
@@ -169,12 +198,17 @@ export default function ChemicalEquilibriumApp({
   const [activeHalide, setActiveHalide] = useState(
     HALIDE_SECTIONS[0]?.symbol ?? "Br",
   );
+  const [activeTopLevelSection, setActiveTopLevelSection] = useState<"AR" | "BR" | "SC" | null>(null);
+  const [activeFlameTest, setActiveFlameTest] = useState(
+    FLAME_TEST_SECTIONS[0]?.symbol ?? "Fl",
+  );
 
   const [match, params] = useRoute("/experiment/:id");
   const experimentId = Number(params?.id ?? 4);
   const experiment = experimentId === PHHClExperiment.id ? PHHClExperiment : ChemicalEquilibriumData;
   const isDryTestExperiment = experiment.id === ChemicalEquilibriumData.id;
   const updateProgress = useUpdateProgress();
+  const applicableDryTestModes = isDryTestExperiment ? SALT_ANALYSIS_DRY_TEST_MODE_ORDER : DRY_TEST_MODE_ORDER;
   const activeDryTestConfig = DRY_TEST_MODE_CONFIG[activeDryTestMode];
   let baseDryTestEquipment = activeDryTestConfig.equipment;
   // If this is the Salt Analysis experiment and user selected "Special Cases" in dry acid mode,
@@ -495,6 +529,13 @@ export default function ChemicalEquilibriumApp({
     setTimer(0);
   }, [activeDryTestMode]);
 
+  // Ensure activeDryTestMode is valid for the current experiment
+  useEffect(() => {
+    if (!applicableDryTestModes.includes(activeDryTestMode)) {
+      setActiveDryTestMode(applicableDryTestModes[0]);
+    }
+  }, [isDryTestExperiment]);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -578,20 +619,103 @@ export default function ChemicalEquilibriumApp({
 
           {isDryTestExperiment && (
             <>
-              {/* Special Cases Description Box */}
-              <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
+              {/* Acid Radicals Description Box */}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setActiveTopLevelSection(activeTopLevelSection === "AR" ? null : "AR")}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setActiveTopLevelSection(activeTopLevelSection === "AR" ? null : "AR");
+                  }
+                }}
+                className={`mb-6 p-4 rounded-lg transition-all cursor-pointer ${
+                  activeTopLevelSection === "AR"
+                    ? "bg-gradient-to-r from-blue-100 to-cyan-100 border-2 border-blue-400"
+                    : "bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200"
+                }`}
+                aria-pressed={activeTopLevelSection === "AR"}
+              >
                 <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">SC</span>
+                  <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">AR</span>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 text-sm">Special Cases</h3>
-                    <p className="text-gray-600 text-sm mt-1">CO₃²⁻ ,NO₂⁻, S²⁻, SO₃²⁻, NO₃⁻, C₂O₄²⁻, SO₄²⁻, SO₃²⁻, PO₄³⁻, Ca²⁺, Sr²⁺, Cu²⁺ , Pb²⁺, Ba²⁺  radicals are present</p>
+                    <h3 className="font-semibold text-gray-900 text-sm">Acid Radicals</h3>
+                    <p className="text-gray-600 text-sm mt-1">Identify and analyze acid radicals present in your sample through systematic testing procedures.</p>
                   </div>
                 </div>
               </div>
 
-              {/* Halide Sections Grid */}
+              {/* Basic Radicals Description Box */}
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setActiveTopLevelSection(activeTopLevelSection === "BR" ? null : "BR")}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setActiveTopLevelSection(activeTopLevelSection === "BR" ? null : "BR");
+                  }
+                }}
+                className={`mb-6 p-4 rounded-lg transition-all cursor-pointer ${
+                  activeTopLevelSection === "BR"
+                    ? "bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400"
+                    : "bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200"
+                }`}
+                aria-pressed={activeTopLevelSection === "BR"}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">BR</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 text-sm">Basic Radicals</h3>
+                    <p className="text-gray-600 text-sm mt-1">Detect and examine basic radicals in your sample using established qualitative analysis methods.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Flame Test Sections Grid - Only show when Basic Radicals is selected */}
+              {activeTopLevelSection === "BR" && (
+          <div className="halide-section-grid mb-6">
+            {FLAME_TEST_SECTIONS.map((section) => {
+              const isActiveFlameTest = activeFlameTest === section.symbol;
+              return (
+                <article
+                  key={section.symbol}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setActiveFlameTest(section.symbol)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setActiveFlameTest(section.symbol);
+                    }
+                  }}
+                  className={`halide-section-card ${isActiveFlameTest ? "halide-section-card--active" : ""}`}
+                  aria-pressed={isActiveFlameTest}
+                  aria-expanded={isActiveFlameTest}
+                >
+                  <div className="halide-section-card__header">
+                    <span className="halide-section-symbol" aria-hidden="true">
+                      {section.symbol}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">{section.label}</p>
+                      <p className="text-xs text-gray-500 mt-1">{section.description}</p>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+              )}
+
+
+              {/* Halide Sections Grid - Only show when Acid Radicals is selected */}
+              {activeTopLevelSection === "AR" && (
           <div className="halide-section-grid mb-6">
             {HALIDE_SECTIONS.map((section) => {
               const isActiveHalide = activeHalide === section.symbol;
@@ -623,7 +747,7 @@ export default function ChemicalEquilibriumApp({
                   {isActiveHalide && (
                     <>
                       <div className="dry-test-button-panel halide-section-card__dry-test-panel">
-                        {DRY_TEST_MODE_ORDER.map((mode) => {
+                        {applicableDryTestModes.map((mode) => {
                           const modeConfig = DRY_TEST_MODE_CONFIG[mode];
                           const isActive = activeDryTestMode === mode;
                           return (
@@ -657,6 +781,7 @@ export default function ChemicalEquilibriumApp({
               );
             })}
           </div>
+              )}
             </>
           )}
 
@@ -671,7 +796,24 @@ export default function ChemicalEquilibriumApp({
             </>
           )}
         </div>
-        {isDryTestExperiment && (
+
+        {/* Special Cases Description Box - Only show when Special Cases is selected */}
+        {isDryTestExperiment && activeTopLevelSection === "AR" && activeHalide === "SC" && (
+          <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">SC</span>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900 text-sm">Special Cases</h3>
+                <p className="text-gray-600 text-sm mt-1">CO₃²⁻ ,NO₂⁻, S²⁻, SO₃²⁻, NO₃⁻, C₂O₄²⁻, SO₄²⁻, SO₃²⁻, PO₄³⁻, Ca²⁺, Sr²⁺, Cu²⁺ , Pb²⁺, Ba²⁺  radicals are present</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Experiment Progress - Only show when a specific section is selected */}
+        {isDryTestExperiment && (activeTopLevelSection === "AR" || activeTopLevelSection === "BR") && (
           <div className="mb-6">
             <div className="rounded-xl border border-gray-200 bg-gradient-to-b from-white via-slate-50 to-slate-100 shadow-sm">
               <div className="px-6 py-5 space-y-4">
@@ -704,8 +846,8 @@ export default function ChemicalEquilibriumApp({
 
         {/* Main Lab Area */}
         <div className="w-full relative">
-          {/* Experiment Not Started Overlay */}
-          {!experimentStarted && (
+          {/* Ready to Start Overlay - Only show when a specific section is selected and experiment hasn't started */}
+          {!experimentStarted && (activeTopLevelSection === "AR" || activeTopLevelSection === "BR") && (
             <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-center justify-center">
               <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200 max-w-md">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -728,6 +870,8 @@ export default function ChemicalEquilibriumApp({
             </div>
           )}
 
+          {/* Virtual Lab Card - Only show when a specific section is selected */}
+          {(activeTopLevelSection === "AR" || activeTopLevelSection === "BR") && (
           <Card className="min-h-[80vh]">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
@@ -825,6 +969,7 @@ export default function ChemicalEquilibriumApp({
               />
             </CardContent>
           </Card>
+          )}
         </div>
 
         {/* Safety Information */}

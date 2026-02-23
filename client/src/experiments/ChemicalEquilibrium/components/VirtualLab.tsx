@@ -2763,7 +2763,7 @@ function ChemicalEquilibriumVirtualLab({
             if (newCount === 1) {
               setBromideWetHeatingTriggered(true);
               setCaseOneResult(
-                "pale yellow Precipitation insoluble in HNO3 but sparingly soluble in NH4OH , therefore Br⁻ is present",
+                "pale yellow Precipitation insoluble in HNO₃ but sparingly soluble in NH₄OH , therefore Br⁻ is present",
               );
             } else if (newCount === 2) {
               setCaseTwoResult(
