@@ -159,6 +159,29 @@ const HALIDE_SECTIONS = [
   },
 ];
 
+const FLAME_TEST_SECTIONS = [
+  {
+    symbol: "Ca",
+    label: "Calcium Test",
+    description: "Observe brick-red flame color indicating presence of calcium ions.",
+  },
+  {
+    symbol: "Na",
+    label: "Sodium Test",
+    description: "Note the persistent yellow-orange flame characteristic of sodium.",
+  },
+  {
+    symbol: "K",
+    label: "Potassium Test",
+    description: "Look for the lilac/violet flame through a blue glass rod specific to potassium.",
+  },
+  {
+    symbol: "Cu",
+    label: "Copper Test",
+    description: "Identify the blue-green flame color that indicates copper presence.",
+  },
+];
+
 export default function ChemicalEquilibriumApp({
   onBack,
 }: ChemicalEquilibriumAppProps) {
@@ -171,6 +194,9 @@ export default function ChemicalEquilibriumApp({
     HALIDE_SECTIONS[0]?.symbol ?? "Br",
   );
   const [activeTopLevelSection, setActiveTopLevelSection] = useState<"AR" | "BR" | "SC" | null>(null);
+  const [activeFlameTest, setActiveFlameTest] = useState(
+    FLAME_TEST_SECTIONS[0]?.symbol ?? "Ca",
+  );
 
   const [match, params] = useRoute("/experiment/:id");
   const experimentId = Number(params?.id ?? 4);
@@ -618,7 +644,23 @@ export default function ChemicalEquilibriumApp({
               </div>
 
               {/* Basic Radicals Description Box */}
-              <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setActiveTopLevelSection(activeTopLevelSection === "BR" ? null : "BR")}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setActiveTopLevelSection(activeTopLevelSection === "BR" ? null : "BR");
+                  }
+                }}
+                className={`mb-6 p-4 rounded-lg transition-all cursor-pointer ${
+                  activeTopLevelSection === "BR"
+                    ? "bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400"
+                    : "bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200"
+                }`}
+                aria-pressed={activeTopLevelSection === "BR"}
+              >
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-sm">BR</span>
@@ -629,6 +671,42 @@ export default function ChemicalEquilibriumApp({
                   </div>
                 </div>
               </div>
+
+              {/* Flame Test Sections Grid - Only show when Basic Radicals is selected */}
+              {activeTopLevelSection === "BR" && (
+          <div className="halide-section-grid mb-6">
+            {FLAME_TEST_SECTIONS.map((section) => {
+              const isActiveFlameTest = activeFlameTest === section.symbol;
+              return (
+                <article
+                  key={section.symbol}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setActiveFlameTest(section.symbol)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setActiveFlameTest(section.symbol);
+                    }
+                  }}
+                  className={`halide-section-card ${isActiveFlameTest ? "halide-section-card--active" : ""}`}
+                  aria-pressed={isActiveFlameTest}
+                  aria-expanded={isActiveFlameTest}
+                >
+                  <div className="halide-section-card__header">
+                    <span className="halide-section-symbol" aria-hidden="true">
+                      {section.symbol}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">{section.label}</p>
+                      <p className="text-xs text-gray-500 mt-1">{section.description}</p>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+              )}
 
 
               {/* Halide Sections Grid - Only show when Acid Radicals is selected */}
