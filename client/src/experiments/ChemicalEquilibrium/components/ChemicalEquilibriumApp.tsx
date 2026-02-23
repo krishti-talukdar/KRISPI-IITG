@@ -88,6 +88,7 @@ const SPECIAL_CASES_ACID_EQUIPMENT = [
 ];
 
 const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
+const SALT_ANALYSIS_DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "wet"];
 
 const CHLORIDE_ACID_EQUIPMENT = [
   "Acidified Potassium Dichromate (K₂Cr₂O₇)",
@@ -175,6 +176,7 @@ export default function ChemicalEquilibriumApp({
   const experiment = experimentId === PHHClExperiment.id ? PHHClExperiment : ChemicalEquilibriumData;
   const isDryTestExperiment = experiment.id === ChemicalEquilibriumData.id;
   const updateProgress = useUpdateProgress();
+  const applicableDryTestModes = isDryTestExperiment ? SALT_ANALYSIS_DRY_TEST_MODE_ORDER : DRY_TEST_MODE_ORDER;
   const activeDryTestConfig = DRY_TEST_MODE_CONFIG[activeDryTestMode];
   let baseDryTestEquipment = activeDryTestConfig.equipment;
   // If this is the Salt Analysis experiment and user selected "Special Cases" in dry acid mode,
@@ -495,6 +497,13 @@ export default function ChemicalEquilibriumApp({
     setTimer(0);
   }, [activeDryTestMode]);
 
+  // Ensure activeDryTestMode is valid for the current experiment
+  useEffect(() => {
+    if (!applicableDryTestModes.includes(activeDryTestMode)) {
+      setActiveDryTestMode(applicableDryTestModes[0]);
+    }
+  }, [isDryTestExperiment]);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -623,7 +632,7 @@ export default function ChemicalEquilibriumApp({
                   {isActiveHalide && (
                     <>
                       <div className="dry-test-button-panel halide-section-card__dry-test-panel">
-                        {DRY_TEST_MODE_ORDER.map((mode) => {
+                        {applicableDryTestModes.map((mode) => {
                           const modeConfig = DRY_TEST_MODE_CONFIG[mode];
                           const isActive = activeDryTestMode === mode;
                           return (
