@@ -630,7 +630,8 @@ export default function ChemicalEquilibriumApp({
                 </div>
               </div>
 
-              {/* Special Cases Description Box */}
+              {/* Special Cases Description Box - Only show when Special Cases is selected */}
+              {activeTopLevelSection === "AR" && activeHalide === "SC" && (
               <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
@@ -642,6 +643,7 @@ export default function ChemicalEquilibriumApp({
                   </div>
                 </div>
               </div>
+              )}
 
               {/* Halide Sections Grid - Only show when Acid Radicals is selected */}
               {activeTopLevelSection === "AR" && (
