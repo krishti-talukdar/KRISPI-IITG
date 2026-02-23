@@ -587,6 +587,32 @@ export default function ChemicalEquilibriumApp({
 
           {isDryTestExperiment && (
             <>
+              {/* Acid Radicals Description Box */}
+              <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">AR</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 text-sm">Acid Radicals</h3>
+                    <p className="text-gray-600 text-sm mt-1">Identify and analyze acid radicals present in your sample through systematic testing procedures.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Basic Radicals Description Box */}
+              <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">BR</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 text-sm">Basic Radicals</h3>
+                    <p className="text-gray-600 text-sm mt-1">Detect and examine basic radicals in your sample using established qualitative analysis methods.</p>
+                  </div>
+                </div>
+              </div>
+
               {/* Special Cases Description Box */}
               <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
                 <div className="flex items-start gap-3">
