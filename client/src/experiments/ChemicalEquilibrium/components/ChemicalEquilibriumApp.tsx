@@ -187,6 +187,14 @@ const FLAME_TEST_SECTIONS = [
   },
 ];
 
+const WET_TEST_BASIC_SECTIONS = [
+  {
+    symbol: "GR",
+    label: "GROUPS",
+    description: "Classify and identify basic radicals based on their group characteristics and reactions.",
+  },
+];
+
 export default function ChemicalEquilibriumApp({
   onBack,
 }: ChemicalEquilibriumAppProps) {
@@ -198,10 +206,12 @@ export default function ChemicalEquilibriumApp({
   const [activeHalide, setActiveHalide] = useState(
     HALIDE_SECTIONS[0]?.symbol ?? "Br",
   );
+  const [halideExplicitlySelected, setHalideExplicitlySelected] = useState(false);
   const [activeTopLevelSection, setActiveTopLevelSection] = useState<"AR" | "BR" | "SC" | null>(null);
   const [activeFlameTest, setActiveFlameTest] = useState(
     FLAME_TEST_SECTIONS[0]?.symbol ?? "Fl",
   );
+  const [activeBasicRadicalsSubsection, setActiveBasicRadicalsSubsection] = useState<"dry" | "wet" | null>(null);
 
   const [match, params] = useRoute("/experiment/:id");
   const experimentId = Number(params?.id ?? 4);
@@ -529,6 +539,17 @@ export default function ChemicalEquilibriumApp({
     setTimer(0);
   }, [activeDryTestMode]);
 
+  useEffect(() => {
+    // Reset activeBasicRadicalsSubsection when Basic Radicals section is closed
+    if (activeTopLevelSection !== "BR") {
+      setActiveBasicRadicalsSubsection(null);
+    }
+    // Reset halideExplicitlySelected when Acid Radicals section is closed
+    if (activeTopLevelSection !== "AR") {
+      setHalideExplicitlySelected(false);
+    }
+  }, [activeTopLevelSection]);
+
   // Ensure activeDryTestMode is valid for the current experiment
   useEffect(() => {
     if (!applicableDryTestModes.includes(activeDryTestMode)) {
@@ -677,40 +698,150 @@ export default function ChemicalEquilibriumApp({
                 </div>
               </div>
 
-              {/* Flame Test Sections Grid - Only show when Basic Radicals is selected */}
+              {/* Basic Radicals Subsections - Only show when Basic Radicals is selected */}
               {activeTopLevelSection === "BR" && (
-          <div className="halide-section-grid mb-6">
-            {FLAME_TEST_SECTIONS.map((section) => {
-              const isActiveFlameTest = activeFlameTest === section.symbol;
-              return (
-                <article
-                  key={section.symbol}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => setActiveFlameTest(section.symbol)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      setActiveFlameTest(section.symbol);
-                    }
-                  }}
-                  className={`halide-section-card ${isActiveFlameTest ? "halide-section-card--active" : ""}`}
-                  aria-pressed={isActiveFlameTest}
-                  aria-expanded={isActiveFlameTest}
-                >
-                  <div className="halide-section-card__header">
-                    <span className="halide-section-symbol" aria-hidden="true">
-                      {section.symbol}
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">{section.label}</p>
-                      <p className="text-xs text-gray-500 mt-1">{section.description}</p>
+                <div className="mb-6">
+                  {/* Dry Test and Wet Test Headers - Horizontal Layout */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    {/* Dry Test for Basic Radicals */}
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => setActiveBasicRadicalsSubsection(activeBasicRadicalsSubsection === "dry" ? null : "dry")}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          setActiveBasicRadicalsSubsection(activeBasicRadicalsSubsection === "dry" ? null : "dry");
+                        }
+                      }}
+                      className={`p-4 rounded-lg transition-all cursor-pointer ${
+                        activeBasicRadicalsSubsection === "dry"
+                          ? "bg-gradient-to-r from-orange-100 to-amber-100 border-2 border-orange-400"
+                          : "bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200"
+                      }`}
+                      aria-pressed={activeBasicRadicalsSubsection === "dry"}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">D</span>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900 text-sm">Dry Test for Basic Radicals</h3>
+                          <p className="text-gray-600 text-sm mt-1">Perform dry tests including flame test, borax bead test, and other identification methods.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Wet Test for Basic Radicals */}
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => setActiveBasicRadicalsSubsection(activeBasicRadicalsSubsection === "wet" ? null : "wet")}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          setActiveBasicRadicalsSubsection(activeBasicRadicalsSubsection === "wet" ? null : "wet");
+                        }
+                      }}
+                      className={`p-4 rounded-lg transition-all cursor-pointer ${
+                        activeBasicRadicalsSubsection === "wet"
+                          ? "bg-gradient-to-r from-teal-100 to-cyan-100 border-2 border-teal-400"
+                          : "bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-200"
+                      }`}
+                      aria-pressed={activeBasicRadicalsSubsection === "wet"}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">W</span>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900 text-sm">Wet Test for Basic Radicals</h3>
+                          <p className="text-gray-600 text-sm mt-1">Conduct wet tests to classify and identify basic radical groups.</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </article>
-              );
-            })}
-          </div>
+
+                  {/* Flame Test Sections Grid - Only show when Dry Test is selected */}
+                  {activeBasicRadicalsSubsection === "dry" && (
+                    <div className="halide-section-grid mb-6">
+                      {FLAME_TEST_SECTIONS.map((section) => {
+                        const isActiveFlameTest = activeFlameTest === section.symbol;
+                        return (
+                          <article
+                            key={section.symbol}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => setActiveFlameTest(section.symbol)}
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter" || event.key === " ") {
+                                event.preventDefault();
+                                setActiveFlameTest(section.symbol);
+                              }
+                            }}
+                            className={`p-4 rounded-lg transition-all cursor-pointer ${
+                              isActiveFlameTest
+                                ? "bg-gradient-to-r from-blue-100 to-cyan-100 border-2 border-blue-400"
+                                : "bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200"
+                            }`}
+                            aria-pressed={isActiveFlameTest}
+                            aria-expanded={isActiveFlameTest}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                <span className="text-white font-bold text-sm">{section.symbol}</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-sm font-semibold text-gray-900">{section.label}</p>
+                                <p className="text-xs text-gray-500 mt-1">{section.description}</p>
+                              </div>
+                            </div>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Wet Test Basic Sections Grid - Only show when Wet Test is selected */}
+                  {activeBasicRadicalsSubsection === "wet" && (
+                    <div className="halide-section-grid mb-6">
+                      {WET_TEST_BASIC_SECTIONS.map((section) => {
+                        const isActiveWetTest = activeFlameTest === section.symbol;
+                        return (
+                          <article
+                            key={section.symbol}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => setActiveFlameTest(section.symbol)}
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter" || event.key === " ") {
+                                event.preventDefault();
+                                setActiveFlameTest(section.symbol);
+                              }
+                            }}
+                            className={`p-4 rounded-lg transition-all cursor-pointer ${
+                              isActiveWetTest
+                                ? "bg-gradient-to-r from-blue-100 to-cyan-100 border-2 border-blue-400"
+                                : "bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200"
+                            }`}
+                            aria-pressed={isActiveWetTest}
+                            aria-expanded={isActiveWetTest}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                <span className="text-white font-bold text-sm">{section.symbol}</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-sm font-semibold text-gray-900">{section.label}</p>
+                                <p className="text-xs text-gray-500 mt-1">{section.description}</p>
+                              </div>
+                            </div>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               )}
 
 
@@ -724,11 +855,15 @@ export default function ChemicalEquilibriumApp({
                   key={section.symbol}
                   role="button"
                   tabIndex={0}
-                  onClick={() => setActiveHalide(section.symbol)}
+                  onClick={() => {
+                    setActiveHalide(section.symbol);
+                    setHalideExplicitlySelected(true);
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault();
                       setActiveHalide(section.symbol);
+                      setHalideExplicitlySelected(true);
                     }
                   }}
                   className={`halide-section-card ${isActiveHalide ? "halide-section-card--active" : ""}`}
@@ -813,7 +948,7 @@ export default function ChemicalEquilibriumApp({
         )}
 
         {/* Experiment Progress - Only show when a specific section is selected */}
-        {isDryTestExperiment && (activeTopLevelSection === "AR" || activeTopLevelSection === "BR") && (
+        {isDryTestExperiment && ((activeTopLevelSection === "AR" && halideExplicitlySelected) || (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null)) && (
           <div className="mb-6">
             <div className="rounded-xl border border-gray-200 bg-gradient-to-b from-white via-slate-50 to-slate-100 shadow-sm">
               <div className="px-6 py-5 space-y-4">
@@ -847,7 +982,7 @@ export default function ChemicalEquilibriumApp({
         {/* Main Lab Area */}
         <div className="w-full relative">
           {/* Ready to Start Overlay - Only show when a specific section is selected and experiment hasn't started */}
-          {!experimentStarted && (activeTopLevelSection === "AR" || activeTopLevelSection === "BR") && (
+          {!experimentStarted && ((activeTopLevelSection === "AR" && halideExplicitlySelected) || (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null)) && (
             <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-center justify-center">
               <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200 max-w-md">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -871,7 +1006,7 @@ export default function ChemicalEquilibriumApp({
           )}
 
           {/* Virtual Lab Card - Only show when a specific section is selected */}
-          {(activeTopLevelSection === "AR" || activeTopLevelSection === "BR") && (
+          {((activeTopLevelSection === "AR" && halideExplicitlySelected) || (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null)) && (
           <Card className="min-h-[80vh]">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
