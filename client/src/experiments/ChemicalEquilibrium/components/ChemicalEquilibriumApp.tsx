@@ -779,15 +779,19 @@ export default function ChemicalEquilibriumApp({
                                 setActiveFlameTest(section.symbol);
                               }
                             }}
-                            className={`halide-section-card ${isActiveFlameTest ? "halide-section-card--active" : ""}`}
+                            className={`p-4 rounded-lg transition-all cursor-pointer ${
+                              isActiveFlameTest
+                                ? "bg-gradient-to-r from-blue-100 to-cyan-100 border-2 border-blue-400"
+                                : "bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200"
+                            }`}
                             aria-pressed={isActiveFlameTest}
                             aria-expanded={isActiveFlameTest}
                           >
-                            <div className="halide-section-card__header">
-                              <span className="halide-section-symbol" aria-hidden="true">
-                                {section.symbol}
-                              </span>
-                              <div>
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                <span className="text-white font-bold text-sm">{section.symbol}</span>
+                              </div>
+                              <div className="flex-1">
                                 <p className="text-sm font-semibold text-gray-900">{section.label}</p>
                                 <p className="text-xs text-gray-500 mt-1">{section.description}</p>
                               </div>
@@ -815,15 +819,19 @@ export default function ChemicalEquilibriumApp({
                                 setActiveFlameTest(section.symbol);
                               }
                             }}
-                            className={`halide-section-card ${isActiveWetTest ? "halide-section-card--active" : ""}`}
+                            className={`p-4 rounded-lg transition-all cursor-pointer ${
+                              isActiveWetTest
+                                ? "bg-gradient-to-r from-blue-100 to-cyan-100 border-2 border-blue-400"
+                                : "bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200"
+                            }`}
                             aria-pressed={isActiveWetTest}
                             aria-expanded={isActiveWetTest}
                           >
-                            <div className="halide-section-card__header">
-                              <span className="halide-section-symbol" aria-hidden="true">
-                                {section.symbol}
-                              </span>
-                              <div>
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                <span className="text-white font-bold text-sm">{section.symbol}</span>
+                              </div>
+                              <div className="flex-1">
                                 <p className="text-sm font-semibold text-gray-900">{section.label}</p>
                                 <p className="text-xs text-gray-500 mt-1">{section.description}</p>
                               </div>
