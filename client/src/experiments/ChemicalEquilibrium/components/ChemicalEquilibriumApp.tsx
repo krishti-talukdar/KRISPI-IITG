@@ -161,24 +161,29 @@ const HALIDE_SECTIONS = [
 
 const FLAME_TEST_SECTIONS = [
   {
-    symbol: "Ca",
-    label: "Calcium Test",
-    description: "Observe brick-red flame color indicating presence of calcium ions.",
+    symbol: "Fl",
+    label: "Flame Test",
+    description: "Observe distinctive flame colors indicating presence of various metal ions.",
   },
   {
-    symbol: "Na",
-    label: "Sodium Test",
-    description: "Note the persistent yellow-orange flame characteristic of sodium.",
+    symbol: "BB",
+    label: "Borax Bead Test",
+    description: "Use borax beads to identify metal ions through characteristic color changes.",
   },
   {
-    symbol: "K",
-    label: "Potassium Test",
-    description: "Look for the lilac/violet flame through a blue glass rod specific to potassium.",
+    symbol: "Ch",
+    label: "Charcoal Test",
+    description: "Apply the charcoal test to detect metal ions and their oxidation states.",
   },
   {
-    symbol: "Cu",
-    label: "Copper Test",
-    description: "Identify the blue-green flame color that indicates copper presence.",
+    symbol: "Co",
+    label: "Cobalt Nitrate Test",
+    description: "Use cobalt nitrate reagent to identify basic radicals through color reactions.",
+  },
+  {
+    symbol: "Am",
+    label: "Ammonium Radical Test",
+    description: "Detect ammonium radicals using appropriate reagents and heating techniques.",
   },
 ];
 
@@ -195,7 +200,7 @@ export default function ChemicalEquilibriumApp({
   );
   const [activeTopLevelSection, setActiveTopLevelSection] = useState<"AR" | "BR" | "SC" | null>(null);
   const [activeFlameTest, setActiveFlameTest] = useState(
-    FLAME_TEST_SECTIONS[0]?.symbol ?? "Ca",
+    FLAME_TEST_SECTIONS[0]?.symbol ?? "Fl",
   );
 
   const [match, params] = useRoute("/experiment/:id");
