@@ -630,20 +630,6 @@ export default function ChemicalEquilibriumApp({
                 </div>
               </div>
 
-              {/* Special Cases Description Box - Only show when Special Cases is selected */}
-              {activeTopLevelSection === "AR" && activeHalide === "SC" && (
-              <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">SC</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 text-sm">Special Cases</h3>
-                    <p className="text-gray-600 text-sm mt-1">CO₃²⁻ ,NO₂⁻, S²⁻, SO₃²⁻, NO₃⁻, C₂O₄²⁻, SO₄²⁻, SO₃²⁻, PO₄³⁻, Ca²⁺, Sr²⁺, Cu²⁺ , Pb²⁺, Ba²⁺  radicals are present</p>
-                  </div>
-                </div>
-              </div>
-              )}
 
               {/* Halide Sections Grid - Only show when Acid Radicals is selected */}
               {activeTopLevelSection === "AR" && (
@@ -727,6 +713,22 @@ export default function ChemicalEquilibriumApp({
             </>
           )}
         </div>
+
+        {/* Special Cases Description Box - Only show when Special Cases is selected */}
+        {isDryTestExperiment && activeTopLevelSection === "AR" && activeHalide === "SC" && (
+          <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">SC</span>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900 text-sm">Special Cases</h3>
+                <p className="text-gray-600 text-sm mt-1">CO₃²⁻ ,NO₂⁻, S²⁻, SO₃²⁻, NO₃⁻, C₂O₄²⁻, SO₄²⁻, SO₃²⁻, PO₄³⁻, Ca²⁺, Sr²⁺, Cu²⁺ , Pb²⁺, Ba²⁺  radicals are present</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {isDryTestExperiment && (
           <div className="mb-6">
             <div className="rounded-xl border border-gray-200 bg-gradient-to-b from-white via-slate-50 to-slate-100 shadow-sm">
