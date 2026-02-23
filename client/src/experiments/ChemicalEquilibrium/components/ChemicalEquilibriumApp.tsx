@@ -170,6 +170,7 @@ export default function ChemicalEquilibriumApp({
   const [activeHalide, setActiveHalide] = useState(
     HALIDE_SECTIONS[0]?.symbol ?? "Br",
   );
+  const [activeTopLevelSection, setActiveTopLevelSection] = useState<"AR" | "BR" | "SC" | null>(null);
 
   const [match, params] = useRoute("/experiment/:id");
   const experimentId = Number(params?.id ?? 4);
@@ -588,7 +589,23 @@ export default function ChemicalEquilibriumApp({
           {isDryTestExperiment && (
             <>
               {/* Acid Radicals Description Box */}
-              <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-lg">
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setActiveTopLevelSection(activeTopLevelSection === "AR" ? null : "AR")}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setActiveTopLevelSection(activeTopLevelSection === "AR" ? null : "AR");
+                  }
+                }}
+                className={`mb-6 p-4 rounded-lg transition-all cursor-pointer ${
+                  activeTopLevelSection === "AR"
+                    ? "bg-gradient-to-r from-blue-100 to-cyan-100 border-2 border-blue-400"
+                    : "bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200"
+                }`}
+                aria-pressed={activeTopLevelSection === "AR"}
+              >
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-sm">AR</span>
@@ -626,7 +643,8 @@ export default function ChemicalEquilibriumApp({
                 </div>
               </div>
 
-              {/* Halide Sections Grid */}
+              {/* Halide Sections Grid - Only show when Acid Radicals is selected */}
+              {activeTopLevelSection === "AR" && (
           <div className="halide-section-grid mb-6">
             {HALIDE_SECTIONS.map((section) => {
               const isActiveHalide = activeHalide === section.symbol;
@@ -692,6 +710,7 @@ export default function ChemicalEquilibriumApp({
               );
             })}
           </div>
+              )}
             </>
           )}
 
