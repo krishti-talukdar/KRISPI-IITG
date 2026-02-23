@@ -206,6 +206,7 @@ export default function ChemicalEquilibriumApp({
   const [activeHalide, setActiveHalide] = useState(
     HALIDE_SECTIONS[0]?.symbol ?? "Br",
   );
+  const [halideExplicitlySelected, setHalideExplicitlySelected] = useState(false);
   const [activeTopLevelSection, setActiveTopLevelSection] = useState<"AR" | "BR" | "SC" | null>(null);
   const [activeFlameTest, setActiveFlameTest] = useState(
     FLAME_TEST_SECTIONS[0]?.symbol ?? "Fl",
@@ -543,6 +544,10 @@ export default function ChemicalEquilibriumApp({
     if (activeTopLevelSection !== "BR") {
       setActiveBasicRadicalsSubsection(null);
     }
+    // Reset halideExplicitlySelected when Acid Radicals section is closed
+    if (activeTopLevelSection !== "AR") {
+      setHalideExplicitlySelected(false);
+    }
   }, [activeTopLevelSection]);
 
   // Ensure activeDryTestMode is valid for the current experiment
@@ -842,11 +847,15 @@ export default function ChemicalEquilibriumApp({
                   key={section.symbol}
                   role="button"
                   tabIndex={0}
-                  onClick={() => setActiveHalide(section.symbol)}
+                  onClick={() => {
+                    setActiveHalide(section.symbol);
+                    setHalideExplicitlySelected(true);
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault();
                       setActiveHalide(section.symbol);
+                      setHalideExplicitlySelected(true);
                     }
                   }}
                   className={`halide-section-card ${isActiveHalide ? "halide-section-card--active" : ""}`}
@@ -931,7 +940,7 @@ export default function ChemicalEquilibriumApp({
         )}
 
         {/* Experiment Progress - Only show when a specific section is selected */}
-        {isDryTestExperiment && (activeTopLevelSection === "AR" || (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null)) && (
+        {isDryTestExperiment && ((activeTopLevelSection === "AR" && halideExplicitlySelected) || (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null)) && (
           <div className="mb-6">
             <div className="rounded-xl border border-gray-200 bg-gradient-to-b from-white via-slate-50 to-slate-100 shadow-sm">
               <div className="px-6 py-5 space-y-4">
@@ -965,7 +974,7 @@ export default function ChemicalEquilibriumApp({
         {/* Main Lab Area */}
         <div className="w-full relative">
           {/* Ready to Start Overlay - Only show when a specific section is selected and experiment hasn't started */}
-          {!experimentStarted && (activeTopLevelSection === "AR" || (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null)) && (
+          {!experimentStarted && ((activeTopLevelSection === "AR" && halideExplicitlySelected) || (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null)) && (
             <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-center justify-center">
               <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200 max-w-md">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -989,7 +998,7 @@ export default function ChemicalEquilibriumApp({
           )}
 
           {/* Virtual Lab Card - Only show when a specific section is selected */}
-          {(activeTopLevelSection === "AR" || activeTopLevelSection === "BR") && (
+          {((activeTopLevelSection === "AR" && halideExplicitlySelected) || (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null)) && (
           <Card className="min-h-[80vh]">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
