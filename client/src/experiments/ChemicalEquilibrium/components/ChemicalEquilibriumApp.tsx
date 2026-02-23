@@ -931,7 +931,7 @@ export default function ChemicalEquilibriumApp({
         )}
 
         {/* Experiment Progress - Only show when a specific section is selected */}
-        {isDryTestExperiment && (activeTopLevelSection === "AR" || activeTopLevelSection === "BR") && (
+        {isDryTestExperiment && (activeTopLevelSection === "AR" || (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null)) && (
           <div className="mb-6">
             <div className="rounded-xl border border-gray-200 bg-gradient-to-b from-white via-slate-50 to-slate-100 shadow-sm">
               <div className="px-6 py-5 space-y-4">
@@ -965,7 +965,7 @@ export default function ChemicalEquilibriumApp({
         {/* Main Lab Area */}
         <div className="w-full relative">
           {/* Ready to Start Overlay - Only show when a specific section is selected and experiment hasn't started */}
-          {!experimentStarted && (activeTopLevelSection === "AR" || activeTopLevelSection === "BR") && (
+          {!experimentStarted && (activeTopLevelSection === "AR" || (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null)) && (
             <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-center justify-center">
               <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200 max-w-md">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
