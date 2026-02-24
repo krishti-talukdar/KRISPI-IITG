@@ -501,29 +501,38 @@ export default function ChemicalEquilibriumApp({
 
   // Equipment modifications for Basic Radicals section
   if (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null && dryTestEquipmentToUse) {
-    const basicRadicalsExclude = ["MnO₂", "MnO2", "Glass container", "Concentrated H₂SO₄"];
-    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
-      (name) => !basicRadicalsExclude.some(item => name.includes(item))
-    );
-
-    // Specific modifications for different Basic Radicals tests
-    if (activeFlameTest === "BB") {
-      // Borax Bead Test: Remove Concentrated HCl variants
+    // For Wet Test - GROUPS section, remove specific equipment
+    if (activeBasicRadicalsSubsection === "wet" && activeFlameTest === "GR") {
+      const groupsExclude = ["Dilute H2SO4", "Dilute H₂SO₄", "Conc. H2SO4", "Concentrated H₂SO₄", "Glass Rod", "Glass rod", "Platinum Wire", "Watch glass", "Concentrated HCl", "Conc. HCl"];
       dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
-        (name) => !name.includes("Concentrated HCl") && !name.includes("Conc. HCl")
+        (name) => !groupsExclude.some(item => name.includes(item))
       );
-      // Add Borax and Platinum Wire for Borax Bead Test
-      dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Borax", "Platinum Wire"]));
-    } else if (activeFlameTest === "Am") {
-      // Ammonium Radical Test: Remove Platinum Wire, Watch glass, and Concentrated HCl
-      dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
-        (name) => !name.includes("Platinum Wire") && !name.includes("Watch glass") && !name.includes("Concentrated HCl") && !name.includes("Conc. HCl")
-      );
-      // Add Na₂CO₃ for Ammonium Radical Test
-      dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Na₂CO₃"]));
     } else {
-      // Add Platinum Wire, Watch glass & concentrated HCL for other Basic Radicals tests (like Flame Test)
-      dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Concentrated HCl"]));
+      // For Dry Test section, apply existing modifications
+      const basicRadicalsExclude = ["MnO₂", "MnO2", "Glass container", "Concentrated H₂SO₄"];
+      dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+        (name) => !basicRadicalsExclude.some(item => name.includes(item))
+      );
+
+      // Specific modifications for different Basic Radicals tests
+      if (activeFlameTest === "BB") {
+        // Borax Bead Test: Remove Concentrated HCl variants
+        dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+          (name) => !name.includes("Concentrated HCl") && !name.includes("Conc. HCl")
+        );
+        // Add Borax and Platinum Wire for Borax Bead Test
+        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Borax", "Platinum Wire"]));
+      } else if (activeFlameTest === "Am") {
+        // Ammonium Radical Test: Remove Platinum Wire, Watch glass, and Concentrated HCl
+        dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+          (name) => !name.includes("Platinum Wire") && !name.includes("Watch glass") && !name.includes("Concentrated HCl") && !name.includes("Conc. HCl")
+        );
+        // Add Na₂CO₃ for Ammonium Radical Test
+        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Na₂CO₃"]));
+      } else {
+        // Add Platinum Wire, Watch glass & concentrated HCL for other Basic Radicals tests (like Flame Test)
+        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Concentrated HCl"]));
+      }
     }
   }
 
