@@ -505,14 +505,19 @@ export default function ChemicalEquilibriumApp({
       (name) => !basicRadicalsExclude.some(item => name.includes(item))
     );
 
-    // Specific modifications for Borax Bead Test (activeFlameTest === "BB")
+    // Specific modifications for different Basic Radicals tests
     if (activeFlameTest === "BB") {
-      // Remove Concentrated HCl variants for Borax Bead Test
+      // Borax Bead Test: Remove Concentrated HCl variants
       dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
         (name) => !name.includes("Concentrated HCl") && !name.includes("Conc. HCl")
       );
       // Add Borax and Platinum Wire for Borax Bead Test
       dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Borax", "Platinum Wire"]));
+    } else if (activeFlameTest === "Am") {
+      // Ammonium Radical Test: Remove Platinum Wire, Watch glass, and Concentrated HCl
+      dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+        (name) => !name.includes("Platinum Wire") && !name.includes("Watch glass") && !name.includes("Concentrated HCl") && !name.includes("Conc. HCl")
+      );
     } else {
       // Add Platinum Wire, Watch glass & concentrated HCL for other Basic Radicals tests (like Flame Test)
       dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Concentrated HCl"]));
