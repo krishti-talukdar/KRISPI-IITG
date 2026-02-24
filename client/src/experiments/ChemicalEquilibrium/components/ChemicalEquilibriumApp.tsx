@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Play, Pause } from "lucide-react";
+import { ArrowLeft, ArrowRight, Play, Pause, Info, X } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import ChemicalEquilibriumVirtualLab from "./VirtualLab";
 import ChemicalEquilibriumData, { PHHClExperiment, BASIC_DRY_TEST_STEPS } from "../data";
@@ -211,6 +211,7 @@ export default function ChemicalEquilibriumApp({
     FLAME_TEST_SECTIONS[0]?.symbol ?? "Fl",
   );
   const [activeBasicRadicalsSubsection, setActiveBasicRadicalsSubsection] = useState<"dry" | "wet" | null>(null);
+  const [showWetBasicGroupsModal, setShowWetBasicGroupsModal] = useState(false);
 
   const [match, params] = useRoute("/experiment/:id");
   const experimentId = Number(params?.id ?? 4);
@@ -787,7 +788,19 @@ export default function ChemicalEquilibriumApp({
                           <span className="text-white font-bold text-sm">W</span>
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 text-sm">Wet Test for Basic Radicals</h3>
+                          <div className="flex items-center justify-between">
+                            <h3 className="font-semibold text-gray-900 text-sm">Wet Test for Basic Radicals</h3>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowWetBasicGroupsModal(true);
+                              }}
+                              className="p-1 hover:bg-teal-200 rounded-full transition-colors"
+                              title="View ions grouping information"
+                            >
+                              <Info size={18} className="text-teal-600" />
+                            </button>
+                          </div>
                           <p className="text-gray-600 text-sm mt-1">Conduct wet tests to classify and identify basic radical groups.</p>
                         </div>
                       </div>
@@ -1138,6 +1151,68 @@ export default function ChemicalEquilibriumApp({
           </Card>
           )}
         </div>
+
+        {/* Wet Test for Basic Radicals - Groups Information Modal */}
+        {showWetBasicGroupsModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-teal-600 text-white p-6 flex items-center justify-between">
+                <h2 className="text-xl font-bold">Classification of Cations (Basic Radicals) by Groups</h2>
+                <button
+                  onClick={() => setShowWetBasicGroupsModal(false)}
+                  className="p-1 hover:bg-teal-500 rounded-full transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <div className="p-6">
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-teal-50">
+                        <th className="border border-teal-300 px-4 py-3 text-left font-semibold text-teal-900 w-20">Group</th>
+                        <th className="border border-teal-300 px-4 py-3 text-left font-semibold text-teal-900">Ions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="hover:bg-gray-50">
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">I</td>
+                        <td className="border border-gray-300 px-4 py-3">Pb²⁺</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">II</td>
+                        <td className="border border-gray-300 px-4 py-3">Pb²⁺, Cu²⁺, As³⁺</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">III</td>
+                        <td className="border border-gray-300 px-4 py-3">Fe³⁺, Al³⁺, Mn²⁺</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">IV</td>
+                        <td className="border border-gray-300 px-4 py-3">Zn²⁺, Mn²⁺, Co²⁺, Ni²⁺</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">V</td>
+                        <td className="border border-gray-300 px-4 py-3">Ba²⁺, Sr²⁺, Ca²⁺</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">VI</td>
+                        <td className="border border-gray-300 px-4 py-3">Mg²⁺</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-gray-700">
+                    These groups represent the classification of cations based on their precipitation behavior with specific reagents in wet test procedures. Each group contains cations that exhibit similar chemical reactions and can be identified through systematic qualitative analysis.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Safety Information */}
         <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
