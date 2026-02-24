@@ -57,6 +57,7 @@ interface ChemicalEquilibriumVirtualLabProps {
   dryTestEquipment?: string[];
   dryTestMode?: DryTestMode;
   activeHalide?: string;
+  activeFlameTest?: string;
 }
 
 type LabSnapshot = {
@@ -556,6 +557,7 @@ function ChemicalEquilibriumVirtualLab({
   dryTestEquipment,
   dryTestMode,
   activeHalide,
+  activeFlameTest,
 }: ChemicalEquilibriumVirtualLabProps) {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -3909,7 +3911,12 @@ function ChemicalEquilibriumVirtualLab({
       isAllowedHalideForDryAcid &&
       normalizedEquipmentName.includes("bunsen");
 
-    return (isTestTube && !allowTestTubeInDryAcid) || (isBunsen && !allowBunsenInDryAcid) || isGlassLimit;
+    // Allow glass rod in Flame Test (activeFlameTest === "Fl" means Flame Test is selected)
+    const isGlassRod = normalizedEquipmentName.includes("glass rod");
+    const isFlameTest = activeFlameTest === "Fl" && dryTestMode === "basic";
+    const allowGlassRodInFlameTest = isGlassRod && isFlameTest;
+
+    return ((isTestTube && !allowTestTubeInDryAcid) || (isBunsen && !allowBunsenInDryAcid) || isGlassLimit) && !allowGlassRodInFlameTest;
   })();
                   const showAddButton = !hideAddButton;
                   const isBaClCard = normalizedEquipmentName.includes("bacl");
@@ -4169,6 +4176,7 @@ function ChemicalEquilibriumVirtualLab({
                         iodideWetHeatingTriggered={iodideWetHeatingTriggered}
                         iodideWetHeatingCount={iodideWetHeatingCount}
                         specialCasesHeatingCount={specialCasesHeatingCount}
+                        activeFlameTest={activeFlameTest}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
@@ -4311,6 +4319,7 @@ function ChemicalEquilibriumVirtualLab({
                     disabled={!experimentStarted}
                     isDryTest={isDryTestExperiment}
                     dryTestMode={resolvedDryTestMode}
+                    activeFlameTest={activeFlameTest}
                   />
                 </div>
               ))}
@@ -4373,6 +4382,7 @@ function ChemicalEquilibriumVirtualLab({
                       isDryTest={isDryTestExperiment}
                       dryTestMode={resolvedDryTestMode}
                       imageUrl={equipment.imageUrl}
+                      activeFlameTest={activeFlameTest}
                       // Special: color/volume for test tube reaction when heating conc H2SO4 with salt under Bromide Check
                       color={
                           pos.id === "test_tubes" &&

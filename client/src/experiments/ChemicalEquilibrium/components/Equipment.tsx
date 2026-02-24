@@ -61,6 +61,7 @@ interface EquipmentProps {
   iodideWetHeatingTriggered?: boolean;
   iodideWetHeatingCount?: number;
   specialCasesHeatingCount?: number;
+  activeFlameTest?: string;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -91,6 +92,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   iodideWetHeatingTriggered = false,
   iodideWetHeatingCount = 0,
   specialCasesHeatingCount = 0,
+  activeFlameTest,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
@@ -467,7 +469,11 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isGlassRodEquipment) {
-      const rodVisualClasses = `w-28 h-6 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`;
+      // Increase glass rod size by 2x when in Flame Test
+      const isFlameTest = activeFlameTest === "Fl" && dryTestMode === "basic";
+      const rodVisualClasses = isFlameTest
+        ? `w-56 h-12 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`
+        : `w-28 h-6 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`;
       return (
         <div
           className="relative flex flex-col items-center pointer-events-none"
