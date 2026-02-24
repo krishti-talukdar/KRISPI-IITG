@@ -498,11 +498,14 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = [...ordered, ...remaining];
   }
 
-  // Remove MnO₂, Glass container, and Concentrated H₂SO₄ from Basic Radicals equipment
+  // Remove MnO₂, Glass container, and Concentrated H₂SO₄ from Basic Radicals equipment, and add Platinum Wire, Watch glass & concentrated HCL
   if (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null && dryTestEquipmentToUse) {
+    const basicRadicalsExclude = ["MnO₂", "MnO2", "Glass container", "Concentrated H₂SO₄"];
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
-      (name) => !name.includes("MnO₂") && !name.includes("MnO2") && !name.includes("Glass container") && !name.includes("Concentrated H₂SO₄")
+      (name) => !basicRadicalsExclude.some(item => name.includes(item))
     );
+    // Add Platinum Wire, Watch glass & concentrated HCL for Basic Radicals Flame Test
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Concentrated HCl"]));
   }
 
   const activeStepDetails =
