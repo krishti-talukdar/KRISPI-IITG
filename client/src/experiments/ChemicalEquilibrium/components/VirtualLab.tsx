@@ -2821,6 +2821,12 @@ function ChemicalEquilibriumVirtualLab({
             setCaseTwoResult("Form insoluble sulphide with H₂S in presence of dilute HCL,  Pb²⁺,Cu²⁺, As³⁺ are confirmed");
           } else if (newCount === 3) {
             setCaseThreeResult("In presence of NH₄Cl form insoluble ,Fe³⁺, Al³⁺, and Mn²⁺ are confirmed");
+          } else if (newCount === 4) {
+            setCaseFourResult("Form insoluble sulphide in presence of NH₄OH medium, Zn²⁺, Mn²⁺, Co²⁺& Ni²⁺ are confirmed");
+          } else if (newCount === 5) {
+            setCaseFiveResult("Form insoluble Carbonate in  NH₄OH medium in presence of NH₄Cl, Ba²⁺, Sr²⁺& Ca²⁺ are confirmed ");
+          } else if (newCount === 6) {
+            setCaseSixResult("Mg²⁺ forms insoluble MgNH₄PO₄, Mg²⁺ confirmed ");
           }
           return newCount;
         });
