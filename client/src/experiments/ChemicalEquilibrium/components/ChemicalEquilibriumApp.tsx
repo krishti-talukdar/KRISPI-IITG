@@ -219,7 +219,9 @@ export default function ChemicalEquilibriumApp({
   const isDryTestExperiment = experiment.id === ChemicalEquilibriumData.id;
   const updateProgress = useUpdateProgress();
   const applicableDryTestModes = isDryTestExperiment ? SALT_ANALYSIS_DRY_TEST_MODE_ORDER : DRY_TEST_MODE_ORDER;
-  const activeDryTestConfig = DRY_TEST_MODE_CONFIG[activeDryTestMode];
+  // For Basic Radicals wet test, use "wetBasic" mode internally
+  const effectiveDryTestMode = (isDryTestExperiment && activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "wet") ? "wetBasic" : activeDryTestMode;
+  const activeDryTestConfig = DRY_TEST_MODE_CONFIG[effectiveDryTestMode];
   let baseDryTestEquipment = activeDryTestConfig.equipment;
   // If this is the Salt Analysis experiment and user selected "Special Cases" in dry acid mode,
   // restrict equipment to the curated minimal list specified above.
@@ -345,6 +347,11 @@ export default function ChemicalEquilibriumApp({
     // Also include any remaining items that might be present but not in desiredOrder after the ordered ones
     const remaining = (dryTestEquipmentToUse as string[]).filter((n) => !ordered.includes(n));
     dryTestEquipmentToUse = [...ordered, ...remaining];
+  }
+
+  // For Salt Analysis, use WET_BASIC_TEST_EQUIPMENT when Basic Radicals > Wet Test is selected
+  if (isDryTestExperiment && activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "wet") {
+    dryTestEquipmentToUse = WET_BASIC_TEST_EQUIPMENT;
   }
 
   // For Salt Analysis, Bromide check in the WET test for Acid Radicals,
@@ -1130,9 +1137,9 @@ export default function ChemicalEquilibriumApp({
             </CardHeader>
             <CardContent className="p-0">
               <ChemicalEquilibriumVirtualLab
-                key={`dry-test-${activeDryTestMode}`}
+                key={`dry-test-${effectiveDryTestMode}`}
                 dryTestEquipment={dryTestEquipmentToUse}
-                dryTestMode={activeDryTestMode}
+                dryTestMode={effectiveDryTestMode}
                 step={currentStepData}
                 onStepComplete={handleCompleteStep}
                 isActive={true}
