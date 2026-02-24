@@ -898,7 +898,7 @@ function ChemicalEquilibriumVirtualLab({
       description: caseThreeResult,
     },
     {
-      title: "Oxalate check",
+      title: "Sulphite check",
       hint: "Inference 4",
       description: caseFourResult,
     },
