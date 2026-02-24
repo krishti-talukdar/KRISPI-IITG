@@ -649,6 +649,8 @@ function ChemicalEquilibriumVirtualLab({
   const [iodideAgNO3Observed, setIodideAgNO3Observed] = useState(false);
   const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
   const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
+  const [wetBasicHeatingTriggered, setWetBasicHeatingTriggered] = useState(false);
+  const [wetBasicHeatingCount, setWetBasicHeatingCount] = useState(0);
   const MNO2_CASE_TWO_RESULT =
     "MnO₂ accelerates the rate of production of Br₂ gas.\n\n2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
@@ -896,7 +898,7 @@ function ChemicalEquilibriumVirtualLab({
       description: caseThreeResult,
     },
     {
-      title: "Oxalate check",
+      title: "Sulphite check",
       hint: "Inference 4",
       description: caseFourResult,
     },
@@ -1468,6 +1470,8 @@ function ChemicalEquilibriumVirtualLab({
     setBasicSecondBunsenTracked(false);
     setBasicGlassSetupTracked(false);
     setBasicGlassAcidAddedTracked(false);
+    setWetBasicHeatingTriggered(false);
+    setWetBasicHeatingCount(0);
   }, [stepNumber, workbenchResetTrigger]);
 
   useEffect(() => {
@@ -1858,6 +1862,14 @@ function ChemicalEquilibriumVirtualLab({
       // on the workbench (skip the amount dialog).
       const isSpecialCasesWetAcid = isDryTestExperiment && (dryTestMode === "wet") && (activeHalide ?? "").toLowerCase() === "sc";
       if (isTestTubeId && isSpecialCasesWetAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
+      // For Wet Test for Basic Radicals (wetBasic mode), immediately place test tube and bunsen burner
+      // on the workbench without opening the amount dialog.
+      const isWetBasicTest = isDryTestExperiment && dryTestMode === "wetBasic";
+      if ((isTestTubeId || isBunsenId) && isWetBasicTest) {
         handleEquipmentAddButton(equipment.id);
         return;
       }
@@ -2798,6 +2810,28 @@ function ChemicalEquilibriumVirtualLab({
         }
       }
 
+      // For Wet Test for Basic Radicals (wetBasic mode), set inference results based on heating count
+      if (heating && isDryTestExperiment && resolvedDryTestMode === "wetBasic") {
+        setWetBasicHeatingCount((prev) => {
+          const newCount = prev + 1;
+          if (newCount === 1) {
+            setWetBasicHeatingTriggered(true);
+            setCaseOneResult("Form insoluble chloride with dilute HCL , Pb²⁺ confirmed ");
+          } else if (newCount === 2) {
+            setCaseTwoResult("Form insoluble sulphide with H₂S in presence of dilute HCL,  Pb²⁺,Cu²⁺, As³⁺ are confirmed");
+          } else if (newCount === 3) {
+            setCaseThreeResult("In presence of NH₄Cl form insoluble ,Fe³⁺, Al³⁺, and Mn²⁺ are confirmed");
+          } else if (newCount === 4) {
+            setCaseFourResult("Form insoluble sulphide in presence of NH₄OH medium, Zn²⁺, Mn²⁺, Co²⁺& Ni²⁺ are confirmed");
+          } else if (newCount === 5) {
+            setCaseFiveResult("Form insoluble Carbonate in  NH₄OH medium in presence of NH₄Cl, Ba²⁺, Sr²⁺& Ca²⁺ are confirmed ");
+          } else if (newCount === 6) {
+            setCaseSixResult("Mg²⁺ forms insoluble MgNH₄PO₄, Mg²⁺ confirmed ");
+          }
+          return newCount;
+        });
+      }
+
       if (!heating) {
         setDilH2SO4HeatingTriggered(false);
       }
@@ -3632,6 +3666,8 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
     setChlorideHeatingCount(0);
+    setWetBasicHeatingTriggered(false);
+    setWetBasicHeatingCount(0);
     setFeCl3Added(false);
     setBaClUsed(false);
     setSodiumNitroprussideUsed(false);
@@ -3693,6 +3729,8 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
     setChlorideHeatingCount(0);
+    setWetBasicHeatingTriggered(false);
+    setWetBasicHeatingCount(0);
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
