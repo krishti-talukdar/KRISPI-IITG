@@ -1162,6 +1162,7 @@ export default function ChemicalEquilibriumApp({
                 timer={timer}
                 toggleTimer={toggleTimer}
                 activeHalide={activeHalide}
+                activeFlameTest={activeFlameTest}
               />
             </CardContent>
           </Card>
