@@ -511,8 +511,8 @@ export default function ChemicalEquilibriumApp({
       dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
         (name) => !name.includes("Concentrated HCl") && !name.includes("Conc. HCl")
       );
-      // Add Borax for Borax Bead Test
-      dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Borax"]));
+      // Add Borax and Platinum Wire for Borax Bead Test
+      dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Borax", "Platinum Wire"]));
     } else {
       // Add Platinum Wire, Watch glass & concentrated HCL for other Basic Radicals tests (like Flame Test)
       dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Concentrated HCl"]));
