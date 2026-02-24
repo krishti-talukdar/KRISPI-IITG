@@ -498,6 +498,13 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = [...ordered, ...remaining];
   }
 
+  // Remove MnO₂ from Basic Radicals equipment
+  if (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null && dryTestEquipmentToUse) {
+    dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
+      (name) => !name.includes("MnO₂") && !name.includes("MnO2")
+    );
+  }
+
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
       ? BASIC_DRY_TEST_STEPS
