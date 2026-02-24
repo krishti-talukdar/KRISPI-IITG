@@ -62,7 +62,6 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
       "Conc. HCl",
       "Anhydrous Na₂CO₃",
       "NaOH",
-      "Glass container",
     ],
   },
   wet: {
