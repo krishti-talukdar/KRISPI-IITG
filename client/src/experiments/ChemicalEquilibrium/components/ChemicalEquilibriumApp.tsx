@@ -498,10 +498,10 @@ export default function ChemicalEquilibriumApp({
     dryTestEquipmentToUse = [...ordered, ...remaining];
   }
 
-  // Remove MnO₂ from Basic Radicals equipment
+  // Remove MnO₂, Glass container, and Concentrated H₂SO₄ from Basic Radicals equipment
   if (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null && dryTestEquipmentToUse) {
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
-      (name) => !name.includes("MnO₂") && !name.includes("MnO2")
+      (name) => !name.includes("MnO₂") && !name.includes("MnO2") && !name.includes("Glass container") && !name.includes("Concentrated H₂SO₄")
     );
   }
 
