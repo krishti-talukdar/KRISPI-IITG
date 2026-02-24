@@ -650,6 +650,7 @@ function ChemicalEquilibriumVirtualLab({
   const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
   const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
   const [wetBasicHeatingTriggered, setWetBasicHeatingTriggered] = useState(false);
+  const [wetBasicHeatingCount, setWetBasicHeatingCount] = useState(0);
   const MNO2_CASE_TWO_RESULT =
     "MnO₂ accelerates the rate of production of Br₂ gas.\n\n2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
@@ -1470,6 +1471,7 @@ function ChemicalEquilibriumVirtualLab({
     setBasicGlassSetupTracked(false);
     setBasicGlassAcidAddedTracked(false);
     setWetBasicHeatingTriggered(false);
+    setWetBasicHeatingCount(0);
   }, [stepNumber, workbenchResetTrigger]);
 
   useEffect(() => {
@@ -2808,17 +2810,27 @@ function ChemicalEquilibriumVirtualLab({
         }
       }
 
-      // For Wet Test for Basic Radicals (wetBasic mode), set INFERENCE 1 result on first heating
-      if (heating && isDryTestExperiment && resolvedDryTestMode === "wetBasic" && !wetBasicHeatingTriggered) {
-        setCaseOneResult("Form insoluble chloride with dilute HCL , Pb²⁺ confirmed ");
-        setWetBasicHeatingTriggered(true);
+      // For Wet Test for Basic Radicals (wetBasic mode), set inference results based on heating count
+      if (heating && isDryTestExperiment && resolvedDryTestMode === "wetBasic") {
+        setWetBasicHeatingCount((prev) => {
+          const newCount = prev + 1;
+          if (newCount === 1) {
+            setWetBasicHeatingTriggered(true);
+            setCaseOneResult("Form insoluble chloride with dilute HCL , Pb²⁺ confirmed ");
+          } else if (newCount === 2) {
+            setCaseTwoResult("Form insoluble sulphide with H₂S in presence of dilute HCL,  Pb²⁺,Cu²⁺, As³⁺ are confirmed");
+          } else if (newCount === 3) {
+            setCaseThreeResult("In presence of NH₄Cl form insoluble ,Fe³⁺, Al³⁺, and Mn²⁺ are confirmed");
+          }
+          return newCount;
+        });
       }
 
       if (!heating) {
         setDilH2SO4HeatingTriggered(false);
       }
     },
-    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide, wetBasicHeatingTriggered],
+    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide],
   );
 
   useEffect(() => {
@@ -3649,6 +3661,7 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetHeatingCount(0);
     setChlorideHeatingCount(0);
     setWetBasicHeatingTriggered(false);
+    setWetBasicHeatingCount(0);
     setFeCl3Added(false);
     setBaClUsed(false);
     setSodiumNitroprussideUsed(false);
@@ -3711,6 +3724,7 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetHeatingCount(0);
     setChlorideHeatingCount(0);
     setWetBasicHeatingTriggered(false);
+    setWetBasicHeatingCount(0);
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
