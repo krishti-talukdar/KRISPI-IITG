@@ -649,6 +649,7 @@ function ChemicalEquilibriumVirtualLab({
   const [iodideAgNO3Observed, setIodideAgNO3Observed] = useState(false);
   const [specialCasesHeatingCount, setSpecialCasesHeatingCount] = useState(0);
   const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
+  const [wetBasicHeatingTriggered, setWetBasicHeatingTriggered] = useState(false);
   const MNO2_CASE_TWO_RESULT =
     "MnO₂ accelerates the rate of production of Br₂ gas.\n\n2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
@@ -1468,6 +1469,7 @@ function ChemicalEquilibriumVirtualLab({
     setBasicSecondBunsenTracked(false);
     setBasicGlassSetupTracked(false);
     setBasicGlassAcidAddedTracked(false);
+    setWetBasicHeatingTriggered(false);
   }, [stepNumber, workbenchResetTrigger]);
 
   useEffect(() => {
@@ -2806,11 +2808,17 @@ function ChemicalEquilibriumVirtualLab({
         }
       }
 
+      // For Wet Test for Basic Radicals (wetBasic mode), set INFERENCE 1 result on first heating
+      if (heating && isDryTestExperiment && resolvedDryTestMode === "wetBasic" && !wetBasicHeatingTriggered) {
+        setCaseOneResult("Form insoluble chloride with dilute HCL , Pb²⁺ confirmed ");
+        setWetBasicHeatingTriggered(true);
+      }
+
       if (!heating) {
         setDilH2SO4HeatingTriggered(false);
       }
     },
-    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide],
+    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide, wetBasicHeatingTriggered],
   );
 
   useEffect(() => {
@@ -3640,6 +3648,7 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
     setChlorideHeatingCount(0);
+    setWetBasicHeatingTriggered(false);
     setFeCl3Added(false);
     setBaClUsed(false);
     setSodiumNitroprussideUsed(false);
@@ -3701,6 +3710,7 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
     setChlorideHeatingCount(0);
+    setWetBasicHeatingTriggered(false);
     setFeCl3Added(false);
     setShowCase2ResultsModal(false);
     setShowSaltAnalysisQuizModal(false);
