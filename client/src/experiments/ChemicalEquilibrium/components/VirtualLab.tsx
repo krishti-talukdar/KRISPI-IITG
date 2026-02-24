@@ -1862,6 +1862,14 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // For Wet Test for Basic Radicals (wetBasic mode), immediately place test tube and bunsen burner
+      // on the workbench without opening the amount dialog.
+      const isWetBasicTest = isDryTestExperiment && dryTestMode === "wetBasic";
+      if ((isTestTubeId || isBunsenId) && isWetBasicTest) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
