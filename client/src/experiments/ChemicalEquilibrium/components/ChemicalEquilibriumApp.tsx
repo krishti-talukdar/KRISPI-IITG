@@ -503,7 +503,7 @@ export default function ChemicalEquilibriumApp({
   if (activeTopLevelSection === "BR" && activeBasicRadicalsSubsection !== null && dryTestEquipmentToUse) {
     // For Wet Test - GROUPS section, remove specific equipment
     if (activeBasicRadicalsSubsection === "wet" && activeFlameTest === "GR") {
-      const groupsExclude = ["Dilute H2SO4", "Dilute H₂SO₄", "Conc. H2SO4", "Concentrated H₂SO₄", "Glass Rod", "Glass rod", "Platinum Wire", "Watch glass", "Concentrated HCl", "Conc. HCl"];
+      const groupsExclude = ["Dilute H2SO4", "Dilute H₂SO₄", "Conc. H2SO4", "Concentrated H₂SO₄", "Glass Rod", "Glass rod", "Platinum Wire", "Watch glass", "Concentrated HCl", "Conc. HCl", "MnO2", "MnO₂"];
       dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
         (name) => !groupsExclude.some(item => name.includes(item))
       );
