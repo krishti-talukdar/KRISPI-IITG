@@ -519,6 +519,11 @@ export default function ChemicalEquilibriumApp({
     }
   }
 
+  // Filter FLAME_TEST_SECTIONS for Basic Radicals - remove Charcoal Test (Ch) and Cobalt Nitrate Test (Co)
+  const displayedFlameTestSections = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry"
+    ? FLAME_TEST_SECTIONS.filter((section) => section.symbol !== "Ch" && section.symbol !== "Co")
+    : FLAME_TEST_SECTIONS;
+
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
       ? BASIC_DRY_TEST_STEPS
@@ -785,7 +790,7 @@ export default function ChemicalEquilibriumApp({
                   {/* Flame Test Sections Grid - Only show when Dry Test is selected */}
                   {activeBasicRadicalsSubsection === "dry" && (
                     <div className="halide-section-grid mb-6">
-                      {FLAME_TEST_SECTIONS.map((section) => {
+                      {displayedFlameTestSections.map((section) => {
                         const isActiveFlameTest = activeFlameTest === section.symbol;
                         return (
                           <article
