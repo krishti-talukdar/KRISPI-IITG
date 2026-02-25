@@ -2397,6 +2397,17 @@ function ChemicalEquilibriumVirtualLab({
     DILUTE_HNO3_CHEMICAL_ID,
   ]);
 
+  const handleObservePhPaper = useCallback(() => {
+    // For Ammonium Radical Test, when pH paper is observed, set INFERENCE 2
+    if (isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am") {
+      if (caseTwoResult === DEFAULT_CASE_RESULT) {
+        setCaseTwoResult(CASE_TWO_BASIC_RESULT);
+      }
+      setToastMessage("pH paper turns blue, indicating basic nature due to ammonia gas presence.");
+      setTimeout(() => setToastMessage(null), 2500);
+    }
+  }, [isDryTestExperiment, dryTestMode, activeFlameTest, caseTwoResult, setCaseTwoResult, setToastMessage]);
+
   useEffect(() => {
     if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
       return;
@@ -4198,7 +4209,13 @@ function ChemicalEquilibriumVirtualLab({
                         isDryTest={isDryTestExperiment}
                         dryTestMode={resolvedDryTestMode}
                         isRinseActive={pos.id === glassRodEquipmentId && showRinseAnimation}
-                        onObserve={isDryTestExperiment && resolvedDryTestMode === "wet" ? handleObserveWetTest : undefined}
+                        onObserve={
+                          isDryTestExperiment && resolvedDryTestMode === "wet"
+                            ? handleObserveWetTest
+                            : isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am" && normalizedEquipmentName.includes("ph") && normalizedEquipmentName.includes("paper")
+                            ? handleObservePhPaper
+                            : undefined
+                        }
                         observeBlinking={shouldBlinkObserveButton && equipment.id === "test_tubes"}
                         imageUrl={equipment.imageUrl}
                         interactDisabled={shouldDisableAmmoniumInteraction}

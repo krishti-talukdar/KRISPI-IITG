@@ -507,8 +507,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
     if (isPhPaperEquipment) {
       return (
-        <div className="relative flex flex-col items-center pointer-events-none">
-          <div className="w-24 h-8 relative overflow-visible mb-2 ph-paper" style={{ backgroundColor: phPaperColor || 'transparent' }}>
+        <div className="relative flex flex-col items-center">
+          <div className="w-24 h-8 relative overflow-visible mb-2 ph-paper pointer-events-none" style={{ backgroundColor: phPaperColor || 'transparent' }}>
             <img
               src={PH_PAPER_IMAGE_URL}
               alt="pH Paper"
@@ -516,6 +516,20 @@ export const Equipment: React.FC<EquipmentProps> = ({
               style={{ mixBlendMode: 'multiply', opacity: 0.95 }}
             />
           </div>
+          {position && onObserve && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onObserve?.();
+              }}
+              disabled={interactDisabled}
+              className={`lab-observe-button ${observeBlinking ? "blink-until-pressed" : ""}`}
+            >
+              OBSERVE
+            </button>
+          )}
         </div>
       );
     }
