@@ -592,17 +592,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
         );
         const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
         const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
+        const hasConcHclSample = chemicals.some((chemical) => chemical.id === "conc_hcl");
         const hasAmmoniumSample = chemicals.some((chemical) => chemical.id === "nh4oh");
         const hasNaOHSample = chemicals.some((chemical) => chemical.id === NAOH_CHEMICAL_ID);
         const hasSaltOnly =
-          hasSaltSample && !hasAcidSample && !hasNaOHSample && !hasAmmoniumSample;
+          hasSaltSample && !hasAcidSample && !hasConcHclSample && !hasNaOHSample && !hasAmmoniumSample;
         const naohAmount =
           chemicals.find((chemical) => chemical.id === NAOH_CHEMICAL_ID)?.amount ?? 0;
         const naohHeightRatio =
           Math.min(naohAmount, MAX_NAOH_VOLUME_DISPLAY) / MAX_NAOH_VOLUME_DISPLAY;
         const totalHeightRatio = Math.min(totalChemicalsAmount, 25) / 25;
         const heightRatio = hasNaOHSample ? naohHeightRatio : totalHeightRatio;
-        const saltOverlayMinimumHeight = hasSaltSample ? 60 : 0;
+        const saltOverlayMinimumHeight = hasSaltSample || hasConcHclSample ? 60 : 0;
         const ammoniumAmountInTube = chemicals
           .filter((chemical) => chemical.id === "nh4oh")
           .reduce((sum, chemical) => sum + (chemical.amount || 0), 0);
@@ -612,7 +613,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
           saltOverlayMinimumHeight,
           Math.min(150, baseOverlayHeight + (hasAmmoniumSample ? ammoniumHeightBoost : 0)),
         );
-        const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
+        const overrideWithWhite =
+          hasSaltOnly || hasAcidSample || hasConcHclSample || hasAmmoniumSample;
         const nonNaOHChemicals = chemicals.filter((chemical) => chemical.id !== NAOH_CHEMICAL_ID);
         const overlayColorSource =
           nonNaOHChemicals.length > 0 ? nonNaOHChemicals : chemicals;
