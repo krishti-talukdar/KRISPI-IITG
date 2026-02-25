@@ -3929,6 +3929,11 @@ function ChemicalEquilibriumVirtualLab({
                       return !(normalizedName.includes("dil") && normalizedName.includes("h2so4")) &&
                              !(normalizedName.includes("chromyl"));
                     }
+                    // Hide "acidified potassium dichromate" for Chloride Check in Wet Test for Acid Radicals
+                    if (activeHalide === "Cl" && dryTestMode === "wet") {
+                      const normalizedName = eq.name.toLowerCase();
+                      return !(normalizedName.includes("dichromate"));
+                    }
                     return true;
                   })
                   .sort((a, b) => {
