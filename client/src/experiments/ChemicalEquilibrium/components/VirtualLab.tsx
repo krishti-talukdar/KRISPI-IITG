@@ -1890,11 +1890,19 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // For Ammonium Radical Test, immediately place pH paper on the workbench without opening the amount dialog.
+      const isPhPaperEquipment = equipment.name?.toLowerCase().includes("ph paper") || equipment.id?.toLowerCase().includes("ph paper");
+      const isAmmoniumRadicalTest = isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am";
+      if (isPhPaperEquipment && isAmmoniumRadicalTest) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
     },
-    [handleEquipmentAddButton, isDryTestExperiment, dryTestMode, activeHalide],
+    [handleEquipmentAddButton, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest],
   );
 
   const handleEquipmentAddDialogClose = useCallback(() => {
@@ -4326,28 +4334,34 @@ function ChemicalEquilibriumVirtualLab({
               </div>
             </div>
             <div className="flex items-center space-x-3 mt-2 overflow-x-auto pb-2">
-              {equipmentList.map((equipment) => (
-                <div key={equipment.id} className="flex-shrink-0">
-                  <Equipment
-                    id={equipment.id}
-                    name={equipment.name}
-                    icon={equipment.icon}
-                    onDrag={experimentStarted ? handleEquipmentDrop : () => {}}
-                    position={null}
-                    chemicals={[]}
-                    onChemicalDrop={
-                      experimentStarted ? handleChemicalDrop : () => {}
-                    }
-                    allEquipmentPositions={equipmentPositions}
-                    currentStep={currentStep}
-                    disabled={!experimentStarted}
-                    isDryTest={isDryTestExperiment}
-                    dryTestMode={resolvedDryTestMode}
-                    activeFlameTest={activeFlameTest}
-                    phPaperColor={phPaperColor}
-                  />
-                </div>
-              ))}
+              {equipmentList.map((equipment) => {
+                const normalizedName = equipment.name?.toLowerCase() ?? "";
+                const isPhPaper = normalizedName.includes("ph paper") || normalizedName.includes("ph") && normalizedName.includes("paper");
+                const equipmentInteractHandler = isPhPaper && experimentStarted ? handleEquipmentAddButtonClick : undefined;
+                return (
+                  <div key={equipment.id} className="flex-shrink-0">
+                    <Equipment
+                      id={equipment.id}
+                      name={equipment.name}
+                      icon={equipment.icon}
+                      onDrag={experimentStarted ? handleEquipmentDrop : () => {}}
+                      position={null}
+                      chemicals={[]}
+                      onChemicalDrop={
+                        experimentStarted ? handleChemicalDrop : () => {}
+                      }
+                      onInteract={equipmentInteractHandler}
+                      allEquipmentPositions={equipmentPositions}
+                      currentStep={currentStep}
+                      disabled={!experimentStarted}
+                      isDryTest={isDryTestExperiment}
+                      dryTestMode={resolvedDryTestMode}
+                      activeFlameTest={activeFlameTest}
+                      phPaperColor={phPaperColor}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
 
