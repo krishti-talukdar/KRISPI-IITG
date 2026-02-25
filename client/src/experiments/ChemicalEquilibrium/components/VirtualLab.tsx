@@ -4360,6 +4360,10 @@ function ChemicalEquilibriumVirtualLab({
                   if (activeHalide === "S" && resolvedDryTestMode === "acid") {
                     return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
+                  // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Wet Test for Acid Radicals
+                  if (activeHalide === "S" && resolvedDryTestMode === "wet") {
+                    return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
                   // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the respective heating count is reached
                   if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
                     if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
@@ -4987,6 +4991,10 @@ function ChemicalEquilibriumVirtualLab({
                     if (activeHalide === "S" && resolvedDryTestMode === "acid") {
                       return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                     }
+                    // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Wet Test for Acid Radicals
+                    if (activeHalide === "S" && resolvedDryTestMode === "wet") {
+                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                    }
                     // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
                     if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
                       if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
@@ -5066,6 +5074,10 @@ function ChemicalEquilibriumVirtualLab({
                     // Hide Inference 3, 4, 5, 6 highlights for Sulfide Check in Dry Test for Acid Radicals
                     if (activeHalide === "S" && resolvedDryTestMode === "acid") {
                       return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                    }
+                    // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Wet Test for Acid Radicals
+                    if (activeHalide === "S" && resolvedDryTestMode === "wet") {
+                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                     }
                     return true;
                   }).map((highlight) => (
