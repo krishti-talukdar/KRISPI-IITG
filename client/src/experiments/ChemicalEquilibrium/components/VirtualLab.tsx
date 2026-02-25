@@ -1873,6 +1873,15 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // Additionally, for the Salt Analysis chloride check in the *wet* acid test,
+      // clicking ADD on the Test Tubes or Bunsen Burner should immediately place them
+      // on the workbench (skip the amount dialog).
+      const isChlorideWetAcid = isDryTestExperiment && (dryTestMode === "wet") && (activeHalide ?? "").toLowerCase() === "cl";
+      if ((isTestTubeId || isBunsenId) && isChlorideWetAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       // Additionally, for the Salt Analysis special cases check in the *wet* acid test,
       // clicking ADD on the Test Tubes should immediately place the test tube
       // on the workbench (skip the amount dialog).
