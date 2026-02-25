@@ -7,7 +7,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState, DryTestMode } from "../types";
-import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL, GLASS_ROD_FLAME_TEST_IMAGE_URL, GLASS_ROD_FLAME_TEST_DROPPED_IMAGE_URL } from "../constants";
+import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL, GLASS_ROD_FLAME_TEST_IMAGE_URL, GLASS_ROD_FLAME_TEST_DROPPED_IMAGE_URL, PH_PAPER_IMAGE_URL } from "../constants";
 
 const NAOH_CHEMICAL_ID = "naoh";
 const NAOH_SOLUTION_COLOR = "#bfdbfe";
@@ -62,6 +62,7 @@ interface EquipmentProps {
   iodideWetHeatingCount?: number;
   specialCasesHeatingCount?: number;
   activeFlameTest?: string;
+  phPaperColor?: string;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -93,6 +94,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   iodideWetHeatingCount = 0,
   specialCasesHeatingCount = 0,
   activeFlameTest,
+  phPaperColor,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
@@ -105,6 +107,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   const isGlassRodEquipment = normalizedName.includes("glass rod");
   const isBunsenBurnerEquipment = normalizedName.includes("bunsen");
   const isGlassContainerEquipment = normalizedName.includes("glass container");
+  const isPhPaperEquipment = normalizedName.includes("ph paper") || normalizedName.includes("ph") && normalizedName.includes("paper");
   const isSpecialCasesFifthHeating =
     id === "test_tubes" &&
     activeHalide === "SC" &&
@@ -490,6 +493,21 @@ export const Equipment: React.FC<EquipmentProps> = ({
               src={rodImageUrl}
               alt="Glass Rod"
               className="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (isPhPaperEquipment) {
+      return (
+        <div className="relative flex flex-col items-center pointer-events-none">
+          <div className="w-24 h-8 relative overflow-visible mb-2 ph-paper" style={{ backgroundColor: phPaperColor || 'transparent' }}>
+            <img
+              src={PH_PAPER_IMAGE_URL}
+              alt="pH Paper"
+              className="w-full h-full object-contain transform rotate-0 scale-[5] origin-center max-w-none"
+              style={{ mixBlendMode: 'multiply', opacity: 0.95 }}
             />
           </div>
         </div>

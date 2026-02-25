@@ -653,6 +653,7 @@ function ChemicalEquilibriumVirtualLab({
   const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
   const [wetBasicHeatingTriggered, setWetBasicHeatingTriggered] = useState(false);
   const [wetBasicHeatingCount, setWetBasicHeatingCount] = useState(0);
+  const [phPaperColor, setPhPaperColor] = useState<string | undefined>(undefined);
   const MNO2_CASE_TWO_RESULT =
     "MnO₂ accelerates the rate of production of Br₂ gas.\n\n2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
@@ -1513,6 +1514,19 @@ function ChemicalEquilibriumVirtualLab({
     totalSteps,
     onStepComplete,
   ]);
+
+  // Detect when pH paper is added to workbench and set its initial color
+  useEffect(() => {
+    const hasPhPaper = equipmentPositions.some(
+      (pos) => pos.id && (pos.id.toLowerCase().includes("ph paper") ||
+                          (pos.id.toLowerCase().includes("ph") && pos.id.toLowerCase().includes("paper")))
+    );
+
+    if (hasPhPaper && !phPaperColor) {
+      // Set initial neutral/green color for pH paper
+      setPhPaperColor("#C8E6C9");
+    }
+  }, [equipmentPositions, phPaperColor]);
 
   const cobaltReactionState: CobaltReactionState = {
     cobaltChlorideAdded,
@@ -3701,6 +3715,7 @@ function ChemicalEquilibriumVirtualLab({
     setIsRinsing(false);
     setShowRinseAnimation(false);
     setTestTubePlacementTracked(false);
+    setPhPaperColor(undefined);
     onResetTimer();
     setWorkbenchResetTrigger((prev) => prev + 1);
     if (onResetExperiment) onResetExperiment();
@@ -4185,6 +4200,7 @@ function ChemicalEquilibriumVirtualLab({
                         iodideWetHeatingCount={iodideWetHeatingCount}
                         specialCasesHeatingCount={specialCasesHeatingCount}
                         activeFlameTest={activeFlameTest}
+                        phPaperColor={phPaperColor}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
@@ -4328,6 +4344,7 @@ function ChemicalEquilibriumVirtualLab({
                     isDryTest={isDryTestExperiment}
                     dryTestMode={resolvedDryTestMode}
                     activeFlameTest={activeFlameTest}
+                    phPaperColor={phPaperColor}
                   />
                 </div>
               ))}
