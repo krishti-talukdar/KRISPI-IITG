@@ -4356,9 +4356,9 @@ function ChemicalEquilibriumVirtualLab({
                   if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
                     return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
-                  // Hide INFERENCE 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
+                  // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
                   if (activeHalide === "S" && resolvedDryTestMode === "acid") {
-                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                    return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
                   // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Wet Test for Acid Radicals
                   if (activeHalide === "S" && resolvedDryTestMode === "wet") {
@@ -4987,9 +4987,9 @@ function ChemicalEquilibriumVirtualLab({
                     if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
                       return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                     }
-                    // Hide INFERENCE 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
+                    // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
                     if (activeHalide === "S" && resolvedDryTestMode === "acid") {
-                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                     }
                     // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Wet Test for Acid Radicals
                     if (activeHalide === "S" && resolvedDryTestMode === "wet") {
@@ -5071,9 +5071,9 @@ function ChemicalEquilibriumVirtualLab({
                     if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
                       return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                     }
-                    // Hide Inference 3, 4, 5, 6 highlights for Sulfide Check in Dry Test for Acid Radicals
+                    // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Dry Test for Acid Radicals
                     if (activeHalide === "S" && resolvedDryTestMode === "acid") {
-                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                     }
                     // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Wet Test for Acid Radicals
                     if (activeHalide === "S" && resolvedDryTestMode === "wet") {
