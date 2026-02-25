@@ -3913,6 +3913,15 @@ function ChemicalEquilibriumVirtualLab({
               <div className="space-y-3">
                 {equipmentList
                   .filter((eq): eq is EquipmentDefinition => eq != null && eq.name != null)
+                  .filter((eq) => {
+                    // Hide "dil h2so4" and "chromyl chloride" for Chloride Check in Dry Test for Acid Radicals
+                    if (activeHalide === "Cl" && dryTestMode === "acid") {
+                      const normalizedName = eq.name.toLowerCase();
+                      return !(normalizedName.includes("dil") && normalizedName.includes("h2so4")) &&
+                             !(normalizedName.includes("chromyl"));
+                    }
+                    return true;
+                  })
                   .sort((a, b) => {
                     // Move Bunsen Burner to the bottom
                     const aName = a.name?.toLowerCase() ?? "";
