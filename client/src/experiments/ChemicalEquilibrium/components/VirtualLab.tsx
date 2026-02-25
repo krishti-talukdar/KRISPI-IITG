@@ -2942,6 +2942,10 @@ function ChemicalEquilibriumVirtualLab({
               setCaseTwoResult(
                 "White crystalline precipitate appears , therefore PO₄³⁻ is present",
               );
+            } else if (newCount === 3) {
+              setCaseThreeResult(
+                "A green colouration is obtained , therefore SO₃²⁻  is present",
+              );
             }
             return newCount;
           });
