@@ -4258,7 +4258,7 @@ function ChemicalEquilibriumVirtualLab({
                         dryTestMode={resolvedDryTestMode}
                         isRinseActive={pos.id === glassRodEquipmentId && showRinseAnimation}
                         onObserve={
-                          isDryTestExperiment && resolvedDryTestMode === "wet" && (activeHalide ?? "").toLowerCase() !== "cl"
+                          isDryTestExperiment && resolvedDryTestMode === "wet" && (activeHalide ?? "").toLowerCase() !== "cl" && (activeHalide ?? "").toLowerCase() !== "s"
                             ? handleObserveWetTest
                             : isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am" && normalizedEquipmentName.includes("ph") && normalizedEquipmentName.includes("paper")
                             ? handleObservePhPaper
