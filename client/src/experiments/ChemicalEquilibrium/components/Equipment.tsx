@@ -7,7 +7,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState, DryTestMode } from "../types";
-import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL } from "../constants";
+import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL, GLASS_ROD_FLAME_TEST_IMAGE_URL } from "../constants";
 
 const NAOH_CHEMICAL_ID = "naoh";
 const NAOH_SOLUTION_COLOR = "#bfdbfe";
@@ -474,6 +474,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
       const rodVisualClasses = isFlameTest
         ? `w-56 h-12 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`
         : `w-28 h-6 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`;
+      const rodImageUrl = isFlameTest ? GLASS_ROD_FLAME_TEST_IMAGE_URL : GLASS_ROD_IMAGE_URL;
       return (
         <div
           className="relative flex flex-col items-center pointer-events-none"
@@ -481,7 +482,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
         >
           <div className={rodVisualClasses}>
             <img
-              src={GLASS_ROD_IMAGE_URL}
+              src={rodImageUrl}
               alt="Glass Rod"
               className="w-full h-full object-contain"
             />
@@ -591,17 +592,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
         );
         const hasSaltSample = chemicals.some((chemical) => chemical.id === "salt_sample");
         const hasAcidSample = chemicals.some((chemical) => chemical.id === "conc_h2so4");
+        const hasConcHclSample = chemicals.some((chemical) => chemical.id === "conc_hcl");
         const hasAmmoniumSample = chemicals.some((chemical) => chemical.id === "nh4oh");
         const hasNaOHSample = chemicals.some((chemical) => chemical.id === NAOH_CHEMICAL_ID);
         const hasSaltOnly =
-          hasSaltSample && !hasAcidSample && !hasNaOHSample && !hasAmmoniumSample;
+          hasSaltSample && !hasAcidSample && !hasConcHclSample && !hasNaOHSample && !hasAmmoniumSample;
         const naohAmount =
           chemicals.find((chemical) => chemical.id === NAOH_CHEMICAL_ID)?.amount ?? 0;
         const naohHeightRatio =
           Math.min(naohAmount, MAX_NAOH_VOLUME_DISPLAY) / MAX_NAOH_VOLUME_DISPLAY;
         const totalHeightRatio = Math.min(totalChemicalsAmount, 25) / 25;
         const heightRatio = hasNaOHSample ? naohHeightRatio : totalHeightRatio;
-        const saltOverlayMinimumHeight = hasSaltSample ? 60 : 0;
+        const saltOverlayMinimumHeight = hasSaltSample || hasConcHclSample ? 60 : 0;
         const ammoniumAmountInTube = chemicals
           .filter((chemical) => chemical.id === "nh4oh")
           .reduce((sum, chemical) => sum + (chemical.amount || 0), 0);
@@ -611,7 +613,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
           saltOverlayMinimumHeight,
           Math.min(150, baseOverlayHeight + (hasAmmoniumSample ? ammoniumHeightBoost : 0)),
         );
-        const overrideWithWhite = hasSaltOnly || hasAcidSample || hasAmmoniumSample;
+        const overrideWithWhite =
+          hasSaltOnly || hasAcidSample || hasConcHclSample || hasAmmoniumSample;
         const nonNaOHChemicals = chemicals.filter((chemical) => chemical.id !== NAOH_CHEMICAL_ID);
         const overlayColorSource =
           nonNaOHChemicals.length > 0 ? nonNaOHChemicals : chemicals;
