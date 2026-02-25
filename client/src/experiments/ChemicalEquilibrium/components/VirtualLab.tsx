@@ -88,6 +88,8 @@ type LabSnapshot = {
   chlorideHeatingCount: number;
   chlorideWetHeatingTriggered: boolean;
   chlorideWetHeatingCount: number;
+  sulfideWetHeatingTriggered: boolean;
+  sulfideWetHeatingCount: number;
   feCl3Added: boolean;
 };
 
@@ -643,6 +645,8 @@ function ChemicalEquilibriumVirtualLab({
   const [chlorideHeatingCount, setChlorideHeatingCount] = useState(0);
   const [chlorideWetHeatingTriggered, setChlorideWetHeatingTriggered] = useState(false);
   const [chlorideWetHeatingCount, setChlorideWetHeatingCount] = useState(0);
+  const [sulfideWetHeatingTriggered, setSulfideWetHeatingTriggered] = useState(false);
+  const [sulfideWetHeatingCount, setSulfideWetHeatingCount] = useState(0);
   const [feCl3Added, setFeCl3Added] = useState(false);
   const [baClUsed, setBaClUsed] = useState(false);
   const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
@@ -1571,6 +1575,8 @@ function ChemicalEquilibriumVirtualLab({
     chlorideHeatingCount,
     chlorideWetHeatingTriggered,
     chlorideWetHeatingCount,
+    sulfideWetHeatingTriggered,
+    sulfideWetHeatingCount,
     feCl3Added,
   });
 
@@ -2876,6 +2882,34 @@ function ChemicalEquilibriumVirtualLab({
           });
         }
 
+        if (activeHalide === "S") {
+          setSulfideWetHeatingCount((prev) => {
+            const newCount = prev + 1;
+            if (newCount === 1) {
+              setSulfideWetHeatingTriggered(true);
+              // Add light purple color chemical to test tube
+              setEquipmentPositions((prevPositions) => {
+                return prevPositions.map((pos) => {
+                  if (pos.id === "test_tubes") {
+                    const existingChemicals = [...pos.chemicals];
+                    // Add a light purple color chemical
+                    existingChemicals.push({
+                      id: "sulfide_purple_color",
+                      name: "Light Purple Solution",
+                      color: "#d8a7ff",
+                      amount: 10,
+                      concentration: "Precipitate",
+                    });
+                    return { ...pos, chemicals: existingChemicals };
+                  }
+                  return pos;
+                });
+              });
+            }
+            return newCount;
+          });
+        }
+
         if ((activeHalide ?? "").toLowerCase() === "sc") {
           setCaseOneResult(
             "Heavy white precipitate is formed , therefore SO4^2- is present",
@@ -3741,6 +3775,8 @@ function ChemicalEquilibriumVirtualLab({
     setChlorideHeatingCount(0);
     setChlorideWetHeatingTriggered(false);
     setChlorideWetHeatingCount(0);
+    setSulfideWetHeatingTriggered(false);
+    setSulfideWetHeatingCount(0);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
     setFeCl3Added(false);
@@ -3807,6 +3843,8 @@ function ChemicalEquilibriumVirtualLab({
     setChlorideHeatingCount(0);
     setChlorideWetHeatingTriggered(false);
     setChlorideWetHeatingCount(0);
+    setSulfideWetHeatingTriggered(false);
+    setSulfideWetHeatingCount(0);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
     setFeCl3Added(false);
@@ -3874,6 +3912,8 @@ function ChemicalEquilibriumVirtualLab({
     setChlorideHeatingCount(lastSnapshot.chlorideHeatingCount);
     setChlorideWetHeatingTriggered(lastSnapshot.chlorideWetHeatingTriggered);
     setChlorideWetHeatingCount(lastSnapshot.chlorideWetHeatingCount);
+    setSulfideWetHeatingTriggered(lastSnapshot.sulfideWetHeatingTriggered);
+    setSulfideWetHeatingCount(lastSnapshot.sulfideWetHeatingCount);
     setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
