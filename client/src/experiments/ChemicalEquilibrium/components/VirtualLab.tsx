@@ -2887,6 +2887,9 @@ function ChemicalEquilibriumVirtualLab({
             const newCount = prev + 1;
             if (newCount === 1) {
               setSulfideWetHeatingTriggered(true);
+              setCaseOneResult(
+                "Purple colouration , therefore S²⁻ is present",
+              );
               // Add light purple color chemical to test tube
               setEquipmentPositions((prevPositions) => {
                 return prevPositions.map((pos) => {
