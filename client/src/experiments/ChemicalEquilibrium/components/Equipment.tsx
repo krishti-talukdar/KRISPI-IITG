@@ -472,7 +472,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
       // Increase glass rod size by 2x when in Flame Test
       const isFlameTest = activeFlameTest === "Fl" && dryTestMode === "basic";
       const rodVisualClasses = isFlameTest
-        ? `w-80 h-32 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`
+        ? `w-56 h-12 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`
         : `w-28 h-6 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`;
       const rodImageUrl = isFlameTest ? GLASS_ROD_FLAME_TEST_IMAGE_URL : GLASS_ROD_IMAGE_URL;
       return (
