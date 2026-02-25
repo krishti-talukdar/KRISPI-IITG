@@ -2681,6 +2681,10 @@ function ChemicalEquilibriumVirtualLab({
         );
       }
 
+      if (heating && isDryTestExperiment && activeFlameTest === "Am") {
+        setCaseOneResult("Strong pungent smell of NH₃ gas");
+      }
+
       if (
         heating &&
         isDryTestExperiment &&
@@ -2838,7 +2842,7 @@ function ChemicalEquilibriumVirtualLab({
         setDilH2SO4HeatingTriggered(false);
       }
     },
-    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide],
+    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide, activeFlameTest],
   );
 
   useEffect(() => {
