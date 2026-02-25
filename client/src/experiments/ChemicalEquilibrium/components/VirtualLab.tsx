@@ -90,6 +90,8 @@ type LabSnapshot = {
   chlorideWetHeatingCount: number;
   sulfideWetHeatingTriggered: boolean;
   sulfideWetHeatingCount: number;
+  specialCasesWetHeatingTriggered: boolean;
+  specialCasesWetHeatingCount: number;
   feCl3Added: boolean;
 };
 
@@ -647,6 +649,8 @@ function ChemicalEquilibriumVirtualLab({
   const [chlorideWetHeatingCount, setChlorideWetHeatingCount] = useState(0);
   const [sulfideWetHeatingTriggered, setSulfideWetHeatingTriggered] = useState(false);
   const [sulfideWetHeatingCount, setSulfideWetHeatingCount] = useState(0);
+  const [specialCasesWetHeatingTriggered, setSpecialCasesWetHeatingTriggered] = useState(false);
+  const [specialCasesWetHeatingCount, setSpecialCasesWetHeatingCount] = useState(0);
   const [feCl3Added, setFeCl3Added] = useState(false);
   const [baClUsed, setBaClUsed] = useState(false);
   const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
@@ -1577,6 +1581,8 @@ function ChemicalEquilibriumVirtualLab({
     chlorideWetHeatingCount,
     sulfideWetHeatingTriggered,
     sulfideWetHeatingCount,
+    specialCasesWetHeatingTriggered,
+    specialCasesWetHeatingCount,
     feCl3Added,
   });
 
@@ -2925,9 +2931,20 @@ function ChemicalEquilibriumVirtualLab({
         }
 
         if ((activeHalide ?? "").toLowerCase() === "sc") {
-          setCaseOneResult(
-            "Heavy white precipitate is formed , therefore SO4^2- is present",
-          );
+          setSpecialCasesWetHeatingCount((prev) => {
+            const newCount = prev + 1;
+            if (newCount === 1) {
+              setSpecialCasesWetHeatingTriggered(true);
+              setCaseOneResult(
+                "Heavy white precipitate is formed , therefore SO4^2- is present",
+              );
+            } else if (newCount === 2) {
+              setCaseTwoResult(
+                "White crystalline precipitate appears , therefore PO₄³⁻ is present",
+              );
+            }
+            return newCount;
+          });
         }
       }
 
@@ -3791,6 +3808,8 @@ function ChemicalEquilibriumVirtualLab({
     setChlorideWetHeatingCount(0);
     setSulfideWetHeatingTriggered(false);
     setSulfideWetHeatingCount(0);
+    setSpecialCasesWetHeatingTriggered(false);
+    setSpecialCasesWetHeatingCount(0);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
     setFeCl3Added(false);
@@ -3859,6 +3878,8 @@ function ChemicalEquilibriumVirtualLab({
     setChlorideWetHeatingCount(0);
     setSulfideWetHeatingTriggered(false);
     setSulfideWetHeatingCount(0);
+    setSpecialCasesWetHeatingTriggered(false);
+    setSpecialCasesWetHeatingCount(0);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
     setFeCl3Added(false);
@@ -3928,6 +3949,8 @@ function ChemicalEquilibriumVirtualLab({
     setChlorideWetHeatingCount(lastSnapshot.chlorideWetHeatingCount);
     setSulfideWetHeatingTriggered(lastSnapshot.sulfideWetHeatingTriggered);
     setSulfideWetHeatingCount(lastSnapshot.sulfideWetHeatingCount);
+    setSpecialCasesWetHeatingTriggered(lastSnapshot.specialCasesWetHeatingTriggered);
+    setSpecialCasesWetHeatingCount(lastSnapshot.specialCasesWetHeatingCount);
     setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
