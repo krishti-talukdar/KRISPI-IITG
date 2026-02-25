@@ -8,6 +8,9 @@ export const GLASS_CONTAINER_IMAGE_URL =
 export const GLASS_ROD_IMAGE_URL =
   "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3bdedfd838454c6b8a3cc44b25ecfdc0?format=webp&width=800";
 
+export const GLASS_ROD_FLAME_TEST_IMAGE_URL =
+  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F914c717b16a44143811b9cda27cfbaff?format=webp&width=800";
+
 // Chemical reagents specific to Chemical Equilibrium experiment
 export const CHEMICAL_EQUILIBRIUM_CHEMICALS: Chemical[] = [
   {

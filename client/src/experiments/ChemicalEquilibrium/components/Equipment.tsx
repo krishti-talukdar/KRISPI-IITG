@@ -7,7 +7,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState, DryTestMode } from "../types";
-import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL } from "../constants";
+import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL, GLASS_ROD_FLAME_TEST_IMAGE_URL } from "../constants";
 
 const NAOH_CHEMICAL_ID = "naoh";
 const NAOH_SOLUTION_COLOR = "#bfdbfe";
@@ -472,8 +472,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
       // Increase glass rod size by 2x when in Flame Test
       const isFlameTest = activeFlameTest === "Fl" && dryTestMode === "basic";
       const rodVisualClasses = isFlameTest
-        ? `w-56 h-12 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`
+        ? `w-80 h-32 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`
         : `w-28 h-6 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`;
+      const rodImageUrl = isFlameTest ? GLASS_ROD_FLAME_TEST_IMAGE_URL : GLASS_ROD_IMAGE_URL;
       return (
         <div
           className="relative flex flex-col items-center pointer-events-none"
@@ -481,7 +482,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
         >
           <div className={rodVisualClasses}>
             <img
-              src={GLASS_ROD_IMAGE_URL}
+              src={rodImageUrl}
               alt="Glass Rod"
               className="w-full h-full object-contain"
             />
