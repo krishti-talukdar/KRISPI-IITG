@@ -1895,10 +1895,10 @@ function ChemicalEquilibriumVirtualLab({
       }
 
       // Additionally, for the Salt Analysis special cases check in the *wet* acid test,
-      // clicking ADD on the Test Tubes should immediately place the test tube
+      // clicking ADD on the Test Tubes or Bunsen Burner should immediately place them
       // on the workbench (skip the amount dialog).
       const isSpecialCasesWetAcid = isDryTestExperiment && (dryTestMode === "wet") && (activeHalide ?? "").toLowerCase() === "sc";
-      if (isTestTubeId && isSpecialCasesWetAcid) {
+      if ((isTestTubeId || isBunsenId) && isSpecialCasesWetAcid) {
         handleEquipmentAddButton(equipment.id);
         return;
       }
