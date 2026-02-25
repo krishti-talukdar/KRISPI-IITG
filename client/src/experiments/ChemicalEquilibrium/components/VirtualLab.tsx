@@ -2825,6 +2825,17 @@ function ChemicalEquilibriumVirtualLab({
         });
       }
 
+      if (
+        heating &&
+        isDryTestExperiment &&
+        activeHalide === "S" &&
+        resolvedDryTestMode === "acid"
+      ) {
+        setCaseOneResult(
+          "Colourless gas with smell of rotten egg",
+        );
+      }
+
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
         const hasDiluteH2SO4InTestTube = Boolean(
           testTubeState?.chemicals.some(
