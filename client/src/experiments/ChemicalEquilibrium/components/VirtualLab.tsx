@@ -2689,7 +2689,8 @@ function ChemicalEquilibriumVirtualLab({
         heating &&
         isDryTestExperiment &&
         activeHalide === "SC" &&
-        resolvedDryTestMode === "acid"
+        resolvedDryTestMode === "acid" &&
+        activeFlameTest !== "Am"
       ) {
         setSpecialCasesHeatingCount((prev) => {
           const newCount = prev + 1;
@@ -2726,7 +2727,8 @@ function ChemicalEquilibriumVirtualLab({
         heating &&
         isDryTestExperiment &&
         activeHalide === "Br" &&
-        resolvedDryTestMode === "acid"
+        resolvedDryTestMode === "acid" &&
+        activeFlameTest !== "Am"
       ) {
         setCaseOneResult(
           "Reddish-brown Br₂ gas is produced.\n\n2KBr + 3H₂SO₄ → 2KHSO₄ + H₂O + SO₂ + Br₂",
@@ -2737,7 +2739,8 @@ function ChemicalEquilibriumVirtualLab({
         heating &&
         isDryTestExperiment &&
         activeHalide === "I" &&
-        resolvedDryTestMode === "acid"
+        resolvedDryTestMode === "acid" &&
+        activeFlameTest !== "Am"
       ) {
         setCaseOneResult(
           "A thick violet vapour is produced , therefore I⁻ is present",
@@ -2748,7 +2751,8 @@ function ChemicalEquilibriumVirtualLab({
         heating &&
         isDryTestExperiment &&
         activeHalide === "Cl" &&
-        resolvedDryTestMode === "acid"
+        resolvedDryTestMode === "acid" &&
+        activeFlameTest !== "Am"
       ) {
         setChlorideHeatingCount((prev) => {
           const newCount = prev + 1;
