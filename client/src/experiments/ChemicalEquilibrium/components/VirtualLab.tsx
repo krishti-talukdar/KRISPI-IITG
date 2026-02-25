@@ -86,6 +86,12 @@ type LabSnapshot = {
   iodideWetHeatingTriggered: boolean;
   iodideWetHeatingCount: number;
   chlorideHeatingCount: number;
+  chlorideWetHeatingTriggered: boolean;
+  chlorideWetHeatingCount: number;
+  sulfideWetHeatingTriggered: boolean;
+  sulfideWetHeatingCount: number;
+  specialCasesWetHeatingTriggered: boolean;
+  specialCasesWetHeatingCount: number;
   feCl3Added: boolean;
 };
 
@@ -639,6 +645,12 @@ function ChemicalEquilibriumVirtualLab({
   const [iodideWetHeatingTriggered, setIodideWetHeatingTriggered] = useState(false);
   const [iodideWetHeatingCount, setIodideWetHeatingCount] = useState(0);
   const [chlorideHeatingCount, setChlorideHeatingCount] = useState(0);
+  const [chlorideWetHeatingTriggered, setChlorideWetHeatingTriggered] = useState(false);
+  const [chlorideWetHeatingCount, setChlorideWetHeatingCount] = useState(0);
+  const [sulfideWetHeatingTriggered, setSulfideWetHeatingTriggered] = useState(false);
+  const [sulfideWetHeatingCount, setSulfideWetHeatingCount] = useState(0);
+  const [specialCasesWetHeatingTriggered, setSpecialCasesWetHeatingTriggered] = useState(false);
+  const [specialCasesWetHeatingCount, setSpecialCasesWetHeatingCount] = useState(0);
   const [feCl3Added, setFeCl3Added] = useState(false);
   const [baClUsed, setBaClUsed] = useState(false);
   const [sodiumNitroprussideUsed, setSodiumNitroprussideUsed] = useState(false);
@@ -1565,6 +1577,12 @@ function ChemicalEquilibriumVirtualLab({
     iodideWetHeatingTriggered,
     iodideWetHeatingCount,
     chlorideHeatingCount,
+    chlorideWetHeatingTriggered,
+    chlorideWetHeatingCount,
+    sulfideWetHeatingTriggered,
+    sulfideWetHeatingCount,
+    specialCasesWetHeatingTriggered,
+    specialCasesWetHeatingCount,
     feCl3Added,
   });
 
@@ -1873,11 +1891,20 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // Additionally, for the Salt Analysis chloride check in the *wet* acid test,
+      // clicking ADD on the Test Tubes or Bunsen Burner should immediately place them
+      // on the workbench (skip the amount dialog).
+      const isChlorideWetAcid = isDryTestExperiment && (dryTestMode === "wet") && (activeHalide ?? "").toLowerCase() === "cl";
+      if ((isTestTubeId || isBunsenId) && isChlorideWetAcid) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       // Additionally, for the Salt Analysis special cases check in the *wet* acid test,
-      // clicking ADD on the Test Tubes should immediately place the test tube
+      // clicking ADD on the Test Tubes or Bunsen Burner should immediately place them
       // on the workbench (skip the amount dialog).
       const isSpecialCasesWetAcid = isDryTestExperiment && (dryTestMode === "wet") && (activeHalide ?? "").toLowerCase() === "sc";
-      if (isTestTubeId && isSpecialCasesWetAcid) {
+      if ((isTestTubeId || isBunsenId) && isSpecialCasesWetAcid) {
         handleEquipmentAddButton(equipment.id);
         return;
       }
@@ -2804,6 +2831,17 @@ function ChemicalEquilibriumVirtualLab({
         });
       }
 
+      if (
+        heating &&
+        isDryTestExperiment &&
+        activeHalide === "S" &&
+        resolvedDryTestMode === "acid"
+      ) {
+        setCaseOneResult(
+          "Colourless gas with smell of rotten egg",
+        );
+      }
+
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
         const hasDiluteH2SO4InTestTube = Boolean(
           testTubeState?.chemicals.some(
@@ -2848,10 +2886,69 @@ function ChemicalEquilibriumVirtualLab({
           });
         }
 
+        if (activeHalide === "Cl") {
+          setChlorideWetHeatingCount((prev) => {
+            const newCount = prev + 1;
+            if (newCount === 1) {
+              setChlorideWetHeatingTriggered(true);
+              setCaseOneResult(
+                "Curdy white precipitate insoluble in HNO₃ but soluble in NH₄OH",
+              );
+            }
+            return newCount;
+          });
+        }
+
+        if (activeHalide === "S") {
+          setSulfideWetHeatingCount((prev) => {
+            const newCount = prev + 1;
+            if (newCount === 1) {
+              setSulfideWetHeatingTriggered(true);
+              setCaseOneResult(
+                "Purple colouration , therefore S²⁻ is present",
+              );
+              // Add light purple color chemical to test tube
+              setEquipmentPositions((prevPositions) => {
+                return prevPositions.map((pos) => {
+                  if (pos.id === "test_tubes") {
+                    const existingChemicals = [...pos.chemicals];
+                    // Add a light purple color chemical
+                    existingChemicals.push({
+                      id: "sulfide_purple_color",
+                      name: "Light Purple Solution",
+                      color: "#d8a7ff",
+                      amount: 10,
+                      concentration: "Precipitate",
+                    });
+                    return { ...pos, chemicals: existingChemicals };
+                  }
+                  return pos;
+                });
+              });
+            }
+            return newCount;
+          });
+        }
+
         if ((activeHalide ?? "").toLowerCase() === "sc") {
-          setCaseOneResult(
-            "Heavy white precipitate is formed , therefore SO4^2- is present",
-          );
+          setSpecialCasesWetHeatingCount((prev) => {
+            const newCount = prev + 1;
+            if (newCount === 1) {
+              setSpecialCasesWetHeatingTriggered(true);
+              setCaseOneResult(
+                "Heavy white precipitate is formed , therefore SO4^2- is present",
+              );
+            } else if (newCount === 2) {
+              setCaseTwoResult(
+                "White crystalline precipitate appears , therefore PO₄³⁻ is present",
+              );
+            } else if (newCount === 3) {
+              setCaseThreeResult(
+                "A green colouration is obtained , therefore SO₃²⁻  is present",
+              );
+            }
+            return newCount;
+          });
         }
       }
 
@@ -3711,6 +3808,12 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
     setChlorideHeatingCount(0);
+    setChlorideWetHeatingTriggered(false);
+    setChlorideWetHeatingCount(0);
+    setSulfideWetHeatingTriggered(false);
+    setSulfideWetHeatingCount(0);
+    setSpecialCasesWetHeatingTriggered(false);
+    setSpecialCasesWetHeatingCount(0);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
     setFeCl3Added(false);
@@ -3775,6 +3878,12 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
     setChlorideHeatingCount(0);
+    setChlorideWetHeatingTriggered(false);
+    setChlorideWetHeatingCount(0);
+    setSulfideWetHeatingTriggered(false);
+    setSulfideWetHeatingCount(0);
+    setSpecialCasesWetHeatingTriggered(false);
+    setSpecialCasesWetHeatingCount(0);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
     setFeCl3Added(false);
@@ -3840,6 +3949,12 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetHeatingTriggered(lastSnapshot.iodideWetHeatingTriggered);
     setIodideWetHeatingCount(lastSnapshot.iodideWetHeatingCount);
     setChlorideHeatingCount(lastSnapshot.chlorideHeatingCount);
+    setChlorideWetHeatingTriggered(lastSnapshot.chlorideWetHeatingTriggered);
+    setChlorideWetHeatingCount(lastSnapshot.chlorideWetHeatingCount);
+    setSulfideWetHeatingTriggered(lastSnapshot.sulfideWetHeatingTriggered);
+    setSulfideWetHeatingCount(lastSnapshot.sulfideWetHeatingCount);
+    setSpecialCasesWetHeatingTriggered(lastSnapshot.specialCasesWetHeatingTriggered);
+    setSpecialCasesWetHeatingCount(lastSnapshot.specialCasesWetHeatingCount);
     setFeCl3Added(lastSnapshot.feCl3Added);
 
     setToastMessage("Reverted the last operation.");
@@ -3919,6 +4034,11 @@ function ChemicalEquilibriumVirtualLab({
                       const normalizedName = eq.name.toLowerCase();
                       return !(normalizedName.includes("dil") && normalizedName.includes("h2so4")) &&
                              !(normalizedName.includes("chromyl"));
+                    }
+                    // Hide "acidified potassium dichromate" for Chloride Check in Wet Test for Acid Radicals
+                    if (activeHalide === "Cl" && dryTestMode === "wet") {
+                      const normalizedName = eq.name.toLowerCase();
+                      return !(normalizedName.includes("dichromate"));
                     }
                     return true;
                   })
@@ -4219,7 +4339,7 @@ function ChemicalEquilibriumVirtualLab({
                         dryTestMode={resolvedDryTestMode}
                         isRinseActive={pos.id === glassRodEquipmentId && showRinseAnimation}
                         onObserve={
-                          isDryTestExperiment && resolvedDryTestMode === "wet"
+                          isDryTestExperiment && resolvedDryTestMode === "wet" && (activeHalide ?? "").toLowerCase() !== "cl" && (activeHalide ?? "").toLowerCase() !== "s"
                             ? handleObserveWetTest
                             : isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am" && normalizedEquipmentName.includes("ph") && normalizedEquipmentName.includes("paper")
                             ? handleObservePhPaper
@@ -4293,6 +4413,10 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "INFERENCE 6", result: caseSixResult },
               ]
                 .filter((entry) => {
+                  // Hide INFERENCE 3, 4, 5, 6 for Bromide Check in Dry Test for Acid Radicals
+                  if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
                   // Hide INFERENCE 3, 4, 5, 6 for Bromide Check in Wet Test for Acid Radicals
                   if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                     return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
@@ -4307,6 +4431,22 @@ function ChemicalEquilibriumVirtualLab({
                   }
                   // Hide INFERENCE 4, 5, 6 for Chloride Check in Dry Test for Acid Radicals
                   if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
+                    return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
+                  // Hide INFERENCE 2, 3, 4, 5, 6 for Chloride Check in Wet Test for Acid Radicals
+                  if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
+                    return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
+                  // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
+                  if (activeHalide === "S" && resolvedDryTestMode === "acid") {
+                    return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
+                  // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Wet Test for Acid Radicals
+                  if (activeHalide === "S" && resolvedDryTestMode === "wet") {
+                    return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
+                  // Hide INFERENCE 4, 5, 6 for Special Cases in Wet Test for Acid Radicals
+                  if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
                     return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
                   // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the respective heating count is reached
@@ -4328,7 +4468,13 @@ function ChemicalEquilibriumVirtualLab({
                 })
                 .map((entry) => {
                   // For Iodide Check in Dry Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
-                  const displayLabel = activeHalide === "I" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1"
+                  // For Chloride Check in Wet Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
+                  // For Sulfide Check in Dry Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
+                  // For Sulfide Check in Wet Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
+                  const displayLabel = (activeHalide === "I" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1") ||
+                    (activeHalide === "Cl" && resolvedDryTestMode === "wet" && entry.label === "INFERENCE 1") ||
+                    (activeHalide === "S" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1") ||
+                    (activeHalide === "S" && resolvedDryTestMode === "wet" && entry.label === "INFERENCE 1")
                     ? "INFERENCE"
                     : entry.label;
                   return (
@@ -4918,9 +5064,29 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries.filter((entry) => {
+                    // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Dry Test for Acid Radicals
+                    if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                    }
                     // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Wet Test for Acid Radicals
                     if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                       return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                    }
+                    // Hide INFERENCE 2, 3, 4, 5, 6 for Chloride Check in Wet Test for Acid Radicals
+                    if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
+                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                    }
+                    // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
+                    if (activeHalide === "S" && resolvedDryTestMode === "acid") {
+                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                    }
+                    // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Wet Test for Acid Radicals
+                    if (activeHalide === "S" && resolvedDryTestMode === "wet") {
+                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                    }
+                    // Hide INFERENCE 4, 5, 6 for Special Cases in Wet Test for Acid Radicals
+                    if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
+                      return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                     }
                     // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
                     if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
@@ -4986,9 +5152,29 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
                 <ul className="mt-4 space-y-3">
                   {observationHighlights.filter((highlight) => {
+                    // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Dry Test for Acid Radicals
+                    if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                    }
                     // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Wet Test for Acid Radicals
                     if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                       return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                    }
+                    // Hide Inference 2, 3, 4, 5, 6 highlights for Chloride Check in Wet Test for Acid Radicals
+                    if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
+                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                    }
+                    // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Dry Test for Acid Radicals
+                    if (activeHalide === "S" && resolvedDryTestMode === "acid") {
+                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                    }
+                    // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Wet Test for Acid Radicals
+                    if (activeHalide === "S" && resolvedDryTestMode === "wet") {
+                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                    }
+                    // Hide Inference 4, 5, 6 highlights for Special Cases in Wet Test for Acid Radicals
+                    if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
+                      return !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                     }
                     return true;
                   }).map((highlight) => (
