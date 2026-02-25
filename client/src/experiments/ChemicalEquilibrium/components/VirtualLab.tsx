@@ -4307,6 +4307,10 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "INFERENCE 6", result: caseSixResult },
               ]
                 .filter((entry) => {
+                  // Hide INFERENCE 3, 4, 5, 6 for Bromide Check in Dry Test for Acid Radicals
+                  if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
                   // Hide INFERENCE 3, 4, 5, 6 for Bromide Check in Wet Test for Acid Radicals
                   if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                     return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
@@ -4932,6 +4936,10 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries.filter((entry) => {
+                    // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Dry Test for Acid Radicals
+                    if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                    }
                     // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Wet Test for Acid Radicals
                     if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                       return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
@@ -5000,6 +5008,10 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
                 <ul className="mt-4 space-y-3">
                   {observationHighlights.filter((highlight) => {
+                    // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Dry Test for Acid Radicals
+                    if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                    }
                     // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Wet Test for Acid Radicals
                     if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                       return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
