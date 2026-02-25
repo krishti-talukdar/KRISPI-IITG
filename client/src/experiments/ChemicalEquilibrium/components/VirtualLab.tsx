@@ -4309,12 +4309,18 @@ function ChemicalEquilibriumVirtualLab({
                   }
                   return true;
                 })
-                .map((entry) => (
-                <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
-                  <div className="mt-1 text-sm text-slate-800 whitespace-pre-wrap">{entry.result}</div>
-                </div>
-              ))}
+                .map((entry) => {
+                  // For Iodide Check in Dry Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
+                  const displayLabel = activeHalide === "I" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1"
+                    ? "INFERENCE"
+                    : entry.label;
+                  return (
+                    <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{displayLabel}</div>
+                      <div className="mt-1 text-sm text-slate-800 whitespace-pre-wrap">{entry.result}</div>
+                    </div>
+                  );
+                })}
             </div>
             {caseOneResult !== DEFAULT_CASE_RESULT && (
               <button
