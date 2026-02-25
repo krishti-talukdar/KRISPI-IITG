@@ -1893,7 +1893,7 @@ function ChemicalEquilibriumVirtualLab({
       // For Ammonium Radical Test, immediately place pH paper on the workbench without opening the amount dialog.
       const lowerName = equipment.name?.toLowerCase() ?? "";
       const lowerId = equipment.id?.toLowerCase() ?? "";
-      const isPhPaperEquipment = lowerName.includes("ph") && lowerName.includes("paper") || lowerName.includes("ph paper") || lowerId.includes("ph") && lowerId.includes("paper") || lowerId.includes("ph paper");
+      const isPhPaperEquipment = (lowerName.includes("ph") && lowerName.includes("paper")) || lowerName.includes("ph paper") || (lowerId.includes("ph") && lowerId.includes("paper")) || lowerId.includes("ph paper");
       const isAmmoniumRadicalTest = isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am";
       if (isPhPaperEquipment && isAmmoniumRadicalTest) {
         handleEquipmentAddButton(equipment.id);
@@ -4339,7 +4339,7 @@ function ChemicalEquilibriumVirtualLab({
               {equipmentList.map((equipment) => {
                 const normalizedName = equipment.name?.toLowerCase() ?? "";
                 const isPhPaper = (normalizedName.includes("ph") && normalizedName.includes("paper")) || normalizedName.includes("ph paper");
-                const equipmentInteractHandler = isPhPaper && experimentStarted ? handleEquipmentAddButtonClick : undefined;
+                const equipmentInteractHandler = isPhPaper && experimentStarted ? (id: string) => handleAddButtonClick(equipment) : undefined;
                 return (
                   <div key={equipment.id} className="flex-shrink-0">
                     <Equipment
