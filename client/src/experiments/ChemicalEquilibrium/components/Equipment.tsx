@@ -7,7 +7,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState, DryTestMode } from "../types";
-import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL, GLASS_ROD_FLAME_TEST_IMAGE_URL } from "../constants";
+import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL, GLASS_ROD_FLAME_TEST_IMAGE_URL, GLASS_ROD_FLAME_TEST_DROPPED_IMAGE_URL, PH_PAPER_IMAGE_URL } from "../constants";
 
 const NAOH_CHEMICAL_ID = "naoh";
 const NAOH_SOLUTION_COLOR = "#bfdbfe";
@@ -62,6 +62,7 @@ interface EquipmentProps {
   iodideWetHeatingCount?: number;
   specialCasesHeatingCount?: number;
   activeFlameTest?: string;
+  phPaperColor?: string;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({
@@ -93,6 +94,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   iodideWetHeatingCount = 0,
   specialCasesHeatingCount = 0,
   activeFlameTest,
+  phPaperColor,
 }) => {
   const normalizedName = name.toLowerCase();
   const isAcidEquipment =
@@ -105,6 +107,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   const isGlassRodEquipment = normalizedName.includes("glass rod");
   const isBunsenBurnerEquipment = normalizedName.includes("bunsen");
   const isGlassContainerEquipment = normalizedName.includes("glass container");
+  const isPhPaperEquipment = normalizedName.includes("ph paper") || normalizedName.includes("ph") && normalizedName.includes("paper");
   const isSpecialCasesFifthHeating =
     id === "test_tubes" &&
     activeHalide === "SC" &&
@@ -297,6 +300,12 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
   };
 
+  const handleClick = () => {
+    if (!isOnWorkbench && onInteract && !disabled) {
+      onInteract(id);
+    }
+  };
+
   const getIconSVG = (equipmentId: string) => {
     const svgMap: Record<string, string> = {
       beaker: `<svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 3h5v5.5l3.5 5.5v6c0 1.1-.9 2-2 2H8c-1.1 0-2-.9-2-2v-6l3.5-5.5V3zm1 1v4.5L7 14v6h10v-6l-3.5-5.5V4h-3z"/></svg>`,
@@ -474,7 +483,12 @@ export const Equipment: React.FC<EquipmentProps> = ({
       const rodVisualClasses = isFlameTest
         ? `w-56 h-12 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`
         : `w-28 h-6 rod-visual ${isRinseActive ? "rod-visual--rinsing" : ""}`;
-      const rodImageUrl = isFlameTest ? GLASS_ROD_FLAME_TEST_IMAGE_URL : GLASS_ROD_IMAGE_URL;
+      const isDroppedInFlameTest = isFlameTest && position !== null;
+      const rodImageUrl = isDroppedInFlameTest
+        ? GLASS_ROD_FLAME_TEST_DROPPED_IMAGE_URL
+        : isFlameTest
+          ? GLASS_ROD_FLAME_TEST_IMAGE_URL
+          : GLASS_ROD_IMAGE_URL;
       return (
         <div
           className="relative flex flex-col items-center pointer-events-none"
@@ -487,6 +501,35 @@ export const Equipment: React.FC<EquipmentProps> = ({
               className="w-full h-full object-contain"
             />
           </div>
+        </div>
+      );
+    }
+
+    if (isPhPaperEquipment) {
+      return (
+        <div className="relative flex flex-col items-center">
+          <div className="w-24 h-8 relative overflow-visible mb-2 ph-paper pointer-events-none" style={{ backgroundColor: phPaperColor || 'transparent' }}>
+            <img
+              src={PH_PAPER_IMAGE_URL}
+              alt="pH Paper"
+              className="w-full h-full object-contain transform rotate-0 scale-[5] origin-center max-w-none"
+              style={{ mixBlendMode: 'multiply', opacity: 0.95 }}
+            />
+          </div>
+          {position && onObserve && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onObserve?.();
+              }}
+              disabled={interactDisabled}
+              className={`lab-observe-button ${observeBlinking ? "blink-until-pressed" : ""}`}
+            >
+              OBSERVE
+            </button>
+          )}
         </div>
       );
     }
@@ -1200,6 +1243,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onDoubleClick={handleDoubleClick}
+      onClick={handleClick}
       onDragOver={isContainer ? handleChemicalDragOver : undefined}
       onDragLeave={isContainer ? handleChemicalDragLeave : undefined}
       onDrop={isContainer ? handleChemicalDrop : undefined}

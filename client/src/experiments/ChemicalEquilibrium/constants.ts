@@ -11,6 +11,12 @@ export const GLASS_ROD_IMAGE_URL =
 export const GLASS_ROD_FLAME_TEST_IMAGE_URL =
   "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F36bab2ffcfc04c1692fc09e10e18550e?format=webp&width=800&height=1200";
 
+export const GLASS_ROD_FLAME_TEST_DROPPED_IMAGE_URL =
+  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F0067812922ee430c8cbe10fbde6b108b?format=webp&width=800&height=1200";
+
+export const PH_PAPER_IMAGE_URL =
+  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Fa1eea72a49464b2f93611a90f0edd819?format=webp&width=800";
+
 // Chemical reagents specific to Chemical Equilibrium experiment
 export const CHEMICAL_EQUILIBRIUM_CHEMICALS: Chemical[] = [
   {

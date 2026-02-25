@@ -653,6 +653,7 @@ function ChemicalEquilibriumVirtualLab({
   const [specialCasesResetCount, setSpecialCasesResetCount] = useState(0);
   const [wetBasicHeatingTriggered, setWetBasicHeatingTriggered] = useState(false);
   const [wetBasicHeatingCount, setWetBasicHeatingCount] = useState(0);
+  const [phPaperColor, setPhPaperColor] = useState<string | undefined>(undefined);
   const MNO2_CASE_TWO_RESULT =
     "MnO₂ accelerates the rate of production of Br₂ gas.\n\n2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
@@ -1514,6 +1515,19 @@ function ChemicalEquilibriumVirtualLab({
     onStepComplete,
   ]);
 
+  // Detect when pH paper is added to workbench and set its initial color
+  useEffect(() => {
+    const hasPhPaper = equipmentPositions.some(
+      (pos) => pos.id && (pos.id.toLowerCase().includes("ph paper") ||
+                          (pos.id.toLowerCase().includes("ph") && pos.id.toLowerCase().includes("paper")))
+    );
+
+    if (hasPhPaper && !phPaperColor) {
+      // Set initial neutral/green color for pH paper
+      setPhPaperColor("#C8E6C9");
+    }
+  }, [equipmentPositions, phPaperColor]);
+
   const cobaltReactionState: CobaltReactionState = {
     cobaltChlorideAdded,
     distilledWaterAdded,
@@ -1876,11 +1890,21 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // For Ammonium Radical Test, immediately place pH paper on the workbench without opening the amount dialog.
+      const lowerName = equipment.name?.toLowerCase() ?? "";
+      const lowerId = equipment.id?.toLowerCase() ?? "";
+      const isPhPaperEquipment = (lowerName.includes("ph") && lowerName.includes("paper")) || lowerName.includes("ph paper") || (lowerId.includes("ph") && lowerId.includes("paper")) || lowerId.includes("ph paper");
+      const isAmmoniumRadicalTest = isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am";
+      if (isPhPaperEquipment && isAmmoniumRadicalTest) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
     },
-    [handleEquipmentAddButton, isDryTestExperiment, dryTestMode, activeHalide],
+    [handleEquipmentAddButton, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest],
   );
 
   const handleEquipmentAddDialogClose = useCallback(() => {
@@ -2373,6 +2397,17 @@ function ChemicalEquilibriumVirtualLab({
     DILUTE_HNO3_CHEMICAL_ID,
   ]);
 
+  const handleObservePhPaper = useCallback(() => {
+    // For Ammonium Radical Test, when pH paper is observed, set INFERENCE 2
+    if (isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am") {
+      if (caseTwoResult === DEFAULT_CASE_RESULT) {
+        setCaseTwoResult(CASE_TWO_BASIC_RESULT);
+      }
+      setToastMessage("pH paper turns blue, indicating basic nature due to ammonia gas presence.");
+      setTimeout(() => setToastMessage(null), 2500);
+    }
+  }, [isDryTestExperiment, dryTestMode, activeFlameTest, caseTwoResult, setCaseTwoResult, setToastMessage]);
+
   useEffect(() => {
     if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
       return;
@@ -2681,11 +2716,16 @@ function ChemicalEquilibriumVirtualLab({
         );
       }
 
+      if (heating && isDryTestExperiment && activeFlameTest === "Am") {
+        setCaseOneResult("Strong pungent smell of NH₃ gas");
+      }
+
       if (
         heating &&
         isDryTestExperiment &&
         activeHalide === "SC" &&
-        resolvedDryTestMode === "acid"
+        resolvedDryTestMode === "acid" &&
+        activeFlameTest !== "Am"
       ) {
         setSpecialCasesHeatingCount((prev) => {
           const newCount = prev + 1;
@@ -2722,7 +2762,8 @@ function ChemicalEquilibriumVirtualLab({
         heating &&
         isDryTestExperiment &&
         activeHalide === "Br" &&
-        resolvedDryTestMode === "acid"
+        resolvedDryTestMode === "acid" &&
+        activeFlameTest !== "Am"
       ) {
         setCaseOneResult(
           "Reddish-brown Br₂ gas is produced.\n\n2KBr + 3H₂SO₄ → 2KHSO₄ + H₂O + SO₂ + Br₂",
@@ -2733,7 +2774,8 @@ function ChemicalEquilibriumVirtualLab({
         heating &&
         isDryTestExperiment &&
         activeHalide === "I" &&
-        resolvedDryTestMode === "acid"
+        resolvedDryTestMode === "acid" &&
+        activeFlameTest !== "Am"
       ) {
         setCaseOneResult(
           "A thick violet vapour is produced , therefore I⁻ is present",
@@ -2744,7 +2786,8 @@ function ChemicalEquilibriumVirtualLab({
         heating &&
         isDryTestExperiment &&
         activeHalide === "Cl" &&
-        resolvedDryTestMode === "acid"
+        resolvedDryTestMode === "acid" &&
+        activeFlameTest !== "Am"
       ) {
         setChlorideHeatingCount((prev) => {
           const newCount = prev + 1;
@@ -2838,7 +2881,7 @@ function ChemicalEquilibriumVirtualLab({
         setDilH2SO4HeatingTriggered(false);
       }
     },
-    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide],
+    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide, activeFlameTest],
   );
 
   useEffect(() => {
@@ -3693,6 +3736,7 @@ function ChemicalEquilibriumVirtualLab({
     setIsRinsing(false);
     setShowRinseAnimation(false);
     setTestTubePlacementTracked(false);
+    setPhPaperColor(undefined);
     onResetTimer();
     setWorkbenchResetTrigger((prev) => prev + 1);
     if (onResetExperiment) onResetExperiment();
@@ -3869,6 +3913,15 @@ function ChemicalEquilibriumVirtualLab({
               <div className="space-y-3">
                 {equipmentList
                   .filter((eq): eq is EquipmentDefinition => eq != null && eq.name != null)
+                  .filter((eq) => {
+                    // Hide "dil h2so4" and "chromyl chloride" for Chloride Check in Dry Test for Acid Radicals
+                    if (activeHalide === "Cl" && dryTestMode === "acid") {
+                      const normalizedName = eq.name.toLowerCase();
+                      return !(normalizedName.includes("dil") && normalizedName.includes("h2so4")) &&
+                             !(normalizedName.includes("chromyl"));
+                    }
+                    return true;
+                  })
                   .sort((a, b) => {
                     // Move Bunsen Burner to the bottom
                     const aName = a.name?.toLowerCase() ?? "";
@@ -4165,7 +4218,13 @@ function ChemicalEquilibriumVirtualLab({
                         isDryTest={isDryTestExperiment}
                         dryTestMode={resolvedDryTestMode}
                         isRinseActive={pos.id === glassRodEquipmentId && showRinseAnimation}
-                        onObserve={isDryTestExperiment && resolvedDryTestMode === "wet" ? handleObserveWetTest : undefined}
+                        onObserve={
+                          isDryTestExperiment && resolvedDryTestMode === "wet"
+                            ? handleObserveWetTest
+                            : isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am" && normalizedEquipmentName.includes("ph") && normalizedEquipmentName.includes("paper")
+                            ? handleObservePhPaper
+                            : undefined
+                        }
                         observeBlinking={shouldBlinkObserveButton && equipment.id === "test_tubes"}
                         imageUrl={equipment.imageUrl}
                         interactDisabled={shouldDisableAmmoniumInteraction}
@@ -4177,6 +4236,7 @@ function ChemicalEquilibriumVirtualLab({
                         iodideWetHeatingCount={iodideWetHeatingCount}
                         specialCasesHeatingCount={specialCasesHeatingCount}
                         activeFlameTest={activeFlameTest}
+                        phPaperColor={phPaperColor}
                         volume={
                           pos.id === "test_tubes"
                             ? Math.min(100, Math.round((pos.chemicals.reduce((s, c) => s + (c.amount || 0), 0) / 25) * 100))
@@ -4233,9 +4293,21 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "INFERENCE 6", result: caseSixResult },
               ]
                 .filter((entry) => {
-                  // Hide INFERENCE 3, 4, 5, 6 for Bromide Check and Iodide Check under Dry Tests for Acid Radicals
-                  if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                  // Hide INFERENCE 3, 4, 5, 6 for Bromide Check in Wet Test for Acid Radicals
+                  if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                     return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
+                  // Hide INFERENCE 3, 4, 5, 6 for Iodide Check in Wet Test for Acid Radicals
+                  if (activeHalide === "I" && resolvedDryTestMode === "wet") {
+                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
+                  // Hide INFERENCE 2, 3, 4, 5, 6 for Iodide Check in Dry Test for Acid Radicals
+                  if (activeHalide === "I" && resolvedDryTestMode === "acid") {
+                    return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
+                  // Hide INFERENCE 4, 5, 6 for Chloride Check in Dry Test for Acid Radicals
+                  if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
+                    return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
                   // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the respective heating count is reached
                   if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
@@ -4254,12 +4326,18 @@ function ChemicalEquilibriumVirtualLab({
                   }
                   return true;
                 })
-                .map((entry) => (
-                <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{entry.label}</div>
-                  <div className="mt-1 text-sm text-slate-800 whitespace-pre-wrap">{entry.result}</div>
-                </div>
-              ))}
+                .map((entry) => {
+                  // For Iodide Check in Dry Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
+                  const displayLabel = activeHalide === "I" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1"
+                    ? "INFERENCE"
+                    : entry.label;
+                  return (
+                    <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{displayLabel}</div>
+                      <div className="mt-1 text-sm text-slate-800 whitespace-pre-wrap">{entry.result}</div>
+                    </div>
+                  );
+                })}
             </div>
             {caseOneResult !== DEFAULT_CASE_RESULT && (
               <button
@@ -4302,27 +4380,34 @@ function ChemicalEquilibriumVirtualLab({
               </div>
             </div>
             <div className="flex items-center space-x-3 mt-2 overflow-x-auto pb-2">
-              {equipmentList.map((equipment) => (
-                <div key={equipment.id} className="flex-shrink-0">
-                  <Equipment
-                    id={equipment.id}
-                    name={equipment.name}
-                    icon={equipment.icon}
-                    onDrag={experimentStarted ? handleEquipmentDrop : () => {}}
-                    position={null}
-                    chemicals={[]}
-                    onChemicalDrop={
-                      experimentStarted ? handleChemicalDrop : () => {}
-                    }
-                    allEquipmentPositions={equipmentPositions}
-                    currentStep={currentStep}
-                    disabled={!experimentStarted}
-                    isDryTest={isDryTestExperiment}
-                    dryTestMode={resolvedDryTestMode}
-                    activeFlameTest={activeFlameTest}
-                  />
-                </div>
-              ))}
+              {equipmentList.map((equipment) => {
+                const normalizedName = equipment.name?.toLowerCase() ?? "";
+                const isPhPaper = (normalizedName.includes("ph") && normalizedName.includes("paper")) || normalizedName.includes("ph paper");
+                const equipmentInteractHandler = isPhPaper && experimentStarted ? (id: string) => handleAddButtonClick(equipment) : undefined;
+                return (
+                  <div key={equipment.id} className="flex-shrink-0">
+                    <Equipment
+                      id={equipment.id}
+                      name={equipment.name}
+                      icon={equipment.icon}
+                      onDrag={experimentStarted ? handleEquipmentDrop : () => {}}
+                      position={null}
+                      chemicals={[]}
+                      onChemicalDrop={
+                        experimentStarted ? handleChemicalDrop : () => {}
+                      }
+                      onInteract={equipmentInteractHandler}
+                      allEquipmentPositions={equipmentPositions}
+                      currentStep={currentStep}
+                      disabled={!experimentStarted}
+                      isDryTest={isDryTestExperiment}
+                      dryTestMode={resolvedDryTestMode}
+                      activeFlameTest={activeFlameTest}
+                      phPaperColor={phPaperColor}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -4833,8 +4918,8 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries.filter((entry) => {
-                    // Hide INFERENCE 3, 4, 5, 6 for Bromide and Iodide checks
-                    if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                    // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Wet Test for Acid Radicals
+                    if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                       return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                     }
                     // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
@@ -4901,8 +4986,8 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
                 <ul className="mt-4 space-y-3">
                   {observationHighlights.filter((highlight) => {
-                    // Hide Inference 3, 4, 5, 6 highlights for Bromide and Iodide checks
-                    if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                    // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Wet Test for Acid Radicals
+                    if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                       return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                     }
                     return true;
