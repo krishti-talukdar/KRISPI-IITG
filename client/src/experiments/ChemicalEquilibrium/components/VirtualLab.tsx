@@ -4288,6 +4288,10 @@ function ChemicalEquilibriumVirtualLab({
                   if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                     return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
+                  // Hide INFERENCE 3, 4, 5, 6 for Iodide Check in Wet Test for Acid Radicals
+                  if (activeHalide === "I" && resolvedDryTestMode === "wet") {
+                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                  }
                   // Hide INFERENCE 2, 3, 4, 5, 6 for Iodide Check in Dry Test for Acid Radicals
                   if (activeHalide === "I" && resolvedDryTestMode === "acid") {
                     return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
