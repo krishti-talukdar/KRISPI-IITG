@@ -4384,8 +4384,10 @@ function ChemicalEquilibriumVirtualLab({
                 .map((entry) => {
                   // For Iodide Check in Dry Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
                   // For Chloride Check in Wet Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
+                  // For Sulfide Check in Dry Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
                   const displayLabel = (activeHalide === "I" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1") ||
-                    (activeHalide === "Cl" && resolvedDryTestMode === "wet" && entry.label === "INFERENCE 1")
+                    (activeHalide === "Cl" && resolvedDryTestMode === "wet" && entry.label === "INFERENCE 1") ||
+                    (activeHalide === "S" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1")
                     ? "INFERENCE"
                     : entry.label;
                   return (
