@@ -9,7 +9,7 @@ export const GLASS_ROD_IMAGE_URL =
   "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3bdedfd838454c6b8a3cc44b25ecfdc0?format=webp&width=800";
 
 export const GLASS_ROD_FLAME_TEST_IMAGE_URL =
-  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Fd3973e1dc1c24c69ad1bd0b5753e7e9b?format=webp&width=800&height=1200";
+  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F36bab2ffcfc04c1692fc09e10e18550e?format=webp&width=800&height=1200";
 
 // Chemical reagents specific to Chemical Equilibrium experiment
 export const CHEMICAL_EQUILIBRIUM_CHEMICALS: Chemical[] = [
