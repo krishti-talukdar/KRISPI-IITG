@@ -63,6 +63,14 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
   const [baseSample, setBaseSample] = useState<TestTubeState | null>(null);
   const [bufferedSample, setBufferedSample] = useState<TestTubeState | null>(null);
   const [ammoniumAfterSample, setAmmoniumAfterSample] = useState<TestTubeState | null>(null);
+
+  const formatChemicalName = (name: string) => {
+    return name
+      .replace(/NH4OH/g, 'NH₄OH')
+      .replace(/NH4Cl/g, 'NH₄Cl')
+      .replace(/NH4\+/g, 'NH₄⁺')
+      .replace(/NH3/g, 'NH₃');
+  };
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [analysisLog, setAnalysisLog] = useState<LogEntry[]>([]);
   const [lastMeasuredPH, setLastMeasuredPH] = useState<number | null>(null);
@@ -788,11 +796,11 @@ useEffect(() => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="p-3 rounded-lg border border-blue-200 bg-gradient-to-br from-blue-50 to-white">
                     <div className="font-medium text-gray-800">Ammonium hydroxide + Indicator (≈ basic)</div>
-                    <div className="text-sm text-gray-600 mt-1">Contents: {baseSample ? baseSample.contents.join(', ') : 'Not recorded'}</div>
+                    <div className="text-sm text-gray-600 mt-1">Contents: {baseSample ? baseSample.contents.map(formatChemicalName).join(', ') : 'Not recorded'}</div>
                   </div>
                   <div className="p-3 rounded-lg border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white">
                     <div className="font-medium text-gray-800">NH₄Cl added + Indicator (≈ buffered)</div>
-                    <div className="text-sm text-gray-600 mt-1">Contents: {ammoniumAfterSample ? ammoniumAfterSample.contents.join(', ') : 'Not recorded'}</div>
+                    <div className="text-sm text-gray-600 mt-1">Contents: {ammoniumAfterSample ? ammoniumAfterSample.contents.map(formatChemicalName).join(', ') : 'Not recorded'}</div>
                   </div>
                 </div>
               </div>
@@ -863,7 +871,7 @@ useEffect(() => {
                   <li>When measuring pH with indicators, cross-check with pH paper or a pH meter for increased accuracy.</li>
                   <li>To test buffer limits, add small incremental volumes of strong acid or base and observe pH change; a stable pH indicates good buffering.</li>
                   <li>Record temperatures and ensure consistent mixing — pH can vary with temperature and incomplete mixing.</li>
-                  <li>For further study, vary the initial NH4OH concentration while keeping NH4Cl constant to observe how buffer pH responds.</li>
+                  <li>For further study, vary the initial NH₄OH concentration while keeping NH₄Cl constant to observe how buffer pH responds.</li>
                 </ul>
               </div>
             </div>
