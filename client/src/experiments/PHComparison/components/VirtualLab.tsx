@@ -829,30 +829,6 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
               </div>
             </div>
 
-            {/* Action Timeline */}
-            <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-              <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-gray-600" />
-                Action Timeline
-              </h3>
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {analysisLog.map((log, index) => (
-                  <div key={log.id} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 bg-gradient-to-r from-blue-50 to-white">
-                    <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold">{index + 1}</div>
-                    <div className="flex-1 space-y-1">
-                      <div className="font-medium text-black">{log.action}</div>
-                      <p className="text-sm text-gray-700">{log.observation}</p>
-                      <div className="flex items-center space-x-3 text-xs text-gray-500">
-                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ backgroundColor: log.colorBefore }} />Before</span>
-                        <span>→</span>
-                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ backgroundColor: log.colorAfter }} />After</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {analysisLog.length === 0 && <p className="text-xs text-gray-500">Actions logged appear after you add reagents.</p>}
-              </div>
-            </div>
 
             {/* Final Experimental State (Both Solutions) */}
             <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
