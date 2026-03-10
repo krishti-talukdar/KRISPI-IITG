@@ -357,12 +357,26 @@ function applyPHResult(ph: number) {
   setShowToast(`Measured pH ≈ ${rounded.toFixed(2)}`);
   setTimeout(() => setShowToast(null), 2000);
 
-  // choose paper color
-  let paperColor: string | undefined = undefined;
-  if (rounded < 4.5) paperColor = '#ff6b6b'; // acidic - red
-  else if (rounded < 6.5) paperColor = '#ffb74d'; // weak acidic - orange
-  else if (rounded < 8) paperColor = '#C8E6C9'; // near neutral - green
-  else paperColor = '#64b5f6'; // basic - blue
+  // choose paper color matching PHScale colors (0-14)
+  const phColors = [
+    '#e53935', // 0
+    '#f44336', // 1
+    '#ff7043', // 2
+    '#ffb74d', // 3
+    '#fdd835', // 4
+    '#cddc39', // 5
+    '#9ccc65', // 6
+    '#7cb342', // 7
+    '#7cb342', // 8
+    '#4db6ac', // 9
+    '#00bcd4', // 10
+    '#2196f3', // 11
+    '#5c6bc0', // 12
+    '#7e57c2', // 13
+    '#9c27b0', // 14
+  ];
+  const idx = Math.max(0, Math.min(14, Math.round(rounded)));
+  const paperColor = phColors[idx];
 
   setEquipmentOnBench(prev => prev.map(e => {
     if (e.id === 'universal-indicator' || e.id.toLowerCase().includes('ph')) {
