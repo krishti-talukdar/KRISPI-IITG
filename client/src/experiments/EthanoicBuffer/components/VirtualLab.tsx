@@ -701,7 +701,11 @@ const stepsProgress = (
               <div className="grid grid-cols-1 gap-3 text-sm">
                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
                   <div className="flex items-center font-semibold tracking-wide text-gray-800 gap-2">
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px]">A</span>
+                    {(() => {
+                      const phColors = ['#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'];
+                      const color = initialAcidPH != null ? phColors[Math.max(0, Math.min(14, Math.round(initialAcidPH)))] : '#000000';
+                      return <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px]" style={{ backgroundColor: color }}>{'A'}</span>;
+                    })()}
                     <span>pH of Ethanoic acid</span>
                   </div>
                   <div className="text-lg font-bold text-gray-900 mt-2">
@@ -710,7 +714,11 @@ const stepsProgress = (
                 </div>
                 <div className="p-3 bg-white rounded-xl border border-gray-200 space-y-2">
                   <div className="flex items-center font-semibold tracking-wide text-gray-800 gap-2">
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px]">B</span>
+                    {(() => {
+                      const phColors = ['#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'];
+                      const color = case2PH != null ? phColors[Math.max(0, Math.min(14, Math.round(case2PH)))] : '#000000';
+                      return <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px]" style={{ backgroundColor: color }}>{'B'}</span>;
+                    })()}
                     <span>When Sodium Ethanoate is added</span>
                   </div>
                   <div className="text-lg font-bold text-gray-900">
