@@ -622,7 +622,13 @@ useEffect(() => {
                     const display = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
                     return (
                       <>
-                        <div className="text-2xl font-bold text-purple-700">{display}</div>
+                        <div className="text-2xl font-bold">
+                          {lastMeasuredPH != null ? (
+                            <span className="text-purple-700">{display}</span>
+                          ) : (
+                            <span style={{ color: '#39FF14', textShadow: '0 0 8px #39FF14' }}>{display}</span>
+                          )}
+                        </div>
                         <div className="text-xs text-gray-500">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet'}</div>
                       </>
                     );
