@@ -2684,7 +2684,7 @@ function ChemicalEquilibriumVirtualLab({
   ]);
 
   const handleSaltDialogOpen = () => {
-    setSaltMass("0.05");
+    setSaltMass("0.00");
     setSaltDialogError(null);
     setSaltDialogOpen(true);
   };
