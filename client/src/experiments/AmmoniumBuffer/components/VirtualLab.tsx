@@ -764,32 +764,6 @@ useEffect(() => {
 
             <div className="space-y-4">
               <div className="bg-white rounded-lg p-4 border border-gray-200">
-                <h4 className="text-lg font-semibold mb-3">Action Timeline</h4>
-                <div className="space-y-3 max-h-64 overflow-y-auto">
-                  {analysisLog.map((log, index) => (
-                    <div key={log.id} className="flex items-start space-x-3 p-3 rounded-lg border border-blue-50 bg-gradient-to-r from-blue-50 to-white">
-                      <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">{index + 1}</div>
-                      <div className="flex-1">
-                        <div className="font-medium text-black">{log.action}</div>
-                        <div className="text-sm text-gray-700 mt-1">{log.observation}</div>
-                        <div className="flex items-center space-x-2 text-xs text-gray-500 mt-2">
-                          <span className="flex items-center gap-2">
-                            <span className="w-6 h-6 rounded-full border-2 border-white shadow-md" style={{ backgroundColor: log.colorBefore, boxShadow: '0 0 0 3px rgba(0,0,0,0.04) inset' }} />
-                            <span className="text-xs text-gray-600">Before</span>
-                          </span>
-                          <span className="text-sm text-gray-400">→</span>
-                          <span className="flex items-center gap-2">
-                            <span className="w-6 h-6 rounded-full border-2 border-white shadow-md" style={{ backgroundColor: log.colorAfter, boxShadow: '0 0 0 3px rgba(0,0,0,0.04) inset' }} />
-                            <span className="text-xs text-gray-600">After</span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {analysisLog.length === 0 && <p className="text-xs text-gray-500">No actions logged yet.</p>}
-                </div>
-              </div>
-              <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <h4 className="text-lg font-semibold mb-3">Final Experimental State</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="p-3 rounded-lg border border-blue-200 bg-gradient-to-br from-blue-50 to-white">
