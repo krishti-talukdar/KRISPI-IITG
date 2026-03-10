@@ -1136,7 +1136,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
           <DialogHeader>
             <DialogTitle>Enter Volume</DialogTitle>
             <DialogDescription>
-              Enter the volume of 0.1 M CH3COOH to add to the test tube.
+              Enter the volume of 0.1 M CH₃COOH to add to the test tube.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
