@@ -67,6 +67,9 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
   const [aceticSample, setAceticSample] = useState<TestTubeState | null>(null);
 
   // Results modal and analysis log
+  const formatChemicalName = (name: string) => {
+    return name.replace(/CH3COOH/g, 'CH₃COOH');
+  };
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [analysisLog, setAnalysisLog] = useState<LogEntry[]>([]);
   const [lastMeasuredPH, setLastMeasuredPH] = useState<number | null>(null);
@@ -195,7 +198,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
           animateColorTransition(nextColor);
         }
         // Log this action for analysis timeline
-        const label = reagent === 'HCL' ? 'Added HCl' : reagent === 'CH3COOH' ? 'Added CH3COOH' : 'Added Universal Indicator';
+        const label = reagent === 'HCL' ? 'Added HCl' : reagent === 'CH3COOH' ? 'Added CH₃COOH' : 'Added Universal Indicator';
         const observation = contents.includes('IND')
           ? (contents.includes('HCL') ? 'Indicator turned red/orange → strong acid (~pH 2)' : contents.includes('CH3COOH') ? 'Indicator turned yellow/orange → weak acid (~pH 3–4)' : 'Indicator added to neutral solution')
           : 'Solution color unchanged (no indicator)';
@@ -204,7 +207,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
       });
       setActiveEquipment("");
       if (reagent === 'IND') setShowToast('Indicator added');
-      else setShowToast(`${reagent === 'HCL' ? 'HCl' : 'CH3COOH'} added`);
+      else setShowToast(`${reagent === 'HCL' ? 'HCl' : 'CH₃COOH'} added`);
       setTimeout(() => setShowToast(""), 1500);
     }, ANIMATION.DROPPER_DURATION);
   };
@@ -829,30 +832,6 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
               </div>
             </div>
 
-            {/* Action Timeline */}
-            <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-              <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-gray-600" />
-                Action Timeline
-              </h3>
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {analysisLog.map((log, index) => (
-                  <div key={log.id} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 bg-gradient-to-r from-blue-50 to-white">
-                    <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold">{index + 1}</div>
-                    <div className="flex-1 space-y-1">
-                      <div className="font-medium text-black">{log.action}</div>
-                      <p className="text-sm text-gray-700">{log.observation}</p>
-                      <div className="flex items-center space-x-3 text-xs text-gray-500">
-                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ backgroundColor: log.colorBefore }} />Before</span>
-                        <span>→</span>
-                        <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ backgroundColor: log.colorAfter }} />After</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {analysisLog.length === 0 && <p className="text-xs text-gray-500">Actions logged appear after you add reagents.</p>}
-              </div>
-            </div>
 
             {/* Final Experimental State (Both Solutions) */}
             <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
@@ -874,7 +853,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                     <h4 className="text-sm font-semibold text-black">0.01 M CH₃COOH + Indicator (≈ pH 3–4)</h4>
                   </div>
                   <div className="text-sm text-black space-y-1">
-                    <div><span className="font-medium">Current Solution:</span> {aceticSample ? aceticSample.contents.join(', ') : 'Not recorded'}</div>
+                    <div><span className="font-medium">Current Solution:</span> {aceticSample ? aceticSample.contents.map(formatChemicalName).join(', ') : 'Not recorded'}</div>
                     <div><span className="font-medium">Volume:</span> {(aceticSample?.volume ?? 0).toFixed(1)} mL</div>
                   </div>
                 </div>
@@ -1157,7 +1136,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
           <DialogHeader>
             <DialogTitle>Enter Volume</DialogTitle>
             <DialogDescription>
-              Enter the volume of 0.1 M CH3COOH to add to the test tube.
+              Enter the volume of 0.1 M CH₃COOH to add to the test tube.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">

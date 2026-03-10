@@ -515,7 +515,7 @@
   },
   {
     "title": "To study the change in pH of ammonium hydroxide solution on addition of ammonium chloride",
-    "description": "Investigate how adding ammonium chloride (NH4Cl) to an ammonium hydroxide (NH4OH) solution affects pH. Observe the common-ion effect: adding NH4+ shifts the NH3/NH4+ equilibrium and lowers the pH.",
+    "description": "Investigate how adding ammonium chloride (NH₄Cl) to an ammonium hydroxide (NH₄OH) solution affects pH. Observe the common-ion effect: adding NH₄⁺ shifts the NH₃/NH₄⁺ equilibrium and lowers the pH.",
     "category": "Acid-Base Chemistry",
     "difficulty": "Beginner",
     "duration": 25,
@@ -526,15 +526,15 @@
       "Beakers",
       "Test Tubes",
       "pH Meter or Universal Indicator",
-      "Ammonium hydroxide solution (0.1 M NH4OH)",
-      "Ammonium chloride solution (NH4Cl)"
+      "Ammonium hydroxide solution (0.1 M NH₄OH)",
+      "Ammonium chloride solution (NH₄Cl)"
     ],
     "stepDetails": [
-      { "id": 1, "title": "Prepare 0.1 M NH4OH Solution", "description": "Prepare approximately 100 mL of 0.1 M ammonium hydroxide solution (NH4OH) using dilute ammonia solution. Record initial concentration and temperature.", "duration": "5 minutes", "completed": false },
-      { "id": 2, "title": "Measure Initial pH", "description": "Calibrate the pH meter or prepare universal indicator. Measure and record the initial pH of the NH4OH solution (expect a basic pH due to NH3 in water).", "duration": "3 minutes", "completed": false },
-      { "id": 3, "title": "Add NH4Cl Incrementally", "description": "Add small known amounts (e.g., 0.1 g increments) of solid ammonium chloride to the NH4OH solution. Stir thoroughly after each addition and allow the solution to equilibrate.", "duration": "8 minutes", "completed": false },
-      { "id": 4, "title": "Record pH After Each Addition", "description": "Measure and record pH after each NH4Cl addition. Observe the pH dropping as NH4+ concentration increases and the common-ion effect suppresses NH3 ionization.", "duration": "5 minutes", "completed": false },
-      { "id": 5, "title": "Analyze Results", "description": "Plot pH vs amount of NH4Cl added. Discuss the common-ion effect, buffer region behavior, and calculate expected pH changes using Kb for NH3 (Kb ≈ 1.8×10⁻⁵).", "duration": "7 minutes", "completed": false },
+      { "id": 1, "title": "Prepare 0.1 M NH₄OH Solution", "description": "Prepare approximately 100 mL of 0.1 M ammonium hydroxide solution (NH₄OH) using dilute ammonia solution. Record initial concentration and temperature.", "duration": "5 minutes", "completed": false },
+      { "id": 2, "title": "Measure Initial pH", "description": "Calibrate the pH meter or prepare universal indicator. Measure and record the initial pH of the NH₄OH solution (expect a basic pH due to NH₃ in water).", "duration": "3 minutes", "completed": false },
+      { "id": 3, "title": "Add NH₄Cl Incrementally", "description": "Add small known amounts (e.g., 0.1 g increments) of solid ammonium chloride to the NH₄OH solution. Stir thoroughly after each addition and allow the solution to equilibrate.", "duration": "8 minutes", "completed": false },
+      { "id": 4, "title": "Record pH After Each Addition", "description": "Measure and record pH after each NH₄Cl addition. Observe the pH dropping as NH₄⁺ concentration increases and the common-ion effect suppresses NH₃ ionization.", "duration": "5 minutes", "completed": false },
+      { "id": 5, "title": "Analyze Results", "description": "Plot pH vs amount of NH₄Cl added. Discuss the common-ion effect, buffer region behavior, and calculate expected pH changes using Kb for NH₃ (Kb ≈ 1.8×10⁻⁵).", "duration": "7 minutes", "completed": false },
       { "id": 6, "title": "Cleanup and Safety", "description": "Neutralize and dispose solutions according to local guidelines. Rinse glassware thoroughly and wash hands. Store reagents properly.", "duration": "2 minutes", "safety": "Ammonia vapors are irritating; work in well-ventilated area. Wear goggles and gloves.", "completed": false }
     ],
     "safetyInfo": "Ammonium hydroxide and ammonia vapors are irritating to eyes and respiratory tract. Ammonium chloride is an irritant. Work in a well-ventilated area or fume hood. Wear safety goggles, gloves, and avoid inhalation."

@@ -15,6 +15,8 @@ export interface IStorage {
   getAllUserProgress(userId: string): Promise<UserProgress[]>;
   updateUserProgress(progress: InsertUserProgress): Promise<UserProgress>;
   createUserProgress(progress: InsertUserProgress): Promise<UserProgress>;
+  // Return total number of completed experiments across all users
+  getTotalCompletedCount(): Promise<number>;
 }
 
 export class MemStorage implements IStorage {
@@ -118,6 +120,10 @@ export class MemStorage implements IStorage {
     return Array.from(this.userProgress.values()).filter(
       (progress) => progress.userId === userId
     );
+  }
+
+  async getTotalCompletedCount(): Promise<number> {
+    return Array.from(this.userProgress.values()).filter((p) => p.completed).length;
   }
 
   async updateUserProgress(progress: InsertUserProgress): Promise<UserProgress> {
