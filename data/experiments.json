@@ -146,7 +146,8 @@
   },
   {
     "title": "Salt Analysis",
-    "description": "A systematic virtual investigation to identify unknown acidic and basic radicals. Perform dry and wet tests, observe characteristic precipitates, and use confirmatory reactions to determine the composition of a white crystalline salt.",
+    "description": "To analyse the given salt for acid and basic radical.  **Physical appearance** : White crystalline solid .  **Solubility** : Soluble in water.",
+    "coverDescription": "A systematic virtual investigation to identify unknown acidic and basic radicals. Perform dry and wet tests, observe characteristic precipitates, and use confirmatory reactions to determine the composition of a white crystalline salt.",
     "category": "Qualitative Analysis",
     "difficulty": "Intermediate",
     "duration": 40,
