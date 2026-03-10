@@ -78,7 +78,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
       { id: "hcl-0-1m", name: "Hydrochloric acid (0.1 M)" },
       { id: "hcl-0-01m", name: "Hydrochloric acid (0.01 M)" },
       { id: "hcl-0-001m", name: "Hydrochloric acid (0.001 M)" },
-      { id: "universal-indicator", name: "pH Paper / Universal Indicator" },
+      { id: "universal-indicator", name: "pH Paper" },
     ];
     return core.map((c) => ({ ...c, icon: iconFor(c.id, c.name) }));
   }, []);
