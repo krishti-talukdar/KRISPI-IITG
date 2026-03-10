@@ -483,9 +483,10 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
   };
 
   const formatPhValue = (ph: number | null) => {
-    if (ph == null) return "No result yet";
+    if (ph == null) return <span>No result yet</span>;
     const label = ph < 7 ? "Acidic" : ph > 7 ? "Basic" : "Neutral";
-    return `${ph.toFixed(2)} (${label})`;
+    const color = getPhColor(ph);
+    return (<span><span style={{ color }}>{ph.toFixed(2)}</span> <span className="text-gray-700">({label})</span></span>);
   };
 
   const handleRestore = () => {
@@ -503,6 +504,15 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     (['q1','q2','q3','q4','q5'] as Array<'q1'|'q2'|'q3'|'q4'|'q5'>).forEach(k => { if (quizSelections[k] === correct[k]) score++; });
     setQuizScore(score);
     setQuizSubmitted(true);
+  };
+
+  // PH scale colors (keep in sync with client/src/components/PHScale.tsx)
+  const PH_COLORS = ['#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'];
+  const getPhColor = (ph: number | null | undefined) => {
+    if (ph == null) return undefined;
+    let idx = Math.round(ph as number);
+    idx = Math.max(0, Math.min(14, idx));
+    return PH_COLORS[idx];
   };
 
   const measurementDisplayValue = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
@@ -688,7 +698,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                 <div>
                   <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
                   <div className="flex items-baseline gap-3">
-                    <div className="text-2xl font-bold text-purple-700">{measurementDisplayValue}</div>
+                    <div className="text-2xl font-bold">{lastMeasuredPH != null ? (<span style={{ color: getPhColor(lastMeasuredPH) }}>{measurementDisplayValue}</span>) : (<span>{measurementDisplayValue}</span>)}</div>
                     <div className="text-xs text-gray-500">{measurementLabel}</div>
                   </div>
                 </div>
