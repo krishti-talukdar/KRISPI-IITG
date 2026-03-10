@@ -146,11 +146,14 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
   useEffect(() => {
     if (testTube.contents.includes('IND') && testTube.contents.includes('HCL') && testTube.colorHex === COLORS.HCL_PH2) {
       setHclSample(testTube);
+      // if a snapshot is captured, set the inferred pH if not already measured
+      if (case1PH == null) setCase1PH(2.0);
     }
     if (testTube.contents.includes('IND') && testTube.contents.includes('CH3COOH') && testTube.colorHex === COLORS.ACETIC_PH3) {
       setAceticSample(testTube);
+      if (case2PH == null) setCase2PH(3.5);
     }
-  }, [testTube]);
+  }, [testTube, case1PH, case2PH]);
 
   // Advance progress to step 3 when the test tube has any volume added
   useEffect(() => {
