@@ -773,12 +773,14 @@ useEffect(() => {
                         <div className="font-medium text-black">{log.action}</div>
                         <div className="text-sm text-gray-700 mt-1">{log.observation}</div>
                         <div className="flex items-center space-x-2 text-xs text-gray-500 mt-2">
-                          <span className="flex items-center gap-1">
-                            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: log.colorBefore }} /> Before
+                          <span className="flex items-center gap-2">
+                            <span className="w-6 h-6 rounded-full border-2 border-white shadow-md" style={{ backgroundColor: log.colorBefore, boxShadow: '0 0 0 3px rgba(0,0,0,0.04) inset' }} />
+                            <span className="text-xs text-gray-600">Before</span>
                           </span>
-                          <span>→</span>
-                          <span className="flex items-center gap-1">
-                            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: log.colorAfter }} /> After
+                          <span className="text-sm text-gray-400">→</span>
+                          <span className="flex items-center gap-2">
+                            <span className="w-6 h-6 rounded-full border-2 border-white shadow-md" style={{ backgroundColor: log.colorAfter, boxShadow: '0 0 0 3px rgba(0,0,0,0.04) inset' }} />
+                            <span className="text-xs text-gray-600">After</span>
                           </span>
                         </div>
                       </div>
