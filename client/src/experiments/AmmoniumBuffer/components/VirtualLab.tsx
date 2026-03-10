@@ -656,7 +656,7 @@ useEffect(() => {
                   </div>
                 </div>
 
-                <div className="text-sm text-black mt-3 mb-2"><span className="inline-block w-2 h-2 rounded-full bg-black mr-2" aria-hidden="true" /> <span className="inline-block mr-2 font-bold">B</span> When NH4Cl is added</div>
+                <div className="text-sm text-black mt-3 mb-2"><span className="inline-block w-2 h-2 rounded-full bg-black mr-2" aria-hidden="true" /> <span className="inline-block mr-2 font-bold">B</span> When NH₄Cl is added</div>
                 <div className="mt-3">
                   <div className="p-3 rounded border border-gray-200 bg-gray-50 text-sm">
                     {(() => {
