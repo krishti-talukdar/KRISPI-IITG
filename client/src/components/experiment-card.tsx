@@ -32,7 +32,7 @@ export default function ExperimentCard({ experiment, progress, onViewDetails }: 
   
   const progressPercentage = progress?.progressPercentage || 0;
   const isCompleted = progress?.completed || false;
-  const coverDescription = (experiment as any).coverDescription || experiment.description;
+  const coverDescription = ((experiment as any).coverDescription || experiment.description).replace(/CH3COOH/g, 'CH₃COOH');
   
   const getCategoryColor = (category: string) => {
     switch (category) {
@@ -83,7 +83,7 @@ export default function ExperimentCard({ experiment, progress, onViewDetails }: 
         </div>
         
         {/* If title is a short placeholder like "Titration 1", prefer the descriptive sentence from the description for the card overlay */}
-        <h4 className="text-xl font-bold text-gray-900 mb-3">{/^Titration\s?\d+$/i.test(experiment.title) ? experiment.description : experiment.title}</h4>
+        <h4 className="text-xl font-bold text-gray-900 mb-3">{/^Titration\s?\d+$/i.test(experiment.title) ? coverDescription : experiment.title.replace(/CH3COOH/g, 'CH₃COOH')}</h4>
         <p className="text-gray-600 mb-4 text-sm leading-relaxed">
           {formatDescription(coverDescription)}
         </p>

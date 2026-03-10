@@ -89,7 +89,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
             className={`flex ${toolbarLayoutClass} p-4 rounded-lg border-2 transition ${toolbarStateClass}`}
           >
             <div className={iconLayoutClass}>{icon}</div>
-            <span className={nameLayoutClass}>{name}</span>
+            {(() => {
+              const m = /^(.*?)\s*\((.*)\)\s*$/.exec(name);
+              if (m) {
+                return (
+                  <div className={nameLayoutClass + " flex flex-col"}>
+                    <span className="text-sm font-medium">{m[1].trim()}</span>
+                    <span className="text-xs text-gray-600">({m[2].trim()})</span>
+                  </div>
+                );
+              }
+              return <span className={nameLayoutClass}>{name}</span>;
+            })()}
           </div>
         </TooltipTrigger>
         <TooltipContent>

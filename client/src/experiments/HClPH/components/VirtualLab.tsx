@@ -253,6 +253,15 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
     }
   }
 
+  // PH scale colors (keep in sync with client/src/components/PHScale.tsx)
+  const PH_COLORS = ['#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'];
+  const getPhColor = (ph: number | null | undefined) => {
+    if (ph == null) return undefined;
+    let idx = Math.round(ph as number);
+    idx = Math.max(0, Math.min(14, idx));
+    return PH_COLORS[idx];
+  };
+
   const stepsProgress = (
     <div className="mb-4 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
@@ -401,7 +410,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
                 <PHScale value={lastMeasuredPH} />
                 <div className="flex items-center space-x-2 mt-4">
-                  <div className="text-2xl font-bold text-purple-700">{lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--'}</div>
+                  <div className="text-2xl font-bold">{lastMeasuredPH != null ? (<span style={{ color: getPhColor(lastMeasuredPH) }}>{lastMeasuredPH.toFixed(2)}</span>) : '--'}</div>
                   <div className="text-xs text-gray-500">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet'}</div>
                 </div>
 
@@ -409,7 +418,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
                   {(["0.1 M", "0.01 M", "0.001 M"] as const).map((lab) => (
                     <div key={lab} className="p-2 rounded border border-gray-200 bg-gray-50 text-sm">
                       <div className="font-medium">HCl {lab}</div>
-                      <div className="text-lg text-black font-semibold">{results[lab] != null ? `${results[lab].toFixed(2)} (${results[lab] < 7 ? 'Acidic' : results[lab] > 7 ? 'Basic' : 'Neutral'})` : 'No result yet'}</div>
+                      <div className="text-lg text-black font-semibold">{results[lab] != null ? (<><span style={{ color: getPhColor(results[lab]) }}>{results[lab].toFixed(2)}</span> ({results[lab] < 7 ? 'Acidic' : results[lab] > 7 ? 'Basic' : 'Neutral'})</>) : 'No result yet'}</div>
                     </div>
                   ))}
                 </div>
@@ -459,30 +468,39 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
       {/* Results modal (styled like Ethanoic Buffer results) */}
       <Dialog open={showResultsModal} onOpenChange={setShowResultsModal}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-black">Experiment Results & Analysis</DialogTitle>
-            <DialogDescription className="text-black">Complete analysis of your HCl pH measurement experiment</DialogDescription>
+          <DialogHeader className="bg-gradient-to-r from-blue-600 to-purple-600 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
+            <DialogTitle className="text-2xl font-bold text-white">Results & Analysis</DialogTitle>
+            <DialogDescription className="text-indigo-100 mt-1">Complete analysis of your HCl pH measurement experiment</DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 text-black">
+          <div className="space-y-6 p-4 text-black">
             <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 border rounded bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200">
-                <div className="text-sm font-medium text-black">Measured pH (latest)</div>
-                <div className="text-3xl font-semibold mt-2 text-black">{lastMeasuredPH != null ? `${lastMeasuredPH.toFixed(2)} (${lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral'})` : 'No measurement'}</div>
+              <div className="p-6 rounded-lg shadow-md bg-gradient-to-br from-red-50 to-red-100 border border-red-200">
+                <div className="text-sm font-semibold text-red-700">Measured pH (latest)</div>
+                <div className="text-4xl font-bold mt-3 text-black">
+                  {lastMeasuredPH != null ? (
+                    <span style={{ color: getPhColor(lastMeasuredPH), textShadow: '0 1px 0 rgba(0,0,0,0.06)' }}>{lastMeasuredPH.toFixed(2)}</span>
+                  ) : (
+                    <span className="text-gray-500">No measurement</span>
+                  )}
+                </div>
+                <div className="mt-2 text-sm font-medium text-gray-700">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : '—'}</div>
               </div>
 
-              <div className="p-4 border rounded bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
-                <div className="text-sm font-medium text-black">Latest Recorded Concentration</div>
-                <div className="text-lg font-semibold mt-2 text-black">{lastUsedHclLabel ? `${lastUsedHclLabel} — ${results[lastUsedHclLabel] != null ? `${results[lastUsedHclLabel].toFixed(2)} (${results[lastUsedHclLabel] < 7 ? 'Acidic' : results[lastUsedHclLabel] > 7 ? 'Basic' : 'Neutral'})` : 'No result'}` : '—'}</div>
+              <div className="p-6 rounded-lg shadow-md bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
+                <div className="text-sm font-semibold text-blue-700">Latest recorded concentration</div>
+                <div className="text-2xl font-bold mt-3 text-black">{lastUsedHclLabel ? lastUsedHclLabel : '—'}</div>
+                <div className="mt-2 text-lg font-semibold" style={{ color: lastUsedHclLabel && results[lastUsedHclLabel] != null ? getPhColor(results[lastUsedHclLabel]) : undefined }}>
+                  {lastUsedHclLabel && results[lastUsedHclLabel] != null ? `${results[lastUsedHclLabel].toFixed(2)} (${results[lastUsedHclLabel] < 7 ? 'Acidic' : results[lastUsedHclLabel] > 7 ? 'Basic' : 'Neutral'})` : 'No result'}
+                </div>
               </div>
             </div>
 
-            <div>
-              <h4 className="font-semibold mb-2 text-black">pH Comparison Analysis</h4>
-              <p className="text-sm text-black">Measured pH values should increase as HCl concentration decreases. Review the recorded pH values below and consider sources of experimental error such as indicator range, dilution accuracy, or contamination. Below we provide expected theoretical pH values for ideal dilution and a comparison to measured results.</p>
+            <div className="rounded-lg bg-white p-4 border border-gray-100 shadow-sm">
+              <h4 className="text-lg font-bold text-gray-900 mb-2">pH Comparison Analysis</h4>
+              <p className="text-sm text-gray-700 mb-3">Measured pH values should increase as HCl concentration decreases. Review the recorded pH values below and consider sources of experimental error such as indicator range, dilution accuracy, or contamination. Below we provide expected theoretical pH values for ideal dilution and a comparison to measured results.</p>
 
-              <div className="mt-3 p-3 bg-white border rounded text-sm text-black">
-                <div className="font-medium mb-2 text-black">Recorded pH by concentration (measured vs expected)</div>
+              <div className="grid grid-cols-1 gap-3">
                 {(() => {
                   const colorMap: Record<string,string> = {
                     '0.1 M': 'bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200',
@@ -498,44 +516,47 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
                     const cls = colorMap[lab] || 'bg-white border-gray-200';
 
                     return (
-                      <div key={lab} className={`mb-2 p-2 rounded border ${cls} text-black`}>
-                        <div className="font-medium text-black">HCl {lab}</div>
-                        <div className="text-sm mt-1 text-black">Expected (ideal): pH {expected.toFixed(2)}</div>
-                        <div className="text-sm mt-1 text-black">Measured: {measured != null ? `${measured.toFixed(2)} (${measured < 7 ? 'Acidic' : measured > 7 ? 'Basic' : 'Neutral'})` : 'No result recorded'}</div>
-                        <div className="text-sm mt-1 text-black">Deviation: {deviation === '-' ? '-' : `${deviation} pH units`} — {status}</div>
-                        <div className="text-xs mt-1 text-black">Notes: {measured == null ? 'No data to assess.' : status === 'Good agreement' ? 'Measured value is within experimental uncertainty of the theoretical value.' : status === 'Moderate deviation' ? 'Check dilution accuracy, indicator range and reading technique.' : 'Large deviation — inspect contamination, indicator limitations, or instrument calibration.'}</div>
+                      <div key={lab} className={`p-3 rounded border ${cls}`}>
+                        <div className="flex items-center justify-between">
+                          <div className="font-semibold text-black">HCl {lab}</div>
+                          <div className="text-sm text-gray-600">Expected: pH {expected.toFixed(2)}</div>
+                        </div>
+                        <div className="mt-2 flex items-baseline gap-3">
+                          <div className="text-2xl font-bold" style={{ color: measured != null ? getPhColor(measured) : undefined }}>{measured != null ? measured.toFixed(2) : '—'}</div>
+                          <div className="text-sm text-gray-700">{measured != null ? (measured < 7 ? 'Acidic' : measured > 7 ? 'Basic' : 'Neutral') : 'No result recorded'}</div>
+                        </div>
+                        <div className="mt-2 text-sm text-gray-700">Deviation: {deviation === '-' ? '-' : `${deviation} pH units`} — <span className="font-medium">{status}</span></div>
                       </div>
                     );
                   });
                 })()}
+              </div>
 
-                {/* Summary interpretation */}
-                <div className="mt-3 p-3 border rounded bg-gradient-to-r from-yellow-50 to-white text-black">
-                  <div className="font-medium text-black">Interpretation</div>
-                  <div className="text-sm mt-1 text-black">Theoretical pH values for strong HCl are calculated as pH = -log10([H+]). For ideal dilutions: 0.1 M → pH 1.00, 0.01 M → pH 2.00, 0.001 M → pH 3.00. Measured values differing from these indicate experimental errors (dilution inaccuracies, indicator/color reading subjectivity, contamination) or limitations of pH paper/universal indicator at extreme pH ranges.</div>
-                </div>
+              <div className="mt-3 p-3 bg-yellow-50 rounded border border-yellow-200">
+                <div className="font-semibold">Interpretation</div>
+                <div className="text-sm text-gray-700 mt-1">Theoretical pH values for strong HCl are calculated as pH = -log10([H+]). For ideal dilutions: 0.1 M → pH 1.00, 0.01 M → pH 2.00, 0.001 M → pH 3.00. Measured values differing from these indicate experimental errors (dilution inaccuracies, indicator/color reading subjectivity, contamination) or limitations of pH paper/universal indicator at extreme pH ranges.</div>
               </div>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-2 text-black">Action Timeline</h4>
-              <ol className="list-decimal list-inside text-sm text-black">
+              <h4 className="text-lg font-bold mb-2">Action Timeline</h4>
+              <ol className="list-decimal list-inside text-sm text-gray-700">
                 <li>Added HCl solutions and recorded pH values where measured.</li>
-                <li>Recorded values: {Object.keys(results).length ? Object.entries(results).map(([k,v]) => `${k}: ${v.toFixed(2)}`).join(' • ') : 'No recorded values'}</li>
+                <li>Recorded values: {Object.keys(results).length ? Object.entries(results).map(([k,v]) => (<span key={k} className="inline-block mr-2"><span className="font-medium">{k}:</span> <span style={{ color: getPhColor(v) }}>{v.toFixed(2)}</span></span>)) : 'No recorded values'}</li>
                 <li>Recommended next steps: repeat measurements with fresh indicator strips, verify dilution volumes with calibrated pipettes, and perform a blank/control measurement.</li>
               </ol>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-2 text-black">Final Experimental State</h4>
+              <h4 className="text-lg font-bold mb-2">Final Experimental State</h4>
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 border rounded text-black">
-                  <div className="text-sm font-medium text-black">Solution</div>
-                  <div className="text-sm mt-1 text-black">pH: {lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : 'N/A'}</div>
+                <div className="p-3 border rounded">
+                  <div className="text-sm font-medium">Solution</div>
+                  <div className="text-sm mt-1">pH: {lastMeasuredPH != null ? (<span style={{ color: getPhColor(lastMeasuredPH) }}>{lastMeasuredPH.toFixed(2)}</span>) : 'N/A'}</div>
                 </div>
-                <div className="p-3 border rounded text-black">
-                  <div className="text-sm font-medium text-black">Notes</div>
-                  <div className="text-sm mt-1 text-black">Strong acid present; ensure proper dilution and indicator range when measuring. Use appropriate PPE and neutralize waste before disposal. Consider instrument calibration if multiple samples deviate significantly from expected.</div>
+                <div className="p-3 border rounded">
+                  <div className="text-sm font-medium">Notes</div>
+                  <div className="text-sm mt-1">Strong acid present; ensure proper dilution and indicator range when measuring. Use appropriate PPE and neutralize waste before disposal. Consider instrument calibration if multiple samples deviate significantly from expected.</div>
                 </div>
               </div>
             </div>

@@ -479,6 +479,14 @@ const stepsProgress = (
   const hhRatio = concHA && concA ? concA / concHA : null;
   const hhPH = hhRatio ? Math.max(0, Math.min(14, pKa + Math.log10(hhRatio))) : null;
   const resultsReady = case2PH != null && case2Version != null && measurementVersion >= case2Version;
+  // PH scale colors (keep in sync with client/src/components/PHScale.tsx)
+  const PH_COLORS = ['#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'];
+  const getPhColor = (ph: number | null | undefined) => {
+    if (ph == null) return undefined;
+    let idx = Math.round(ph as number);
+    idx = Math.max(0, Math.min(14, idx));
+    return PH_COLORS[idx];
+  };
   const handleViewResults = () => {
     if (resultsReady) {
       setShowResultsModal(true);
@@ -693,7 +701,7 @@ const stepsProgress = (
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
                 <PHScale value={lastMeasuredPH} />
                 <div className="flex items-center space-x-2 mt-4">
-                  <div className="text-2xl font-bold text-purple-700">{lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--'}</div>
+                  <div className="text-2xl font-bold">{lastMeasuredPH != null ? (<span style={{ color: getPhColor(lastMeasuredPH) }}>{lastMeasuredPH.toFixed(2)}</span>) : (<span>{'--'}</span>)}</div>
                   <div className="text-xs text-gray-500">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet'}</div>
                 </div>
               </div>
@@ -709,7 +717,7 @@ const stepsProgress = (
                     <span>pH of Ethanoic acid</span>
                   </div>
                   <div className="text-lg font-bold text-gray-900 mt-2">
-                    {initialAcidPH != null ? `${initialAcidPH.toFixed(2)} (${initialAcidPH < 7 ? 'Acidic' : initialAcidPH > 7 ? 'Basic' : 'Neutral'})` : 'Awaiting measurement'}
+                    {initialAcidPH != null ? (<><span style={{ color: getPhColor(initialAcidPH) }}>{initialAcidPH.toFixed(2)}</span> ({initialAcidPH < 7 ? 'Acidic' : initialAcidPH > 7 ? 'Basic' : 'Neutral'})</>) : 'Awaiting measurement'}
                   </div>
                 </div>
                 <div className="p-3 bg-white rounded-xl border border-gray-200 space-y-2">
@@ -722,19 +730,19 @@ const stepsProgress = (
                     <span>When Sodium Ethanoate is added</span>
                   </div>
                   <div className="text-lg font-bold text-gray-900">
-                    {(case2PH != null && case2Version != null && measurementVersion >= case2Version) ? `${case2PH.toFixed(2)} (${case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})` : 'Add sodium ethanoate to log results'}
+                    {(case2PH != null && case2Version != null && measurementVersion >= case2Version) ? (<><span style={{ color: getPhColor(case2PH) }}>{case2PH.toFixed(2)}</span> ({case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})</>) : 'Add sodium ethanoate to log results'}
                   </div>
                   <div className="grid grid-cols-1 gap-2">
                     <div className="p-2 rounded border border-gray-200 bg-gray-50">
                       <div className="text-xs font-medium text-gray-600">CASE 1</div>
                       <div className="text-base font-semibold text-gray-900">
-                        {(case1PH != null && case1Version != null && measurementVersion >= case1Version) ? `${case1PH.toFixed(2)} (${case1PH < 7 ? 'Acidic' : case1PH > 7 ? 'Basic' : 'Neutral'})` : 'Awaiting data'}
+                        {(case1PH != null && case1Version != null && measurementVersion >= case1Version) ? (<><span style={{ color: getPhColor(case1PH) }}>{case1PH.toFixed(2)}</span> ({case1PH < 7 ? 'Acidic' : case1PH > 7 ? 'Basic' : 'Neutral'})</>) : 'Awaiting data'}
                       </div>
                     </div>
                     <div className="p-2 rounded border border-gray-200 bg-gray-50">
                       <div className="text-xs font-medium text-gray-600">CASE 2</div>
                       <div className="text-base font-semibold text-gray-900">
-                        {(case2PH != null && case2Version != null && measurementVersion >= case2Version) ? `${case2PH.toFixed(2)} (${case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})` : 'Awaiting data'}
+                        {(case2PH != null && case2Version != null && measurementVersion >= case2Version) ? (<><span style={{ color: getPhColor(case2PH) }}>{case2PH.toFixed(2)}</span> ({case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})</>) : 'Awaiting data'}
                       </div>
                     </div>
                   </div>
@@ -839,7 +847,7 @@ const stepsProgress = (
               <div className="p-5 border-2 border-red-400 rounded-lg bg-gradient-to-br from-red-50 to-red-100 shadow-md hover:shadow-lg transition-shadow">
                 <div className="text-xs font-bold uppercase tracking-wider text-red-700 mb-1">Initial Solution</div>
                 <div className="text-sm font-medium text-gray-700 mb-2">0.1 M Ethanoic Acid</div>
-                <div className="text-3xl font-bold text-red-600">{initialAcidPH != null ? `${initialAcidPH.toFixed(2)}` : '—'}</div>
+                <div className="text-3xl font-bold">{initialAcidPH != null ? (<span style={{ color: getPhColor(initialAcidPH) }}>{initialAcidPH.toFixed(2)}</span>) : '—'}</div>
                 <div className="text-xs text-red-600 font-semibold mt-1">
                   {initialAcidPH != null ? (initialAcidPH < 7 ? 'Acidic' : initialAcidPH > 7 ? 'Basic' : 'Neutral') : 'Awaiting measurement'}
                 </div>
@@ -847,7 +855,7 @@ const stepsProgress = (
               <div className="p-5 border-2 border-green-400 rounded-lg bg-gradient-to-br from-green-50 to-green-100 shadow-md hover:shadow-lg transition-shadow">
                 <div className="text-xs font-bold uppercase tracking-wider text-green-700 mb-1">After Addition</div>
                 <div className="text-sm font-medium text-gray-700 mb-2">0.1 M Sodium Ethanoate</div>
-                <div className="text-3xl font-bold text-green-600">{case2PH != null ? `${case2PH.toFixed(2)}` : '—'}</div>
+                <div className="text-3xl font-bold">{case2PH != null ? (<span style={{ color: getPhColor(case2PH) }}>{case2PH.toFixed(2)}</span>) : '—'}</div>
                 <div className="text-xs font-semibold mt-1" style={{color: case2PH != null ? (case2PH < 7 ? '#dc2626' : case2PH > 7 ? '#2563eb' : '#7c3aed') : '#666'}}>
                   {case2PH != null ? `(${case2PH < 7 ? 'Acidic' : case2PH > 7 ? 'Basic' : 'Neutral'})` : 'Awaiting sodium additions'}
                 </div>
@@ -858,7 +866,7 @@ const stepsProgress = (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-lg border-l-4 border-blue-500">
               <h4 className="text-lg font-bold text-blue-900 mb-3">📊 pH Comparison Analysis</h4>
               <p className="text-sm text-gray-700 leading-relaxed">
-                Initial pH: <span className="font-bold text-red-600">{initialAcidPH != null ? initialAcidPH.toFixed(2) : 'N/A'}</span>. After adding sodium ethanoate the pH shifted to <span className="font-bold text-green-600">{case2PH != null ? case2PH.toFixed(2) : 'N/A'}</span>. This indicates <span className="font-semibold">buffer formation (CH₃COOH/CH₃COO⁻)</span> and can be interpreted using the Henderson–Hasselbalch relation.
+                Initial pH: <span className="font-bold" style={{ color: getPhColor(initialAcidPH) }}>{initialAcidPH != null ? initialAcidPH.toFixed(2) : 'N/A'}</span>. After adding sodium ethanoate the pH shifted to <span className="font-bold" style={{ color: getPhColor(case2PH) }}>{case2PH != null ? case2PH.toFixed(2) : 'N/A'}</span>. This indicates <span className="font-semibold">buffer formation (CH₃COOH/CH₃COO⁻)</span> and can be interpreted using the Henderson–Hasselbalch relation.
               </p>
             </div>
 

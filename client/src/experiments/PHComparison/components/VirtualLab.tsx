@@ -146,11 +146,14 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
   useEffect(() => {
     if (testTube.contents.includes('IND') && testTube.contents.includes('HCL') && testTube.colorHex === COLORS.HCL_PH2) {
       setHclSample(testTube);
+      // if a snapshot is captured, set the inferred pH if not already measured
+      if (case1PH == null) setCase1PH(2.0);
     }
     if (testTube.contents.includes('IND') && testTube.contents.includes('CH3COOH') && testTube.colorHex === COLORS.ACETIC_PH3) {
       setAceticSample(testTube);
+      if (case2PH == null) setCase2PH(3.5);
     }
-  }, [testTube]);
+  }, [testTube, case1PH, case2PH]);
 
   // Advance progress to step 3 when the test tube has any volume added
   useEffect(() => {
@@ -480,9 +483,10 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
   };
 
   const formatPhValue = (ph: number | null) => {
-    if (ph == null) return "No result yet";
+    if (ph == null) return <span>No result yet</span>;
     const label = ph < 7 ? "Acidic" : ph > 7 ? "Basic" : "Neutral";
-    return `${ph.toFixed(2)} (${label})`;
+    const color = getPhColor(ph);
+    return (<span><span style={{ color }}>{ph.toFixed(2)}</span> <span className="text-gray-700">({label})</span></span>);
   };
 
   const handleRestore = () => {
@@ -500,6 +504,15 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     (['q1','q2','q3','q4','q5'] as Array<'q1'|'q2'|'q3'|'q4'|'q5'>).forEach(k => { if (quizSelections[k] === correct[k]) score++; });
     setQuizScore(score);
     setQuizSubmitted(true);
+  };
+
+  // PH scale colors (keep in sync with client/src/components/PHScale.tsx)
+  const PH_COLORS = ['#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'];
+  const getPhColor = (ph: number | null | undefined) => {
+    if (ph == null) return undefined;
+    let idx = Math.round(ph as number);
+    idx = Math.max(0, Math.min(14, idx));
+    return PH_COLORS[idx];
   };
 
   const measurementDisplayValue = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
@@ -685,7 +698,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                 <div>
                   <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
                   <div className="flex items-baseline gap-3">
-                    <div className="text-2xl font-bold text-purple-700">{measurementDisplayValue}</div>
+                    <div className="text-2xl font-bold">{lastMeasuredPH != null ? (<span style={{ color: getPhColor(lastMeasuredPH) }}>{measurementDisplayValue}</span>) : (<span>{measurementDisplayValue}</span>)}</div>
                     <div className="text-xs text-gray-500">{measurementLabel}</div>
                   </div>
                 </div>
@@ -710,7 +723,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                   <div className="rounded-2xl border border-gray-200 bg-white/80 p-3">
                     <div className="flex items-center text-sm font-semibold text-gray-800">
                       <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px] mr-2">B</span>
-                      <span>pH of 0.01 M CH3COOH</span>
+                      <span>pH of 0.01 M CH₃COOH</span>
                     </div>
                     <div className="mt-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-base font-semibold text-gray-900">
                       {formatPhValue(case2PH)}
@@ -767,7 +780,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                 <div className="bg-white rounded-lg shadow-sm border border-amber-200 p-5 space-y-4">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.ACETIC_PH3 }} />
-                    <h4 className="font-semibold text-black">0.01 M CH3COOH + Indicator</h4>
+                    <h4 className="font-semibold text-black">0.01 M CH₃COOH + Indicator</h4>
                   </div>
                   <div className="grid grid-cols-3 gap-3 text-center text-xs text-gray-700">
                     <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
@@ -799,13 +812,13 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                   <p className="text-sm text-red-700">Strong acid; expected indicator color: red/orange (≈ pH 2).</p>
                   <div className="flex items-center gap-2 text-xs text-red-700">
                     <span className="w-3 h-3 rounded-full border border-red-300" style={{ backgroundColor: COLORS.HCL_PH2 }} />
-                    Observed acidic color implies higher [H⁺] than CH3COOH.
+                    Observed acidic color implies higher [H⁺] than CH₃COOH.
                   </div>
                 </div>
                 <div className="rounded-lg border border-amber-200 bg-amber-50/70 p-4 space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-amber-600" />
-                    <h4 className="text-sm font-semibold text-amber-800">0.01 M CH3COOH + Universal Indicator</h4>
+                    <h4 className="text-sm font-semibold text-amber-800">0.01 M CH₃COOH + Universal Indicator</h4>
                   </div>
                   <p className="text-sm text-amber-700">Weak acid; expected indicator color: yellow/orange (≈ pH 3–4).</p>
                   <div className="flex items-center gap-2 text-xs text-amber-700">
@@ -858,7 +871,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                 <div className="rounded-lg border border-amber-200 bg-amber-50/70 p-4 space-y-3">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS.ACETIC_PH3 }} />
-                    <h4 className="text-sm font-semibold text-black">0.01 M CH3COOH + Indicator (≈ pH 3–4)</h4>
+                    <h4 className="text-sm font-semibold text-black">0.01 M CH₃COOH + Indicator (≈ pH 3–4)</h4>
                   </div>
                   <div className="text-sm text-black space-y-1">
                     <div><span className="font-medium">Current Solution:</span> {aceticSample ? aceticSample.contents.join(', ') : 'Not recorded'}</div>
