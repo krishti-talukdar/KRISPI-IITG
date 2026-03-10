@@ -468,8 +468,8 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
       {/* Results modal (styled like Ethanoic Buffer results) */}
       <Dialog open={showResultsModal} onOpenChange={setShowResultsModal}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader className="bg-gradient-to-r from-indigo-600 to-purple-600 -mx-6 -mt-6 px-6 py-6 rounded-t-lg text-white">
-            <DialogTitle className="text-3xl font-extrabold">Experiment Results & Analysis</DialogTitle>
+          <DialogHeader className="bg-gradient-to-r from-blue-600 to-purple-600 -mx-6 -mt-6 px-6 py-4 rounded-t-lg">
+            <DialogTitle className="text-2xl font-bold text-white">Results & Analysis</DialogTitle>
             <DialogDescription className="text-indigo-100 mt-1">Complete analysis of your HCl pH measurement experiment</DialogDescription>
           </DialogHeader>
 
