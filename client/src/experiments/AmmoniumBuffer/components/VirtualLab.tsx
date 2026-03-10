@@ -195,11 +195,11 @@ useEffect(() => {
           }
         }
 
-        const label = reagent === 'NH4OH' ? 'Added NH4OH' : reagent === 'NH4Cl' ? 'Added NH4Cl' : 'Added pH paper';
+        const label = reagent === 'NH4OH' ? 'Added NH₄OH' : reagent === 'NH4Cl' ? 'Added NH₄Cl' : 'Added pH paper';
         const observation = reagent === 'IND'
           ? 'pH paper placed (no change to liquid color)'
           : reagent === 'NH4Cl'
-            ? 'NH4Cl added (no visible change to liquid color)'
+            ? 'NH₄Cl added (no visible change to liquid color)'
             : (contents.includes('IND') ? (contents.includes('NH4OH') ? 'Indicator turned blue/green → basic (~pH > 7)' : 'Indicator added to neutral solution') : 'Solution color unchanged (no indicator)');
 
         setAnalysisLog(prevLog => [...prevLog, { id: `${Date.now()}-${Math.random()}`, action: `${label} (${volume.toFixed(1)} mL)`, observation, colorBefore, colorAfter: nextColor }]);
@@ -207,7 +207,7 @@ useEffect(() => {
       });
       setActiveEquipment("");
       if (reagent === 'IND') setShowToast('pH paper added');
-      else setShowToast(`${reagent === 'NH4OH' ? 'NH4OH' : 'NH4Cl'} added`);
+      else setShowToast(`${reagent === 'NH4OH' ? 'NH₄OH' : 'NH₄Cl'} added`);
       setTimeout(() => setShowToast(""), 1500);
     }, ANIMATION.DROPPER_DURATION);
   };
@@ -355,7 +355,7 @@ useEffect(() => {
       // color pH paper according to PHScale
       const color = phColors[Math.max(0, Math.min(14, Math.round(ph)))]
       setEquipmentOnBench(prev => prev.map(item => (item.id === 'ph-paper' || item.id.toLowerCase().includes('ph')) ? { ...item, color } : item));
-      setShowToast('Measured pH ≈ 9 (buffered, lower than NH4OH)');
+      setShowToast('Measured pH ≈ 9 (buffered, lower than NH₄OH)');
       setShouldBlinkNh4clReset(nh4clVolumeAdded > 0);
       // advance guided progress: when pH is measured after NH4Cl, mark step 5 complete and move to step 6
       if (currentStep === 5 && onStepComplete && !completedSteps.includes(5)) {
@@ -373,7 +373,7 @@ useEffect(() => {
       // color pH paper according to PHScale
       const color = phColors[Math.max(0, Math.min(14, Math.round(ph)))]
       setEquipmentOnBench(prev => prev.map(item => (item.id === 'ph-paper' || item.id.toLowerCase().includes('ph')) ? { ...item, color } : item));
-      setShowToast('Measured pH ≈ 11 (basic NH4OH)');
+      setShowToast('Measured pH ≈ 11 (basic NH₄OH)');
       // if NH4Cl was previously added, prompt user to reset it after measuring
       setShouldBlinkNh4clReset(nh4clVolumeAdded > 0);
       setTimeout(() => setShowToast(''), 2000);
@@ -681,10 +681,10 @@ useEffect(() => {
               </div>
               <div className="p-5 border-2 border-emerald-400 rounded-lg bg-gradient-to-br from-emerald-50 to-emerald-100 shadow-md">
                 <div className="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">After Addition</div>
-                <div className="text-sm font-medium text-gray-700 mb-2">NH4Cl added (buffered)</div>
+                <div className="text-sm font-medium text-gray-700 mb-2">NH₄Cl added (buffered)</div>
                 <div className="text-3xl font-bold text-emerald-600">{bufferedPhDisplay}</div>
                 <div className={`text-xs font-semibold mt-1 ${bufferedPhResult != null ? (bufferedPhResult < 7 ? 'text-red-600' : bufferedPhResult > 7 ? 'text-green-600' : 'text-gray-600') : 'text-gray-500'}`}>
-                  {bufferedPhResult != null ? `(${describePhLabel(bufferedPhResult)})` : 'Awaiting NH4Cl measurement'}
+                  {bufferedPhResult != null ? `(${describePhLabel(bufferedPhResult)})` : 'Awaiting NH₄Cl measurement'}
                 </div>
               </div>
             </div>
@@ -692,7 +692,7 @@ useEffect(() => {
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-lg border-l-4 border-blue-500">
               <h4 className="text-lg font-bold text-blue-900 mb-3">📊 pH Comparison Analysis</h4>
               <p className="text-sm text-gray-700 leading-relaxed">
-                Initial pH: <span className="font-bold text-blue-700">{ammoniumInitialPH != null ? ammoniumInitialPH.toFixed(2) : 'N/A'}</span>. After adding NH4Cl the pH shifted to <span className="font-bold text-emerald-700">{bufferedPhResult != null ? bufferedPhResult.toFixed(2) : 'N/A'}</span>, indicating <span className="font-semibold text-black">buffer formation (NH₄OH/NH₄⁺)</span> that we interpret using Henderson–Hasselbalch.
+                Initial pH: <span className="font-bold text-blue-700">{ammoniumInitialPH != null ? ammoniumInitialPH.toFixed(2) : 'N/A'}</span>. After adding NH₄Cl the pH shifted to <span className="font-bold text-emerald-700">{bufferedPhResult != null ? bufferedPhResult.toFixed(2) : 'N/A'}</span>, indicating <span className="font-semibold text-black">buffer formation (NH₄OH/NH₄⁺)</span> that we interpret using Henderson–Hasselbalch.
               </p>
             </div>
 
@@ -700,7 +700,7 @@ useEffect(() => {
               <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border-2 border-amber-300 shadow-sm">
                 <h5 className="text-base font-bold text-amber-900 mb-3 flex items-center gap-2">
                   <span className="inline-block w-3 h-3 rounded-full bg-amber-500" />
-                  Initial pH (NH4OH)
+                  Initial pH (NH₄OH)
                 </h5>
                 {ammoniumInitialPH != null ? (
                   <PHScale value={ammoniumInitialPH} />
@@ -711,7 +711,7 @@ useEffect(() => {
               <div className="p-4 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg border-2 border-cyan-300 shadow-sm">
                 <h5 className="text-base font-bold text-cyan-900 mb-3 flex items-center gap-2">
                   <span className="inline-block w-3 h-3 rounded-full bg-cyan-500" />
-                  pH After NH4Cl Addition
+                  pH After NH₄Cl Addition
                 </h5>
                 {bufferedPhResult != null ? (
                   <PHScale value={bufferedPhResult} />
@@ -734,15 +734,15 @@ useEffect(() => {
                       <div className="font-bold text-purple-700">{hendersonResult.pKa.toFixed(2)}</div>
                     </div>
                     <div className="p-2 bg-white rounded border border-purple-200 text-center">
-                      <div className="text-xs text-gray-600">NH4OH added (mL)</div>
+                      <div className="text-xs text-gray-600">NH₄OH added (mL)</div>
                       <div className="font-bold text-purple-700">{hendersonResult.baseVolMl.toFixed(1)}</div>
                     </div>
                     <div className="p-2 bg-white rounded border border-purple-200 text-center">
-                      <div className="text-xs text-gray-600">NH4Cl added (mL)</div>
+                      <div className="text-xs text-gray-600">NH₄Cl added (mL)</div>
                       <div className="font-bold text-purple-700">{hendersonResult.acidVolMl.toFixed(1)}</div>
                     </div>
                     <div className="p-2 bg-white rounded border border-purple-200 text-center">
-                      <div className="text-xs text-gray-600">[NH4OH]/[NH4+] ratio</div>
+                      <div className="text-xs text-gray-600">[NH₄OH]/[NH₄+] ratio</div>
                       <div className="font-bold text-purple-700">{hendersonRatioText}</div>
                     </div>
                   </div>
@@ -757,7 +757,7 @@ useEffect(() => {
                 <div className="text-sm text-gray-700 space-y-2">
                   {hendersonResult.molesBase <= 0 && hendersonResult.molesAcid <= 0 && <div className="p-2 bg-white rounded border border-purple-200 text-gray-600">No reagents recorded yet.</div>}
                   {hendersonResult.molesBase > 0 && hendersonResult.molesAcid <= 0 && <div className="p-2 bg-white rounded border border-purple-200">Only base present—solution remains basic (measured pH ≈ {ammoniumInitialPH != null ? ammoniumInitialPH.toFixed(2) : '—'}).</div>}
-                  {hendersonResult.molesAcid > 0 && hendersonResult.molesBase <= 0 && <div className="p-2 bg-white rounded border border-purple-200">Only NH4Cl present—solution leans acidic/buffered (measured pH ≈ {bufferedPhResult != null ? bufferedPhResult.toFixed(2) : '—'}).</div>}
+                  {hendersonResult.molesAcid > 0 && hendersonResult.molesBase <= 0 && <div className="p-2 bg-white rounded border border-purple-200">Only NH₄Cl present—solution leans acidic/buffered (measured pH ≈ {bufferedPhResult != null ? bufferedPhResult.toFixed(2) : '—'}).</div>}
                 </div>
               )}
             </div>
@@ -771,7 +771,7 @@ useEffect(() => {
                     <div className="text-sm text-gray-600 mt-1">Contents: {baseSample ? baseSample.contents.join(', ') : 'Not recorded'}</div>
                   </div>
                   <div className="p-3 rounded-lg border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white">
-                    <div className="font-medium text-gray-800">NH4Cl added + Indicator (≈ buffered)</div>
+                    <div className="font-medium text-gray-800">NH₄Cl added + Indicator (≈ buffered)</div>
                     <div className="text-sm text-gray-600 mt-1">Contents: {ammoniumAfterSample ? ammoniumAfterSample.contents.join(', ') : 'Not recorded'}</div>
                   </div>
                 </div>
@@ -1082,7 +1082,7 @@ useEffect(() => {
       <Dialog open={showNh4ohDialog} onOpenChange={setShowNh4ohDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add NH4OH</DialogTitle>
+            <DialogTitle>Add NH₄OH</DialogTitle>
             <DialogDescription>Enter the volume of ammonium hydroxide to add (10.0–15.0 mL)</DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
@@ -1100,7 +1100,7 @@ useEffect(() => {
       <Dialog open={showNh4clDialog} onOpenChange={setShowNh4clDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add NH4Cl</DialogTitle>
+            <DialogTitle>Add NH₄Cl</DialogTitle>
             <DialogDescription>Enter the volume of ammonium chloride solution to add (5.0–10.0 mL)</DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
