@@ -401,7 +401,7 @@ useEffect(() => {
 
   // Henderson-Hasselbalch calculation helper
   const computeHenderson = () => {
-    const pKa = 9.25; // pKa of NH4+ at 25°C (approx)
+    const pKa = 9.25; // pKa of NH₄+ at 25°C (approx)
     const baseVolMl = history.filter(h => h.type === 'NH4OH').reduce((s, h) => s + h.volume, 0);
     const acidVolMl = history.filter(h => h.type === 'NH4Cl').reduce((s, h) => s + h.volume, 0);
     const indicatorVolMl = history.filter(h => h.type === 'IND').reduce((s, h) => s + h.volume, 0);
