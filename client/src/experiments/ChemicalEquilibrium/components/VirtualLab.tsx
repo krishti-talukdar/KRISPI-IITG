@@ -2684,7 +2684,7 @@ function ChemicalEquilibriumVirtualLab({
   ]);
 
   const handleSaltDialogOpen = () => {
-    setSaltMass("0.05");
+    setSaltMass("0.00");
     setSaltDialogError(null);
     setSaltDialogOpen(true);
   };
@@ -4466,19 +4466,18 @@ function ChemicalEquilibriumVirtualLab({
                   }
                   return true;
                 })
-                .map((entry) => {
-                  // For Iodide Check in Dry Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
-                  // For Chloride Check in Wet Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
-                  // For Sulfide Check in Dry Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
-                  // For Sulfide Check in Wet Test for Acid Radicals, display "INFERENCE" instead of "INFERENCE 1"
-                  const displayLabel = (activeHalide === "I" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1") ||
+                .map((entry, idx) => {
+                  const isGroupMode = isSaltAnalysisExperiment && resolvedDryTestMode === "wetBasic" && activeFlameTest === "GR";
+                  // For Iodide/Chloride/Sulfide special cases display label as "INFERENCE"
+                  const specialInferenceAsSingle = (activeHalide === "I" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1") ||
                     (activeHalide === "Cl" && resolvedDryTestMode === "wet" && entry.label === "INFERENCE 1") ||
                     (activeHalide === "S" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1") ||
-                    (activeHalide === "S" && resolvedDryTestMode === "wet" && entry.label === "INFERENCE 1")
-                    ? "INFERENCE"
-                    : entry.label;
+                    (activeHalide === "S" && resolvedDryTestMode === "wet" && entry.label === "INFERENCE 1");
+
+                  const defaultDisplayLabel = specialInferenceAsSingle ? "INFERENCE" : entry.label;
+                  const displayLabel = isGroupMode ? `GROUP ${idx + 1} Result` : defaultDisplayLabel;
                   return (
-                    <div key={entry.label} className="p-3 border rounded bg-white text-slate-900">
+                    <div key={`${entry.label}-${idx}`} className="p-3 border rounded bg-white text-slate-900">
                       <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">{displayLabel}</div>
                       <div className="mt-1 text-sm text-slate-800 whitespace-pre-wrap">{entry.result}</div>
                     </div>

@@ -775,7 +775,7 @@ export default function ChemicalEquilibriumApp({
                           <span className="text-white font-bold text-sm">D</span>
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 text-sm">Dry Test for Basic Radicals</h3>
+                          <h3 className="font-semibold text-gray-900 text-sm">Dry Test</h3>
                           <p className="text-gray-600 text-sm mt-1">Perform dry tests including flame test, borax bead test, and other identification methods.</p>
                         </div>
                       </div>
@@ -805,7 +805,7 @@ export default function ChemicalEquilibriumApp({
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <h3 className="font-semibold text-gray-900 text-sm">Wet Test for Basic Radicals</h3>
+                            <h3 className="font-semibold text-gray-900 text-sm">Wet Test </h3>
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();

@@ -357,12 +357,26 @@ function applyPHResult(ph: number) {
   setShowToast(`Measured pH ≈ ${rounded.toFixed(2)}`);
   setTimeout(() => setShowToast(null), 2000);
 
-  // choose paper color
-  let paperColor: string | undefined = undefined;
-  if (rounded < 4.5) paperColor = '#ff6b6b'; // acidic - red
-  else if (rounded < 6.5) paperColor = '#ffb74d'; // weak acidic - orange
-  else if (rounded < 8) paperColor = '#C8E6C9'; // near neutral - green
-  else paperColor = '#64b5f6'; // basic - blue
+  // choose paper color matching PHScale colors (0-14)
+  const phColors = [
+    '#e53935', // 0
+    '#f44336', // 1
+    '#ff7043', // 2
+    '#ffb74d', // 3
+    '#fdd835', // 4
+    '#cddc39', // 5
+    '#9ccc65', // 6
+    '#7cb342', // 7
+    '#7cb342', // 8
+    '#4db6ac', // 9
+    '#00bcd4', // 10
+    '#2196f3', // 11
+    '#5c6bc0', // 12
+    '#7e57c2', // 13
+    '#9c27b0', // 14
+  ];
+  const idx = Math.max(0, Math.min(14, Math.round(rounded)));
+  const paperColor = phColors[idx];
 
   setEquipmentOnBench(prev => prev.map(e => {
     if (e.id === 'universal-indicator' || e.id.toLowerCase().includes('ph')) {
@@ -677,7 +691,8 @@ const stepsProgress = (
 
               <div className="mb-4">
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
-                <div className="flex items-center space-x-2">
+                <PHScale value={lastMeasuredPH} />
+                <div className="flex items-center space-x-2 mt-4">
                   <div className="text-2xl font-bold text-purple-700">{lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--'}</div>
                   <div className="text-xs text-gray-500">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet'}</div>
                 </div>
@@ -686,7 +701,11 @@ const stepsProgress = (
               <div className="grid grid-cols-1 gap-3 text-sm">
                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
                   <div className="flex items-center font-semibold tracking-wide text-gray-800 gap-2">
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px]">A</span>
+                    {(() => {
+                      const phColors = ['#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'];
+                      const color = initialAcidPH != null ? phColors[Math.max(0, Math.min(14, Math.round(initialAcidPH)))] : '#000000';
+                      return <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px]" style={{ backgroundColor: color }}>{'A'}</span>;
+                    })()}
                     <span>pH of Ethanoic acid</span>
                   </div>
                   <div className="text-lg font-bold text-gray-900 mt-2">
@@ -695,7 +714,11 @@ const stepsProgress = (
                 </div>
                 <div className="p-3 bg-white rounded-xl border border-gray-200 space-y-2">
                   <div className="flex items-center font-semibold tracking-wide text-gray-800 gap-2">
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-black text-white text-[11px]">B</span>
+                    {(() => {
+                      const phColors = ['#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'];
+                      const color = case2PH != null ? phColors[Math.max(0, Math.min(14, Math.round(case2PH)))] : '#000000';
+                      return <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px]" style={{ backgroundColor: color }}>{'B'}</span>;
+                    })()}
                     <span>When Sodium Ethanoate is added</span>
                   </div>
                   <div className="text-lg font-bold text-gray-900">
