@@ -677,7 +677,8 @@ const stepsProgress = (
 
               <div className="mb-4">
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
-                <div className="flex items-center space-x-2">
+                <PHScale value={lastMeasuredPH} />
+                <div className="flex items-center space-x-2 mt-4">
                   <div className="text-2xl font-bold text-purple-700">{lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--'}</div>
                   <div className="text-xs text-gray-500">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet'}</div>
                 </div>
