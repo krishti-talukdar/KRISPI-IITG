@@ -776,9 +776,29 @@ useEffect(() => {
                   </div>
                 </div>
               </div>
-            </div>
+              </div>
 
             <div className="space-y-4">
+              <div className="p-4 rounded-lg border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white shadow-sm">
+                <h4 className="text-lg font-bold text-indigo-800 mb-3">pH Calculation Details</h4>
+                {(() => {
+                  const res = hendersonResult;
+                  const concA = res.totalVolL > 0 ? res.molesAcid / res.totalVolL : null;
+                  const concB = res.totalVolL > 0 ? res.molesBase / res.totalVolL : null;
+                  const ratio = concA && concA > 0 ? concB / concA : (res.molesAcid === 0 && res.molesBase > 0 ? Infinity : null);
+                  return (
+                    <div className="text-sm text-gray-800 space-y-2">
+                      <div>Formula: <strong>pH = pK<sub>a</sub> + log10([Base]/[Acid])</strong></div>
+                      <div>pK<sub>a</sub> = <strong>{res.pKa.toFixed(2)}</strong></div>
+                      <div>[Base] = moles of base / total volume (L) = <strong>{res.molesBase.toExponential(4)}</strong> / <strong>{res.totalVolL.toFixed(4)}</strong> = <strong>{concB != null ? concB.toExponential(4) : 'N/A'}</strong></div>
+                      <div>[Acid] = moles of acid / total volume (L) = <strong>{res.molesAcid.toExponential(4)}</strong> / <strong>{res.totalVolL.toFixed(4)}</strong> = <strong>{concA != null ? concA.toExponential(4) : 'N/A'}</strong></div>
+                      <div>Ratio [Base]/[Acid] = <strong>{ratio !== null ? (isFinite(ratio) ? ratio.toFixed(4) : '∞') : 'N/A'}</strong></div>
+                      <div className="mt-2">Calculated pH = <strong>{res.pH != null ? res.pH.toFixed(2) : 'N/A'}</strong></div>
+                    </div>
+                  );
+                })()}
+              </div>
+
               <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <h4 className="font-semibold mb-3">Interpretation & Key Observations</h4>
                 {(() => {
