@@ -158,14 +158,14 @@
       "Beakers",
       "Test Tubes",
       "pH Meter or Universal Indicator",
-      "Ethanoic acid solution (CH3COOH, 0.1 M)",
-      "Sodium ethanoate solution (CH3COONa, 0.1 M)",
+      "Ethanoic acid solution (CH₃COOH, 0.1 M)",
+      "Sodium ethanoate solution (CH₃COONa, 0.1 M)",
       "Pipettes",
       "Magnetic Stirrer (optional)",
       "pH Color Chart"
     ],
     "stepDetails": [
-      { "id": 1, "title": "Prepare Ethanoic Acid Solution", "description": "Prepare approximately 100 mL of 0.1 M ethanoic acid (CH3COOH) in a beaker. Record initial concentration and temperature.", "duration": "5 minutes", "completed": false },
+      { "id": 1, "title": "Prepare Ethanoic Acid Solution", "description": "Prepare approximately 100 mL of 0.1 M ethanoic acid (CH₃COOH) in a beaker. Record initial concentration and temperature.", "duration": "5 minutes", "completed": false },
       { "id": 2, "title": "Measure Initial pH", "description": "Calibrate the pH meter or prepare universal indicator. Measure and record the initial pH of the ethanoic acid solution.", "duration": "3 minutes", "completed": false },
       { "id": 3, "title": "Add Sodium Ethanoate Incrementally", "description": "Add known small volumes (e.g., 0.5 mL increments) of 0.1 M sodium ethanoate solution to the acid solution. Stir and allow the solution to equilibrate after each addition.", "duration": "8 minutes", "safety": "Avoid skin contact; handle reagents with care.", "completed": false },
       { "id": 4, "title": "Record pH After Each Addition", "description": "Measure and record pH after each addition. Observe increase in pH as ethanoate ion concentration increases, showing buffer action.", "duration": "6 minutes", "completed": false },
@@ -455,8 +455,8 @@
     "safetyInfo": "Perform sodium fusion with great care. Dry sodium under kerosene; never touch with wet hands. Use safety shield when heating. Handle acids, AgNO3, and ammonia with gloves and goggles. Dispose of silver waste properly."
   },
   {
-    "title": "To determine and compare pH of 0.01 M HCl and 0.01 M CH3COOH solution using universal indicator",
-    "description": "Determine and compare the pH of 0.01 M HCl (strong acid) and 0.01 M CH3COOH (weak acid) using a universal indicator and color chart. Understand differences in acid strength and degree of ionization.",
+    "title": "To determine and compare pH of 0.01 M HCl and 0.01 M CH₃COOH solution using universal indicator",
+    "description": "Determine and compare the pH of 0.01 M HCl (strong acid) and 0.01 M CH₃COOH (weak acid) using a universal indicator and color chart. Understand differences in acid strength and degree of ionization.",
     "category": "Acid-Base Chemistry",
     "difficulty": "Beginner",
     "duration": 20,
@@ -471,14 +471,14 @@
       "pH Color Chart",
       "Distilled Water",
       "0.01 M HCl",
-      "0.01 M CH3COOH"
+      "0.01 M CH₃COOH"
     ],
     "stepDetails": [
-      { "id": 1, "title": "Label and Prepare Test Tubes", "description": "Label two clean test tubes as HCl and CH3COOH. Add about 5 mL of each 0.01 M solution to the respective tubes.", "duration": "3 minutes", "completed": false },
+      { "id": 1, "title": "Label and Prepare Test Tubes", "description": "Label two clean test tubes as HCl and CH₃COOH. Add about 5 mL of each 0.01 M solution to the respective tubes.", "duration": "3 minutes", "completed": false },
       { "id": 2, "title": "Add Universal Indicator", "description": "Add 2–3 drops of universal indicator solution to each test tube. Swirl gently to mix.", "duration": "2 minutes", "completed": false },
       { "id": 3, "title": "Observe and Match Colors", "description": "Observe the color developed in each tube and compare with the standard pH color chart to estimate pH.", "duration": "5 minutes", "completed": false },
-      { "id": 4, "title": "Record Estimated pH", "description": "Record the approximate pH for 0.01 M HCl and 0.01 M CH3COOH. Note that strong acids give lower pH than weak acids at the same molarity.", "duration": "4 minutes", "completed": false },
-      { "id": 5, "title": "Compare with Expected Values", "description": "Compare observations with theoretical expectations: HCl (~pH 2) vs CH3COOH (typically higher pH, ~2.4–3.0 due to partial ionization).", "duration": "4 minutes", "completed": false },
+      { "id": 4, "title": "Record Estimated pH", "description": "Record the approximate pH for 0.01 M HCl and 0.01 M CH₃COOH. Note that strong acids give lower pH than weak acids at the same molarity.", "duration": "4 minutes", "completed": false },
+      { "id": 5, "title": "Compare with Expected Values", "description": "Compare observations with theoretical expectations: HCl (~pH 2) vs CH₃COOH (typically higher pH, ~2.4–3.0 due to partial ionization).", "duration": "4 minutes", "completed": false },
       { "id": 6, "title": "Cleanup", "description": "Dispose of solutions as per guidelines and rinse glassware with plenty of water.", "duration": "2 minutes", "completed": false }
     ],
     "safetyInfo": "Both acids are irritants; avoid contact with skin and eyes. Wear safety goggles and gloves. Do not ingest chemicals. Handle glassware carefully."
@@ -552,14 +552,14 @@
       "Beakers",
       "Test Tubes",
       "pH Meter or Universal Indicator",
-      "Ethanoic acid solution (CH3COOH, 0.1 M)",
-      "Sodium ethanoate solution (CH3COONa, 0.1 M)",
+      "Ethanoic acid solution (CH₃COOH, 0.1 M)",
+      "Sodium ethanoate solution (CH₃COONa, 0.1 M)",
       "Pipettes",
       "Magnetic Stirrer (optional)",
       "pH Color Chart"
     ],
     "stepDetails": [
-      { "id": 1, "title": "Prepare Ethanoic Acid Solution", "description": "Prepare approximately 100 mL of 0.1 M ethanoic acid (CH3COOH) in a beaker. Record initial concentration and temperature.", "duration": "5 minutes", "completed": false },
+      { "id": 1, "title": "Prepare Ethanoic Acid Solution", "description": "Prepare approximately 100 mL of 0.1 M ethanoic acid (CH₃COOH) in a beaker. Record initial concentration and temperature.", "duration": "5 minutes", "completed": false },
       { "id": 2, "title": "Measure Initial pH", "description": "Calibrate the pH meter or prepare universal indicator. Measure and record the initial pH of the ethanoic acid solution.", "duration": "3 minutes", "completed": false },
       { "id": 3, "title": "Add Sodium Ethanoate Incrementally", "description": "Add known small volumes (e.g., 0.5 mL increments) of 0.1 M sodium ethanoate solution to the acid solution. Stir and allow the solution to equilibrate after each addition.", "duration": "8 minutes", "safety": "Avoid skin contact; handle reagents with care.", "completed": false },
       { "id": 4, "title": "Record pH After Each Addition", "description": "Measure and record pH after each addition. Observe increase in pH as ethanoate ion concentration increases, showing buffer action.", "duration": "6 minutes", "completed": false },
