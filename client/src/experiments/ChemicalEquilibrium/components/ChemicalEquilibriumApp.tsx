@@ -48,12 +48,12 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
 }> = {
   acid: {
     letter: "A",
-    label: "Dry Tests for Acid Radicals",
+    label: "Dry tests",
     equipment: ChemicalEquilibriumData.equipment,
   },
   basic: {
     letter: "B",
-    label: "Dry Tests for Basic Radicals",
+    label: "Dry tests",
     equipment: [
       "Test Tubes",
       "Salt Sample",
@@ -66,12 +66,12 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
   },
   wet: {
     letter: "C",
-    label: "Wet Test for Acid Radicals",
+    label: "Wet tests",
     equipment: WET_ACID_TEST_EQUIPMENT,
   },
   wetBasic: {
     letter: "D",
-    label: "Wet Test for Basic Radicals",
+    label: "Wet tests",
     equipment: WET_BASIC_TEST_EQUIPMENT,
   },
 };

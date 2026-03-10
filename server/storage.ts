@@ -59,6 +59,8 @@ export class MemStorage implements IStorage {
           equipment: exp.equipment,
           stepDetails: exp.stepDetails,
           safetyInfo: exp.safetyInfo,
+          // Optional UI-only cover description, if present in the source JSON
+          ...(exp.coverDescription ? { coverDescription: exp.coverDescription } : {}),
         };
         this.experiments.set(experiment.id, experiment);
         console.log(`Loaded experiment ${experiment.id}: ${experiment.title}`);

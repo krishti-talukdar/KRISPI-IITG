@@ -1,6 +1,6 @@
 const EquilibriumShiftData = {
   id: 5,
-  title: "To study the shift in equilibrium between [Co(H2O)6]²+ and Cl- by changing the concentration of either ions.",
+  title: "To study the shift in equilibrium between [Co(H₂O)₆]²⁺ and Cl⁻ by changing the concentration of either ions.",
   description: "Interactive virtual lab to study equilibrium shifts between cobalt complexes. Observe dramatic color changes from pink to blue as you add HCl or water, demonstrating Le Chatelier's principle in real-time.",
   category: "Equilibrium",
   difficulty: "Intermediate",

@@ -998,13 +998,13 @@ export default function VirtualLab({
                         <div className="text-sm text-gray-600">{log.observation}</div>
                         <div className="flex items-center space-x-4 mt-2 text-xs">
                           <span className="flex items-center">
-                            <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: log.colorBefore }}></span>
-                            Before: {log.colorBefore}
+                            <span className="w-5 h-5 rounded-full mr-2 border-2 border-gray-700" style={{ backgroundColor: log.colorBefore }}></span>
+                            Before
                           </span>
                           <span>→</span>
                           <span className="flex items-center">
-                            <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: log.colorAfter }}></span>
-                            After: {log.colorAfter}
+                            <span className="w-5 h-5 rounded-full mr-2 border-2 border-gray-700" style={{ backgroundColor: log.colorAfter }}></span>
+                            After
                           </span>
                         </div>
                       </div>
@@ -1053,7 +1053,7 @@ export default function VirtualLab({
                     <h4 className="font-semibold text-gray-700 mb-2">Contents Analysis</h4>
                     <div className="space-y-1">
                       <div className="text-sm">Volume: <span className="font-medium">{(finalVolumeUsed ?? testTube.volume).toFixed(1)} mL</span></div>
-                      <div className="text-sm">Components: <span className="font-medium">{testTube.contents.join(', ')}</span></div>
+                      <div className="text-sm">Components: <span className="font-medium">{Array.from(new Set(testTube.contents)).join(', ')}</span></div>
                       <div className="text-sm">Color: <span className="font-medium">{testTube.color}</span></div>
                     </div>
                   </div>
