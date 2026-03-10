@@ -253,6 +253,15 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
     }
   }
 
+  // PH scale colors (keep in sync with client/src/components/PHScale.tsx)
+  const PH_COLORS = ['#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'];
+  const getPhColor = (ph: number | null | undefined) => {
+    if (ph == null) return undefined;
+    let idx = Math.round(ph as number);
+    idx = Math.max(0, Math.min(14, idx));
+    return PH_COLORS[idx];
+  };
+
   const stepsProgress = (
     <div className="mb-4 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
@@ -401,7 +410,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Measured pH</h4>
                 <PHScale value={lastMeasuredPH} />
                 <div className="flex items-center space-x-2 mt-4">
-                  <div className="text-2xl font-bold text-purple-700">{lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--'}</div>
+                  <div className="text-2xl font-bold">{lastMeasuredPH != null ? (<span style={{ color: getPhColor(lastMeasuredPH) }}>{lastMeasuredPH.toFixed(2)}</span>) : '--'}</div>
                   <div className="text-xs text-gray-500">{lastMeasuredPH != null ? (lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral') : 'No measurement yet'}</div>
                 </div>
 
@@ -409,7 +418,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
                   {(["0.1 M", "0.01 M", "0.001 M"] as const).map((lab) => (
                     <div key={lab} className="p-2 rounded border border-gray-200 bg-gray-50 text-sm">
                       <div className="font-medium">HCl {lab}</div>
-                      <div className="text-lg text-black font-semibold">{results[lab] != null ? `${results[lab].toFixed(2)} (${results[lab] < 7 ? 'Acidic' : results[lab] > 7 ? 'Basic' : 'Neutral'})` : 'No result yet'}</div>
+                      <div className="text-lg text-black font-semibold">{results[lab] != null ? (<><span style={{ color: getPhColor(results[lab]) }}>{results[lab].toFixed(2)}</span> ({results[lab] < 7 ? 'Acidic' : results[lab] > 7 ? 'Basic' : 'Neutral'})</>) : 'No result yet'}</div>
                     </div>
                   ))}
                 </div>
@@ -468,12 +477,12 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 border rounded bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200">
                 <div className="text-sm font-medium text-black">Measured pH (latest)</div>
-                <div className="text-3xl font-semibold mt-2 text-black">{lastMeasuredPH != null ? `${lastMeasuredPH.toFixed(2)} (${lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral'})` : 'No measurement'}</div>
+                <div className="text-3xl font-semibold mt-2 text-black">{lastMeasuredPH != null ? (<><span style={{ color: getPhColor(lastMeasuredPH) }}>{lastMeasuredPH.toFixed(2)}</span> ({lastMeasuredPH < 7 ? 'Acidic' : lastMeasuredPH > 7 ? 'Basic' : 'Neutral'})</>) : 'No measurement'}</div>
               </div>
 
               <div className="p-4 border rounded bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
                 <div className="text-sm font-medium text-black">Latest Recorded Concentration</div>
-                <div className="text-lg font-semibold mt-2 text-black">{lastUsedHclLabel ? `${lastUsedHclLabel} — ${results[lastUsedHclLabel] != null ? `${results[lastUsedHclLabel].toFixed(2)} (${results[lastUsedHclLabel] < 7 ? 'Acidic' : results[lastUsedHclLabel] > 7 ? 'Basic' : 'Neutral'})` : 'No result'}` : '—'}</div>
+                <div className="text-lg font-semibold mt-2 text-black">{lastUsedHclLabel ? (<>{lastUsedHclLabel} — {results[lastUsedHclLabel] != null ? (<><span style={{ color: getPhColor(results[lastUsedHclLabel]) }}>{results[lastUsedHclLabel].toFixed(2)}</span> ({results[lastUsedHclLabel] < 7 ? 'Acidic' : results[lastUsedHclLabel] > 7 ? 'Basic' : 'Neutral'})</>) : 'No result'}</>) : '—'}</div>
               </div>
             </div>
 
@@ -501,7 +510,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
                       <div key={lab} className={`mb-2 p-2 rounded border ${cls} text-black`}>
                         <div className="font-medium text-black">HCl {lab}</div>
                         <div className="text-sm mt-1 text-black">Expected (ideal): pH {expected.toFixed(2)}</div>
-                        <div className="text-sm mt-1 text-black">Measured: {measured != null ? `${measured.toFixed(2)} (${measured < 7 ? 'Acidic' : measured > 7 ? 'Basic' : 'Neutral'})` : 'No result recorded'}</div>
+                        <div className="text-sm mt-1 text-black">Measured: {measured != null ? (<><span style={{ color: getPhColor(measured) }}>{measured.toFixed(2)}</span> ({measured < 7 ? 'Acidic' : measured > 7 ? 'Basic' : 'Neutral'})</>) : 'No result recorded'}</div>
                         <div className="text-sm mt-1 text-black">Deviation: {deviation === '-' ? '-' : `${deviation} pH units`} — {status}</div>
                         <div className="text-xs mt-1 text-black">Notes: {measured == null ? 'No data to assess.' : status === 'Good agreement' ? 'Measured value is within experimental uncertainty of the theoretical value.' : status === 'Moderate deviation' ? 'Check dilution accuracy, indicator range and reading technique.' : 'Large deviation — inspect contamination, indicator limitations, or instrument calibration.'}</div>
                       </div>
@@ -521,7 +530,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
               <h4 className="font-semibold mb-2 text-black">Action Timeline</h4>
               <ol className="list-decimal list-inside text-sm text-black">
                 <li>Added HCl solutions and recorded pH values where measured.</li>
-                <li>Recorded values: {Object.keys(results).length ? Object.entries(results).map(([k,v]) => `${k}: ${v.toFixed(2)}`).join(' • ') : 'No recorded values'}</li>
+                <li>Recorded values: {Object.keys(results).length ? Object.entries(results).map(([k,v]) => (<span key={k} className="inline-block mr-2"><span className="font-medium">{k}:</span> <span style={{ color: getPhColor(v) }}>{v.toFixed(2)}</span></span>)) : 'No recorded values'}</li>
                 <li>Recommended next steps: repeat measurements with fresh indicator strips, verify dilution volumes with calibrated pipettes, and perform a blank/control measurement.</li>
               </ol>
             </div>
@@ -531,7 +540,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-3 border rounded text-black">
                   <div className="text-sm font-medium text-black">Solution</div>
-                  <div className="text-sm mt-1 text-black">pH: {lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : 'N/A'}</div>
+                  <div className="text-sm mt-1 text-black">pH: {lastMeasuredPH != null ? (<span style={{ color: getPhColor(lastMeasuredPH) }}>{lastMeasuredPH.toFixed(2)}</span>) : 'N/A'}</div>
                 </div>
                 <div className="p-3 border rounded text-black">
                   <div className="text-sm font-medium text-black">Notes</div>
