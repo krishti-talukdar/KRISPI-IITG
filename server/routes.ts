@@ -85,10 +85,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/stats", async (req, res) => {
     try {
       const experiments = await storage.getAllExperiments();
+      const totalCompleted = await storage.getTotalCompletedCount();
       const stats = {
         experiments: experiments.length,
         students: 2543, // Mock data for demo
-        completed: 15678, // Mock data for demo
+        completed: totalCompleted, // computed from storage
         rating: 4.9 // Mock data for demo
       };
       res.json(stats);
