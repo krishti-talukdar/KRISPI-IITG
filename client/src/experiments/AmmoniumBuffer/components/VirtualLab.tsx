@@ -340,6 +340,9 @@ useEffect(() => {
     if (!tube || (tube.volume ?? 0) <= 0) { setShowToast('No solution in test tube'); setTimeout(() => setShowToast(''), 1400); return; }
     if (!tube.contents.includes('IND')) { setShowToast('No indicator present. Add pH paper'); setTimeout(() => setShowToast(''), 1800); return; }
 
+    // PH color palette matching PHScale (0-14)
+    const phColors = ['#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'];
+
     if (tube.contents.includes('NH4Cl')) {
       const ph = 9.0;
       setLastMeasuredPH(ph);
@@ -349,8 +352,9 @@ useEffect(() => {
       if (bufferedSample == null) setBufferedSample({ ...tube });
       // also store a dedicated sample snapshot for the NH4Cl case
       if (ammoniumAfterSample == null) setAmmoniumAfterSample({ ...tube });
-      // color pH paper to buffered color
-      setEquipmentOnBench(prev => prev.map(item => (item.id === 'ph-paper' || item.id.toLowerCase().includes('ph')) ? { ...item, color: COLORS.NH4_BUFFERED } : item));
+      // color pH paper according to PHScale
+      const color = phColors[Math.max(0, Math.min(14, Math.round(ph)))]
+      setEquipmentOnBench(prev => prev.map(item => (item.id === 'ph-paper' || item.id.toLowerCase().includes('ph')) ? { ...item, color } : item));
       setShowToast('Measured pH ≈ 9 (buffered, lower than NH4OH)');
       setShouldBlinkNh4clReset(nh4clVolumeAdded > 0);
       // advance guided progress: when pH is measured after NH4Cl, mark step 5 complete and move to step 6
@@ -366,8 +370,9 @@ useEffect(() => {
       if (ammoniumInitialPH == null) setAmmoniumInitialPH(ph);
       // store base sample snapshot on first base measurement
       if (baseSample == null) setBaseSample({ ...tube });
-      // color pH paper to basic color
-      setEquipmentOnBench(prev => prev.map(item => (item.id === 'ph-paper' || item.id.toLowerCase().includes('ph')) ? { ...item, color: COLORS.NH4OH_BASE } : item));
+      // color pH paper according to PHScale
+      const color = phColors[Math.max(0, Math.min(14, Math.round(ph)))]
+      setEquipmentOnBench(prev => prev.map(item => (item.id === 'ph-paper' || item.id.toLowerCase().includes('ph')) ? { ...item, color } : item));
       setShowToast('Measured pH ≈ 11 (basic NH4OH)');
       // if NH4Cl was previously added, prompt user to reset it after measuring
       setShouldBlinkNh4clReset(nh4clVolumeAdded > 0);
@@ -380,7 +385,8 @@ useEffect(() => {
       if (ammoniumInitialPH == null) setAmmoniumInitialPH(ph);
       // store base sample for neutral case if none exists
       if (baseSample == null) setBaseSample({ ...tube });
-      setEquipmentOnBench(prev => prev.map(item => (item.id === 'ph-paper' || item.id.toLowerCase().includes('ph')) ? { ...item, color: COLORS.NEUTRAL } : item));
+      const color = phColors[Math.max(0, Math.min(14, Math.round(ph)))]
+      setEquipmentOnBench(prev => prev.map(item => (item.id === 'ph-paper' || item.id.toLowerCase().includes('ph')) ? { ...item, color } : item));
       setShowToast('Measured pH ≈ 7 (neutral)');
       setShouldBlinkNh4clReset(nh4clVolumeAdded > 0);
       setTimeout(() => setShowToast(''), 2000);
