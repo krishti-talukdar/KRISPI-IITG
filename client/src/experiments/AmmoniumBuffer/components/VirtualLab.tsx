@@ -434,6 +434,17 @@ useEffect(() => {
   const bufferedPhDisplay = bufferedPhResult != null ? bufferedPhResult.toFixed(2) : "—";
   const hendersonRatioText = Number.isFinite(hendersonResult.ratio) ? hendersonResult.ratio.toFixed(2) : "—";
 
+  // PH scale colors (same mapping as PHScale component) — keep in sync with client/src/components/PHScale.tsx
+  const PH_COLORS = [
+    '#e53935','#f44336','#ff7043','#ffb74d','#fdd835','#cddc39','#9ccc65','#7cb342','#7cb342','#4db6ac','#00bcd4','#2196f3','#5c6bc0','#7e57c2','#9c27b0'
+  ];
+  const getPhColor = (ph: number | null) => {
+    if (ph == null) return undefined;
+    let idx = Math.round(ph);
+    idx = Math.max(0, Math.min(14, idx));
+    return PH_COLORS[idx];
+  };
+
   const stepsProgress = (
     <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
@@ -620,11 +631,12 @@ useEffect(() => {
                 <div className="flex items-center space-x-2 mt-4">
                   {(() => {
                     const display = lastMeasuredPH != null ? lastMeasuredPH.toFixed(2) : '--';
+                    const color = getPhColor(lastMeasuredPH);
                     return (
                       <>
                         <div className="text-2xl font-bold">
                           {lastMeasuredPH != null ? (
-                            <span className="text-purple-700">{display}</span>
+                            <span style={{ color }}>{display}</span>
                           ) : (
                             <span style={{ color: '#39FF14', textShadow: '0 0 8px #39FF14' }}>{display}</span>
                           )}
@@ -638,7 +650,9 @@ useEffect(() => {
                 <div className="mt-6">
                   <h5 className="font-medium text-sm text-black mb-1"><span className="inline-block w-2 h-2 rounded-full bg-black mr-2" aria-hidden="true" /> <span className="inline-block mr-2 font-bold">A</span> pH of Ammonium hydroxide</h5>
                   <div className="p-3 rounded border border-gray-200 bg-gray-50 text-sm">
-                    <div className="text-lg text-black font-semibold">{baseSample != null ? `${baseSample.volume.toFixed(1)} mL • pH ≈ ${ammoniumInitialPH != null ? ammoniumInitialPH.toFixed(2) : '—'}` : 'No result yet'}</div>
+                    <div className="text-lg text-black font-semibold">{baseSample != null ? (
+                    <><span>{baseSample.volume.toFixed(1)} mL • pH ≈ </span><span style={{ color: getPhColor(ammoniumInitialPH) }}>{ammoniumInitialPH != null ? ammoniumInitialPH.toFixed(2) : '—'}</span></>
+                  ) : 'No result yet'}</div>
                   </div>
                 </div>
 
@@ -650,7 +664,7 @@ useEffect(() => {
                       const addedVol = hh.acidVolMl || (ammoniumAfterSample ? ammoniumAfterSample.volume : 0);
                       const displayedPH = hh.pH !== null ? hh.pH : (ammoniumAfterPH != null ? ammoniumAfterPH : (lastMeasuredPH != null ? lastMeasuredPH : null));
                       if (!ammoniumAfterSample && addedVol === 0) return <div className="text-lg text-black font-semibold">No result yet</div>;
-                      return <div className="text-lg text-black font-semibold">{`${addedVol.toFixed(1)} mL • pH ≈ ${displayedPH != null ? (Number.isFinite(displayedPH) ? displayedPH.toFixed(2) : '—') : '—'}`}</div>;
+                      return <div className="text-lg text-black font-semibold"><span>{addedVol.toFixed(1)} mL • pH ≈ </span><span style={{ color: getPhColor(displayedPH) }}>{displayedPH != null ? (Number.isFinite(displayedPH) ? displayedPH.toFixed(2) : '—') : '—'}</span></div>;
                     })()}
                   </div>
                 </div>
