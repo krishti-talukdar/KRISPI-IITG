@@ -63,6 +63,8 @@ export function useUpdateProgress() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['/api/progress', userId] });
       queryClient.invalidateQueries({ queryKey: ['/api/progress', userId, data.experimentId] });
+      // Also refresh global stats so the "Experiments Completed" counter updates immediately
+      queryClient.invalidateQueries({ queryKey: ['/api/stats'] });
     },
   });
 }
