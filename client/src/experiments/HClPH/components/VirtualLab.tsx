@@ -534,7 +534,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
 
               <div className="mt-3 p-3 bg-yellow-50 rounded border border-yellow-200">
                 <div className="font-semibold">Interpretation</div>
-                <div className="text-sm text-gray-700 mt-1">Theoretical pH values for strong HCl are calculated as pH = -log10([H+]). For ideal dilutions: 0.1 M → pH 1.00, 0.01 M → pH 2.00, 0.001 M → pH 3.00. Measured values differing from these indicate experimental errors (dilution inaccuracies, indicator/color reading subjectivity, contamination) or limitations of pH paper/universal indicator at extreme pH ranges.</div>
+                <div className="text-sm text-gray-700 mt-1">Theoretical pH values for strong HCl are calculated as pH = -log10([H⁺]). For ideal dilutions: 0.1 M → pH 1.00, 0.01 M → pH 2.00, 0.001 M → pH 3.00. Measured values differing from these indicate experimental errors (dilution inaccuracies, indicator/color reading subjectivity, contamination) or limitations of pH paper/universal indicator at extreme pH ranges.</div>
               </div>
             </div>
 

@@ -749,6 +749,27 @@ useEffect(() => {
               </div>
             </div>
 
+            <div className="space-y-4">
+              <div className="p-4 rounded-lg border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white shadow-sm">
+                <h4 className="text-lg font-bold text-indigo-800 mb-3">pH Calculation Details</h4>
+                {(() => {
+                  const res = hendersonResult;
+                  const concA = res.totalVolL > 0 ? res.molesAcid / res.totalVolL : null;
+                  const concB = res.totalVolL > 0 ? res.molesBase / res.totalVolL : null;
+                  const ratio = concA && concA > 0 ? concB / concA : (res.molesAcid === 0 && res.molesBase > 0 ? Infinity : null);
+                  return (
+                    <div className="text-sm text-gray-800 space-y-2">
+                      <div>Formula: <strong>pH = pK<sub>a</sub> + log10([Base]/[Acid])</strong></div>
+                      <div>pK<sub>a</sub> = <strong>{res.pKa.toFixed(2)}</strong></div>
+                      <div>[Base] = moles of base / total volume (L) = <strong>{res.molesBase.toExponential(4)}</strong> / <strong>{res.totalVolL.toFixed(4)}</strong> = <strong>{concB != null ? concB.toExponential(4) : 'N/A'}</strong></div>
+                      <div>[Acid] = moles of acid / total volume (L) = <strong>{res.molesAcid.toExponential(4)}</strong> / <strong>{res.totalVolL.toFixed(4)}</strong> = <strong>{concA != null ? concA.toExponential(4) : 'N/A'}</strong></div>
+                      <div>Ratio [Base]/[Acid] = <strong>{ratio !== null ? (isFinite(ratio) ? ratio.toFixed(4) : '∞') : 'N/A'}</strong></div>
+                      <div className="mt-2">Calculated pH = <strong>{res.pH != null ? res.pH.toFixed(2) : 'N/A'}</strong></div>
+                    </div>
+                  );
+                })()}
+              </div>
+
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-5 rounded-lg border-2 border-purple-300">
               <h5 className="text-base font-bold text-purple-900 mb-4 flex items-center gap-2">
                 <span className="inline-block w-3 h-3 rounded-full bg-purple-500" />
@@ -789,43 +810,6 @@ useEffect(() => {
                 </div>
               )}
             </div>
-
-            <div className="space-y-4">
-              <div className="bg-white rounded-lg p-4 border border-gray-200">
-                <h4 className="text-lg font-semibold mb-3">Final Experimental State</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-3 rounded-lg border border-blue-200 bg-gradient-to-br from-blue-50 to-white">
-                    <div className="font-medium text-gray-800">Ammonium hydroxide + Indicator (≈ basic)</div>
-                    <div className="text-sm text-gray-600 mt-1">Contents: {baseSample ? baseSample.contents.map(formatChemicalName).join(', ') : 'Not recorded'}</div>
-                  </div>
-                  <div className="p-3 rounded-lg border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white">
-                    <div className="font-medium text-gray-800">NH₄Cl added + Indicator (≈ buffered)</div>
-                    <div className="text-sm text-gray-600 mt-1">Contents: {ammoniumAfterSample ? ammoniumAfterSample.contents.map(formatChemicalName).join(', ') : 'Not recorded'}</div>
-                  </div>
-                </div>
-              </div>
-              </div>
-
-            <div className="space-y-4">
-              <div className="p-4 rounded-lg border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white shadow-sm">
-                <h4 className="text-lg font-bold text-indigo-800 mb-3">pH Calculation Details</h4>
-                {(() => {
-                  const res = hendersonResult;
-                  const concA = res.totalVolL > 0 ? res.molesAcid / res.totalVolL : null;
-                  const concB = res.totalVolL > 0 ? res.molesBase / res.totalVolL : null;
-                  const ratio = concA && concA > 0 ? concB / concA : (res.molesAcid === 0 && res.molesBase > 0 ? Infinity : null);
-                  return (
-                    <div className="text-sm text-gray-800 space-y-2">
-                      <div>Formula: <strong>pH = pK<sub>a</sub> + log10([Base]/[Acid])</strong></div>
-                      <div>pK<sub>a</sub> = <strong>{res.pKa.toFixed(2)}</strong></div>
-                      <div>[Base] = moles of base / total volume (L) = <strong>{res.molesBase.toExponential(4)}</strong> / <strong>{res.totalVolL.toFixed(4)}</strong> = <strong>{concB != null ? concB.toExponential(4) : 'N/A'}</strong></div>
-                      <div>[Acid] = moles of acid / total volume (L) = <strong>{res.molesAcid.toExponential(4)}</strong> / <strong>{res.totalVolL.toFixed(4)}</strong> = <strong>{concA != null ? concA.toExponential(4) : 'N/A'}</strong></div>
-                      <div>Ratio [Base]/[Acid] = <strong>{ratio !== null ? (isFinite(ratio) ? ratio.toFixed(4) : '∞') : 'N/A'}</strong></div>
-                      <div className="mt-2">Calculated pH = <strong>{res.pH != null ? res.pH.toFixed(2) : 'N/A'}</strong></div>
-                    </div>
-                  );
-                })()}
-              </div>
 
               <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <h4 className="font-semibold mb-3">Interpretation & Key Observations</h4>

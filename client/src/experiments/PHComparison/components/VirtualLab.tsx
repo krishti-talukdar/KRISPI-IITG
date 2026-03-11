@@ -68,7 +68,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
 
   // Results modal and analysis log
   const formatChemicalName = (name: string) => {
-    return name.replace(/CH3COOH/g, 'CH₃COOH');
+    return name.replace(/CH3COOH/g, 'CH₃COOH').replace(/\bHCL\b/g, 'HCl');
   };
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [analysisLog, setAnalysisLog] = useState<LogEntry[]>([]);
@@ -843,7 +843,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                     <h4 className="text-sm font-semibold text-black">0.01 M HCl + Indicator (≈ pH 2)</h4>
                   </div>
                   <div className="text-sm text-black space-y-1">
-                    <div><span className="font-medium">Current Solution:</span> {hclSample ? hclSample.contents.join(', ') : 'Not recorded'}</div>
+                    <div><span className="font-medium">Current Solution:</span> {hclSample ? hclSample.contents.map(formatChemicalName).join(', ') : 'Not recorded'}</div>
                     <div><span className="font-medium">Volume:</span> {(hclSample?.volume ?? 0).toFixed(1)} mL</div>
                   </div>
                 </div>
