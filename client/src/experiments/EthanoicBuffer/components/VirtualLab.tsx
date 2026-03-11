@@ -920,6 +920,7 @@ const stepsProgress = (
                   </div>
                   <div className="p-3 bg-purple-100 rounded border-2 border-purple-400 mt-2">
                     <div className="text-xs text-gray-600 mb-1">Formula:</div>
+                    <div className="text-sm text-gray-700 mb-1">pH = pK<sub>a</sub> + log10([Base]/[Acid])</div>
                     <div className="font-bold text-purple-900">pH = {pKa.toFixed(2)} + log₁₀({hhRatio.toFixed(3)}) ≈ <span className="text-lg text-purple-700">{hhPH != null ? hhPH.toFixed(2) : 'N/A'}</span></div>
                   </div>
                 </div>
