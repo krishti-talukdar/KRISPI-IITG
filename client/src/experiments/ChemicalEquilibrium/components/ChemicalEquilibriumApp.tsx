@@ -776,7 +776,7 @@ export default function ChemicalEquilibriumApp({
                         </div>
                         <div className="flex-1">
                           <h3 className="font-semibold text-gray-900 text-sm">Dry Test</h3>
-                          <p className="text-gray-600 text-sm mt-1">Perform dry tests including flame test, borax bead test, and other identification methods.</p>
+                          <p className="text-gray-600 text-sm mt-1">Perform dry tests including flame test and other identification methods.</p>
                         </div>
                       </div>
                     </div>
