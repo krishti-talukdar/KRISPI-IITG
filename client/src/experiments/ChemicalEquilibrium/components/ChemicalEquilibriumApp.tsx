@@ -165,11 +165,6 @@ const FLAME_TEST_SECTIONS = [
     description: "Observe distinctive flame colors indicating presence of various metal ions.",
   },
   {
-    symbol: "BB",
-    label: "Borax Bead Test",
-    description: "Use borax beads to identify metal ions through characteristic color changes.",
-  },
-  {
     symbol: "Ch",
     label: "Charcoal Test",
     description: "Apply the charcoal test to detect metal ions and their oxidation states.",
@@ -522,14 +517,7 @@ export default function ChemicalEquilibriumApp({
       );
 
       // Specific modifications for different Basic Radicals tests
-      if (activeFlameTest === "BB") {
-        // Borax Bead Test: Remove Concentrated HCl variants
-        dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
-          (name) => !name.includes("Concentrated HCl") && !name.includes("Conc. HCl")
-        );
-        // Add Borax and Platinum Wire for Borax Bead Test
-        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Borax", "Platinum Wire"]));
-      } else if (activeFlameTest === "Am") {
+      if (activeFlameTest === "Am") {
         // Ammonium Radical Test: Remove Platinum Wire, Watch glass, and Concentrated HCl
         dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
           (name) => !name.includes("Platinum Wire") && !name.includes("Watch glass") && !name.includes("Concentrated HCl") && !name.includes("Conc. HCl")
@@ -545,7 +533,7 @@ export default function ChemicalEquilibriumApp({
 
   // Filter FLAME_TEST_SECTIONS for Basic Radicals - remove Charcoal Test (Ch) and Cobalt Nitrate Test (Co)
   const displayedFlameTestSections = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry"
-    ? FLAME_TEST_SECTIONS.filter((section) => section.symbol !== "Ch" && section.symbol !== "Co")
+    ? FLAME_TEST_SECTIONS.filter((section) => section.symbol !== "Ch" && section.symbol !== "Co" && section.symbol !== "BB")
     : FLAME_TEST_SECTIONS;
 
   const activeStepDetails =
