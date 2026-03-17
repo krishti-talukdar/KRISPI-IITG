@@ -510,8 +510,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
       // Increase visible size when placed on the workbench during Basic Radicals -> Dry -> Flame Test
       const shouldEnlarge = isOnWorkbench && isDryTest && dryTestMode === "basic" && activeFlameTest === "Fl";
       const wrapperMarginTop = shouldEnlarge ? "12px" : "20px";
-      const wrapperWidth = shouldEnlarge ? 320 : 112;
-      const wrapperHeight = shouldEnlarge ? 36 : 112;
+      // Double the enlarged dimensions (2x)
+      const wrapperWidth = shouldEnlarge ? 640 : 112;
+      const wrapperHeight = shouldEnlarge ? 72 : 112;
 
       return (
         <div className="relative flex flex-col items-center pointer-events-none" style={{ marginTop: wrapperMarginTop }}>
