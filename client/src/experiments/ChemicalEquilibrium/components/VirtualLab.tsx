@@ -1927,8 +1927,11 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
-      // If the equipment is Platinum Wire, skip the amount dialog and add immediately
-      if ((equipment.name || "").toLowerCase().includes("platinum")) {
+      // If the equipment is Platinum Wire and we are in Salt Analysis -> Basic Radicals -> Dry -> Flame Test,
+      // skip the amount dialog and add immediately
+      const isPlatinumEquipment = (equipment.name || "").toLowerCase().includes("platinum");
+      const isSaltAnalysisBasicFlame = isDryTestExperiment && (dryTestMode === "basic" || resolvedDryTestMode === "basic") && activeFlameTest === "Fl";
+      if (isPlatinumEquipment && isSaltAnalysisBasicFlame) {
         handleEquipmentAddButton(equipment.id);
         return;
       }
