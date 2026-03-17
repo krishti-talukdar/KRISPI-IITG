@@ -535,6 +535,25 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isBunsenBurnerEquipment) {
+      // Show an enhanced flame visual when a glass rod/platinum wire is brought near the bunsen
+      const shouldShowAttachedFlame = isOnWorkbench && isDryTest && dryTestMode === "basic" && activeFlameTest === "Fl";
+      let nearbyRod = false;
+      try {
+        if (shouldShowAttachedFlame && position && allEquipmentPositions && allEquipmentPositions.length) {
+          nearbyRod = allEquipmentPositions.some((pos) => {
+            const idLower = (pos.id || "").toString().toLowerCase();
+            // match mapped glass rod ids (eg. "glass-rod-0") or legacy stirring rod ids
+            if (!(idLower.includes("glass-rod") || idLower.includes("stirring_rod") || idLower.includes("glassrod"))) return false;
+            const dx = (pos.x || 0) - (position.x || 0);
+            const dy = (pos.y || 0) - (position.y || 0);
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            return dist < 100; // threshold in pixels
+          });
+        }
+      } catch (e) {
+        nearbyRod = false;
+      }
+
       return (
         <div className="relative flex flex-col items-center pointer-events-none">
           <img
@@ -542,6 +561,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
             alt="Bunsen Burner"
             className="max-w-[240px] max-h-[240px] object-contain drop-shadow-lg"
           />
+
+          {/* Attached flame image (appears when rod/wire is close during Salt Analysis flame test) */}
+          {shouldShowAttachedFlame && nearbyRod && (
+            <div className="absolute -top-40 left-1/2 transform -translate-x-1/2 pointer-events-none z-40" style={{ width: 80 }}>
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Fe9cfd8cb33d143f3b1a42a8a8591b784?format=webp&width=800&height=1200"
+                alt="Bunsen Flame"
+                className="w-full h-auto object-contain drop-shadow-2xl"
+                style={{ filter: 'drop-shadow(0 6px 18px rgba(255,140,0,0.45))', transform: 'translateY(-8px)' }}
+              />
+            </div>
+          )}
         </div>
       );
     }
