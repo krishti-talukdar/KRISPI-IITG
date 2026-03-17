@@ -1927,6 +1927,15 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // If the equipment is Platinum Wire and we are in Salt Analysis -> Basic Radicals -> Dry -> Flame Test,
+      // skip the amount dialog and add immediately
+      const isPlatinumEquipment = (equipment.name || "").toLowerCase().includes("platinum");
+      // Always skip the amount dialog for Platinum Wire and add immediately
+      if (isPlatinumEquipment) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
