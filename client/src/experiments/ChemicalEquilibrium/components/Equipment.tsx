@@ -7,7 +7,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState, DryTestMode } from "../types";
-import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL, GLASS_ROD_FLAME_TEST_IMAGE_URL, GLASS_ROD_FLAME_TEST_DROPPED_IMAGE_URL, PH_PAPER_IMAGE_URL } from "../constants";
+import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL, GLASS_ROD_FLAME_TEST_IMAGE_URL, GLASS_ROD_FLAME_TEST_DROPPED_IMAGE_URL, PH_PAPER_IMAGE_URL, PLATINUM_WIRE_IMAGE_URL } from "../constants";
 
 const NAOH_CHEMICAL_ID = "naoh";
 const NAOH_SOLUTION_COLOR = "#bfdbfe";
@@ -105,9 +105,10 @@ export const Equipment: React.FC<EquipmentProps> = ({
     normalizedName.includes("nh₄oh") ||
     normalizedName.includes("nh4oh");
   const isGlassRodEquipment = normalizedName.includes("glass rod");
+  const isPlatinumWireEquipment = normalizedName.includes("platinum");
   const isBunsenBurnerEquipment = normalizedName.includes("bunsen");
   const isGlassContainerEquipment = normalizedName.includes("glass container");
-  const isPhPaperEquipment = normalizedName.includes("ph paper") || normalizedName.includes("ph") && normalizedName.includes("paper");
+  const isPhPaperEquipment = normalizedName.includes("ph paper") || (normalizedName.includes("ph") && normalizedName.includes("paper"));
   const isSpecialCasesFifthHeating =
     id === "test_tubes" &&
     activeHalide === "SC" &&
@@ -499,6 +500,20 @@ export const Equipment: React.FC<EquipmentProps> = ({
               src={rodImageUrl}
               alt="Glass Rod"
               className="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (isPlatinumWireEquipment) {
+      return (
+        <div className="relative flex flex-col items-center pointer-events-none" style={{ marginTop: "20px" }}>
+          <div className="w-28 h-28">
+            <img
+              src={PLATINUM_WIRE_IMAGE_URL}
+              alt="Platinum Wire"
+              className="w-full h-full object-contain drop-shadow-lg"
             />
           </div>
         </div>
