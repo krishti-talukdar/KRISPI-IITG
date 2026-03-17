@@ -561,20 +561,26 @@ export const Equipment: React.FC<EquipmentProps> = ({
       // Show an enhanced flame visual when a glass rod/platinum wire is brought near the bunsen
       const shouldShowAttachedFlame = isOnWorkbench && isDryTest && dryTestMode === "basic" && activeFlameTest === "Fl";
       let nearbyRod = false;
+      let nearbyPlatinum = false;
       try {
         if (shouldShowAttachedFlame && position && allEquipmentPositions && allEquipmentPositions.length) {
           nearbyRod = allEquipmentPositions.some((pos) => {
             const idLower = (pos.id || "").toString().toLowerCase();
-            // match mapped glass rod ids (eg. "glass-rod-0") or legacy stirring rod ids
-            if (!(idLower.includes("glass-rod") || idLower.includes("stirring_rod") || idLower.includes("glassrod"))) return false;
+            // match mapped glass rod ids (eg. "glass-rod-0") or legacy stirring rod ids or platinum wire ids
+            if (!(idLower.includes("glass-rod") || idLower.includes("stirring_rod") || idLower.includes("glassrod") || idLower.includes("platinum") || idLower.includes("platinum-wire"))) return false;
             const dx = (pos.x || 0) - (position.x || 0);
             const dy = (pos.y || 0) - (position.y || 0);
             const dist = Math.sqrt(dx * dx + dy * dy);
-            return dist < 100; // threshold in pixels
+            if (dist < 100) {
+              if (idLower.includes("platinum")) nearbyPlatinum = true;
+              return true;
+            }
+            return false;
           });
         }
       } catch (e) {
         nearbyRod = false;
+        nearbyPlatinum = false;
       }
 
       return (
@@ -587,13 +593,56 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
           {/* Attached flame image (appears when rod/wire is close during Salt Analysis flame test) */}
           {shouldShowAttachedFlame && nearbyRod && (
-            <div className="absolute -top-40 left-1/2 transform -translate-x-1/2 pointer-events-none z-40" style={{ width: 80 }}>
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Fe9cfd8cb33d143f3b1a42a8a8591b784?format=webp&width=800&height=1200"
-                alt="Bunsen Flame"
-                className="w-full h-auto object-contain drop-shadow-2xl"
-                style={{ filter: 'drop-shadow(0 6px 18px rgba(255,140,0,0.45))', transform: 'translateY(-8px)' }}
-              />
+            <div className="absolute -top-40 left-1/2 transform -translate-x-1/2 pointer-events-none z-40" style={{ width: 120 }}>
+              <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Fe9cfd8cb33d143f3b1a42a8a8591b784?format=webp&width=800&height=1200"
+                  alt="Bunsen Flame"
+                  className="w-full h-auto object-contain drop-shadow-2xl"
+                  style={{ filter: 'drop-shadow(0 6px 18px rgba(255,140,0,0.45))', transform: 'translateY(-8px)' }}
+                />
+
+                {/* Brick-red glow at the flame tip when platinum wire is present */}
+                {nearbyPlatinum && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: '50%',
+                      top: '10%',
+                      transform: 'translateX(-50%)',
+                      width: 60,
+                      height: 100,
+                      pointerEvents: 'none',
+                      zIndex: 50,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '50% 50% 40% 40% / 60% 60% 40% 40%',
+                        background: 'radial-gradient(circle at 50% 20%, rgba(178,34,34,0.95) 0%, rgba(178,34,34,0.7) 30%, rgba(255,165,0,0.25) 60%, transparent 80%)',
+                        filter: 'blur(8px) saturate(120%)',
+                        mixBlendMode: 'screen',
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: '50%',
+                        top: '40%',
+                        transform: 'translateX(-50%)',
+                        width: 18,
+                        height: 10,
+                        background: 'rgba(255,255,255,0.12)',
+                        borderRadius: 6,
+                        filter: 'blur(1px)',
+                        opacity: 0.9,
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
