@@ -1927,6 +1927,12 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // If the equipment is Platinum Wire, skip the amount dialog and add immediately
+      if ((equipment.name || "").toLowerCase().includes("platinum")) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
