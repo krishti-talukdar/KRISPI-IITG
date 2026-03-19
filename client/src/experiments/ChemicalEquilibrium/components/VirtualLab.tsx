@@ -85,6 +85,9 @@ type LabSnapshot = {
   bromideWetHeatingCount: number;
   iodideWetHeatingTriggered: boolean;
   iodideWetHeatingCount: number;
+  iodideWetTestTubeTracked: boolean;
+  iodideWetSaltAddedTracked: boolean;
+  iodideWetSodaExtractAddedTracked: boolean;
   chlorideHeatingCount: number;
   chlorideWetHeatingTriggered: boolean;
   chlorideWetHeatingCount: number;
@@ -633,6 +636,9 @@ function ChemicalEquilibriumVirtualLab({
   const [bromideWetSodaExtractAddedTracked, setBromideWetSodaExtractAddedTracked] = useState(false);
   const [bromideWetHNO3AddedTracked, setBromideWetHNO3AddedTracked] = useState(false);
   const [bromideWetAgNO3AddedTracked, setBromideWetAgNO3AddedTracked] = useState(false);
+  const [iodideWetTestTubeTracked, setIodideWetTestTubeTracked] = useState(false);
+  const [iodideWetSaltAddedTracked, setIodideWetSaltAddedTracked] = useState(false);
+  const [iodideWetSodaExtractAddedTracked, setIodideWetSodaExtractAddedTracked] = useState(false);
   const [rodMoveAnimationConfig, setRodMoveAnimationConfig] = useState<RodMoveAnimationConfig | null>(null);
   const rodMoveAnimationTimerRef = useRef<number | null>(null);
   const cancelRodMoveAnimation = useCallback(() => {
@@ -1426,6 +1432,75 @@ function ChemicalEquilibriumVirtualLab({
     if (
       !experimentStarted ||
       !isDryTestExperiment ||
+      resolvedDryTestMode !== "wet" ||
+      (activeHalide ?? "").toLowerCase() !== "i"
+    ) {
+      return;
+    }
+
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+    const hasTestTube = Boolean(testTube);
+    const hasSaltSample = Boolean(
+      testTube?.chemicals.some(
+        (chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+      ),
+    );
+    const hasSodaExtract = Boolean(
+      testTube?.chemicals.some(
+        (chemical) =>
+          chemical.id === SODA_EXTRACT_CHEMICAL_ID && (chemical.amount ?? 0) > 0,
+      ),
+    );
+
+    if (currentStep === 1) {
+      if (hasTestTube && !iodideWetTestTubeTracked) {
+        setIodideWetTestTubeTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+      return;
+    }
+
+    if (currentStep === 2) {
+      if (hasSaltSample && !iodideWetSaltAddedTracked) {
+        setIodideWetSaltAddedTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Salt sample added. Moving to Step 3.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+      return;
+    }
+
+    if (currentStep === 3) {
+      if (hasSodaExtract && !iodideWetSodaExtractAddedTracked) {
+        setIodideWetSodaExtractAddedTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Soda extract added. Moving to Step 4.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+    }
+  }, [
+    activeHalide,
+    currentStep,
+    equipmentPositions,
+    experimentStarted,
+    iodideWetSaltAddedTracked,
+    iodideWetSodaExtractAddedTracked,
+    iodideWetTestTubeTracked,
+    isDryTestExperiment,
+    onStepComplete,
+    resolvedDryTestMode,
+    totalSteps,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
       (resolvedDryTestMode !== "acid" && resolvedDryTestMode !== "basic")
     ) {
       return;
@@ -1622,6 +1697,9 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetSodaExtractAddedTracked(false);
     setBromideWetHNO3AddedTracked(false);
     setBromideWetAgNO3AddedTracked(false);
+    setIodideWetTestTubeTracked(false);
+    setIodideWetSaltAddedTracked(false);
+    setIodideWetSodaExtractAddedTracked(false);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
   }, [stepNumber, workbenchResetTrigger]);
@@ -1719,6 +1797,9 @@ function ChemicalEquilibriumVirtualLab({
     bromideWetHeatingCount,
     iodideWetHeatingTriggered,
     iodideWetHeatingCount,
+    iodideWetTestTubeTracked,
+    iodideWetSaltAddedTracked,
+    iodideWetSodaExtractAddedTracked,
     chlorideHeatingCount,
     chlorideWetHeatingTriggered,
     chlorideWetHeatingCount,
@@ -4076,6 +4157,9 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingCount(0);
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
+    setIodideWetTestTubeTracked(false);
+    setIodideWetSaltAddedTracked(false);
+    setIodideWetSodaExtractAddedTracked(false);
     setChlorideHeatingCount(0);
     setChlorideWetHeatingTriggered(false);
     setChlorideWetHeatingCount(0);
@@ -4146,6 +4230,9 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingCount(0);
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
+    setIodideWetTestTubeTracked(false);
+    setIodideWetSaltAddedTracked(false);
+    setIodideWetSodaExtractAddedTracked(false);
     setChlorideHeatingCount(0);
     setChlorideWetHeatingTriggered(false);
     setChlorideWetHeatingCount(0);
@@ -4217,6 +4304,9 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingCount(lastSnapshot.bromideWetHeatingCount);
     setIodideWetHeatingTriggered(lastSnapshot.iodideWetHeatingTriggered);
     setIodideWetHeatingCount(lastSnapshot.iodideWetHeatingCount);
+    setIodideWetTestTubeTracked(lastSnapshot.iodideWetTestTubeTracked);
+    setIodideWetSaltAddedTracked(lastSnapshot.iodideWetSaltAddedTracked);
+    setIodideWetSodaExtractAddedTracked(lastSnapshot.iodideWetSodaExtractAddedTracked);
     setChlorideHeatingCount(lastSnapshot.chlorideHeatingCount);
     setChlorideWetHeatingTriggered(lastSnapshot.chlorideWetHeatingTriggered);
     setChlorideWetHeatingCount(lastSnapshot.chlorideWetHeatingCount);
