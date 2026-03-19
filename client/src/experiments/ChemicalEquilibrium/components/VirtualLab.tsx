@@ -1499,6 +1499,11 @@ function ChemicalEquilibriumVirtualLab({
       resolvedDryTestMode === "acid" &&
       currentStep === 7 &&
       !workbenchResetStepTracked;
+    const isBromideResetStep =
+      resolvedDryTestMode === "acid" &&
+      activeHalide === "Br" &&
+      currentStep === 6 &&
+      !workbenchResetStepTracked;
     const isBasicResetStep =
       resolvedDryTestMode === "basic" &&
       currentStep === 4 &&
@@ -1506,7 +1511,7 @@ function ChemicalEquilibriumVirtualLab({
 
     if (
       workbenchResetTrigger !== workbenchResetTriggerRef.current &&
-      (isAcidResetStep || isBasicResetStep)
+      (isAcidResetStep || isBromideResetStep || isBasicResetStep)
     ) {
       setWorkbenchResetStepTracked(true);
       onStepComplete();
@@ -1523,6 +1528,7 @@ function ChemicalEquilibriumVirtualLab({
     experimentStarted,
     isDryTestExperiment,
     resolvedDryTestMode,
+    activeHalide,
     totalSteps,
     onStepComplete,
   ]);
