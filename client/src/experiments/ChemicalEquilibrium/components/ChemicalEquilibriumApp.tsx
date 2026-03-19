@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Play, Pause, Info, X } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import ChemicalEquilibriumVirtualLab from "./VirtualLab";
-import ChemicalEquilibriumData, { PHHClExperiment, BASIC_DRY_TEST_STEPS, BROMIDE_WET_TEST_STEPS } from "../data";
+import ChemicalEquilibriumData, { PHHClExperiment, BASIC_DRY_TEST_STEPS, BROMIDE_WET_TEST_STEPS, IODIDE_WET_TEST_STEPS } from "../data";
 import type { ExperimentStep, DryTestMode } from "../types";
 import { useUpdateProgress } from "@/hooks/use-experiments";
 
@@ -265,6 +265,13 @@ export default function ChemicalEquilibriumApp({
     "Soda extract",
     "Dilute HNO₃",
     "Dilute HCl",
+    "Dil. H₂SO₄",
+    "Dil. H2SO4",
+    "Dilute H₂SO₄",
+    "Dilute H2SO4",
+    "Glass Rod",
+    "Glass rod",
+    "Glass container",
   ];
 
   let dryTestEquipmentToUse = extraDryAcidEquipment.length
@@ -541,7 +548,11 @@ export default function ChemicalEquilibriumApp({
       ? BASIC_DRY_TEST_STEPS
       : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
         ? BROMIDE_WET_TEST_STEPS
-        : experiment.stepDetails;
+        : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "I"
+          ? IODIDE_WET_TEST_STEPS
+          : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "I"
+            ? experiment.stepDetails.slice(0, 5)
+            : experiment.stepDetails;
 
   // Auto-start when URL contains ?autostart=1 for the PH experiment
   useEffect(() => {

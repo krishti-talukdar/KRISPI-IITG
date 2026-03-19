@@ -85,6 +85,9 @@ type LabSnapshot = {
   bromideWetHeatingCount: number;
   iodideWetHeatingTriggered: boolean;
   iodideWetHeatingCount: number;
+  iodideWetTestTubeTracked: boolean;
+  iodideWetSaltAddedTracked: boolean;
+  iodideWetSodaExtractAddedTracked: boolean;
   chlorideHeatingCount: number;
   chlorideWetHeatingTriggered: boolean;
   chlorideWetHeatingCount: number;
@@ -633,6 +636,9 @@ function ChemicalEquilibriumVirtualLab({
   const [bromideWetSodaExtractAddedTracked, setBromideWetSodaExtractAddedTracked] = useState(false);
   const [bromideWetHNO3AddedTracked, setBromideWetHNO3AddedTracked] = useState(false);
   const [bromideWetAgNO3AddedTracked, setBromideWetAgNO3AddedTracked] = useState(false);
+  const [iodideWetTestTubeTracked, setIodideWetTestTubeTracked] = useState(false);
+  const [iodideWetSaltAddedTracked, setIodideWetSaltAddedTracked] = useState(false);
+  const [iodideWetSodaExtractAddedTracked, setIodideWetSodaExtractAddedTracked] = useState(false);
   const [rodMoveAnimationConfig, setRodMoveAnimationConfig] = useState<RodMoveAnimationConfig | null>(null);
   const rodMoveAnimationTimerRef = useRef<number | null>(null);
   const cancelRodMoveAnimation = useCallback(() => {
@@ -827,13 +833,21 @@ function ChemicalEquilibriumVirtualLab({
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const resultsReady = caseOneReady && caseTwoReady;
+  const iodideAnalysisReady =
+    activeHalide === "I" && resolvedDryTestMode === "acid"
+      ? caseOneReady
+      : resultsReady;
+  const canViewResults =
+    activeHalide === "I" && resolvedDryTestMode === "acid"
+      ? iodideAnalysisReady
+      : resultsReady;
 
   useEffect(() => {
     if (!isSaltAnalysisExperiment) {
       return;
     }
 
-    if (!resultsReady) {
+    if (!iodideAnalysisReady) {
       if (hasAutoOpenedResults) {
         setHasAutoOpenedResults(false);
       }
@@ -851,8 +865,8 @@ function ChemicalEquilibriumVirtualLab({
     }
   }, [
     hasAutoOpenedResults,
+    iodideAnalysisReady,
     isSaltAnalysisExperiment,
-    resultsReady,
     showCase2ResultsModal,
     activeHalide,
     resolvedDryTestMode,
@@ -1418,6 +1432,75 @@ function ChemicalEquilibriumVirtualLab({
     if (
       !experimentStarted ||
       !isDryTestExperiment ||
+      resolvedDryTestMode !== "wet" ||
+      (activeHalide ?? "").toLowerCase() !== "i"
+    ) {
+      return;
+    }
+
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+    const hasTestTube = Boolean(testTube);
+    const hasSaltSample = Boolean(
+      testTube?.chemicals.some(
+        (chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+      ),
+    );
+    const hasSodaExtract = Boolean(
+      testTube?.chemicals.some(
+        (chemical) =>
+          chemical.id === SODA_EXTRACT_CHEMICAL_ID && (chemical.amount ?? 0) > 0,
+      ),
+    );
+
+    if (currentStep === 1) {
+      if (hasTestTube && !iodideWetTestTubeTracked) {
+        setIodideWetTestTubeTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+      return;
+    }
+
+    if (currentStep === 2) {
+      if (hasSaltSample && !iodideWetSaltAddedTracked) {
+        setIodideWetSaltAddedTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Salt sample added. Moving to Step 3.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+      return;
+    }
+
+    if (currentStep === 3) {
+      if (hasSodaExtract && !iodideWetSodaExtractAddedTracked) {
+        setIodideWetSodaExtractAddedTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Soda extract added. Moving to Step 4.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+    }
+  }, [
+    activeHalide,
+    currentStep,
+    equipmentPositions,
+    experimentStarted,
+    iodideWetSaltAddedTracked,
+    iodideWetSodaExtractAddedTracked,
+    iodideWetTestTubeTracked,
+    isDryTestExperiment,
+    onStepComplete,
+    resolvedDryTestMode,
+    totalSteps,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
       (resolvedDryTestMode !== "acid" && resolvedDryTestMode !== "basic")
     ) {
       return;
@@ -1614,6 +1697,9 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetSodaExtractAddedTracked(false);
     setBromideWetHNO3AddedTracked(false);
     setBromideWetAgNO3AddedTracked(false);
+    setIodideWetTestTubeTracked(false);
+    setIodideWetSaltAddedTracked(false);
+    setIodideWetSodaExtractAddedTracked(false);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
   }, [stepNumber, workbenchResetTrigger]);
@@ -1711,6 +1797,9 @@ function ChemicalEquilibriumVirtualLab({
     bromideWetHeatingCount,
     iodideWetHeatingTriggered,
     iodideWetHeatingCount,
+    iodideWetTestTubeTracked,
+    iodideWetSaltAddedTracked,
+    iodideWetSodaExtractAddedTracked,
     chlorideHeatingCount,
     chlorideWetHeatingTriggered,
     chlorideWetHeatingCount,
@@ -3763,15 +3852,27 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${DILUTE_HNO3_VOLUME_INCREMENT} mL of dil. HNO₃ to the test tube.`);
+    if (!bromideWetHNO3AddedTracked && currentStep === 4) {
+      setBromideWetHNO3AddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
+    } else {
+      setToastMessage(`Added ${DILUTE_HNO3_VOLUME_INCREMENT} mL of dil. HNO₃ to the test tube.`);
+    }
     setTimeout(() => setToastMessage(null), 2500);
   }, [
+    bromideWetHNO3AddedTracked,
+    currentStep,
     equipmentPositions,
     isDryTestExperiment,
-    resolvedDryTestMode,
+    onStepComplete,
     pushHistorySnapshot,
+    resolvedDryTestMode,
+    setCurrentStep,
     setEquipmentPositions,
     setToastMessage,
+    totalSteps,
   ]);
 
   const handleAddDiluteH2SO4ToTestTube = useCallback(() => {
@@ -4056,6 +4157,9 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingCount(0);
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
+    setIodideWetTestTubeTracked(false);
+    setIodideWetSaltAddedTracked(false);
+    setIodideWetSodaExtractAddedTracked(false);
     setChlorideHeatingCount(0);
     setChlorideWetHeatingTriggered(false);
     setChlorideWetHeatingCount(0);
@@ -4126,6 +4230,9 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingCount(0);
     setIodideWetHeatingTriggered(false);
     setIodideWetHeatingCount(0);
+    setIodideWetTestTubeTracked(false);
+    setIodideWetSaltAddedTracked(false);
+    setIodideWetSodaExtractAddedTracked(false);
     setChlorideHeatingCount(0);
     setChlorideWetHeatingTriggered(false);
     setChlorideWetHeatingCount(0);
@@ -4197,6 +4304,9 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetHeatingCount(lastSnapshot.bromideWetHeatingCount);
     setIodideWetHeatingTriggered(lastSnapshot.iodideWetHeatingTriggered);
     setIodideWetHeatingCount(lastSnapshot.iodideWetHeatingCount);
+    setIodideWetTestTubeTracked(lastSnapshot.iodideWetTestTubeTracked);
+    setIodideWetSaltAddedTracked(lastSnapshot.iodideWetSaltAddedTracked);
+    setIodideWetSodaExtractAddedTracked(lastSnapshot.iodideWetSodaExtractAddedTracked);
     setChlorideHeatingCount(lastSnapshot.chlorideHeatingCount);
     setChlorideWetHeatingTriggered(lastSnapshot.chlorideWetHeatingTriggered);
     setChlorideWetHeatingCount(lastSnapshot.chlorideWetHeatingCount);
@@ -4211,12 +4321,14 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleViewResults = () => {
-    if (!resultsReady) {
-      const missing = !caseOneReady
-        ? "Case 1 observations"
-        : !caseTwoReady
-          ? "Case 2 observations"
-          : "observations";
+    if (!canViewResults) {
+      const missing = activeHalide === "I" && resolvedDryTestMode === "acid"
+        ? "Inference 1"
+        : !caseOneReady
+          ? "Case 1 observations"
+          : !caseTwoReady
+            ? "Case 2 observations"
+            : "observations";
       setToastMessage(`Complete ${missing} before viewing the analysis.`);
       setTimeout(() => setToastMessage(null), 2500);
       return;
@@ -4429,7 +4541,7 @@ function ChemicalEquilibriumVirtualLab({
                 <button
                   onClick={handleViewResults}
                   className={`w-full px-3 py-2 rounded shadow-sm transition ${
-                    resultsReady
+                    canViewResults
                       ? "bg-blue-600 text-white hover:bg-blue-700"
                       : "bg-blue-200 text-blue-800 opacity-80"
                   }`}
@@ -5275,18 +5387,27 @@ function ChemicalEquilibriumVirtualLab({
                 </p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
                   {detailedInsights.filter((insight) => {
+                    if (activeHalide === "I" && resolvedDryTestMode === "acid") {
+                      return insight.hint === "Inference 1";
+                    }
                     // Hide Inference 3, 4, 5, 6 for Bromide and Iodide checks under Dry Tests for Acid Radicals
                     if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                       return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
                     }
                     return true;
-                  }).map((insight) => (
-                    <div key={insight.title} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{insight.hint}</div>
-                      <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
-                      <p className="mt-1 text-xs text-white/70 leading-tight whitespace-pre-wrap">{insight.description}</p>
-                    </div>
-                  ))}
+                  }).map((insight) => {
+                    const displayHint = activeHalide === "I" && resolvedDryTestMode === "acid" && insight.hint === "Inference 1"
+                      ? "Inference"
+                      : insight.hint;
+
+                    return (
+                      <div key={insight.title} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{displayHint}</div>
+                        <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
+                        <p className="mt-1 text-xs text-white/70 leading-tight whitespace-pre-wrap">{insight.description}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -5311,59 +5432,70 @@ function ChemicalEquilibriumVirtualLab({
               <div className="rounded-2xl border border-slate-300 bg-gradient-to-br from-slate-50 via-white to-slate-50 p-5 shadow-lg">
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
-                  {caseSummaryEntries.filter((entry) => {
-                    // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Dry Test for Acid Radicals
-                    if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
-                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Wet Test for Acid Radicals
-                    if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
-                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 2, 3, 4, 5, 6 for Chloride Check in Wet Test for Acid Radicals
-                    if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
-                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
-                    if (activeHalide === "S" && resolvedDryTestMode === "acid") {
-                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Wet Test for Acid Radicals
-                    if (activeHalide === "S" && resolvedDryTestMode === "wet") {
-                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 4, 5, 6 for Special Cases in Wet Test for Acid Radicals
-                    if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
-                      return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
-                    if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
-                      if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
-                        return false;
+                  {caseSummaryEntries
+                    .filter((entry) => {
+                      if (activeHalide === "I" && resolvedDryTestMode === "acid") {
+                        return entry.label === "INFERENCE 1";
                       }
-                      if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
-                        return false;
+                      // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Dry Test for Acid Radicals
+                      if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                        return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
-                      if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
-                        return false;
+                      // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Wet Test for Acid Radicals
+                      if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
+                        return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
-                      if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
-                        return false;
+                      // Hide INFERENCE 2, 3, 4, 5, 6 for Chloride Check in Wet Test for Acid Radicals
+                      if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
+                        return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
-                    }
-                    return true;
-                  }).map((entry) => (
-                    <div
-                      key={entry.label}
-                      className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
-                    >
-                      <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{entry.label}</div>
-                      <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed whitespace-pre-wrap`}>{entry.result}</p>
-                      <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
-                        {entry.indicator}
-                      </div>
-                    </div>
-                  ))}
+                      // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
+                      if (activeHalide === "S" && resolvedDryTestMode === "acid") {
+                        return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      }
+                      // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Wet Test for Acid Radicals
+                      if (activeHalide === "S" && resolvedDryTestMode === "wet") {
+                        return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      }
+                      // Hide INFERENCE 4, 5, 6 for Special Cases in Wet Test for Acid Radicals
+                      if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
+                        return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      }
+                      // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
+                      if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+                        if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
+                          return false;
+                        }
+                        if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
+                          return false;
+                        }
+                        if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
+                          return false;
+                        }
+                        if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
+                          return false;
+                        }
+                      }
+                      return true;
+                    })
+                    .map((entry) => {
+                      const displayLabel = activeHalide === "I" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1"
+                        ? "Inference"
+                        : entry.label;
+
+                      return (
+                        <div
+                          key={entry.label}
+                          className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
+                        >
+                          <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{displayLabel}</div>
+                          <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed whitespace-pre-wrap`}>{entry.result}</p>
+                          <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
+                            {entry.indicator}
+                          </div>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
 
@@ -5396,43 +5528,45 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               )}
 
-              <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-white p-5 shadow-xl">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
-                <ul className="mt-4 space-y-3">
-                  {observationHighlights.filter((highlight) => {
-                    // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Dry Test for Acid Radicals
-                    if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
-                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Wet Test for Acid Radicals
-                    if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
-                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    // Hide Inference 2, 3, 4, 5, 6 highlights for Chloride Check in Wet Test for Acid Radicals
-                    if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
-                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Dry Test for Acid Radicals
-                    if (activeHalide === "S" && resolvedDryTestMode === "acid") {
-                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Wet Test for Acid Radicals
-                    if (activeHalide === "S" && resolvedDryTestMode === "wet") {
-                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    // Hide Inference 4, 5, 6 highlights for Special Cases in Wet Test for Acid Radicals
-                    if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
-                      return !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    return true;
-                  }).map((highlight) => (
-                    <li key={highlight} className="flex items-start gap-3">
-                      <span className="mt-[3px] h-2.5 w-2.5 rounded-full bg-slate-900" />
-                      <span className="text-base font-bold text-slate-900 leading-snug whitespace-pre-wrap">{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {!(activeHalide === "I" && resolvedDryTestMode === "acid") && (
+                <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-white p-5 shadow-xl">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
+                  <ul className="mt-4 space-y-3">
+                    {observationHighlights.filter((highlight) => {
+                      // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Dry Test for Acid Radicals
+                      if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                        return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Wet Test for Acid Radicals
+                      if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
+                        return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 2, 3, 4, 5, 6 highlights for Chloride Check in Wet Test for Acid Radicals
+                      if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
+                        return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Dry Test for Acid Radicals
+                      if (activeHalide === "S" && resolvedDryTestMode === "acid") {
+                        return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Wet Test for Acid Radicals
+                      if (activeHalide === "S" && resolvedDryTestMode === "wet") {
+                        return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 4, 5, 6 highlights for Special Cases in Wet Test for Acid Radicals
+                      if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
+                        return !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      return true;
+                    }).map((highlight) => (
+                      <li key={highlight} className="flex items-start gap-3">
+                        <span className="mt-[3px] h-2.5 w-2.5 rounded-full bg-slate-900" />
+                        <span className="text-base font-bold text-slate-900 leading-snug whitespace-pre-wrap">{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 

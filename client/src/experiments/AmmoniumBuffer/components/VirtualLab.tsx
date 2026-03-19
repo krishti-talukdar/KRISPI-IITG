@@ -756,7 +756,7 @@ useEffect(() => {
                   const res = hendersonResult;
                   const concA = res.totalVolL > 0 ? res.molesAcid / res.totalVolL : null;
                   const concB = res.totalVolL > 0 ? res.molesBase / res.totalVolL : null;
-                  const ratio = concA && concA > 0 ? concB / concA : (res.molesAcid === 0 && res.molesBase > 0 ? Infinity : null);
+                  const ratio = concA != null && concA > 0 && concB != null ? concB / concA : (res.molesAcid === 0 && res.molesBase > 0 ? Infinity : null);
                   return (
                     <div className="text-sm text-gray-800 space-y-2">
                       <div>Formula: <strong>pH = pK<sub>a</sub> + log10([Base]/[Acid])</strong></div>
