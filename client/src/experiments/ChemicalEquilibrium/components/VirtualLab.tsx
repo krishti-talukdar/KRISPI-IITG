@@ -831,6 +831,10 @@ function ChemicalEquilibriumVirtualLab({
     activeHalide === "I" && resolvedDryTestMode === "acid"
       ? caseOneReady
       : resultsReady;
+  const canViewResults =
+    activeHalide === "I" && resolvedDryTestMode === "acid"
+      ? iodideAnalysisReady
+      : resultsReady;
 
   useEffect(() => {
     if (!isSaltAnalysisExperiment) {
@@ -4227,12 +4231,14 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleViewResults = () => {
-    if (!resultsReady) {
-      const missing = !caseOneReady
-        ? "Case 1 observations"
-        : !caseTwoReady
-          ? "Case 2 observations"
-          : "observations";
+    if (!canViewResults) {
+      const missing = activeHalide === "I" && resolvedDryTestMode === "acid"
+        ? "Inference 1"
+        : !caseOneReady
+          ? "Case 1 observations"
+          : !caseTwoReady
+            ? "Case 2 observations"
+            : "observations";
       setToastMessage(`Complete ${missing} before viewing the analysis.`);
       setTimeout(() => setToastMessage(null), 2500);
       return;
@@ -4445,7 +4451,7 @@ function ChemicalEquilibriumVirtualLab({
                 <button
                   onClick={handleViewResults}
                   className={`w-full px-3 py-2 rounded shadow-sm transition ${
-                    resultsReady
+                    canViewResults
                       ? "bg-blue-600 text-white hover:bg-blue-700"
                       : "bg-blue-200 text-blue-800 opacity-80"
                   }`}
