@@ -2804,6 +2804,13 @@ function ChemicalEquilibriumVirtualLab({
         setCaseOneResult(
           "Reddish-brown Br₂ gas is produced.\n\n2KBr + 3H₂SO₄ → 2KHSO₄ + H₂O + SO₂ + Br₂",
         );
+
+        if (currentStep === 5) {
+          setCurrentStep(6);
+          onStepComplete();
+          setToastMessage("Start heating pressed. Moving to Step 6...");
+          setTimeout(() => setToastMessage(null), 3000);
+        }
       }
 
       if (
