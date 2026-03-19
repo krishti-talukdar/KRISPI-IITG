@@ -689,10 +689,20 @@ function ChemicalEquilibriumVirtualLab({
       ? PH_HCL_EQUIPMENT
       : mapDryTestEquipment(dryTestEquipmentNames)
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
+  const displayedEquipmentList =
+    isSaltAnalysisExperiment && resolvedDryTestMode === "acid" && activeHalide === "Br"
+      ? equipmentList.filter((equipment) => {
+          const normalizedName = equipment.name?.toLowerCase() ?? "";
+          return !(
+            normalizedName.includes("dil") &&
+            (normalizedName.includes("h2so4") || normalizedName.includes("h₂so₄"))
+          ) && !normalizedName.includes("glass rod") && !normalizedName.includes("glass container");
+        })
+      : equipmentList;
   const glassContainerEquipmentId =
-    equipmentList.find((eq) => eq.name?.toLowerCase().includes("glass container"))?.id ?? null;
+    displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass container"))?.id ?? null;
   const glassRodEquipmentId =
-    equipmentList.find((eq) => eq.name?.toLowerCase().includes("glass rod"))?.id ?? null;
+    displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass rod"))?.id ?? null;
   const glassContainerState = equipmentPositions.find((pos) => pos.id === glassContainerEquipmentId);
   const ammoniumAmountInGlassContainer = glassContainerState
     ? glassContainerState.chemicals
@@ -4048,7 +4058,7 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="flex-1 overflow-auto">
               <div className="space-y-3">
-                {equipmentList
+                {displayedEquipmentList
                   .filter((eq): eq is EquipmentDefinition => eq != null && eq.name != null)
                   .filter((eq) => {
                     // Hide "dil h2so4" and "chromyl chloride" for Chloride Check in Dry Test for Acid Radicals
@@ -4547,7 +4557,7 @@ function ChemicalEquilibriumVirtualLab({
               </div>
             </div>
             <div className="flex items-center space-x-3 mt-2 overflow-x-auto pb-2">
-              {equipmentList.map((equipment) => {
+              {displayedEquipmentList.map((equipment) => {
                 const normalizedName = equipment.name?.toLowerCase() ?? "";
                 const isPhPaper = (normalizedName.includes("ph") && normalizedName.includes("paper")) || normalizedName.includes("ph paper");
                 const equipmentInteractHandler = isPhPaper && experimentStarted ? (id: string) => handleAddButtonClick(equipment) : undefined;
