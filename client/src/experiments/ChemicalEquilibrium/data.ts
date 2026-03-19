@@ -9,7 +9,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   category: "Qualitative Analysis",
   difficulty: "Intermediate",
   duration: 40,
-  steps: 8,
+  steps: 6,
   rating: 4.7,
   imageUrl:
     "https://images.unsplash.com/photo-1576086213369-97a306d36557?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=400",
@@ -66,23 +66,9 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     },
     {
       id: 6,
-      title: "Step 6 : Press the reset workbench button in the live analysis section ",
+      title: "Step 6 : Add MnO₂ in the test tube",
       description:
-        "Use the reset workbench button in the live analysis section to clear the setup.",
-      completed: false,
-    },
-    {
-      id: 7,
-      title: "Step 7 :  Place the test tube in the workbench. ",
-      description:
-        "Place the test tube in the workbench again for the next run.",
-      completed: false,
-    },
-    {
-      id: 8,
-      title: "Step 8 :  Add Salt sample in the test tube. ",
-      description:
-        "Add the salt sample again to the test tube.",
+        "Add manganese dioxide to the test tube to continue the dry test sequence.",
       completed: false,
     },
   ],
