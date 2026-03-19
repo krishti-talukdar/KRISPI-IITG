@@ -5297,18 +5297,27 @@ function ChemicalEquilibriumVirtualLab({
                 </p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
                   {detailedInsights.filter((insight) => {
+                    if (activeHalide === "I" && resolvedDryTestMode === "acid") {
+                      return insight.hint === "Inference 1";
+                    }
                     // Hide Inference 3, 4, 5, 6 for Bromide and Iodide checks under Dry Tests for Acid Radicals
                     if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                       return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
                     }
                     return true;
-                  }).map((insight) => (
-                    <div key={insight.title} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{insight.hint}</div>
-                      <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
-                      <p className="mt-1 text-xs text-white/70 leading-tight whitespace-pre-wrap">{insight.description}</p>
-                    </div>
-                  ))}
+                  }).map((insight) => {
+                    const displayHint = activeHalide === "I" && resolvedDryTestMode === "acid" && insight.hint === "Inference 1"
+                      ? "Inference"
+                      : insight.hint;
+
+                    return (
+                      <div key={insight.title} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{displayHint}</div>
+                        <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
+                        <p className="mt-1 text-xs text-white/70 leading-tight whitespace-pre-wrap">{insight.description}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -5429,43 +5438,45 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               )}
 
-              <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-white p-5 shadow-xl">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
-                <ul className="mt-4 space-y-3">
-                  {observationHighlights.filter((highlight) => {
-                    // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Dry Test for Acid Radicals
-                    if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
-                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Wet Test for Acid Radicals
-                    if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
-                      return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    // Hide Inference 2, 3, 4, 5, 6 highlights for Chloride Check in Wet Test for Acid Radicals
-                    if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
-                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Dry Test for Acid Radicals
-                    if (activeHalide === "S" && resolvedDryTestMode === "acid") {
-                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Wet Test for Acid Radicals
-                    if (activeHalide === "S" && resolvedDryTestMode === "wet") {
-                      return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    // Hide Inference 4, 5, 6 highlights for Special Cases in Wet Test for Acid Radicals
-                    if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
-                      return !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
-                    }
-                    return true;
-                  }).map((highlight) => (
-                    <li key={highlight} className="flex items-start gap-3">
-                      <span className="mt-[3px] h-2.5 w-2.5 rounded-full bg-slate-900" />
-                      <span className="text-base font-bold text-slate-900 leading-snug whitespace-pre-wrap">{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {!(activeHalide === "I" && resolvedDryTestMode === "acid") && (
+                <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-white p-5 shadow-xl">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
+                  <ul className="mt-4 space-y-3">
+                    {observationHighlights.filter((highlight) => {
+                      // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Dry Test for Acid Radicals
+                      if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                        return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 3, 4, 5, 6 highlights for Bromide check in Wet Test for Acid Radicals
+                      if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
+                        return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 2, 3, 4, 5, 6 highlights for Chloride Check in Wet Test for Acid Radicals
+                      if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
+                        return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Dry Test for Acid Radicals
+                      if (activeHalide === "S" && resolvedDryTestMode === "acid") {
+                        return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Wet Test for Acid Radicals
+                      if (activeHalide === "S" && resolvedDryTestMode === "wet") {
+                        return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 4, 5, 6 highlights for Special Cases in Wet Test for Acid Radicals
+                      if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
+                        return !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      return true;
+                    }).map((highlight) => (
+                      <li key={highlight} className="flex items-start gap-3">
+                        <span className="mt-[3px] h-2.5 w-2.5 rounded-full bg-slate-900" />
+                        <span className="text-base font-bold text-slate-900 leading-snug whitespace-pre-wrap">{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 
