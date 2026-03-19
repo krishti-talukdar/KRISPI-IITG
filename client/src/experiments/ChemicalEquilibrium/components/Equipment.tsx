@@ -63,6 +63,8 @@ interface EquipmentProps {
   specialCasesHeatingCount?: number;
   activeFlameTest?: string;
   phPaperColor?: string;
+  color?: string;
+  volume?: number;
 }
 
 export const Equipment: React.FC<EquipmentProps> = ({

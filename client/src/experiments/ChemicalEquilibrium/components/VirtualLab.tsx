@@ -473,6 +473,14 @@ const FE_CL3_DROP_VOLUME_ML = 0.25;
 const FE_CL3_CHEMICAL_ID = "fecl3_solution";
 const FE_CL3_CHEMICAL_NAME = "FeCl₃ Solution";
 const FE_CL3_CHEMICAL_COLOR = "#ef4444";
+const SODA_EXTRACT_CHEMICAL_ID = "soda_extract";
+const SODA_EXTRACT_CHEMICAL_NAME = "Soda extract";
+const SODA_EXTRACT_CHEMICAL_COLOR = "#fde68a";
+const SODA_EXTRACT_DROP_VOLUME_ML = 0.25;
+const AGNO3_CHEMICAL_ID = "agno3_solution";
+const AGNO3_CHEMICAL_NAME = "AgNO₃";
+const AGNO3_CHEMICAL_COLOR = "#e5e7eb";
+const AGNO3_DROP_VOLUME_ML = 0.25;
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
@@ -620,6 +628,11 @@ function ChemicalEquilibriumVirtualLab({
   const [basicSecondBunsenTracked, setBasicSecondBunsenTracked] = useState(false);
   const [basicGlassSetupTracked, setBasicGlassSetupTracked] = useState(false);
   const [basicGlassAcidAddedTracked, setBasicGlassAcidAddedTracked] = useState(false);
+  const [bromideWetTestTubeTracked, setBromideWetTestTubeTracked] = useState(false);
+  const [bromideWetSaltAddedTracked, setBromideWetSaltAddedTracked] = useState(false);
+  const [bromideWetSodaExtractAddedTracked, setBromideWetSodaExtractAddedTracked] = useState(false);
+  const [bromideWetHNO3AddedTracked, setBromideWetHNO3AddedTracked] = useState(false);
+  const [bromideWetAgNO3AddedTracked, setBromideWetAgNO3AddedTracked] = useState(false);
   const [rodMoveAnimationConfig, setRodMoveAnimationConfig] = useState<RodMoveAnimationConfig | null>(null);
   const rodMoveAnimationTimerRef = useRef<number | null>(null);
   const cancelRodMoveAnimation = useCallback(() => {
@@ -689,10 +702,22 @@ function ChemicalEquilibriumVirtualLab({
       ? PH_HCL_EQUIPMENT
       : mapDryTestEquipment(dryTestEquipmentNames)
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
+  const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
+  const resolvedDryTestMode = dryTestMode ?? "acid";
+  const displayedEquipmentList =
+    isSaltAnalysisExperiment && resolvedDryTestMode === "acid" && activeHalide === "Br"
+      ? equipmentList.filter((equipment) => {
+          const normalizedName = equipment.name?.toLowerCase() ?? "";
+          return !(
+            normalizedName.includes("dil") &&
+            (normalizedName.includes("h2so4") || normalizedName.includes("h₂so₄"))
+          ) && !normalizedName.includes("glass rod") && !normalizedName.includes("glass container");
+        })
+      : equipmentList;
   const glassContainerEquipmentId =
-    equipmentList.find((eq) => eq.name?.toLowerCase().includes("glass container"))?.id ?? null;
+    displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass container"))?.id ?? null;
   const glassRodEquipmentId =
-    equipmentList.find((eq) => eq.name?.toLowerCase().includes("glass rod"))?.id ?? null;
+    displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass rod"))?.id ?? null;
   const glassContainerState = equipmentPositions.find((pos) => pos.id === glassContainerEquipmentId);
   const ammoniumAmountInGlassContainer = glassContainerState
     ? glassContainerState.chemicals
@@ -704,8 +729,6 @@ function ChemicalEquilibriumVirtualLab({
     ? glassContainerState.chemicals.some((chemical) => chemical.id === "conc_hcl")
     : false;
   const shouldShowRinseButton = hasAmmoniumInGlassContainer || hasHClInGlassContainer;
-  const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
-  const resolvedDryTestMode = dryTestMode ?? "acid";
   const testTubeState = equipmentPositions.find((pos) => pos.id === "test_tubes");
   const mnO2Chemical = testTubeState?.chemicals.find((chemical) => chemical.id === "mno2");
   const hasMnO2InTestTube = (mnO2Chemical?.amount ?? 0) > 0;
@@ -789,7 +812,7 @@ function ChemicalEquilibriumVirtualLab({
   const hasFeCl3BeenUsed = isWetAcidTestMode && feCl3Used;
   const dryTestInstructionMap: Record<DryTestMode, string> = {
     acid:
-      "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂, K₂Cr₂O₇, NaOH solution, acetic acid, acetate solution) with a clean loop to compare color, smell, and residues after heating.",
+      "Use the acid radical reagents (salt sample, concentrated H₂SO₄, MnO₂ solution) with a clean loop to compare color, smell, and residues after heating.",
     basic:
       "Arrange anhydrous Na₂CO₃ and NaOH on the clean loop, heat gently, and observe the characteristic fumes, residues, and colors of basic radicals.",
     wet:
@@ -799,7 +822,7 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const instructionMessage = isDryTestExperiment
-    ? dryTestInstructionMap[dryTestMode]
+    ? dryTestInstructionMap[resolvedDryTestMode]
     : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
@@ -1294,6 +1317,107 @@ function ChemicalEquilibriumVirtualLab({
     if (
       !experimentStarted ||
       !isDryTestExperiment ||
+      resolvedDryTestMode !== "wet" ||
+      (activeHalide ?? "").toLowerCase() !== "br"
+    ) {
+      return;
+    }
+
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+    const hasTestTube = Boolean(testTube);
+    const hasSaltSample = Boolean(
+      testTube?.chemicals.some(
+        (chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+      ),
+    );
+    const hasSodaExtract = Boolean(
+      testTube?.chemicals.some(
+        (chemical) =>
+          chemical.id === SODA_EXTRACT_CHEMICAL_ID && (chemical.amount ?? 0) > 0,
+      ),
+    );
+    const hasDiluteHNO3 = Boolean(
+      testTube?.chemicals.some(
+        (chemical) =>
+          chemical.id === DILUTE_HNO3_CHEMICAL_ID && (chemical.amount ?? 0) > 0,
+      ),
+    );
+    const hasAgNO3 = Boolean(
+      testTube?.chemicals.some(
+        (chemical) =>
+          chemical.id === AGNO3_CHEMICAL_ID && (chemical.amount ?? 0) > 0,
+      ),
+    );
+
+    if (currentStep === 1) {
+      if (hasTestTube && !bromideWetTestTubeTracked) {
+        setBromideWetTestTubeTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+      return;
+    }
+
+    if (currentStep === 2) {
+      if (hasSaltSample && !bromideWetSaltAddedTracked) {
+        setBromideWetSaltAddedTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Salt sample added. Moving to Step 3.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+      return;
+    }
+
+    if (currentStep === 3) {
+      if (hasSodaExtract && !bromideWetSodaExtractAddedTracked) {
+        setBromideWetSodaExtractAddedTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Soda extract added. Moving to Step 4.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+      return;
+    }
+
+    if (currentStep === 4 && hasDiluteHNO3 && !bromideWetHNO3AddedTracked) {
+      setBromideWetHNO3AddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (currentStep === 5 && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
+      setBromideWetAgNO3AddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("AgNO₃ added. Moving to Step 6.");
+      setTimeout(() => setToastMessage(null), 3000);
+    }
+  }, [
+    activeHalide,
+    bromideWetAgNO3AddedTracked,
+    bromideWetHNO3AddedTracked,
+    bromideWetSaltAddedTracked,
+    bromideWetSodaExtractAddedTracked,
+    bromideWetTestTubeTracked,
+    currentStep,
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    onStepComplete,
+    resolvedDryTestMode,
+    totalSteps,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
       (resolvedDryTestMode !== "acid" && resolvedDryTestMode !== "basic")
     ) {
       return;
@@ -1485,6 +1609,11 @@ function ChemicalEquilibriumVirtualLab({
     setBasicSecondBunsenTracked(false);
     setBasicGlassSetupTracked(false);
     setBasicGlassAcidAddedTracked(false);
+    setBromideWetTestTubeTracked(false);
+    setBromideWetSaltAddedTracked(false);
+    setBromideWetSodaExtractAddedTracked(false);
+    setBromideWetHNO3AddedTracked(false);
+    setBromideWetAgNO3AddedTracked(false);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
   }, [stepNumber, workbenchResetTrigger]);
@@ -1499,6 +1628,11 @@ function ChemicalEquilibriumVirtualLab({
       resolvedDryTestMode === "acid" &&
       currentStep === 7 &&
       !workbenchResetStepTracked;
+    const isBromideResetStep =
+      resolvedDryTestMode === "acid" &&
+      activeHalide === "Br" &&
+      currentStep === 6 &&
+      !workbenchResetStepTracked;
     const isBasicResetStep =
       resolvedDryTestMode === "basic" &&
       currentStep === 4 &&
@@ -1506,7 +1640,7 @@ function ChemicalEquilibriumVirtualLab({
 
     if (
       workbenchResetTrigger !== workbenchResetTriggerRef.current &&
-      (isAcidResetStep || isBasicResetStep)
+      (isAcidResetStep || isBromideResetStep || isBasicResetStep)
     ) {
       setWorkbenchResetStepTracked(true);
       onStepComplete();
@@ -1523,6 +1657,7 @@ function ChemicalEquilibriumVirtualLab({
     experimentStarted,
     isDryTestExperiment,
     resolvedDryTestMode,
+    activeHalide,
     totalSteps,
     onStepComplete,
   ]);
@@ -1974,6 +2109,8 @@ function ChemicalEquilibriumVirtualLab({
     const isMagnesiaAddition = lowerName.includes("magnesia");
     const isCaClAddition = lowerName.includes("cacl");
     const isFeCl3Addition = lowerName.includes("fecl");
+    const isSodaExtractAddition = lowerName.includes("soda") && lowerName.includes("extract");
+    const isAgNO3Addition = lowerName.includes("agno3") || lowerName.includes("silver nitrate") || (lowerName.includes("agno") && lowerName.includes("silver"));
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -2241,6 +2378,101 @@ function ChemicalEquilibriumVirtualLab({
           setFeCl3Added(true);
         }
       }
+    }
+
+    if (requiresDropValidation && isSodaExtractAddition) {
+      const dropVolume = parsedAmount * SODA_EXTRACT_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === SODA_EXTRACT_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === SODA_EXTRACT_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: SODA_EXTRACT_CHEMICAL_ID,
+                    name: SODA_EXTRACT_CHEMICAL_NAME,
+                    color: SODA_EXTRACT_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "Reagent",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          return updated ? next : prev;
+        });
+      }
+    }
+
+    if (requiresDropValidation && isAgNO3Addition) {
+      setEquipmentPositions((prev) => {
+        let updated = false;
+        const next = prev.map((pos) => {
+          if (pos.id !== "test_tubes") {
+            return pos;
+          }
+
+          const hasSaltSample = pos.chemicals.some(
+            (chemical) =>
+              chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+          );
+          if (!hasSaltSample) {
+            return pos;
+          }
+
+          updated = true;
+          const existing = pos.chemicals.find(
+            (chemical) => chemical.id === AGNO3_CHEMICAL_ID,
+          );
+          const updatedChemicals = existing
+            ? pos.chemicals.map((chemical) =>
+                chemical.id === AGNO3_CHEMICAL_ID
+                  ? {
+                      ...chemical,
+                      amount: (chemical.amount ?? 0) + parsedAmount * AGNO3_DROP_VOLUME_ML,
+                    }
+                  : chemical,
+              )
+            : [
+                ...pos.chemicals,
+                {
+                  id: AGNO3_CHEMICAL_ID,
+                  name: AGNO3_CHEMICAL_NAME,
+                  color: AGNO3_CHEMICAL_COLOR,
+                  amount: parsedAmount * AGNO3_DROP_VOLUME_ML,
+                  concentration: "Reagent",
+                },
+              ];
+
+          return { ...pos, chemicals: updatedChemicals };
+        });
+        return updated ? next : prev;
+      });
     }
 
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
@@ -2804,6 +3036,13 @@ function ChemicalEquilibriumVirtualLab({
         setCaseOneResult(
           "Reddish-brown Br₂ gas is produced.\n\n2KBr + 3H₂SO₄ → 2KHSO₄ + H₂O + SO₂ + Br₂",
         );
+
+        if (currentStep === 5) {
+          setCurrentStep(6);
+          onStepComplete();
+          setToastMessage("Start heating pressed. Moving to Step 6...");
+          setTimeout(() => setToastMessage(null), 3000);
+        }
       }
 
       if (
@@ -2866,6 +3105,7 @@ function ChemicalEquilibriumVirtualLab({
             const newCount = prev + 1;
             if (newCount === 1) {
               setBromideWetHeatingTriggered(true);
+              setCaseTwoResult(DEFAULT_CASE_RESULT);
               setCaseOneResult(
                 "pale yellow Precipitation insoluble in HNO₃ but sparingly soluble in NH₄OH , therefore Br⁻ is present",
               );
@@ -2987,7 +3227,7 @@ function ChemicalEquilibriumVirtualLab({
         setDilH2SO4HeatingTriggered(false);
       }
     },
-    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide, activeFlameTest],
+    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide, activeFlameTest, currentStep, onStepComplete],
   );
 
   useEffect(() => {
@@ -4035,7 +4275,7 @@ function ChemicalEquilibriumVirtualLab({
 
             <div className="flex-1 overflow-auto">
               <div className="space-y-3">
-                {equipmentList
+                {displayedEquipmentList
                   .filter((eq): eq is EquipmentDefinition => eq != null && eq.name != null)
                   .filter((eq) => {
                     // Hide "dil h2so4" and "chromyl chloride" for Chloride Check in Dry Test for Acid Radicals
@@ -4534,7 +4774,7 @@ function ChemicalEquilibriumVirtualLab({
               </div>
             </div>
             <div className="flex items-center space-x-3 mt-2 overflow-x-auto pb-2">
-              {equipmentList.map((equipment) => {
+              {displayedEquipmentList.map((equipment) => {
                 const normalizedName = equipment.name?.toLowerCase() ?? "";
                 const isPhPaper = (normalizedName.includes("ph") && normalizedName.includes("paper")) || normalizedName.includes("ph paper");
                 const equipmentInteractHandler = isPhPaper && experimentStarted ? (id: string) => handleAddButtonClick(equipment) : undefined;

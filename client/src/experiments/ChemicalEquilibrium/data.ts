@@ -31,92 +31,131 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   stepDetails: [
     {
       id: 1,
-      title: "Drag the test tube into the workbench",
+      title: "Step 1 : Place the test tube in the workbench.",
       description:
-        "Move the test tube from the rack onto the virtual workbench so the dry test sequence can begin.",
+        "Place the test tube in the workbench to begin the dry test.",
       completed: false,
+    duration: "3 minutes",
     },
     {
       id: 2,
-      title: "Add salt sample to the test tube",
+      title: "Step 2 : Add Salt sample in the test tube. ",
       description:
-        "Drop a small amount of the dry salt sample into the tube before applying any reagents.",
+        "Add the salt sample to the test tube before introducing any reagent.",
       completed: false,
+    duration: "3 minutes",
     },
     {
       id: 3,
-      title: "Add concentrated H₂SO₄ down the side of the tube",
+      title: "Step 3 : Add concentrated H₂SO₄ in the test tube",
       description:
-        "Carefully dispense 2–3 drops of concentrated H₂SO₄ down the glass wall so the acid mixes gently with the sample.",
+        "Add concentrated H₂SO₄ carefully to the test tube.",
       completed: false,
+    duration: "3 minutes",
     },
     {
       id: 4,
-      title: "Warm the tube gently with the bunsen burner",
+      title: "Step 4 : Add bunsen burner in the workbench",
       description:
-        "Drag the bunsen burner onto the workbench and heat the tube over a low flame to activate the dry test reactions.",
+        "Place the bunsen burner in the workbench for heating.",
       completed: false,
+    duration: "3 minutes",
     },
     {
       id: 5,
-      title: "Drop the glass rod and container into the workbench",
+      title: "Step 5 : Press the start heating button",
       description:
-        "Place a clean glass rod alongside an empty glass container so they are ready for the next reagent transfer.",
+        "Press the start heating button to begin the heating process.",
       completed: false,
+    duration: "3 minutes",
     },
     {
       id: 6,
-      title: "Add NH₄OH to the container and dip the rod",
+      title: "Step 6 : Add MnO₂ in the test tube",
       description:
-        "Pour ammonium hydroxide into the glass container and dip the glass rod into the solution for subsequent spotting.",
+        "Add manganese dioxide to the test tube to continue the dry test sequence.",
       completed: false,
-    },
-    {
-      id: 7,
-      title: "Reset the workbench",
-      description:
-        "Clear the current setup using the reset control so you can begin the next stage with a fresh workspace.",
-      completed: false,
-    },
-    {
-      id: 8,
-      title: "Drag the test tube into the workbench",
-      description:
-        "Bring a fresh test tube onto the workbench to repeat the dry test under the new conditions.",
-      completed: false,
-    },
-    {
-      id: 9,
-      title: "Add salt sample to the test tube",
-      description:
-        "Load another portion of the dry salt sample into the clean tube before reheating.",
-      completed: false,
-    },
-    {
-      id: 10,
-      title: "Add concentrated H₂SO₄ down the side of the tube",
-      description:
-        "Carefully add 2–3 drops of concentrated H₂SO₄ down the glass wall so the new sample is acidified gently.",
-      completed: false,
-    },
-    {
-      id: 11,
-      title: "Add a pinch of solid MnO₂ to the test tube",
-      description:
-        "Drop a small pinch of manganese dioxide into the acidified tube to help generate the characteristic fumes.",
-      completed: false,
-    },
-    {
-      id: 12,
-      title: "Warm the tube gently with the bunsen burner",
-      description:
-        "Return the bunsen burner to the workbench and heat the tube over a low flame for the final observation.",
-      completed: false,
+    duration: "3 minutes",
     },
   ],
   safetyInfo:
     "This is a virtual simulation. In real laboratory practice, dry tests use hot wire loops and can produce toxic fumes (eg. NO2) or hot residues. Always use proper ventilation, a fume hood, safety goggles, heat-resistant gloves, and follow institutional safety protocols.",
 };
+
+export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
+  {
+    id: 1,
+    title: "Step 1 : Add the test tube in the workbench. ",
+    description:
+      "Add the test tube to the workbench to begin the wet test sequence.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 2,
+    title: "Step 2 : Add the salt sample in the test tube ",
+    description:
+      "Add the salt sample into the test tube before adding reagents.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 3,
+    title: "Step 3 : Add the Soda extract in the test tube",
+    description:
+      "Add soda extract to the test tube for the bromide wet test.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 4,
+    title: "Step 4 : Add Dilute HNO₃ in the test tube ",
+    description:
+      "Add dilute HNO₃ carefully to the test tube.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 5,
+    title: "Step 5 : Add AgNO₃  in the test tube",
+    description:
+      "Add AgNO₃ to the test tube to observe the bromide reaction.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 6,
+    title: "Step 6 : Add bunsen burner in the workbench ",
+    description:
+      "Place the bunsen burner in the workbench for heating.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 7,
+    title: "Step 7 : Press the start heating button ",
+    description:
+      "Press the start heating button to begin heating the wet test setup.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 8,
+    title: "Step 8 : Press the reset workbench button ",
+    description:
+      "Press the reset workbench button to clear the setup.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 9,
+    title: "Step 9 : Add the test tube in the workbench",
+    description:
+      "Add the test tube again after reset to repeat the wet test sequence.",
+    completed: false,
+    duration: "3 minutes",
+  },
+];
 
 export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
   {
@@ -125,6 +164,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Move a clean test tube from the rack onto the workbench to begin the basic radical dry test.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 2,
@@ -132,6 +172,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Carefully drop a small portion of the dry salt sample into the test tube before adding any reagents.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 3,
@@ -139,6 +180,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Position the bunsen burner close to the tube and heat the sample gently with a low flame to observe the basic radicals.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 4,
@@ -146,6 +188,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Use the reset control to clear the current setup so the follow-up steps start with fresh glassware.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 5,
@@ -153,6 +196,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Place another clean test tube on the workbench to continue the basic radical investigation.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 6,
@@ -160,6 +204,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Add a second portion of the salt sample into the new tube to repeat the dry test.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 7,
@@ -167,6 +212,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Introduce sodium hydroxide into the test tube using the NaOH control to reveal basic radical behavior.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 8,
@@ -174,6 +220,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Warm the NaOH-treated tube on a low flame so the evolved fumes or residues can be observed.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 9,
@@ -181,6 +228,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Place both the glass rod and glass container on the workbench to prepare for the spotting transfer.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 10,
@@ -188,6 +236,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Add concentrated HCl into the glass container so the spotting acid is ready for transfer.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 11,
@@ -195,6 +244,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Use the RINSE control to clean the glass rod, then tap MOVE so it hovers above the test tube for the final observation.",
     completed: false,
+    duration: "3 minutes",
   },
 ];
 
