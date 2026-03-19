@@ -76,6 +76,72 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     "This is a virtual simulation. In real laboratory practice, dry tests use hot wire loops and can produce toxic fumes (eg. NO2) or hot residues. Always use proper ventilation, a fume hood, safety goggles, heat-resistant gloves, and follow institutional safety protocols.",
 };
 
+export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
+  {
+    id: 1,
+    title: "Step 1 : Add the test tube in the workbench. ",
+    description:
+      "Add the test tube to the workbench to begin the wet test sequence.",
+    completed: false,
+  },
+  {
+    id: 2,
+    title: "Step 2 : Add the salt sample in the test tube ",
+    description:
+      "Add the salt sample into the test tube before adding reagents.",
+    completed: false,
+  },
+  {
+    id: 3,
+    title: "Step 3 : Add the Soda extract in the test tube",
+    description:
+      "Add soda extract to the test tube for the bromide wet test.",
+    completed: false,
+  },
+  {
+    id: 4,
+    title: "Step 4 : Add Dilute HNO₃ in the test tube ",
+    description:
+      "Add dilute HNO₃ carefully to the test tube.",
+    completed: false,
+  },
+  {
+    id: 5,
+    title: "Step 5 : Add AgNO₃  in the test tube",
+    description:
+      "Add AgNO₃ to the test tube to observe the bromide reaction.",
+    completed: false,
+  },
+  {
+    id: 6,
+    title: "Step 6 : Add bunsen burner in the workbench ",
+    description:
+      "Place the bunsen burner in the workbench for heating.",
+    completed: false,
+  },
+  {
+    id: 7,
+    title: "Step 7 : Press the start heating button ",
+    description:
+      "Press the start heating button to begin heating the wet test setup.",
+    completed: false,
+  },
+  {
+    id: 8,
+    title: "Step 8 : Press the reset workbench button ",
+    description:
+      "Press the reset workbench button to clear the setup.",
+    completed: false,
+  },
+  {
+    id: 9,
+    title: "Step 9 : Add the test tube in the workbench",
+    description:
+      "Add the test tube again after reset to repeat the wet test sequence.",
+    completed: false,
+  },
+];
+
 export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
   {
     id: 1,
