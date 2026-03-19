@@ -2994,7 +2994,7 @@ function ChemicalEquilibriumVirtualLab({
         setDilH2SO4HeatingTriggered(false);
       }
     },
-    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide, activeFlameTest],
+    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide, activeFlameTest, currentStep, onStepComplete],
   );
 
   useEffect(() => {
