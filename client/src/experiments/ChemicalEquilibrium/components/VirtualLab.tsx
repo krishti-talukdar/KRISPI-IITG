@@ -477,6 +477,10 @@ const SODA_EXTRACT_CHEMICAL_ID = "soda_extract";
 const SODA_EXTRACT_CHEMICAL_NAME = "Soda extract";
 const SODA_EXTRACT_CHEMICAL_COLOR = "#fde68a";
 const SODA_EXTRACT_DROP_VOLUME_ML = 0.25;
+const AGNO3_CHEMICAL_ID = "agno3_solution";
+const AGNO3_CHEMICAL_NAME = "AgNO₃";
+const AGNO3_CHEMICAL_COLOR = "#e5e7eb";
+const AGNO3_DROP_VOLUME_ML = 0.25;
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
@@ -628,6 +632,7 @@ function ChemicalEquilibriumVirtualLab({
   const [bromideWetSaltAddedTracked, setBromideWetSaltAddedTracked] = useState(false);
   const [bromideWetSodaExtractAddedTracked, setBromideWetSodaExtractAddedTracked] = useState(false);
   const [bromideWetHNO3AddedTracked, setBromideWetHNO3AddedTracked] = useState(false);
+  const [bromideWetAgNO3AddedTracked, setBromideWetAgNO3AddedTracked] = useState(false);
   const [rodMoveAnimationConfig, setRodMoveAnimationConfig] = useState<RodMoveAnimationConfig | null>(null);
   const rodMoveAnimationTimerRef = useRef<number | null>(null);
   const cancelRodMoveAnimation = useCallback(() => {
@@ -1337,6 +1342,12 @@ function ChemicalEquilibriumVirtualLab({
           chemical.id === DILUTE_HNO3_CHEMICAL_ID && (chemical.amount ?? 0) > 0,
       ),
     );
+    const hasAgNO3 = Boolean(
+      testTube?.chemicals.some(
+        (chemical) =>
+          chemical.id === AGNO3_CHEMICAL_ID && (chemical.amount ?? 0) > 0,
+      ),
+    );
 
     if (currentStep === 1) {
       if (hasTestTube && !bromideWetTestTubeTracked) {
@@ -1377,9 +1388,19 @@ function ChemicalEquilibriumVirtualLab({
       setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
       setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
       setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (currentStep === 5 && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
+      setBromideWetAgNO3AddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("AgNO₃ added. Moving to Step 6.");
+      setTimeout(() => setToastMessage(null), 3000);
     }
   }, [
     activeHalide,
+    bromideWetAgNO3AddedTracked,
     bromideWetHNO3AddedTracked,
     bromideWetSaltAddedTracked,
     bromideWetSodaExtractAddedTracked,
@@ -1592,6 +1613,7 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetSaltAddedTracked(false);
     setBromideWetSodaExtractAddedTracked(false);
     setBromideWetHNO3AddedTracked(false);
+    setBromideWetAgNO3AddedTracked(false);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
   }, [stepNumber, workbenchResetTrigger]);
@@ -2088,6 +2110,7 @@ function ChemicalEquilibriumVirtualLab({
     const isCaClAddition = lowerName.includes("cacl");
     const isFeCl3Addition = lowerName.includes("fecl");
     const isSodaExtractAddition = lowerName.includes("soda") && lowerName.includes("extract");
+    const isAgNO3Addition = lowerName.includes("agno3") || lowerName.includes("silver nitrate") || (lowerName.includes("agno") && lowerName.includes("silver"));
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -2404,6 +2427,52 @@ function ChemicalEquilibriumVirtualLab({
           return updated ? next : prev;
         });
       }
+    }
+
+    if (requiresDropValidation && isAgNO3Addition) {
+      setEquipmentPositions((prev) => {
+        let updated = false;
+        const next = prev.map((pos) => {
+          if (pos.id !== "test_tubes") {
+            return pos;
+          }
+
+          const hasSaltSample = pos.chemicals.some(
+            (chemical) =>
+              chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+          );
+          if (!hasSaltSample) {
+            return pos;
+          }
+
+          updated = true;
+          const existing = pos.chemicals.find(
+            (chemical) => chemical.id === AGNO3_CHEMICAL_ID,
+          );
+          const updatedChemicals = existing
+            ? pos.chemicals.map((chemical) =>
+                chemical.id === AGNO3_CHEMICAL_ID
+                  ? {
+                      ...chemical,
+                      amount: (chemical.amount ?? 0) + parsedAmount * AGNO3_DROP_VOLUME_ML,
+                    }
+                  : chemical,
+              )
+            : [
+                ...pos.chemicals,
+                {
+                  id: AGNO3_CHEMICAL_ID,
+                  name: AGNO3_CHEMICAL_NAME,
+                  color: AGNO3_CHEMICAL_COLOR,
+                  amount: parsedAmount * AGNO3_DROP_VOLUME_ML,
+                  concentration: "Reagent",
+                },
+              ];
+
+          return { ...pos, chemicals: updatedChemicals };
+        });
+        return updated ? next : prev;
+      });
     }
 
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
