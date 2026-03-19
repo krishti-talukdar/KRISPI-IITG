@@ -3763,15 +3763,27 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    setToastMessage(`Added ${DILUTE_HNO3_VOLUME_INCREMENT} mL of dil. HNO₃ to the test tube.`);
+    if (!bromideWetHNO3AddedTracked && currentStep === 4) {
+      setBromideWetHNO3AddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
+    } else {
+      setToastMessage(`Added ${DILUTE_HNO3_VOLUME_INCREMENT} mL of dil. HNO₃ to the test tube.`);
+    }
     setTimeout(() => setToastMessage(null), 2500);
   }, [
+    bromideWetHNO3AddedTracked,
+    currentStep,
     equipmentPositions,
     isDryTestExperiment,
-    resolvedDryTestMode,
+    onStepComplete,
     pushHistorySnapshot,
+    resolvedDryTestMode,
+    setCurrentStep,
     setEquipmentPositions,
     setToastMessage,
+    totalSteps,
   ]);
 
   const handleAddDiluteH2SO4ToTestTube = useCallback(() => {
