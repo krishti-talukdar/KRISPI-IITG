@@ -9,7 +9,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   category: "Qualitative Analysis",
   difficulty: "Intermediate",
   duration: 40,
-  steps: 6,
+  steps: 8,
   rating: 4.7,
   imageUrl:
     "https://images.unsplash.com/photo-1576086213369-97a306d36557?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=400",
@@ -31,86 +31,58 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
   stepDetails: [
     {
       id: 1,
-      title: "Drag the test tube into the workbench",
+      title: "Step 1 : Place the test tube in the workbench.",
       description:
-        "Move the test tube from the rack onto the virtual workbench so the dry test sequence can begin.",
+        "Place the test tube in the workbench to begin the dry test.",
       completed: false,
     },
     {
       id: 2,
-      title: "Add salt sample to the test tube",
+      title: "Step 2 : Add Salt sample in the test tube. ",
       description:
-        "Drop a small amount of the dry salt sample into the tube before applying any reagents.",
+        "Add the salt sample to the test tube before introducing any reagent.",
       completed: false,
     },
     {
       id: 3,
-      title: "Add concentrated H₂SO₄ down the side of the tube",
+      title: "Step 3 : Add concentrated H₂SO₄ in the test tube",
       description:
-        "Carefully dispense 2–3 drops of concentrated H₂SO₄ down the glass wall so the acid mixes gently with the sample.",
+        "Add concentrated H₂SO₄ carefully to the test tube.",
       completed: false,
     },
     {
       id: 4,
-      title: "Warm the tube gently with the bunsen burner",
+      title: "Step 4 : Add bunsen burner in the workbench",
       description:
-        "Drag the bunsen burner onto the workbench and heat the tube over a low flame to activate the dry test reactions.",
+        "Place the bunsen burner in the workbench for heating.",
       completed: false,
     },
     {
       id: 5,
-      title: "Drop the glass rod and container into the workbench",
+      title: "Step 5 : Press the start heating button",
       description:
-        "Place a clean glass rod alongside an empty glass container so they are ready for the next reagent transfer.",
+        "Press the start heating button to begin the heating process.",
       completed: false,
     },
     {
       id: 6,
-      title: "Add NH₄OH to the container and dip the rod",
+      title: "Step 6 : Press the reset workbench button in the live analysis section ",
       description:
-        "Pour ammonium hydroxide into the glass container and dip the glass rod into the solution for subsequent spotting.",
+        "Use the reset workbench button in the live analysis section to clear the setup.",
       completed: false,
     },
     {
       id: 7,
-      title: "Reset the workbench",
+      title: "Step 7 :  Place the test tube in the workbench. ",
       description:
-        "Clear the current setup using the reset control so you can begin the next stage with a fresh workspace.",
+        "Place the test tube in the workbench again for the next run.",
       completed: false,
     },
     {
       id: 8,
-      title: "Drag the test tube into the workbench",
+      title: "Step 8 :  Add Salt sample in the test tube. ",
       description:
-        "Bring a fresh test tube onto the workbench to repeat the dry test under the new conditions.",
-      completed: false,
-    },
-    {
-      id: 9,
-      title: "Add salt sample to the test tube",
-      description:
-        "Load another portion of the dry salt sample into the clean tube before reheating.",
-      completed: false,
-    },
-    {
-      id: 10,
-      title: "Add concentrated H₂SO₄ down the side of the tube",
-      description:
-        "Carefully add 2–3 drops of concentrated H₂SO₄ down the glass wall so the new sample is acidified gently.",
-      completed: false,
-    },
-    {
-      id: 11,
-      title: "Add a pinch of solid MnO₂ to the test tube",
-      description:
-        "Drop a small pinch of manganese dioxide into the acidified tube to help generate the characteristic fumes.",
-      completed: false,
-    },
-    {
-      id: 12,
-      title: "Warm the tube gently with the bunsen burner",
-      description:
-        "Return the bunsen burner to the workbench and heat the tube over a low flame for the final observation.",
+        "Add the salt sample again to the test tube.",
       completed: false,
     },
   ],
