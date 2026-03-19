@@ -157,6 +157,65 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
   },
 ];
 
+export const IODIDE_WET_TEST_STEPS: ExperimentStep[] = [
+  {
+    id: 1,
+    title: "Step 1 : Place the test tube in the workbench. ",
+    description: "Place the test tube in the workbench.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 2,
+    title: "Step 2 : Add salt sample in the test tube",
+    description: "Add salt sample in the test tube.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 3,
+    title: "Step 3 : Add soda extract in the test tube .",
+    description: "Add soda extract in the test tube.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 4,
+    title: "Step 4 : Add Dilute HNO₃ in the test tube",
+    description: "Add Dilute HNO₃ in the test tube.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 5,
+    title: "Step 5 : Add  AgNO₃ in the test tube",
+    description: "Add AgNO₃ in the test tube.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 6,
+    title: "Step 6 : Add bunsen burner in the workbench",
+    description: "Add bunsen burner in the workbench.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 7,
+    title: "Step 7 : Press the start heating button ",
+    description: "Press the start heating button.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 8,
+    title: "Step 8 : Press the reset workbench button in the live analysis section ",
+    description: "Press the reset workbench button in the live analysis section.",
+    completed: false,
+    duration: "3 minutes",
+  },
+];
+
 export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
   {
     id: 1,
