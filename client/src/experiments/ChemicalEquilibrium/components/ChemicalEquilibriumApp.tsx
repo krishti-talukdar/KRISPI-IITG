@@ -548,7 +548,9 @@ export default function ChemicalEquilibriumApp({
       ? BASIC_DRY_TEST_STEPS
       : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
         ? BROMIDE_WET_TEST_STEPS
-        : experiment.stepDetails;
+        : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "I"
+          ? experiment.stepDetails.slice(0, 5)
+          : experiment.stepDetails;
 
   // Auto-start when URL contains ?autostart=1 for the PH experiment
   useEffect(() => {
