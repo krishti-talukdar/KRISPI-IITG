@@ -35,6 +35,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
       description:
         "Place the test tube in the workbench to begin the dry test.",
       completed: false,
+    duration: "3 minutes",
     },
     {
       id: 2,
@@ -42,6 +43,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
       description:
         "Add the salt sample to the test tube before introducing any reagent.",
       completed: false,
+    duration: "3 minutes",
     },
     {
       id: 3,
@@ -49,6 +51,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
       description:
         "Add concentrated H₂SO₄ carefully to the test tube.",
       completed: false,
+    duration: "3 minutes",
     },
     {
       id: 4,
@@ -56,6 +59,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
       description:
         "Place the bunsen burner in the workbench for heating.",
       completed: false,
+    duration: "3 minutes",
     },
     {
       id: 5,
@@ -63,6 +67,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
       description:
         "Press the start heating button to begin the heating process.",
       completed: false,
+    duration: "3 minutes",
     },
     {
       id: 6,
@@ -70,6 +75,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
       description:
         "Add manganese dioxide to the test tube to continue the dry test sequence.",
       completed: false,
+    duration: "3 minutes",
     },
   ],
   safetyInfo:
@@ -83,6 +89,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
     description:
       "Add the test tube to the workbench to begin the wet test sequence.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 2,
@@ -90,6 +97,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
     description:
       "Add the salt sample into the test tube before adding reagents.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 3,
@@ -97,6 +105,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
     description:
       "Add soda extract to the test tube for the bromide wet test.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 4,
@@ -104,6 +113,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
     description:
       "Add dilute HNO₃ carefully to the test tube.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 5,
@@ -111,6 +121,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
     description:
       "Add AgNO₃ to the test tube to observe the bromide reaction.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 6,
@@ -118,6 +129,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
     description:
       "Place the bunsen burner in the workbench for heating.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 7,
@@ -125,6 +137,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
     description:
       "Press the start heating button to begin heating the wet test setup.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 8,
@@ -132,6 +145,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
     description:
       "Press the reset workbench button to clear the setup.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 9,
@@ -139,6 +153,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
     description:
       "Add the test tube again after reset to repeat the wet test sequence.",
     completed: false,
+    duration: "3 minutes",
   },
 ];
 
@@ -149,6 +164,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Move a clean test tube from the rack onto the workbench to begin the basic radical dry test.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 2,
@@ -156,6 +172,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Carefully drop a small portion of the dry salt sample into the test tube before adding any reagents.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 3,
@@ -163,6 +180,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Position the bunsen burner close to the tube and heat the sample gently with a low flame to observe the basic radicals.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 4,
@@ -170,6 +188,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Use the reset control to clear the current setup so the follow-up steps start with fresh glassware.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 5,
@@ -177,6 +196,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Place another clean test tube on the workbench to continue the basic radical investigation.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 6,
@@ -184,6 +204,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Add a second portion of the salt sample into the new tube to repeat the dry test.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 7,
@@ -191,6 +212,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Introduce sodium hydroxide into the test tube using the NaOH control to reveal basic radical behavior.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 8,
@@ -198,6 +220,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Warm the NaOH-treated tube on a low flame so the evolved fumes or residues can be observed.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 9,
@@ -205,6 +228,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Place both the glass rod and glass container on the workbench to prepare for the spotting transfer.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 10,
@@ -212,6 +236,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Add concentrated HCl into the glass container so the spotting acid is ready for transfer.",
     completed: false,
+    duration: "3 minutes",
   },
   {
     id: 11,
@@ -219,6 +244,7 @@ export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
     description:
       "Use the RINSE control to clean the glass rod, then tap MOVE so it hovers above the test tube for the final observation.",
     completed: false,
+    duration: "3 minutes",
   },
 ];
 

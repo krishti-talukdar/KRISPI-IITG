@@ -473,6 +473,10 @@ const FE_CL3_DROP_VOLUME_ML = 0.25;
 const FE_CL3_CHEMICAL_ID = "fecl3_solution";
 const FE_CL3_CHEMICAL_NAME = "FeCl₃ Solution";
 const FE_CL3_CHEMICAL_COLOR = "#ef4444";
+const SODA_EXTRACT_CHEMICAL_ID = "soda_extract";
+const SODA_EXTRACT_CHEMICAL_NAME = "Soda extract";
+const SODA_EXTRACT_CHEMICAL_COLOR = "#fde68a";
+const SODA_EXTRACT_DROP_VOLUME_ML = 0.25;
 
 const getDryTestWorkbenchPosition = (rect: DOMRect | null, id: string) => {
   if (!rect) return null;
@@ -620,6 +624,10 @@ function ChemicalEquilibriumVirtualLab({
   const [basicSecondBunsenTracked, setBasicSecondBunsenTracked] = useState(false);
   const [basicGlassSetupTracked, setBasicGlassSetupTracked] = useState(false);
   const [basicGlassAcidAddedTracked, setBasicGlassAcidAddedTracked] = useState(false);
+  const [bromideWetTestTubeTracked, setBromideWetTestTubeTracked] = useState(false);
+  const [bromideWetSaltAddedTracked, setBromideWetSaltAddedTracked] = useState(false);
+  const [bromideWetSodaExtractAddedTracked, setBromideWetSodaExtractAddedTracked] = useState(false);
+  const [bromideWetHNO3AddedTracked, setBromideWetHNO3AddedTracked] = useState(false);
   const [rodMoveAnimationConfig, setRodMoveAnimationConfig] = useState<RodMoveAnimationConfig | null>(null);
   const rodMoveAnimationTimerRef = useRef<number | null>(null);
   const cancelRodMoveAnimation = useCallback(() => {
@@ -809,7 +817,7 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const instructionMessage = isDryTestExperiment
-    ? dryTestInstructionMap[dryTestMode]
+    ? dryTestInstructionMap[resolvedDryTestMode]
     : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
@@ -1304,6 +1312,91 @@ function ChemicalEquilibriumVirtualLab({
     if (
       !experimentStarted ||
       !isDryTestExperiment ||
+      resolvedDryTestMode !== "wet" ||
+      (activeHalide ?? "").toLowerCase() !== "br"
+    ) {
+      return;
+    }
+
+    const testTube = equipmentPositions.find((pos) => pos.id === "test_tubes");
+    const hasTestTube = Boolean(testTube);
+    const hasSaltSample = Boolean(
+      testTube?.chemicals.some(
+        (chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+      ),
+    );
+    const hasSodaExtract = Boolean(
+      testTube?.chemicals.some(
+        (chemical) =>
+          chemical.id === SODA_EXTRACT_CHEMICAL_ID && (chemical.amount ?? 0) > 0,
+      ),
+    );
+    const hasDiluteHNO3 = Boolean(
+      testTube?.chemicals.some(
+        (chemical) =>
+          chemical.id === DILUTE_HNO3_CHEMICAL_ID && (chemical.amount ?? 0) > 0,
+      ),
+    );
+
+    if (currentStep === 1) {
+      if (hasTestTube && !bromideWetTestTubeTracked) {
+        setBromideWetTestTubeTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+      return;
+    }
+
+    if (currentStep === 2) {
+      if (hasSaltSample && !bromideWetSaltAddedTracked) {
+        setBromideWetSaltAddedTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Salt sample added. Moving to Step 3.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+      return;
+    }
+
+    if (currentStep === 3) {
+      if (hasSodaExtract && !bromideWetSodaExtractAddedTracked) {
+        setBromideWetSodaExtractAddedTracked(true);
+        onStepComplete();
+        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+        setToastMessage("Soda extract added. Moving to Step 4.");
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+      return;
+    }
+
+    if (currentStep === 4 && hasDiluteHNO3 && !bromideWetHNO3AddedTracked) {
+      setBromideWetHNO3AddedTracked(true);
+      onStepComplete();
+      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
+      setTimeout(() => setToastMessage(null), 3000);
+    }
+  }, [
+    activeHalide,
+    bromideWetHNO3AddedTracked,
+    bromideWetSaltAddedTracked,
+    bromideWetSodaExtractAddedTracked,
+    bromideWetTestTubeTracked,
+    currentStep,
+    equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    onStepComplete,
+    resolvedDryTestMode,
+    totalSteps,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
       (resolvedDryTestMode !== "acid" && resolvedDryTestMode !== "basic")
     ) {
       return;
@@ -1495,6 +1588,10 @@ function ChemicalEquilibriumVirtualLab({
     setBasicSecondBunsenTracked(false);
     setBasicGlassSetupTracked(false);
     setBasicGlassAcidAddedTracked(false);
+    setBromideWetTestTubeTracked(false);
+    setBromideWetSaltAddedTracked(false);
+    setBromideWetSodaExtractAddedTracked(false);
+    setBromideWetHNO3AddedTracked(false);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
   }, [stepNumber, workbenchResetTrigger]);
@@ -1990,6 +2087,7 @@ function ChemicalEquilibriumVirtualLab({
     const isMagnesiaAddition = lowerName.includes("magnesia");
     const isCaClAddition = lowerName.includes("cacl");
     const isFeCl3Addition = lowerName.includes("fecl");
+    const isSodaExtractAddition = lowerName.includes("soda") && lowerName.includes("extract");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -2256,6 +2354,55 @@ function ChemicalEquilibriumVirtualLab({
         if (addedFeCl3) {
           setFeCl3Added(true);
         }
+      }
+    }
+
+    if (requiresDropValidation && isSodaExtractAddition) {
+      const dropVolume = parsedAmount * SODA_EXTRACT_DROP_VOLUME_ML;
+      if (dropVolume > 0) {
+        setEquipmentPositions((prev) => {
+          let updated = false;
+          const next = prev.map((pos) => {
+            if (pos.id !== "test_tubes") {
+              return pos;
+            }
+
+            const hasSaltSample = pos.chemicals.some(
+              (chemical) =>
+                chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0,
+            );
+            if (!hasSaltSample) {
+              return pos;
+            }
+
+            updated = true;
+            const existing = pos.chemicals.find(
+              (chemical) => chemical.id === SODA_EXTRACT_CHEMICAL_ID,
+            );
+            const updatedChemicals = existing
+              ? pos.chemicals.map((chemical) =>
+                  chemical.id === SODA_EXTRACT_CHEMICAL_ID
+                    ? {
+                        ...chemical,
+                        amount: (chemical.amount ?? 0) + dropVolume,
+                      }
+                    : chemical,
+                )
+              : [
+                  ...pos.chemicals,
+                  {
+                    id: SODA_EXTRACT_CHEMICAL_ID,
+                    name: SODA_EXTRACT_CHEMICAL_NAME,
+                    color: SODA_EXTRACT_CHEMICAL_COLOR,
+                    amount: dropVolume,
+                    concentration: "Reagent",
+                  },
+                ];
+
+            return { ...pos, chemicals: updatedChemicals };
+          });
+          return updated ? next : prev;
+        });
       }
     }
 
