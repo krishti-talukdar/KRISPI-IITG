@@ -5333,59 +5333,70 @@ function ChemicalEquilibriumVirtualLab({
               <div className="rounded-2xl border border-slate-300 bg-gradient-to-br from-slate-50 via-white to-slate-50 p-5 shadow-lg">
                 <div className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Full Case Results</div>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
-                  {caseSummaryEntries.filter((entry) => {
-                    // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Dry Test for Acid Radicals
-                    if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
-                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Wet Test for Acid Radicals
-                    if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
-                      return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 2, 3, 4, 5, 6 for Chloride Check in Wet Test for Acid Radicals
-                    if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
-                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
-                    if (activeHalide === "S" && resolvedDryTestMode === "acid") {
-                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Wet Test for Acid Radicals
-                    if (activeHalide === "S" && resolvedDryTestMode === "wet") {
-                      return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 4, 5, 6 for Special Cases in Wet Test for Acid Radicals
-                    if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
-                      return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
-                    }
-                    // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
-                    if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
-                      if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
-                        return false;
+                  {caseSummaryEntries
+                    .filter((entry) => {
+                      if (activeHalide === "I" && resolvedDryTestMode === "acid") {
+                        return entry.label === "INFERENCE 1";
                       }
-                      if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
-                        return false;
+                      // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Dry Test for Acid Radicals
+                      if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
+                        return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
-                      if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
-                        return false;
+                      // Hide INFERENCE 3, 4, 5, 6 for Bromide check in Wet Test for Acid Radicals
+                      if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
+                        return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
-                      if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
-                        return false;
+                      // Hide INFERENCE 2, 3, 4, 5, 6 for Chloride Check in Wet Test for Acid Radicals
+                      if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
+                        return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
-                    }
-                    return true;
-                  }).map((entry) => (
-                    <div
-                      key={entry.label}
-                      className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
-                    >
-                      <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{entry.label}</div>
-                      <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed whitespace-pre-wrap`}>{entry.result}</p>
-                      <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
-                        {entry.indicator}
-                      </div>
-                    </div>
-                  ))}
+                      // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
+                      if (activeHalide === "S" && resolvedDryTestMode === "acid") {
+                        return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      }
+                      // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Wet Test for Acid Radicals
+                      if (activeHalide === "S" && resolvedDryTestMode === "wet") {
+                        return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      }
+                      // Hide INFERENCE 4, 5, 6 for Special Cases in Wet Test for Acid Radicals
+                      if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
+                        return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      }
+                      // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
+                      if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+                        if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
+                          return false;
+                        }
+                        if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
+                          return false;
+                        }
+                        if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
+                          return false;
+                        }
+                        if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
+                          return false;
+                        }
+                      }
+                      return true;
+                    })
+                    .map((entry) => {
+                      const displayLabel = activeHalide === "I" && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1"
+                        ? "Inference"
+                        : entry.label;
+
+                      return (
+                        <div
+                          key={entry.label}
+                          className={`rounded-2xl border ${entry.borderClass} bg-gradient-to-br ${entry.bgClass} p-4 shadow-sm`}
+                        >
+                          <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{displayLabel}</div>
+                          <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed whitespace-pre-wrap`}>{entry.result}</p>
+                          <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
+                            {entry.indicator}
+                          </div>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
 
