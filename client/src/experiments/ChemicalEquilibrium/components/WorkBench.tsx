@@ -140,7 +140,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         });
       }, 2000);
 
-      return () => clearInterval(tempInterval);
+      return () => window.clearInterval(tempInterval);
     }
   }, [isRunning]);
 
@@ -186,9 +186,9 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const dryStepLabel = `Step ${currentGuidedStep}${totalGuidedSteps ? ` of ${totalGuidedSteps}` : ""}`;
 
   const workbenchRef = useRef<HTMLDivElement>(null);
-  const heatIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const heatTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const flameFadeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const heatIntervalRef = useRef<number | null>(null);
+  const heatTimerRef = useRef<number | null>(null);
+  const flameFadeRef = useRef<number | null>(null);
   const [isBunsenHeating, setIsBunsenHeating] = useState(false);
   const [isBunsenLit, setIsBunsenLit] = useState(false);
   const [heatCharge, setHeatCharge] = useState(0);
@@ -391,7 +391,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       }, 120);
 
       if (heatTimerRef.current) {
-        clearTimeout(heatTimerRef.current);
+        window.clearTimeout(heatTimerRef.current);
       }
       heatTimerRef.current = window.setTimeout(() => {
         setIsBunsenHeating(false);
@@ -400,11 +400,11 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       setIsBunsenLit(true);
     } else {
       if (heatIntervalRef.current) {
-        clearInterval(heatIntervalRef.current);
+        window.clearInterval(heatIntervalRef.current);
         heatIntervalRef.current = null;
       }
       if (heatTimerRef.current) {
-        clearTimeout(heatTimerRef.current);
+        window.clearTimeout(heatTimerRef.current);
         heatTimerRef.current = null;
       }
       setHeatCharge(0);
@@ -412,11 +412,11 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
     return () => {
       if (heatIntervalRef.current) {
-        clearInterval(heatIntervalRef.current);
+        window.clearInterval(heatIntervalRef.current);
         heatIntervalRef.current = null;
       }
       if (heatTimerRef.current) {
-        clearTimeout(heatTimerRef.current);
+        window.clearTimeout(heatTimerRef.current);
         heatTimerRef.current = null;
       }
     };
@@ -425,7 +425,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   useEffect(() => {
     if (isBunsenHeating) {
       if (flameFadeRef.current) {
-        clearTimeout(flameFadeRef.current);
+        window.clearTimeout(flameFadeRef.current);
         flameFadeRef.current = null;
       }
       return;
@@ -442,7 +442,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
     return () => {
       if (flameFadeRef.current) {
-        clearTimeout(flameFadeRef.current);
+        window.clearTimeout(flameFadeRef.current);
         flameFadeRef.current = null;
       }
     };
