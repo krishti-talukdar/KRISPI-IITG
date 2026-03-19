@@ -265,6 +265,13 @@ export default function ChemicalEquilibriumApp({
     "Soda extract",
     "Dilute HNO₃",
     "Dilute HCl",
+    "Dil. H₂SO₄",
+    "Dil. H2SO4",
+    "Dilute H₂SO₄",
+    "Dilute H2SO4",
+    "Glass Rod",
+    "Glass rod",
+    "Glass container",
   ];
 
   let dryTestEquipmentToUse = extraDryAcidEquipment.length
