@@ -2200,6 +2200,7 @@ function ChemicalEquilibriumVirtualLab({
     const isFeCl3Addition = lowerName.includes("fecl");
     const isSodaExtractAddition = lowerName.includes("soda") && lowerName.includes("extract");
     const isAgNO3Addition = lowerName.includes("agno3") || lowerName.includes("silver nitrate") || (lowerName.includes("agno") && lowerName.includes("silver"));
+    const isDiluteHNO3Addition = lowerName.includes("dil") && lowerName.includes("hno");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -2564,22 +2565,44 @@ function ChemicalEquilibriumVirtualLab({
       });
     }
 
+    const shouldAdvanceAfterDiluteHNO3 =
+      requiresDropValidation &&
+      isDiluteHNO3Addition &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "wet" &&
+      (activeHalide ?? "").toLowerCase() === "br" &&
+      currentStep === 4 &&
+      !bromideWetHNO3AddedTracked;
+
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
       setSodiumNitroprussideAdded(true);
       setSodiumNitroprussideUsed(true);
     }
 
     handleEquipmentAddButton(addDialogEquipment.id);
-    setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
+
+    if (shouldAdvanceAfterDiluteHNO3) {
+      setBromideWetHNO3AddedTracked(true);
+      onStepComplete();
+      setCurrentStep(5);
+      setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
+    } else {
+      setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
+    }
     setTimeout(() => setToastMessage(null), 2500);
     handleEquipmentAddDialogClose();
   }, [
+    activeHalide,
     addDialogAmount,
     addDialogEquipment,
+    bromideWetHNO3AddedTracked,
+    currentStep,
     handleEquipmentAddButton,
     handleEquipmentAddDialogClose,
     isDryTestExperiment,
+    onStepComplete,
     resolvedDryTestMode,
+    setCurrentStep,
     setEquipmentPositions,
     setBaClUsed,
     setSodiumNitroprussideAdded,
@@ -2590,6 +2613,7 @@ function ChemicalEquilibriumVirtualLab({
     setCaClUsed,
     setFeCl3Added,
     setFeCl3Used,
+    setBromideWetHNO3AddedTracked,
   ]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
