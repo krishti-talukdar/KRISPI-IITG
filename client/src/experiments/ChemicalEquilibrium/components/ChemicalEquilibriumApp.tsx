@@ -333,8 +333,6 @@ export default function ChemicalEquilibriumApp({
       "Test Tubes",
       "Salt Sample",
       "Bunsen Burner (virtual heat source)",
-      "Glass Rod",
-      "Glass container",
       "Concentrated H₂SO₄",
     ];
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
@@ -346,8 +344,6 @@ export default function ChemicalEquilibriumApp({
       "Test Tubes",
       "Salt Sample",
       "Concentrated H₂SO₄",
-      "Glass Rod",
-      "Glass container",
       "Bunsen Burner (virtual heat source)",
     ];
 
