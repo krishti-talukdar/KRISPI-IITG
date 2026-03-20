@@ -664,6 +664,7 @@ function ChemicalEquilibriumVirtualLab({
   const [iodideWetHeatingTriggered, setIodideWetHeatingTriggered] = useState(false);
   const [iodideWetHeatingCount, setIodideWetHeatingCount] = useState(0);
   const [chlorideHeatingCount, setChlorideHeatingCount] = useState(0);
+  const chlorideDryHeatingHandledRef = useRef(false);
   const [chlorideWetHeatingTriggered, setChlorideWetHeatingTriggered] = useState(false);
   const [chlorideWetHeatingCount, setChlorideWetHeatingCount] = useState(0);
   const [sulfideWetHeatingTriggered, setSulfideWetHeatingTriggered] = useState(false);
@@ -3190,14 +3191,22 @@ function ChemicalEquilibriumVirtualLab({
         isDryTestExperiment &&
         activeHalide === "Cl" &&
         resolvedDryTestMode === "acid" &&
-        activeFlameTest !== "Am"
+        activeFlameTest !== "Am" &&
+        !chlorideDryHeatingHandledRef.current
       ) {
+        chlorideDryHeatingHandledRef.current = true;
         setChlorideHeatingCount((prev) => {
           const newCount = prev + 1;
           if (newCount === 1) {
             setCaseOneResult(
               "Colourless gas vapours produced",
             );
+            if (currentStep === 5) {
+              setCurrentStep(6);
+              onStepComplete();
+              setToastMessage("Start heating pressed. Moving to Step 6...");
+              setTimeout(() => setToastMessage(null), 3000);
+            }
           } else if (newCount === 2) {
             setCaseThreeResult(
               "Deep red colour vapour is produced , therefore Cl⁻ is present",
@@ -3352,6 +3361,7 @@ function ChemicalEquilibriumVirtualLab({
       }
 
       if (!heating) {
+        chlorideDryHeatingHandledRef.current = false;
         setDilH2SO4HeatingTriggered(false);
       }
     },
@@ -4200,6 +4210,7 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetSaltAddedTracked(false);
     setIodideWetSodaExtractAddedTracked(false);
     setChlorideHeatingCount(0);
+    chlorideDryHeatingHandledRef.current = false;
     setChlorideWetHeatingTriggered(false);
     setChlorideWetHeatingCount(0);
     setSulfideWetHeatingTriggered(false);
@@ -4273,6 +4284,7 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetSaltAddedTracked(false);
     setIodideWetSodaExtractAddedTracked(false);
     setChlorideHeatingCount(0);
+    chlorideDryHeatingHandledRef.current = false;
     setChlorideWetHeatingTriggered(false);
     setChlorideWetHeatingCount(0);
     setSulfideWetHeatingTriggered(false);
