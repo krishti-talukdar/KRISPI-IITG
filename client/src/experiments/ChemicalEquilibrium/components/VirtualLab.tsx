@@ -664,6 +664,7 @@ function ChemicalEquilibriumVirtualLab({
   const [iodideWetHeatingTriggered, setIodideWetHeatingTriggered] = useState(false);
   const [iodideWetHeatingCount, setIodideWetHeatingCount] = useState(0);
   const [chlorideHeatingCount, setChlorideHeatingCount] = useState(0);
+  const chlorideDryHeatingHandledRef = useRef(false);
   const [chlorideWetHeatingTriggered, setChlorideWetHeatingTriggered] = useState(false);
   const [chlorideWetHeatingCount, setChlorideWetHeatingCount] = useState(0);
   const [sulfideWetHeatingTriggered, setSulfideWetHeatingTriggered] = useState(false);
@@ -1399,7 +1400,7 @@ function ChemicalEquilibriumVirtualLab({
     if (currentStep === 4 && hasDiluteHNO3 && !bromideWetHNO3AddedTracked) {
       setBromideWetHNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setCurrentStep(5);
       setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1408,7 +1409,7 @@ function ChemicalEquilibriumVirtualLab({
     if (currentStep === 5 && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
       setBromideWetAgNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setCurrentStep(6);
       setToastMessage("AgNO₃ added. Moving to Step 6.");
       setTimeout(() => setToastMessage(null), 3000);
     }
@@ -2200,6 +2201,7 @@ function ChemicalEquilibriumVirtualLab({
     const isFeCl3Addition = lowerName.includes("fecl");
     const isSodaExtractAddition = lowerName.includes("soda") && lowerName.includes("extract");
     const isAgNO3Addition = lowerName.includes("agno3") || lowerName.includes("silver nitrate") || (lowerName.includes("agno") && lowerName.includes("silver"));
+    const isDiluteHNO3Addition = lowerName.includes("dil") && lowerName.includes("hno");
 
     if (requiresDropValidation && isBaClAddition) {
       const dropVolume = parsedAmount * BA_CL_DROP_VOLUME_ML;
@@ -2564,32 +2566,70 @@ function ChemicalEquilibriumVirtualLab({
       });
     }
 
+    const shouldAdvanceAfterDiluteHNO3 =
+      requiresDropValidation &&
+      isDiluteHNO3Addition &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "wet" &&
+      (activeHalide ?? "").toLowerCase() === "br" &&
+      currentStep === 4 &&
+      !bromideWetHNO3AddedTracked;
+
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
       setSodiumNitroprussideAdded(true);
       setSodiumNitroprussideUsed(true);
     }
 
     handleEquipmentAddButton(addDialogEquipment.id);
-    setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
+
+    if (shouldAdvanceAfterDiluteHNO3) {
+      setBromideWetHNO3AddedTracked(true);
+      onStepComplete();
+      setCurrentStep(5);
+      setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
+    } else if (
+      requiresDropValidation &&
+      isAgNO3Addition &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "wet" &&
+      (activeHalide ?? "").toLowerCase() === "br" &&
+      currentStep === 5 &&
+      bromideWetHNO3AddedTracked &&
+      !bromideWetAgNO3AddedTracked
+    ) {
+      setBromideWetAgNO3AddedTracked(true);
+      onStepComplete();
+      setCurrentStep(6);
+      setToastMessage("AgNO₃ added. Moving to Step 6.");
+    } else {
+      setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
+    }
     setTimeout(() => setToastMessage(null), 2500);
     handleEquipmentAddDialogClose();
   }, [
+    activeHalide,
     addDialogAmount,
     addDialogEquipment,
+    bromideWetHNO3AddedTracked,
+    currentStep,
     handleEquipmentAddButton,
     handleEquipmentAddDialogClose,
     isDryTestExperiment,
+    onStepComplete,
     resolvedDryTestMode,
+    setCurrentStep,
     setEquipmentPositions,
     setBaClUsed,
     setSodiumNitroprussideAdded,
     setSodiumNitroprussideUsed,
     setMagnesiaAdded,
+    bromideWetAgNO3AddedTracked,
     setMagnesiaUsed,
     setCaClAdded,
     setCaClUsed,
     setFeCl3Added,
     setFeCl3Used,
+    setBromideWetHNO3AddedTracked,
   ]);
 
   const handleEquipmentRemove = useCallback((id: string) => {
@@ -3151,14 +3191,22 @@ function ChemicalEquilibriumVirtualLab({
         isDryTestExperiment &&
         activeHalide === "Cl" &&
         resolvedDryTestMode === "acid" &&
-        activeFlameTest !== "Am"
+        activeFlameTest !== "Am" &&
+        !chlorideDryHeatingHandledRef.current
       ) {
+        chlorideDryHeatingHandledRef.current = true;
         setChlorideHeatingCount((prev) => {
           const newCount = prev + 1;
           if (newCount === 1) {
             setCaseOneResult(
               "Colourless gas vapours produced",
             );
+            if (currentStep === 5) {
+              setCurrentStep(6);
+              onStepComplete();
+              setToastMessage("Start heating pressed. Moving to Step 6...");
+              setTimeout(() => setToastMessage(null), 3000);
+            }
           } else if (newCount === 2) {
             setCaseThreeResult(
               "Deep red colour vapour is produced , therefore Cl⁻ is present",
@@ -3313,6 +3361,7 @@ function ChemicalEquilibriumVirtualLab({
       }
 
       if (!heating) {
+        chlorideDryHeatingHandledRef.current = false;
         setDilH2SO4HeatingTriggered(false);
       }
     },
@@ -4161,6 +4210,7 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetSaltAddedTracked(false);
     setIodideWetSodaExtractAddedTracked(false);
     setChlorideHeatingCount(0);
+    chlorideDryHeatingHandledRef.current = false;
     setChlorideWetHeatingTriggered(false);
     setChlorideWetHeatingCount(0);
     setSulfideWetHeatingTriggered(false);
@@ -4234,6 +4284,7 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetSaltAddedTracked(false);
     setIodideWetSodaExtractAddedTracked(false);
     setChlorideHeatingCount(0);
+    chlorideDryHeatingHandledRef.current = false;
     setChlorideWetHeatingTriggered(false);
     setChlorideWetHeatingCount(0);
     setSulfideWetHeatingTriggered(false);

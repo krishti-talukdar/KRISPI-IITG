@@ -200,7 +200,11 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   }, [workbenchResetTrigger]);
 
   useEffect(() => {
-    onHeatingStateChange?.(isBunsenHeating);
+    const timeout = window.setTimeout(() => {
+      onHeatingStateChange?.(isBunsenHeating);
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
   }, [isBunsenHeating, onHeatingStateChange]);
   const bunsenBurnerBaseId = "bunsen-burner-virtual-heat-source";
   const bunsenPosition =

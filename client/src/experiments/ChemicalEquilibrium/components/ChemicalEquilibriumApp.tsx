@@ -127,6 +127,12 @@ const CHLORIDE_EXCLUDE_EQUIPMENT = [
   "Acidified KMnO4",
   "Acetic Acid",
   "Acetic acid",
+  "Glass Rod",
+  "Glass container",
+  "Dil. H₂SO₄",
+  "Dil. H2SO4",
+  "Dilute H₂SO₄",
+  "Dilute H2SO4",
 ];
 
 const HALIDE_SECTIONS = [
