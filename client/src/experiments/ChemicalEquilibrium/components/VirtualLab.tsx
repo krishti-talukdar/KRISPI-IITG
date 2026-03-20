@@ -1399,13 +1399,13 @@ function ChemicalEquilibriumVirtualLab({
     if (currentStep === 4 && hasDiluteHNO3 && !bromideWetHNO3AddedTracked) {
       setBromideWetHNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setCurrentStep(5);
       setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
     }
 
-    if (currentStep === 5 && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
+    if (currentStep === 5 && bromideWetHNO3AddedTracked && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
       setBromideWetAgNO3AddedTracked(true);
       onStepComplete();
       setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
