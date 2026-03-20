@@ -1917,6 +1917,10 @@ function ChemicalEquilibriumVirtualLab({
             }
           : { x: baseX, y: baseY };
 
+      let pendingToastMessage: string | null = null;
+      let shouldClearToastMessage = false;
+      let shouldStartStirringSequence = false;
+
       pushHistorySnapshot();
       setEquipmentPositions((prev) => {
         const existing = prev.find((pos) => pos.id === id);
@@ -1924,11 +1928,11 @@ function ChemicalEquilibriumVirtualLab({
           // Auto-alignment logic for Chemical Equilibrium
           if (id === "beaker_hot_water") {
             if (currentStep === 4) {
-              setToastMessage("Drop the test tube into the hot water beaker!");
+              pendingToastMessage = "Drop the test tube into the hot water beaker!";
             }
           } else if (id === "beaker_cold_water") {
             if (currentStep === 5) {
-              setToastMessage("Drop the test tube into the cold water beaker!");
+              pendingToastMessage = "Drop the test tube into the cold water beaker!";
             }
 
             const testTube = prev.find((pos) => pos.id === "test_tubes");
@@ -1959,7 +1963,7 @@ function ChemicalEquilibriumVirtualLab({
               );
               if (distance < 200) {
                 if (currentStep === 4) {
-                  setToastMessage(null);
+                  shouldClearToastMessage = true;
                 }
                 return prev.map((pos) =>
                   pos.id === id
@@ -1979,7 +1983,7 @@ function ChemicalEquilibriumVirtualLab({
                   Math.pow(y - coldWaterBeaker.y, 2),
               );
               if (distance < 200) {
-                setToastMessage(null);
+                shouldClearToastMessage = true;
                 return prev.map((pos) =>
                   pos.id === id
                     ? {
@@ -2000,41 +2004,54 @@ function ChemicalEquilibriumVirtualLab({
 
         // Stirring rod automation for Chemical Equilibrium
         if (id === "stirring_rod" && distilledWaterAdded) {
-          setStirrerActive(true);
-          setToastMessage("Stirrer activated! Mixing solution...");
-          setTimeout(() => setToastMessage(null), 3000);
-
-          setTimeout(() => {
-            setEquipmentPositions((prev) =>
-              prev.filter((pos) => pos.id !== "stirring_rod"),
-            );
-            setToastMessage("Stirrer removed - mixing complete!");
-            setTimeout(() => setToastMessage(null), 3000);
-          }, 2000);
-
-          setTimeout(() => {
-            setColorTransition("transitioning");
-            setToastMessage("Solution slowly turning pink...");
-            setTimeout(() => setToastMessage(null), 3000);
-
-            setTimeout(() => {
-              setColorTransition("pink");
-              setToastMessage("Pink hydrated cobalt complex formed!");
-              setTimeout(() => setToastMessage(null), 4000);
-
-              setTimeout(() => {
-                onStepComplete();
-                setCurrentStep(currentStep + 1);
-                setToastMessage("Step completed! Moving to next step...");
-                setTimeout(() => setToastMessage(null), 3000);
-              }, 1000);
-            }, 2000);
-          }, 1000);
+          shouldStartStirringSequence = true;
         }
 
         const snappedDrop = getSnappedPosition(dropX, dropY);
         return [...prev, { id, x: snappedDrop.x, y: snappedDrop.y, chemicals: [] }];
       });
+
+      if (shouldClearToastMessage) {
+        setToastMessage(null);
+      }
+
+      if (pendingToastMessage) {
+        setToastMessage(pendingToastMessage);
+        setTimeout(() => setToastMessage(null), 3000);
+      }
+
+      if (shouldStartStirringSequence) {
+        setStirrerActive(true);
+        setToastMessage("Stirrer activated! Mixing solution...");
+        setTimeout(() => setToastMessage(null), 3000);
+
+        setTimeout(() => {
+          setEquipmentPositions((prev) =>
+            prev.filter((pos) => pos.id !== "stirring_rod"),
+          );
+          setToastMessage("Stirrer removed - mixing complete!");
+          setTimeout(() => setToastMessage(null), 3000);
+        }, 2000);
+
+        setTimeout(() => {
+          setColorTransition("transitioning");
+          setToastMessage("Solution slowly turning pink...");
+          setTimeout(() => setToastMessage(null), 3000);
+
+          setTimeout(() => {
+            setColorTransition("pink");
+            setToastMessage("Pink hydrated cobalt complex formed!");
+            setTimeout(() => setToastMessage(null), 4000);
+
+            setTimeout(() => {
+              onStepComplete();
+              setCurrentStep(currentStep + 1);
+              setToastMessage("Step completed! Moving to next step...");
+              setTimeout(() => setToastMessage(null), 3000);
+            }, 1000);
+          }, 2000);
+        }, 1000);
+      }
     },
     [currentStep, distilledWaterAdded, experimentStarted, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode, testTubePlacementTracked, totalSteps],
   );
@@ -3131,35 +3148,34 @@ function ChemicalEquilibriumVirtualLab({
         resolvedDryTestMode === "acid" &&
         activeFlameTest !== "Am"
       ) {
-        setSpecialCasesHeatingCount((prev) => {
-          const newCount = prev + 1;
-          if (newCount === 1) {
-            setCaseOneResult(
-              "Rapid effervescence of colourless and odourless gas , therefore CO₃²⁻ is present",
-            );
-          } else if (newCount === 2) {
-            setCaseTwoResult(
-              "Reddish-Brown vapour is produced in the cold condition, therefore NO₂⁻ is present",
-            );
-          } else if (newCount === 3) {
-            setCaseThreeResult(
-              "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO₃⁻ is present",
-            );
-          } else if (newCount === 4) {
-            setCaseFourResult(
-              "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO₃²⁻ is present",
-            );
-          } else if (newCount === 5) {
-            setCaseFiveResult(
-              "Reddish-brown fumes evolve and solution turns blue in colour , therefore NO₃⁻ is present",
-            );
-          } else if (newCount === 6) {
-            setCaseSixResult(
-              "Colourless and odourless gas is evolved , on burning the gas at the mouth of the test tube , a blue flame is obtained , therefore C₂O₄²⁻ is present",
-            );
-          }
-          return newCount;
-        });
+        const nextCount = specialCasesHeatingCount + 1;
+        setSpecialCasesHeatingCount(nextCount);
+
+        if (nextCount === 1) {
+          setCaseOneResult(
+            "Rapid effervescence of colourless and odourless gas , therefore CO₃²⁻ is present",
+          );
+        } else if (nextCount === 2) {
+          setCaseTwoResult(
+            "Reddish-Brown vapour is produced in the cold condition, therefore NO₂⁻ is present",
+          );
+        } else if (nextCount === 3) {
+          setCaseThreeResult(
+            "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO₃⁻ is present",
+          );
+        } else if (nextCount === 4) {
+          setCaseFourResult(
+            "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO₃²⁻ is present",
+          );
+        } else if (nextCount === 5) {
+          setCaseFiveResult(
+            "Reddish-brown fumes evolve and solution turns blue in colour , therefore NO₃⁻ is present",
+          );
+        } else if (nextCount === 6) {
+          setCaseSixResult(
+            "Colourless and odourless gas is evolved , on burning the gas at the mouth of the test tube , a blue flame is obtained , therefore C₂O₄²⁻ is present",
+          );
+        }
       }
 
       if (
@@ -3202,25 +3218,22 @@ function ChemicalEquilibriumVirtualLab({
         !chlorideDryHeatingHandledRef.current
       ) {
         chlorideDryHeatingHandledRef.current = true;
-        setChlorideHeatingCount((prev) => {
-          const newCount = prev + 1;
-          if (newCount === 1) {
-            setCaseOneResult(
-              "Colourless gas vapours produced",
-            );
-            if (currentStep === 5) {
-              setCurrentStep(6);
-              onStepComplete();
-              setToastMessage("Start heating pressed. Moving to Step 6...");
-              setTimeout(() => setToastMessage(null), 3000);
-            }
-          } else if (newCount === 2) {
-            setCaseThreeResult(
-              "Deep red colour vapour is produced , therefore Cl⁻ is present",
-            );
+        const nextCount = chlorideHeatingCount + 1;
+        setChlorideHeatingCount(nextCount);
+
+        if (nextCount === 1) {
+          setCaseOneResult("Colourless gas vapours produced");
+          if (currentStep === 5) {
+            setCurrentStep(6);
+            onStepComplete();
+            setToastMessage("Start heating pressed. Moving to Step 6...");
+            setTimeout(() => setToastMessage(null), 3000);
           }
-          return newCount;
-        });
+        } else if (nextCount === 2) {
+          setCaseThreeResult(
+            "Deep red colour vapour is produced , therefore Cl⁻ is present",
+          );
+        }
       }
 
       if (
@@ -3229,9 +3242,7 @@ function ChemicalEquilibriumVirtualLab({
         activeHalide === "S" &&
         resolvedDryTestMode === "acid"
       ) {
-        setCaseOneResult(
-          "Colourless gas with smell of rotten egg",
-        );
+        setCaseOneResult("Colourless gas with smell of rotten egg");
       }
 
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wet") {
@@ -3245,126 +3256,107 @@ function ChemicalEquilibriumVirtualLab({
         }
 
         if (activeHalide === "Br") {
-          setBromideWetHeatingCount((prev) => {
-            const newCount = prev + 1;
-            if (newCount === 1) {
-              setBromideWetHeatingTriggered(true);
-              setCaseTwoResult(DEFAULT_CASE_RESULT);
-              setCaseOneResult(
-                "pale yellow Precipitation insoluble in HNO₃ but sparingly soluble in NH₄OH , therefore Br⁻ is present",
-              );
-            } else if (newCount === 2) {
-              setCaseTwoResult(
-                "Organic layer becomes orange-brown in colour , therefore Br⁻ is present",
-              );
-            }
-            return newCount;
-          });
+          const nextCount = bromideWetHeatingCount + 1;
+          setBromideWetHeatingCount(nextCount);
+          if (nextCount === 1) {
+            setBromideWetHeatingTriggered(true);
+            setCaseTwoResult(DEFAULT_CASE_RESULT);
+            setCaseOneResult(
+              "pale yellow Precipitation insoluble in HNO₃ but sparingly soluble in NH₄OH , therefore Br⁻ is present",
+            );
+          } else if (nextCount === 2) {
+            setCaseTwoResult(
+              "Organic layer becomes orange-brown in colour , therefore Br⁻ is present",
+            );
+          }
         }
 
         if (activeHalide === "I") {
-          setIodideWetHeatingCount((prev) => {
-            const newCount = prev + 1;
-            if (newCount === 1) {
-              setIodideWetHeatingTriggered(true);
-              setCaseOneResult(
-                "Yellow coloured precipitate insoluble in HNO3 and NH4OH is formed , therefore I⁻ is present",
-              );
-            } else if (newCount === 2) {
-              setCaseTwoResult(
-                "Organic layer turns violet in colour",
-              );
-            }
-            return newCount;
-          });
+          const nextCount = iodideWetHeatingCount + 1;
+          setIodideWetHeatingCount(nextCount);
+          if (nextCount === 1) {
+            setIodideWetHeatingTriggered(true);
+            setCaseOneResult(
+              "Yellow coloured precipitate insoluble in HNO3 and NH4OH is formed , therefore I⁻ is present",
+            );
+          } else if (nextCount === 2) {
+            setCaseTwoResult("Organic layer turns violet in colour");
+          }
         }
 
         if (activeHalide === "Cl") {
-          setChlorideWetHeatingCount((prev) => {
-            const newCount = prev + 1;
-            if (newCount === 1) {
-              setChlorideWetHeatingTriggered(true);
-              setCaseOneResult(
-                "Curdy white precipitate insoluble in HNO₃ but soluble in NH₄OH",
-              );
-            }
-            return newCount;
-          });
+          const nextCount = chlorideWetHeatingCount + 1;
+          setChlorideWetHeatingCount(nextCount);
+          if (nextCount === 1) {
+            setChlorideWetHeatingTriggered(true);
+            setCaseOneResult(
+              "Curdy white precipitate insoluble in HNO₃ but soluble in NH₄OH",
+            );
+          }
         }
 
         if (activeHalide === "S") {
-          setSulfideWetHeatingCount((prev) => {
-            const newCount = prev + 1;
-            if (newCount === 1) {
-              setSulfideWetHeatingTriggered(true);
-              setCaseOneResult(
-                "Purple colouration , therefore S²⁻ is present",
-              );
-              // Add light purple color chemical to test tube
-              setEquipmentPositions((prevPositions) => {
-                return prevPositions.map((pos) => {
-                  if (pos.id === "test_tubes") {
-                    const existingChemicals = [...pos.chemicals];
-                    // Add a light purple color chemical
-                    existingChemicals.push({
-                      id: "sulfide_purple_color",
-                      name: "Light Purple Solution",
-                      color: "#d8a7ff",
-                      amount: 10,
-                      concentration: "Precipitate",
-                    });
-                    return { ...pos, chemicals: existingChemicals };
-                  }
-                  return pos;
-                });
-              });
-            }
-            return newCount;
-          });
+          const nextCount = sulfideWetHeatingCount + 1;
+          setSulfideWetHeatingCount(nextCount);
+          if (nextCount === 1) {
+            setSulfideWetHeatingTriggered(true);
+            setCaseOneResult("Purple colouration , therefore S²⁻ is present");
+            setEquipmentPositions((prevPositions) =>
+              prevPositions.map((pos) => {
+                if (pos.id === "test_tubes") {
+                  const existingChemicals = [...pos.chemicals];
+                  existingChemicals.push({
+                    id: "sulfide_purple_color",
+                    name: "Light Purple Solution",
+                    color: "#d8a7ff",
+                    amount: 10,
+                    concentration: "Precipitate",
+                  });
+                  return { ...pos, chemicals: existingChemicals };
+                }
+                return pos;
+              }),
+            );
+          }
         }
 
         if ((activeHalide ?? "").toLowerCase() === "sc") {
-          setSpecialCasesWetHeatingCount((prev) => {
-            const newCount = prev + 1;
-            if (newCount === 1) {
-              setSpecialCasesWetHeatingTriggered(true);
-              setCaseOneResult(
-                "Heavy white precipitate is formed , therefore SO4^2- is present",
-              );
-            } else if (newCount === 2) {
-              setCaseTwoResult(
-                "White crystalline precipitate appears , therefore PO₄³⁻ is present",
-              );
-            } else if (newCount === 3) {
-              setCaseThreeResult(
-                "A green colouration is obtained , therefore SO₃²⁻  is present",
-              );
-            }
-            return newCount;
-          });
+          const nextCount = specialCasesWetHeatingCount + 1;
+          setSpecialCasesWetHeatingCount(nextCount);
+          if (nextCount === 1) {
+            setSpecialCasesWetHeatingTriggered(true);
+            setCaseOneResult(
+              "Heavy white precipitate is formed , therefore SO4^2- is present",
+            );
+          } else if (nextCount === 2) {
+            setCaseTwoResult(
+              "White crystalline precipitate appears , therefore PO₄³⁻ is present",
+            );
+          } else if (nextCount === 3) {
+            setCaseThreeResult(
+              "A green colouration is obtained , therefore SO₃²⁻  is present",
+            );
+          }
         }
       }
 
-      // For Wet Test for Basic Radicals (wetBasic mode), set inference results based on heating count
       if (heating && isDryTestExperiment && resolvedDryTestMode === "wetBasic") {
-        setWetBasicHeatingCount((prev) => {
-          const newCount = prev + 1;
-          if (newCount === 1) {
-            setWetBasicHeatingTriggered(true);
-            setCaseOneResult("Form insoluble chloride with dilute HCL , Pb²⁺ confirmed ");
-          } else if (newCount === 2) {
-            setCaseTwoResult("Form insoluble sulphide with H₂S in presence of dilute HCL,  Pb²⁺,Cu²⁺, As³⁺ are confirmed");
-          } else if (newCount === 3) {
-            setCaseThreeResult("In presence of NH₄Cl form insoluble ,Fe³⁺, Al³⁺, and Mn²⁺ are confirmed");
-          } else if (newCount === 4) {
-            setCaseFourResult("Form insoluble sulphide in presence of NH₄OH medium, Zn²⁺, Mn²⁺, Co²⁺& Ni²⁺ are confirmed");
-          } else if (newCount === 5) {
-            setCaseFiveResult("Form insoluble Carbonate in  NH₄OH medium in presence of NH₄Cl, Ba²⁺, Sr²⁺& Ca²⁺ are confirmed ");
-          } else if (newCount === 6) {
-            setCaseSixResult("Mg²⁺ forms insoluble MgNH₄PO₄, Mg²⁺ confirmed ");
-          }
-          return newCount;
-        });
+        const nextCount = wetBasicHeatingCount + 1;
+        setWetBasicHeatingCount(nextCount);
+        if (nextCount === 1) {
+          setWetBasicHeatingTriggered(true);
+          setCaseOneResult("Form insoluble chloride with dilute HCL , Pb²⁺ confirmed ");
+        } else if (nextCount === 2) {
+          setCaseTwoResult("Form insoluble sulphide with H₂S in presence of dilute HCL,  Pb²⁺,Cu²⁺, As³⁺ are confirmed");
+        } else if (nextCount === 3) {
+          setCaseThreeResult("In presence of NH₄Cl form insoluble ,Fe³⁺, Al³⁺, and Mn²⁺ are confirmed");
+        } else if (nextCount === 4) {
+          setCaseFourResult("Form insoluble sulphide in presence of NH₄OH medium, Zn²⁺, Mn²⁺, Co²⁺& Ni²⁺ are confirmed");
+        } else if (nextCount === 5) {
+          setCaseFiveResult("Form insoluble Carbonate in  NH₄OH medium in presence of NH₄Cl, Ba²⁺, Sr²⁺& Ca²⁺ are confirmed ");
+        } else if (nextCount === 6) {
+          setCaseSixResult("Mg²⁺ forms insoluble MgNH₄PO₄, Mg²⁺ confirmed ");
+        }
       }
 
       if (!heating) {
@@ -3372,7 +3364,24 @@ function ChemicalEquilibriumVirtualLab({
         setDilH2SO4HeatingTriggered(false);
       }
     },
-    [experiment.id, resolvedDryTestMode, isDryTestExperiment, testTubeState, activeHalide, activeFlameTest, currentStep, onStepComplete],
+    [
+      experiment.id,
+      resolvedDryTestMode,
+      isDryTestExperiment,
+      testTubeState,
+      activeHalide,
+      activeFlameTest,
+      currentStep,
+      onStepComplete,
+      specialCasesHeatingCount,
+      chlorideHeatingCount,
+      bromideWetHeatingCount,
+      iodideWetHeatingCount,
+      chlorideWetHeatingCount,
+      sulfideWetHeatingCount,
+      specialCasesWetHeatingCount,
+      wetBasicHeatingCount,
+    ],
   );
 
   useEffect(() => {
