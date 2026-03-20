@@ -127,6 +127,8 @@ const CHLORIDE_EXCLUDE_EQUIPMENT = [
   "Acidified KMnO4",
   "Acetic Acid",
   "Acetic acid",
+  "Glass Rod",
+  "Glass container",
 ];
 
 const HALIDE_SECTIONS = [
