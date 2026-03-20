@@ -549,16 +549,19 @@ export default function ChemicalEquilibriumApp({
     ? FLAME_TEST_SECTIONS.filter((section) => section.symbol !== "Ch" && section.symbol !== "Co" && section.symbol !== "BB")
     : FLAME_TEST_SECTIONS;
 
+  const limitSaltAnalysisProgressSteps = (steps: ExperimentStep[]) =>
+    experiment.id === ChemicalEquilibriumData.id ? steps.slice(0, 6) : steps;
+
   const activeStepDetails =
     isDryTestExperiment && activeDryTestMode === "basic"
-      ? BASIC_DRY_TEST_STEPS
+      ? limitSaltAnalysisProgressSteps(BASIC_DRY_TEST_STEPS)
       : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
-        ? BROMIDE_WET_TEST_STEPS
+        ? limitSaltAnalysisProgressSteps(BROMIDE_WET_TEST_STEPS)
         : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "I"
           ? IODIDE_WET_TEST_STEPS
           : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "I"
             ? experiment.stepDetails.slice(0, 5)
-            : experiment.stepDetails;
+            : limitSaltAnalysisProgressSteps(experiment.stepDetails);
 
   // Auto-start when URL contains ?autostart=1 for the PH experiment
   useEffect(() => {
