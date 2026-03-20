@@ -554,10 +554,10 @@ export default function ChemicalEquilibriumApp({
       : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
         ? limitSaltAnalysisProgressSteps(BROMIDE_WET_TEST_STEPS)
         : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "I"
-          ? IODIDE_WET_TEST_STEPS
-          : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "I"
-            ? experiment.stepDetails.slice(0, 5)
-            : limitSaltAnalysisProgressSteps(experiment.stepDetails);
+        ? IODIDE_WET_TEST_STEPS
+        : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"
+          ? experiment.stepDetails.slice(0, 5)
+          : limitSaltAnalysisProgressSteps(experiment.stepDetails);
 
   // Auto-start when URL contains ?autostart=1 for the PH experiment
   useEffect(() => {
