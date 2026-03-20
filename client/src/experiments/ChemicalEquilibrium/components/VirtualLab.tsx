@@ -1408,7 +1408,7 @@ function ChemicalEquilibriumVirtualLab({
     if (currentStep === 5 && bromideWetHNO3AddedTracked && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
       setBromideWetAgNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+      setCurrentStep(6);
       setToastMessage("AgNO₃ added. Moving to Step 6.");
       setTimeout(() => setToastMessage(null), 3000);
     }
@@ -2586,6 +2586,20 @@ function ChemicalEquilibriumVirtualLab({
       onStepComplete();
       setCurrentStep(5);
       setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
+    } else if (
+      requiresDropValidation &&
+      isAgNO3Addition &&
+      isDryTestExperiment &&
+      resolvedDryTestMode === "wet" &&
+      (activeHalide ?? "").toLowerCase() === "br" &&
+      currentStep === 5 &&
+      bromideWetHNO3AddedTracked &&
+      !bromideWetAgNO3AddedTracked
+    ) {
+      setBromideWetAgNO3AddedTracked(true);
+      onStepComplete();
+      setCurrentStep(6);
+      setToastMessage("AgNO₃ added. Moving to Step 6.");
     } else {
       setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
     }
@@ -2597,6 +2611,7 @@ function ChemicalEquilibriumVirtualLab({
     addDialogEquipment,
     bromideWetHNO3AddedTracked,
     currentStep,
+    isAgNO3Addition,
     handleEquipmentAddButton,
     handleEquipmentAddDialogClose,
     isDryTestExperiment,
@@ -2608,6 +2623,7 @@ function ChemicalEquilibriumVirtualLab({
     setSodiumNitroprussideAdded,
     setSodiumNitroprussideUsed,
     setMagnesiaAdded,
+    bromideWetAgNO3AddedTracked,
     setMagnesiaUsed,
     setCaClAdded,
     setCaClUsed,
