@@ -838,17 +838,23 @@ function ChemicalEquilibriumVirtualLab({
     activeHalide === "I" && resolvedDryTestMode === "acid"
       ? caseOneReady
       : resultsReady;
-  const canViewResults =
-    activeHalide === "I" && resolvedDryTestMode === "acid"
-      ? iodideAnalysisReady
+  const sulfideAnalysisReady =
+    activeHalide === "S" && resolvedDryTestMode === "acid"
+      ? caseOneReady
       : resultsReady;
+  const canViewResults =
+    (activeHalide === "I" && resolvedDryTestMode === "acid"
+      ? iodideAnalysisReady
+      : activeHalide === "S" && resolvedDryTestMode === "acid"
+        ? sulfideAnalysisReady
+        : resultsReady);
 
   useEffect(() => {
     if (!isSaltAnalysisExperiment) {
       return;
     }
 
-    if (!iodideAnalysisReady) {
+    if (!iodideAnalysisReady && !sulfideAnalysisReady) {
       if (hasAutoOpenedResults) {
         setHasAutoOpenedResults(false);
       }
@@ -867,6 +873,7 @@ function ChemicalEquilibriumVirtualLab({
   }, [
     hasAutoOpenedResults,
     iodideAnalysisReady,
+    sulfideAnalysisReady,
     isSaltAnalysisExperiment,
     showCase2ResultsModal,
     activeHalide,
