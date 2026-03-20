@@ -2611,7 +2611,6 @@ function ChemicalEquilibriumVirtualLab({
     addDialogEquipment,
     bromideWetHNO3AddedTracked,
     currentStep,
-    isAgNO3Addition,
     handleEquipmentAddButton,
     handleEquipmentAddDialogClose,
     isDryTestExperiment,
