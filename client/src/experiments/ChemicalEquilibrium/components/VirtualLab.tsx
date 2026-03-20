@@ -1405,7 +1405,7 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
-    if (currentStep === 5 && bromideWetHNO3AddedTracked && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
+    if (currentStep === 5 && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
       setBromideWetAgNO3AddedTracked(true);
       onStepComplete();
       setCurrentStep(6);
