@@ -1376,7 +1376,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
         transition: isDragging
           ? "none"
           : isOnWorkbench
-            ? "transform 0.2s ease-out"
+            ? "left 0.7s ease-in-out, top 0.7s ease-in-out, transform 0.2s ease-out"
             : "all 0.3s ease-out",
         willChange: isDragging ? "transform" : "auto",
         cursor: isOnWorkbench ? (isDragging ? "grabbing" : "grab") : "grab",

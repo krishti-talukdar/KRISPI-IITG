@@ -1131,6 +1131,7 @@ function ChemicalEquilibriumVirtualLab({
   const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const saltHeatingIntervalRef = useRef<number | null>(null);
+  const platinumWireHeatingAppliedRef = useRef(false);
   const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
 
   // Chemical Equilibrium specific states
@@ -2891,6 +2892,14 @@ function ChemicalEquilibriumVirtualLab({
         return position;
       }
 
+      if (
+        normalizedId === "platinum-wire" &&
+        isWorkbenchHeating &&
+        activeFlameTest === "Fl"
+      ) {
+        return position;
+      }
+
       const layoutPosition = getDryTestWorkbenchPosition(
         workbenchRect,
         position.id,
@@ -2921,6 +2930,8 @@ function ChemicalEquilibriumVirtualLab({
     equipmentPositions,
     isDryTestExperiment,
     resolvedDryTestMode,
+    isWorkbenchHeating,
+    activeFlameTest,
     setEquipmentPositions,
   ]);
 
@@ -3419,6 +3430,51 @@ function ChemicalEquilibriumVirtualLab({
       wetBasicHeatingCount,
     ],
   );
+
+  useEffect(() => {
+    if (!isDryTestExperiment || resolvedDryTestMode !== "basic" || activeFlameTest !== "Fl") {
+      platinumWireHeatingAppliedRef.current = false;
+      return;
+    }
+
+    const platinumPosition = equipmentPositions.find(
+      (position) => stripEquipmentIdSuffix(position.id) === "platinum-wire",
+    );
+    const bunsenPosition = equipmentPositions.find(
+      (position) => stripEquipmentIdSuffix(position.id) === "bunsen-burner-virtual-heat-source",
+    );
+
+    if (!platinumPosition || !bunsenPosition) {
+      return;
+    }
+
+    if (isWorkbenchHeating) {
+      if (!platinumWireHeatingAppliedRef.current) {
+        platinumWireHeatingAppliedRef.current = true;
+        setEquipmentPositions((prev) =>
+          prev.map((position) =>
+            position.id === platinumPosition.id
+              ? {
+                  ...position,
+                  x: bunsenPosition.x + 150,
+                  y: bunsenPosition.y - 105,
+                }
+              : position,
+          ),
+        );
+      }
+      return;
+    }
+
+    platinumWireHeatingAppliedRef.current = false;
+  }, [
+    activeFlameTest,
+    equipmentPositions,
+    isDryTestExperiment,
+    isWorkbenchHeating,
+    resolvedDryTestMode,
+    setEquipmentPositions,
+  ]);
 
   useEffect(() => {
     if (
