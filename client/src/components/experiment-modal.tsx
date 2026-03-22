@@ -1,6 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { AlertTriangle, Clock, Thermometer, Play, Download, CheckCircle, Lock, Activity } from "lucide-react";
 import type { Experiment, ExperimentStep } from "@shared/schema";
 import { useLocation } from "wouter";

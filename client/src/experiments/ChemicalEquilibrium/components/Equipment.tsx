@@ -17,6 +17,7 @@ const K2CR2O7_SOLUTION_COLOR = "#fb923c";
 const DILUTE_HNO3_WET_SOLUTION_COLOR = "rgba(14, 165, 233, 0.95)";
 const NH4OH_WET_SOLUTION_COLOR = "rgba(191, 219, 254, 0.95)";
 const BUNSEN_BURNER_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2Fc4be507c9a054f00b694808aa900a9e5?format=webp&width=800";
+const FLAME_TEST_IMAGE_URL = "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F43c386826dc748149f9a370e9f9ba5bf?format=webp&width=800&height=1200";
 const GLASS_CONTAINER_MAX_VOLUME_ML = 12;
 const GLASS_CONTAINER_MIN_OVERLAY_HEIGHT = 16;
 const GLASS_CONTAINER_MAX_OVERLAY_HEIGHT = 94;
@@ -511,10 +512,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
     if (isPlatinumWireEquipment) {
       // Increase visible size when placed on the workbench during Basic Radicals -> Dry -> Flame Test
       const shouldEnlarge = isOnWorkbench && isDryTest && dryTestMode === "basic" && activeFlameTest === "Fl";
-      const wrapperMarginTop = shouldEnlarge ? "12px" : "20px";
-      // Double the enlarged dimensions (2x)
-      const wrapperWidth = shouldEnlarge ? 640 : 112;
-      const wrapperHeight = shouldEnlarge ? 72 : 112;
+      const wrapperMarginTop = shouldEnlarge ? "2px" : "20px";
+      const wrapperWidth = shouldEnlarge ? 420 : 112;
+      const wrapperHeight = shouldEnlarge ? 56 : 112;
 
       return (
         <div className="relative flex flex-col items-center pointer-events-none" style={{ marginTop: wrapperMarginTop }}>
@@ -523,7 +523,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
               src={PLATINUM_WIRE_IMAGE_URL}
               alt="Platinum Wire"
               className="w-full h-full object-contain drop-shadow-lg"
-              style={{ transform: shouldEnlarge ? 'rotate(-6deg)' : undefined }}
+              style={{ transform: shouldEnlarge ? 'rotate(-26deg) translateY(-8px)' : undefined }}
             />
           </div>
         </div>
@@ -598,7 +598,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
             <div className="absolute -top-40 left-1/2 transform -translate-x-1/2 pointer-events-none z-40" style={{ width: 120 }}>
               <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Fe9cfd8cb33d143f3b1a42a8a8591b784?format=webp&width=800&height=1200"
+                  src={FLAME_TEST_IMAGE_URL}
                   alt="Bunsen Flame"
                   className="w-full h-auto object-contain drop-shadow-2xl"
                   style={{ filter: 'drop-shadow(0 6px 18px rgba(255,140,0,0.45))', transform: 'translateY(-8px)' }}
@@ -1376,7 +1376,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
         transition: isDragging
           ? "none"
           : isOnWorkbench
-            ? "transform 0.2s ease-out"
+            ? "left 0.7s ease-in-out, top 0.7s ease-in-out, transform 0.2s ease-out"
             : "all 0.3s ease-out",
         willChange: isDragging ? "transform" : "auto",
         cursor: isOnWorkbench ? (isDragging ? "grabbing" : "grab") : "grab",

@@ -132,6 +132,7 @@ const DRY_WORKBENCH_VERTICAL_SPACING = 0.22;
 const DRY_WORKBENCH_TEST_TUBE_POSITION = { xPercent: 0.3, yPercent: 0.3 };
 const DRY_WORKBENCH_GLASS_ROD_POSITION = { xPercent: 0.75, yPercent: 0.15 };
 const DRY_WORKBENCH_BUNSEN_POSITION = { xPercent: 0.3, yPercent: 0.75 };
+const DRY_WORKBENCH_PLATINUM_WIRE_POSITION = { xPercent: 0.6, yPercent: 0.27 };
 const DRY_WORKBENCH_GLASS_CONTAINER_POSITION = { xPercent: 0.65, yPercent: 0.45 };
 
 type AcidTarget = "h2so4" | "hcl";
@@ -441,12 +442,14 @@ const DRY_WORKBENCH_BOTTLE_LAYOUT: Record<string, { xPercent: number; yPercent: 
   "test_tubes": DRY_WORKBENCH_TEST_TUBE_POSITION,
   "glass-rod": DRY_WORKBENCH_GLASS_ROD_POSITION,
   "bunsen-burner-virtual-heat-source": DRY_WORKBENCH_BUNSEN_POSITION,
+  "platinum-wire": DRY_WORKBENCH_PLATINUM_WIRE_POSITION,
   "glass-container": DRY_WORKBENCH_GLASS_CONTAINER_POSITION,
 };
 
 const DRY_TEST_FIXED_EQUIPMENT_IDS = [
   "test_tubes",
   "bunsen-burner-virtual-heat-source",
+  "platinum-wire",
   "glass-rod",
   "glass-container",
 ];
@@ -1128,6 +1131,7 @@ function ChemicalEquilibriumVirtualLab({
   const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const saltHeatingIntervalRef = useRef<number | null>(null);
+  const platinumWireHeatingAppliedRef = useRef(false);
   const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
 
   // Chemical Equilibrium specific states
@@ -1929,6 +1933,7 @@ function ChemicalEquilibriumVirtualLab({
       let pendingToastMessage: string | null = null;
       let shouldClearToastMessage = false;
       let shouldStartStirringSequence = false;
+      let autoAddPlatinumWireId: string | null = null;
 
       pushHistorySnapshot();
       setEquipmentPositions((prev) => {
@@ -2017,8 +2022,31 @@ function ChemicalEquilibriumVirtualLab({
         }
 
         const snappedDrop = getSnappedPosition(dropX, dropY);
-        return [...prev, { id, x: snappedDrop.x, y: snappedDrop.y, chemicals: [] }];
+        const nextPositions = [...prev, { id, x: snappedDrop.x, y: snappedDrop.y, chemicals: [] }];
+
+        const isFlameTestBasic =
+          isDryTestExperiment &&
+          resolvedDryTestMode === "basic" &&
+          activeFlameTest === "Fl";
+        const isBunsenBurner = stripEquipmentIdSuffix(id).includes("bunsen");
+        if (isFlameTestBasic && isBunsenBurner) {
+          const platinumEquipment = displayedEquipmentList.find((equipment) =>
+            (equipment.name ?? "").toLowerCase().includes("platinum"),
+          );
+          const hasPlatinumWire = nextPositions.some(
+            (position) => stripEquipmentIdSuffix(position.id) === "platinum-wire",
+          );
+          if (platinumEquipment && !hasPlatinumWire) {
+            autoAddPlatinumWireId = platinumEquipment.id;
+          }
+        }
+
+        return nextPositions;
       });
+
+      if (autoAddPlatinumWireId) {
+        handleEquipmentAddButton(autoAddPlatinumWireId);
+      }
 
       if (shouldClearToastMessage) {
         setToastMessage(null);
@@ -2864,6 +2892,14 @@ function ChemicalEquilibriumVirtualLab({
         return position;
       }
 
+      if (
+        normalizedId === "platinum-wire" &&
+        isWorkbenchHeating &&
+        activeFlameTest === "Fl"
+      ) {
+        return position;
+      }
+
       const layoutPosition = getDryTestWorkbenchPosition(
         workbenchRect,
         position.id,
@@ -2894,6 +2930,8 @@ function ChemicalEquilibriumVirtualLab({
     equipmentPositions,
     isDryTestExperiment,
     resolvedDryTestMode,
+    isWorkbenchHeating,
+    activeFlameTest,
     setEquipmentPositions,
   ]);
 
@@ -3392,6 +3430,51 @@ function ChemicalEquilibriumVirtualLab({
       wetBasicHeatingCount,
     ],
   );
+
+  useEffect(() => {
+    if (!isDryTestExperiment || resolvedDryTestMode !== "basic" || activeFlameTest !== "Fl") {
+      platinumWireHeatingAppliedRef.current = false;
+      return;
+    }
+
+    const platinumPosition = equipmentPositions.find(
+      (position) => stripEquipmentIdSuffix(position.id) === "platinum-wire",
+    );
+    const bunsenPosition = equipmentPositions.find(
+      (position) => stripEquipmentIdSuffix(position.id) === "bunsen-burner-virtual-heat-source",
+    );
+
+    if (!platinumPosition || !bunsenPosition) {
+      return;
+    }
+
+    if (isWorkbenchHeating) {
+      if (!platinumWireHeatingAppliedRef.current) {
+        platinumWireHeatingAppliedRef.current = true;
+        setEquipmentPositions((prev) =>
+          prev.map((position) =>
+            position.id === platinumPosition.id
+              ? {
+                  ...position,
+                  x: bunsenPosition.x + 150,
+                  y: bunsenPosition.y - 105,
+                }
+              : position,
+          ),
+        );
+      }
+      return;
+    }
+
+    platinumWireHeatingAppliedRef.current = false;
+  }, [
+    activeFlameTest,
+    equipmentPositions,
+    isDryTestExperiment,
+    isWorkbenchHeating,
+    resolvedDryTestMode,
+    setEquipmentPositions,
+  ]);
 
   useEffect(() => {
     if (
