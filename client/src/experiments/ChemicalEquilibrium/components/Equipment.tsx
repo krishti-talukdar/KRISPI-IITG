@@ -512,10 +512,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
     if (isPlatinumWireEquipment) {
       // Increase visible size when placed on the workbench during Basic Radicals -> Dry -> Flame Test
       const shouldEnlarge = isOnWorkbench && isDryTest && dryTestMode === "basic" && activeFlameTest === "Fl";
-      const wrapperMarginTop = shouldEnlarge ? "12px" : "20px";
-      // Double the enlarged dimensions (2x)
-      const wrapperWidth = shouldEnlarge ? 640 : 112;
-      const wrapperHeight = shouldEnlarge ? 72 : 112;
+      const wrapperMarginTop = shouldEnlarge ? "2px" : "20px";
+      const wrapperWidth = shouldEnlarge ? 420 : 112;
+      const wrapperHeight = shouldEnlarge ? 56 : 112;
 
       return (
         <div className="relative flex flex-col items-center pointer-events-none" style={{ marginTop: wrapperMarginTop }}>
@@ -524,7 +523,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
               src={PLATINUM_WIRE_IMAGE_URL}
               alt="Platinum Wire"
               className="w-full h-full object-contain drop-shadow-lg"
-              style={{ transform: shouldEnlarge ? 'rotate(-6deg)' : undefined }}
+              style={{ transform: shouldEnlarge ? 'rotate(-26deg) translateY(-8px)' : undefined }}
             />
           </div>
         </div>
