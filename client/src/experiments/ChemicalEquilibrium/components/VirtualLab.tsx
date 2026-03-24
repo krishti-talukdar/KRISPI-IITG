@@ -2866,6 +2866,13 @@ function ChemicalEquilibriumVirtualLab({
     }
   }, [isDryTestExperiment, dryTestMode, activeFlameTest, caseTwoResult, setCaseTwoResult, setToastMessage]);
 
+  const handleObserveFlameTest = useCallback(() => {
+    if (isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Fl") {
+      setToastMessage("Blue flame observed on the platinum wire.");
+      setTimeout(() => setToastMessage(null), 2500);
+    }
+  }, [isDryTestExperiment, dryTestMode, activeFlameTest, setToastMessage]);
+
   useEffect(() => {
     if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
       return;
@@ -4864,6 +4871,8 @@ function ChemicalEquilibriumVirtualLab({
                             ? handleObserveWetTest
                             : isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am" && normalizedEquipmentName.includes("ph") && normalizedEquipmentName.includes("paper")
                             ? handleObservePhPaper
+                            : isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Fl" && normalizedEquipmentName.includes("platinum")
+                            ? handleObserveFlameTest
                             : undefined
                         }
                         observeBlinking={shouldBlinkObserveButton && equipment.id === "test_tubes"}

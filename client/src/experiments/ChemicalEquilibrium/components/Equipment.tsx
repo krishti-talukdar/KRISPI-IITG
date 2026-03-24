@@ -519,7 +519,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
       return (
         <div
-          className="relative flex flex-col items-center pointer-events-none"
+          className="relative flex flex-col items-center"
           style={{
             marginTop: wrapperMarginTop,
             transition: "margin-top 0.75s ease-in-out",
@@ -543,6 +543,19 @@ export const Equipment: React.FC<EquipmentProps> = ({
               }}
             />
           </div>
+          {position && onObserve && isDryTest && dryTestMode === "basic" && activeFlameTest === "Fl" && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onObserve?.();
+              }}
+              className="lab-observe-button mt-2"
+            >
+              OBSERVE
+            </button>
+          )}
         </div>
       );
     }
