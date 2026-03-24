@@ -515,15 +515,32 @@ export const Equipment: React.FC<EquipmentProps> = ({
       const wrapperMarginTop = shouldEnlarge ? "2px" : "20px";
       const wrapperWidth = shouldEnlarge ? 420 : 112;
       const wrapperHeight = shouldEnlarge ? 56 : 112;
+      const shouldPlayApproachAnimation = shouldEnlarge && isHeating;
 
       return (
-        <div className="relative flex flex-col items-center pointer-events-none" style={{ marginTop: wrapperMarginTop }}>
-          <div style={{ width: `${wrapperWidth}px`, height: `${wrapperHeight}px` }}>
+        <div
+          className="relative flex flex-col items-center pointer-events-none"
+          style={{
+            marginTop: wrapperMarginTop,
+            transition: "margin-top 0.75s ease-in-out",
+            animation: shouldPlayApproachAnimation ? "platinumWireApproach 0.85s ease-in-out both" : undefined,
+          }}
+        >
+          <div
+            style={{
+              width: `${wrapperWidth}px`,
+              height: `${wrapperHeight}px`,
+              transition: "width 0.75s ease-in-out, height 0.75s ease-in-out",
+            }}
+          >
             <img
               src={PLATINUM_WIRE_IMAGE_URL}
               alt="Platinum Wire"
               className="w-full h-full object-contain drop-shadow-lg"
-              style={{ transform: shouldEnlarge ? 'rotate(-26deg) translateY(-8px)' : undefined }}
+              style={{
+                transform: shouldEnlarge ? "rotate(-26deg) translateY(-8px)" : "rotate(0deg) translateY(0px)",
+                transition: "transform 0.75s ease-in-out",
+              }}
             />
           </div>
         </div>
