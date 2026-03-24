@@ -5686,7 +5686,7 @@ function ChemicalEquilibriumVirtualLab({
                   <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                     <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
                       <span>Case 1 Indicator</span>
-                      <span>Chloride residue</span>
+                      <span>Chloride</span>
                     </div>
                     <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-300 relative">
                       <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Loop film</span>
