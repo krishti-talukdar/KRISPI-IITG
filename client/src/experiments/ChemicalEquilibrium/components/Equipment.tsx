@@ -515,15 +515,32 @@ export const Equipment: React.FC<EquipmentProps> = ({
       const wrapperMarginTop = shouldEnlarge ? "2px" : "20px";
       const wrapperWidth = shouldEnlarge ? 420 : 112;
       const wrapperHeight = shouldEnlarge ? 56 : 112;
+      const shouldPlayApproachAnimation = shouldEnlarge && isHeating;
 
       return (
-        <div className="relative flex flex-col items-center pointer-events-none" style={{ marginTop: wrapperMarginTop }}>
-          <div style={{ width: `${wrapperWidth}px`, height: `${wrapperHeight}px` }}>
+        <div
+          className="relative flex flex-col items-center pointer-events-none"
+          style={{
+            marginTop: wrapperMarginTop,
+            transition: "margin-top 0.75s ease-in-out",
+            animation: shouldPlayApproachAnimation ? "platinumWireApproach 0.85s ease-in-out both" : undefined,
+          }}
+        >
+          <div
+            style={{
+              width: `${wrapperWidth}px`,
+              height: `${wrapperHeight}px`,
+              transition: "width 0.75s ease-in-out, height 0.75s ease-in-out",
+            }}
+          >
             <img
               src={PLATINUM_WIRE_IMAGE_URL}
               alt="Platinum Wire"
               className="w-full h-full object-contain drop-shadow-lg"
-              style={{ transform: shouldEnlarge ? 'rotate(-26deg) translateY(-8px)' : undefined }}
+              style={{
+                transform: shouldEnlarge ? "rotate(-26deg) translateY(-8px)" : "rotate(0deg) translateY(0px)",
+                transition: "transform 0.75s ease-in-out",
+              }}
             />
           </div>
         </div>
@@ -560,7 +577,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isBunsenBurnerEquipment) {
-      // Show an enhanced flame visual when a glass rod/platinum wire is brought near the bunsen
+      // Show a blue flame visual when heating is active in the flame test
       const shouldShowAttachedFlame = isOnWorkbench && isDryTest && dryTestMode === "basic" && activeFlameTest === "Fl";
       let nearbyRod = false;
       let nearbyPlatinum = false;
@@ -593,38 +610,60 @@ export const Equipment: React.FC<EquipmentProps> = ({
             className="max-w-[240px] max-h-[240px] object-contain drop-shadow-lg"
           />
 
-          {/* Attached flame image (appears when rod/wire is close during Salt Analysis flame test) */}
-          {shouldShowAttachedFlame && nearbyRod && (
+          {/* Attached flame image (appears when flame test heating is active) */}
+          {shouldShowAttachedFlame && isHeating && (
             <div className="absolute -top-40 left-1/2 transform -translate-x-1/2 pointer-events-none z-40" style={{ width: 120 }}>
               <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                 <img
                   src={FLAME_TEST_IMAGE_URL}
                   alt="Bunsen Flame"
                   className="w-full h-auto object-contain drop-shadow-2xl"
-                  style={{ filter: 'drop-shadow(0 6px 18px rgba(255,140,0,0.45))', transform: 'translateY(-8px)' }}
+                  style={{
+                    filter: isHeating
+                      ? 'hue-rotate(190deg) saturate(3) brightness(1.12) contrast(1.05) drop-shadow(0 6px 18px rgba(37,99,235,0.75))'
+                      : 'drop-shadow(0 6px 18px rgba(255,140,0,0.45))',
+                    transform: 'translateY(-8px)',
+                  }}
                 />
+                {isHeating && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: '14% 18% 8% 18%',
+                      borderRadius: '52% 52% 38% 38% / 70% 70% 30% 30%',
+                      background: 'linear-gradient(180deg, rgba(96,165,250,0.96) 0%, rgba(59,130,246,0.95) 32%, rgba(191,219,254,0.22) 72%, transparent 100%)',
+                      mixBlendMode: 'screen',
+                      filter: 'blur(1.5px)',
+                      opacity: 0.95,
+                      pointerEvents: 'none',
+                    }}
+                  />
+                )}
 
-                {/* Brick-red glow at the flame tip when platinum wire is present */}
-                {nearbyPlatinum && (
+                {/* Bluish flame tip when heating is active */}
+                {isHeating && (
                   <div
                     style={{
                       position: 'absolute',
                       left: '50%',
-                      top: '10%',
+                      top: '-2%',
                       transform: 'translateX(-50%)',
-                      width: 60,
-                      height: 100,
+                      width: 38,
+                      height: 82,
                       pointerEvents: 'none',
                       zIndex: 50,
                     }}
                   >
                     <div
                       style={{
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: '50% 50% 40% 40% / 60% 60% 40% 40%',
-                        background: 'radial-gradient(circle at 50% 20%, rgba(178,34,34,0.95) 0%, rgba(178,34,34,0.7) 30%, rgba(255,165,0,0.25) 60%, transparent 80%)',
-                        filter: 'blur(8px) saturate(120%)',
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '52% 52% 42% 42% / 74% 74% 26% 26%',
+                        background:
+                          'linear-gradient(180deg, rgba(56,189,248,0.98) 0%, rgba(59,130,246,0.92) 22%, rgba(96,165,250,0.82) 45%, rgba(191,219,254,0.22) 72%, transparent 100%)',
+                        filter: 'blur(2px) saturate(140%)',
+                        boxShadow: '0 0 18px rgba(59,130,246,0.5)',
+                        clipPath: 'polygon(50% 0%, 78% 16%, 92% 38%, 84% 60%, 67% 82%, 50% 100%, 33% 82%, 16% 60%, 8% 38%, 22% 16%)',
                         mixBlendMode: 'screen',
                       }}
                     />
@@ -632,14 +671,14 @@ export const Equipment: React.FC<EquipmentProps> = ({
                       style={{
                         position: 'absolute',
                         left: '50%',
-                        top: '40%',
+                        top: '18%',
                         transform: 'translateX(-50%)',
-                        width: 18,
-                        height: 10,
-                        background: 'rgba(255,255,255,0.12)',
-                        borderRadius: 6,
+                        width: 14,
+                        height: 26,
+                        borderRadius: '50% 50% 45% 45% / 70% 70% 30% 30%',
+                        background: 'radial-gradient(circle at 50% 30%, rgba(255,255,255,0.65) 0%, rgba(219,234,254,0.32) 35%, rgba(59,130,246,0.0) 75%)',
                         filter: 'blur(1px)',
-                        opacity: 0.9,
+                        opacity: 0.95,
                       }}
                     />
                   </div>
