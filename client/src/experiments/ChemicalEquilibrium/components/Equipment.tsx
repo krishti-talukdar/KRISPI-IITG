@@ -618,10 +618,15 @@ export const Equipment: React.FC<EquipmentProps> = ({
                   src={FLAME_TEST_IMAGE_URL}
                   alt="Bunsen Flame"
                   className="w-full h-auto object-contain drop-shadow-2xl"
-                  style={{ filter: 'drop-shadow(0 6px 18px rgba(255,140,0,0.45))', transform: 'translateY(-8px)' }}
+                  style={{
+                    filter: isHeating
+                      ? 'hue-rotate(185deg) saturate(2.2) brightness(1.08) drop-shadow(0 6px 18px rgba(66,153,225,0.55))'
+                      : 'drop-shadow(0 6px 18px rgba(255,140,0,0.45))',
+                    transform: 'translateY(-8px)',
+                  }}
                 />
 
-                {/* Brick-red flame tip when platinum wire is present */}
+                {/* Bluish flame tip when heating is active */}
                 {nearbyPlatinum && (
                   <div
                     style={{
@@ -641,9 +646,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
                         inset: 0,
                         borderRadius: '52% 52% 42% 42% / 74% 74% 26% 26%',
                         background:
-                          'linear-gradient(180deg, rgba(178,34,34,0.98) 0%, rgba(178,34,34,0.92) 22%, rgba(205,92,92,0.82) 45%, rgba(255,184,120,0.18) 72%, transparent 100%)',
-                        filter: 'blur(2px) saturate(130%)',
-                        boxShadow: '0 0 18px rgba(178,34,34,0.45)',
+                          'linear-gradient(180deg, rgba(56,189,248,0.98) 0%, rgba(59,130,246,0.92) 22%, rgba(96,165,250,0.82) 45%, rgba(191,219,254,0.22) 72%, transparent 100%)',
+                        filter: 'blur(2px) saturate(140%)',
+                        boxShadow: '0 0 18px rgba(59,130,246,0.5)',
                         clipPath: 'polygon(50% 0%, 78% 16%, 92% 38%, 84% 60%, 67% 82%, 50% 100%, 33% 82%, 16% 60%, 8% 38%, 22% 16%)',
                         mixBlendMode: 'screen',
                       }}
@@ -657,7 +662,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
                         width: 14,
                         height: 26,
                         borderRadius: '50% 50% 45% 45% / 70% 70% 30% 30%',
-                        background: 'radial-gradient(circle at 50% 30%, rgba(255,245,235,0.55) 0%, rgba(255,245,235,0.22) 35%, rgba(178,34,34,0.0) 75%)',
+                        background: 'radial-gradient(circle at 50% 30%, rgba(255,255,255,0.65) 0%, rgba(219,234,254,0.32) 35%, rgba(59,130,246,0.0) 75%)',
                         filter: 'blur(1px)',
                         opacity: 0.95,
                       }}
