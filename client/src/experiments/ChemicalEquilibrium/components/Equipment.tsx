@@ -604,27 +604,30 @@ export const Equipment: React.FC<EquipmentProps> = ({
                   style={{ filter: 'drop-shadow(0 6px 18px rgba(255,140,0,0.45))', transform: 'translateY(-8px)' }}
                 />
 
-                {/* Brick-red glow at the flame tip when platinum wire is present */}
+                {/* Brick-red flame tip when platinum wire is present */}
                 {nearbyPlatinum && (
                   <div
                     style={{
                       position: 'absolute',
                       left: '50%',
-                      top: '10%',
+                      top: '-2%',
                       transform: 'translateX(-50%)',
-                      width: 60,
-                      height: 100,
+                      width: 38,
+                      height: 82,
                       pointerEvents: 'none',
                       zIndex: 50,
                     }}
                   >
                     <div
                       style={{
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: '50% 50% 40% 40% / 60% 60% 40% 40%',
-                        background: 'radial-gradient(circle at 50% 20%, rgba(178,34,34,0.95) 0%, rgba(178,34,34,0.7) 30%, rgba(255,165,0,0.25) 60%, transparent 80%)',
-                        filter: 'blur(8px) saturate(120%)',
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '52% 52% 42% 42% / 74% 74% 26% 26%',
+                        background:
+                          'linear-gradient(180deg, rgba(178,34,34,0.98) 0%, rgba(178,34,34,0.92) 22%, rgba(205,92,92,0.82) 45%, rgba(255,184,120,0.18) 72%, transparent 100%)',
+                        filter: 'blur(2px) saturate(130%)',
+                        boxShadow: '0 0 18px rgba(178,34,34,0.45)',
+                        clipPath: 'polygon(50% 0%, 78% 16%, 92% 38%, 84% 60%, 67% 82%, 50% 100%, 33% 82%, 16% 60%, 8% 38%, 22% 16%)',
                         mixBlendMode: 'screen',
                       }}
                     />
@@ -632,14 +635,14 @@ export const Equipment: React.FC<EquipmentProps> = ({
                       style={{
                         position: 'absolute',
                         left: '50%',
-                        top: '40%',
+                        top: '18%',
                         transform: 'translateX(-50%)',
-                        width: 18,
-                        height: 10,
-                        background: 'rgba(255,255,255,0.12)',
-                        borderRadius: 6,
+                        width: 14,
+                        height: 26,
+                        borderRadius: '50% 50% 45% 45% / 70% 70% 30% 30%',
+                        background: 'radial-gradient(circle at 50% 30%, rgba(255,245,235,0.55) 0%, rgba(255,245,235,0.22) 35%, rgba(178,34,34,0.0) 75%)',
                         filter: 'blur(1px)',
-                        opacity: 0.9,
+                        opacity: 0.95,
                       }}
                     />
                   </div>
