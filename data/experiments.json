@@ -2,7 +2,7 @@
   {
     "title": "Equilibrium Shift: [Co(H₂O)₆]²⁺ vs Cl⁻ Ions",
     "description": "Interactive virtual lab to study equilibrium shifts between cobalt complexes. Observe dramatic color changes from pink to blue as you add HCl or water, demonstrating Le Chatelier's principle in real-time.",
-    "category": "Chemical Equilibrium",
+    "category": "Equilibrium",
     "difficulty": "Intermediate",
     "duration": 25,
     "steps": 7,
@@ -260,7 +260,7 @@
   {
     "title": "To determine pH values of hydrochloric acid of different strengths using pH paper and universal indicator",
     "description": "Determine and compare the pH of hydrochloric acid solutions of varying concentrations using pH paper and a universal indicator solution. Learn safe handling of strong acids and how indicators reflect acidity.",
-    "category": "Acid-Base",
+    "category": "Acid-Base Chemistry",
     "difficulty": "Beginner",
     "duration": 40,
     "steps": 7,
