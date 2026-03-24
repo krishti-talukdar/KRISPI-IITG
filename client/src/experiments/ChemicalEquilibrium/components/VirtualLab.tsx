@@ -5561,8 +5561,8 @@ function ChemicalEquilibriumVirtualLab({
                     if ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") {
                       return insight.hint === "Inference 1";
                     }
-                    // Hide Inference 3, 4, 5, 6 for Bromide and Iodide checks under Dry Tests for Acid Radicals
-                    if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                    // Hide Inference 3, 4, 5, 6 for Acid Radicals dry-test chloride/bromide/iodide checks
+                    if ((activeHalide === "Br" || activeHalide === "Cl" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                       return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
                     }
                     return true;
@@ -5584,6 +5584,9 @@ function ChemicalEquilibriumVirtualLab({
 
               <div className={activeHalide === "S" && resolvedDryTestMode === "acid" ? "hidden" : "grid gap-4 md:grid-cols-3"}>
                 {analysisGuidance.filter((note) => {
+                  if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
+                    return !["Wet test focus", "Next steps"].includes(note.label);
+                  }
                   // For Bromide and Iodide checks, only show the Wet test focus note
                   if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                     return note.label === "Wet test focus";
@@ -5605,6 +5608,9 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries
                     .filter((entry) => {
+                      if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
+                        return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      }
                       if (activeHalide === "I" && resolvedDryTestMode === "acid") {
                         return entry.label === "INFERENCE 1";
                       }
@@ -5704,6 +5710,9 @@ function ChemicalEquilibriumVirtualLab({
                   <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
                   <ul className="mt-4 space-y-3">
                     {observationHighlights.filter((highlight, index) => {
+                      if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
+                        return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
                       if (activeHalide === "S" && resolvedDryTestMode === "acid") {
                         return index === 0;
                       }
