@@ -5133,6 +5133,7 @@ function ChemicalEquilibriumVirtualLab({
                       dryTestMode={resolvedDryTestMode}
                       imageUrl={equipment.imageUrl}
                       activeFlameTest={activeFlameTest}
+                      isHeating={isWorkbenchHeating}
                       // Special: color/volume for test tube reaction when heating conc H2SO4 with salt under Bromide Check
                       color={
                           pos.id === "test_tubes" &&
