@@ -522,7 +522,9 @@ export default function ChemicalEquilibriumApp({
       // For Dry Test section, apply existing modifications
       const basicRadicalsExclude = ["MnO₂", "MnO2", "Glass container", "Concentrated H₂SO₄"];
       dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
-        (name) => !basicRadicalsExclude.some(item => name.includes(item))
+        (name) =>
+          !basicRadicalsExclude.some((item) => name.includes(item)) &&
+          !name.toLowerCase().includes("test tube")
       );
 
       // Specific modifications for different Basic Radicals tests
