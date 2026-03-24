@@ -60,6 +60,7 @@ interface WorkBenchProps {
   // New props for contextual fume coloring
   activeHalide?: string;
   dryTestMode?: string;
+  activeFlameTest?: string;
   mno2AddedDuringHeating?: boolean;
   specialCasesHeatingCount?: number;
   chlorideHeatingCount?: number;
@@ -86,6 +87,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   onHeatingStateChange,
   activeHalide,
   dryTestMode,
+  activeFlameTest,
   mno2AddedDuringHeating,
   specialCasesHeatingCount = 0,
   chlorideHeatingCount = 0,
@@ -119,6 +121,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
     dryTestMode === "acid" &&
     activeHalide === "I";
+
+  const shouldUseBlueFlame = dryTestMode === "basic" && activeFlameTest === "Fl";
 
   // Determine whether to use reddish-brown fumes based on context (Special Cases + dry acid mode on 5th heating)
   const shouldUseReddishBrownFumes =
@@ -690,7 +694,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
               )}
               {(isBunsenHeating || isBunsenLit) && flameCoords && (
                 <div
-                  className={`bunsen-flame-layer ${isBunsenHeating ? "flame-burning" : "flame-embers"}`}
+                  className={`bunsen-flame-layer ${isBunsenHeating ? "flame-burning" : "flame-embers"} ${shouldUseBlueFlame ? "flame-blue" : ""}`}
                   style={{
                     "--heat-flame-left": `${flameCoords.left}px`,
                     "--heat-flame-top": `${flameCoords.top}px`,
@@ -943,6 +947,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 .bunsen-flame-layer.flame-embers {
   opacity: 0.5;
   animation-duration: 1.4s;
+}
+.bunsen-flame-layer.flame-blue {
+  background: radial-gradient(circle at 50% 0%, rgba(96, 165, 250, 0.95), rgba(59, 130, 246, 0.7) 45%, rgba(37, 99, 235, 0) 72%);
+  filter: blur(0.4px) drop-shadow(0 0 20px rgba(59, 130, 246, 0.72));
+}
+.bunsen-flame-layer.flame-blue::after {
+  background: radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.85), rgba(96, 165, 250, 0));
+  opacity: 0.72;
 }
 .dry-test-vapor-cloud {
   position: absolute;

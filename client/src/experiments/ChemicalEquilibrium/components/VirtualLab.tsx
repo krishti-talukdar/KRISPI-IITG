@@ -4803,6 +4803,7 @@ function ChemicalEquilibriumVirtualLab({
                 // Pass dry test context for fume coloring
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
+                activeFlameTest={activeFlameTest}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
                 chlorideHeatingCount={chlorideHeatingCount}
@@ -5100,6 +5101,7 @@ function ChemicalEquilibriumVirtualLab({
                 // Pass dry test context for fume coloring
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
+                activeFlameTest={activeFlameTest}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
                 chlorideHeatingCount={chlorideHeatingCount}
