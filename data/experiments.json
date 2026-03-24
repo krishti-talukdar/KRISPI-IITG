@@ -2,7 +2,7 @@
   {
     "title": "Equilibrium Shift: [Co(H₂O)₆]²⁺ vs Cl⁻ Ions",
     "description": "Interactive virtual lab to study equilibrium shifts between cobalt complexes. Observe dramatic color changes from pink to blue as you add HCl or water, demonstrating Le Chatelier's principle in real-time.",
-    "category": "Chemical Equilibrium",
+    "category": "Equilibrium",
     "difficulty": "Intermediate",
     "duration": 25,
     "steps": 7,
