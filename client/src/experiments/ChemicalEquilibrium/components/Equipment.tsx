@@ -577,7 +577,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     }
 
     if (isBunsenBurnerEquipment) {
-      // Show an enhanced flame visual when a glass rod/platinum wire is brought near the bunsen
+      // Show a blue flame visual when heating is active in the flame test
       const shouldShowAttachedFlame = isOnWorkbench && isDryTest && dryTestMode === "basic" && activeFlameTest === "Fl";
       let nearbyRod = false;
       let nearbyPlatinum = false;
@@ -610,8 +610,8 @@ export const Equipment: React.FC<EquipmentProps> = ({
             className="max-w-[240px] max-h-[240px] object-contain drop-shadow-lg"
           />
 
-          {/* Attached flame image (appears when rod/wire is close during Salt Analysis flame test) */}
-          {shouldShowAttachedFlame && nearbyRod && (
+          {/* Attached flame image (appears when flame test heating is active) */}
+          {shouldShowAttachedFlame && isHeating && (
             <div className="absolute -top-40 left-1/2 transform -translate-x-1/2 pointer-events-none z-40" style={{ width: 120 }}>
               <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                 <img
@@ -620,14 +620,28 @@ export const Equipment: React.FC<EquipmentProps> = ({
                   className="w-full h-auto object-contain drop-shadow-2xl"
                   style={{
                     filter: isHeating
-                      ? 'hue-rotate(185deg) saturate(2.2) brightness(1.08) drop-shadow(0 6px 18px rgba(66,153,225,0.55))'
+                      ? 'hue-rotate(190deg) saturate(3) brightness(1.12) contrast(1.05) drop-shadow(0 6px 18px rgba(37,99,235,0.75))'
                       : 'drop-shadow(0 6px 18px rgba(255,140,0,0.45))',
                     transform: 'translateY(-8px)',
                   }}
                 />
+                {isHeating && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: '14% 18% 8% 18%',
+                      borderRadius: '52% 52% 38% 38% / 70% 70% 30% 30%',
+                      background: 'linear-gradient(180deg, rgba(96,165,250,0.96) 0%, rgba(59,130,246,0.95) 32%, rgba(191,219,254,0.22) 72%, transparent 100%)',
+                      mixBlendMode: 'screen',
+                      filter: 'blur(1.5px)',
+                      opacity: 0.95,
+                      pointerEvents: 'none',
+                    }}
+                  />
+                )}
 
                 {/* Bluish flame tip when heating is active */}
-                {nearbyPlatinum && (
+                {isHeating && (
                   <div
                     style={{
                       position: 'absolute',
