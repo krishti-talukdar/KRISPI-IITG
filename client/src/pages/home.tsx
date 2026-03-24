@@ -17,14 +17,11 @@ export default function Home() {
   const [selectedExperiment, setSelectedExperiment] =
     useState<Experiment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("All Experiments");
-
-  const categories = ["All Experiments", "Quantitative Analysis", "Equilibrium", "Qualitative Analysis", "Acid-Base Chemistry"];
+  const categories = ["Quantitative Analysis", "Equilibrium", "Qualitative Analysis", "Acid-Base Chemistry"];
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
   const filteredExperiments =
     experiments?.filter((exp) => {
-      if (selectedCategory === "All Experiments") return true;
-
       if (
         selectedCategory === "Qualitative Analysis" &&
         exp.title ===
