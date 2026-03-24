@@ -90,7 +90,6 @@ const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
 const SALT_ANALYSIS_DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "wet"];
 
 const CHLORIDE_ACID_EQUIPMENT = [
-  "Acidified Potassium Dichromate (K₂Cr₂O₇)",
   "NaOH Solution",
   "Acetic Acid",
   "Acetate Solution",
