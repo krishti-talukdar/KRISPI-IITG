@@ -946,7 +946,12 @@ function ChemicalEquilibriumVirtualLab({
   ];
   const detailedInsights = [
     {
-      title: activeHalide === "Br" && resolvedDryTestMode === "acid" ? "Bromide gas formation" : "Initial chloride clues",
+      title:
+        activeHalide === "Br" && resolvedDryTestMode === "acid"
+          ? "Bromide gas formation"
+          : activeHalide === "S" && resolvedDryTestMode === "acid"
+            ? "Sulfide present"
+            : "Initial chloride clues",
       hint: "Inference 1",
       description: caseOneResult,
     },
