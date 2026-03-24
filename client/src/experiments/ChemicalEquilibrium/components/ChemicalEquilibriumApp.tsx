@@ -90,7 +90,6 @@ const DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "basic", "wet", "wetBasic"];
 const SALT_ANALYSIS_DRY_TEST_MODE_ORDER: DryTestMode[] = ["acid", "wet"];
 
 const CHLORIDE_ACID_EQUIPMENT = [
-  "Acidified Potassium Dichromate (K₂Cr₂O₇)",
   "NaOH Solution",
   "Acetic Acid",
   "Acetate Solution",
@@ -522,7 +521,9 @@ export default function ChemicalEquilibriumApp({
       // For Dry Test section, apply existing modifications
       const basicRadicalsExclude = ["MnO₂", "MnO2", "Glass container", "Concentrated H₂SO₄"];
       dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
-        (name) => !basicRadicalsExclude.some(item => name.includes(item))
+        (name) =>
+          !basicRadicalsExclude.some((item) => name.includes(item)) &&
+          !name.toLowerCase().includes("test tube")
       );
 
       // Specific modifications for different Basic Radicals tests

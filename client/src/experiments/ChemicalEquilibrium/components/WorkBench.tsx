@@ -49,6 +49,7 @@ interface WorkBenchProps {
   equipmentPositions?: EquipmentPosition[];
   showRinseButton?: boolean;
   onRinse?: () => void;
+  onObservePlatinumWire?: () => void;
   isRinsing?: boolean;
   hasRinsed?: boolean;
   rodMoved?: boolean;
@@ -60,6 +61,7 @@ interface WorkBenchProps {
   // New props for contextual fume coloring
   activeHalide?: string;
   dryTestMode?: string;
+  activeFlameTest?: string;
   mno2AddedDuringHeating?: boolean;
   specialCasesHeatingCount?: number;
   chlorideHeatingCount?: number;
@@ -76,6 +78,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   equipmentPositions = [],
   showRinseButton = false,
   onRinse,
+  onObservePlatinumWire,
   isRinsing = false,
   hasRinsed = false,
   rodMoved = false,
@@ -86,6 +89,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   onHeatingStateChange,
   activeHalide,
   dryTestMode,
+  activeFlameTest,
   mno2AddedDuringHeating,
   specialCasesHeatingCount = 0,
   chlorideHeatingCount = 0,
@@ -119,6 +123,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       experimentTitle?.toLowerCase().includes("dry tests for acid radicals")) &&
     dryTestMode === "acid" &&
     activeHalide === "I";
+
+  const shouldUseBlueFlame = dryTestMode === "basic" && activeFlameTest === "Fl";
 
   // Determine whether to use reddish-brown fumes based on context (Special Cases + dry acid mode on 5th heating)
   const shouldUseReddishBrownFumes =
@@ -227,6 +233,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       ),
     );
   const [heatButtonCoords, setHeatButtonCoords] = useState<{ left: number; top: number } | null>(null);
+  const [observeButtonCoords, setObserveButtonCoords] = useState<{ left: number; top: number } | null>(null);
   const [flameAnchorCoords, setFlameAnchorCoords] = useState<{ left: number; top: number } | null>(null);
   const defaultFlameCoords = bunsenPosition
   ? {
@@ -234,6 +241,9 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       top: bunsenPosition.y - 96,
     }
   : null;
+  const platinumPosition = equipmentPositions.find(
+    (pos) => stripEquipmentIdSuffix(pos.id) === "platinum-wire",
+  ) ?? null;
   const flameCoords = flameAnchorCoords ?? defaultFlameCoords;
   const updateHeatButtonCoords = useCallback(() => {
     if (!isDryTestWorkbench || !bunsenPosition || !workbenchRef.current) {
@@ -251,6 +261,28 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
     setHeatButtonCoords({ left: clampedLeft, top: clampedTop });
   }, [bunsenPosition, isDryTestWorkbench]);
+
+  const updateObserveButtonCoords = useCallback(() => {
+    if (!isDryTestWorkbench || dryTestMode !== "basic" || activeFlameTest !== "Fl" || !platinumPosition || !workbenchRef.current) {
+      setObserveButtonCoords(null);
+      return;
+    }
+
+    const platinumElement = workbenchRef.current.querySelector<HTMLDivElement>(
+      `[data-equipment-id="${platinumPosition.id}"]`,
+    );
+    if (!platinumElement) {
+      setObserveButtonCoords(null);
+      return;
+    }
+
+    const workbenchRect = workbenchRef.current.getBoundingClientRect();
+    const platinumRect = platinumElement.getBoundingClientRect();
+    setObserveButtonCoords({
+      left: platinumRect.left - workbenchRect.left + platinumRect.width / 2,
+      top: platinumRect.bottom - workbenchRect.top + 8,
+    });
+  }, [activeFlameTest, dryTestMode, isDryTestWorkbench, platinumPosition]);
 
   const updateFlamePosition = useCallback(() => {
     if (!isDryTestWorkbench || !workbenchRef.current) {
@@ -360,6 +392,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   useEffect(() => {
     const handleResize = () => {
       updateHeatButtonCoords();
+      updateObserveButtonCoords();
       updateFlamePosition();
       updateRinseLayout();
     };
@@ -369,7 +402,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [updateHeatButtonCoords, updateFlamePosition, updateRinseLayout]);
+  }, [updateHeatButtonCoords, updateObserveButtonCoords, updateFlamePosition, updateRinseLayout]);
 
   useEffect(() => {
     if (!isDryTestWorkbench) {
@@ -378,12 +411,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     }
 
     updateHeatButtonCoords();
+    updateObserveButtonCoords();
     updateFlamePosition();
     updateRinseLayout();
   }, [
     isDryTestWorkbench,
     isBunsenHeating,
     updateHeatButtonCoords,
+    updateObserveButtonCoords,
     updateFlamePosition,
     updateRinseLayout,
   ]);
@@ -690,7 +725,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
               )}
               {(isBunsenHeating || isBunsenLit) && flameCoords && (
                 <div
-                  className={`bunsen-flame-layer ${isBunsenHeating ? "flame-burning" : "flame-embers"}`}
+                  className={`bunsen-flame-layer ${isBunsenHeating ? "flame-burning" : "flame-embers"} ${shouldUseBlueFlame ? "flame-blue" : ""}`}
                   style={{
                     "--heat-flame-left": `${flameCoords.left}px`,
                     "--heat-flame-top": `${flameCoords.top}px`,
@@ -826,6 +861,27 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   </div>
                 </div>
               )}
+              {observeButtonCoords && onObservePlatinumWire && (
+                <div
+                  className="heat-control-panel"
+                  style={{
+                    "--heat-action-left": `${observeButtonCoords.left}px`,
+                    "--heat-action-top": `${observeButtonCoords.top}px`,
+                  } as React.CSSProperties}
+                >
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      onObservePlatinumWire();
+                    }}
+                    className="heat-trigger-button flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-full shadow-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 bg-sky-500 hover:bg-sky-600 text-white focus-visible:ring-sky-200"
+                  >
+                    OBSERVE
+                  </button>
+                </div>
+              )}
             </>
           )}
 
@@ -943,6 +999,14 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 .bunsen-flame-layer.flame-embers {
   opacity: 0.5;
   animation-duration: 1.4s;
+}
+.bunsen-flame-layer.flame-blue {
+  background: radial-gradient(circle at 50% 0%, rgba(96, 165, 250, 0.95), rgba(59, 130, 246, 0.7) 45%, rgba(37, 99, 235, 0) 72%);
+  filter: blur(0.4px) drop-shadow(0 0 20px rgba(59, 130, 246, 0.72));
+}
+.bunsen-flame-layer.flame-blue::after {
+  background: radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.85), rgba(96, 165, 250, 0));
+  opacity: 0.72;
 }
 .dry-test-vapor-cloud {
   position: absolute;

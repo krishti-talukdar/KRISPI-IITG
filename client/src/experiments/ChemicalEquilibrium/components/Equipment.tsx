@@ -519,7 +519,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
       return (
         <div
-          className="relative flex flex-col items-center pointer-events-none"
+          className="relative flex flex-col items-center"
           style={{
             marginTop: wrapperMarginTop,
             transition: "margin-top 0.75s ease-in-out",

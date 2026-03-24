@@ -690,7 +690,7 @@ function ChemicalEquilibriumVirtualLab({
   const [wetBasicHeatingCount, setWetBasicHeatingCount] = useState(0);
   const [phPaperColor, setPhPaperColor] = useState<string | undefined>(undefined);
   const MNO2_CASE_TWO_RESULT =
-    "MnO₂ accelerates the rate of production of Br₂ gas.\n\n2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
+    "On adding a small amount of MnO₂ to the mixture in the test tube and warming, a greenish-yellow gas is evolved.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
@@ -946,7 +946,12 @@ function ChemicalEquilibriumVirtualLab({
   ];
   const detailedInsights = [
     {
-      title: activeHalide === "Br" && resolvedDryTestMode === "acid" ? "Bromide gas formation" : "Initial chloride clues",
+      title:
+        activeHalide === "Br" && resolvedDryTestMode === "acid"
+          ? "Bromide gas formation"
+          : activeHalide === "S" && resolvedDryTestMode === "acid"
+            ? "Sulfide present"
+            : "Initial chloride clues",
       hint: "Inference 1",
       description: caseOneResult,
     },
@@ -2865,6 +2870,13 @@ function ChemicalEquilibriumVirtualLab({
       setTimeout(() => setToastMessage(null), 2500);
     }
   }, [isDryTestExperiment, dryTestMode, activeFlameTest, caseTwoResult, setCaseTwoResult, setToastMessage]);
+
+  const handleObserveFlameTest = useCallback(() => {
+    if (isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Fl") {
+      setToastMessage("Blue flame observed on the platinum wire.");
+      setTimeout(() => setToastMessage(null), 2500);
+    }
+  }, [isDryTestExperiment, dryTestMode, activeFlameTest, setToastMessage]);
 
   useEffect(() => {
     if (!isDryTestExperiment || resolvedDryTestMode !== "basic") {
@@ -4803,6 +4815,8 @@ function ChemicalEquilibriumVirtualLab({
                 // Pass dry test context for fume coloring
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
+                activeFlameTest={activeFlameTest}
+                onObservePlatinumWire={handleObserveFlameTest}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
                 chlorideHeatingCount={chlorideHeatingCount}
@@ -5100,6 +5114,8 @@ function ChemicalEquilibriumVirtualLab({
                 // Pass dry test context for fume coloring
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
+                activeFlameTest={activeFlameTest}
+                onObservePlatinumWire={handleObserveFlameTest}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
                 chlorideHeatingCount={chlorideHeatingCount}
@@ -5550,8 +5566,8 @@ function ChemicalEquilibriumVirtualLab({
                     if ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") {
                       return insight.hint === "Inference 1";
                     }
-                    // Hide Inference 3, 4, 5, 6 for Bromide and Iodide checks under Dry Tests for Acid Radicals
-                    if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                    // Hide Inference 3, 4, 5, 6 for Acid Radicals dry-test chloride/bromide/iodide checks
+                    if ((activeHalide === "Br" || activeHalide === "Cl" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                       return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
                     }
                     return true;
@@ -5573,6 +5589,9 @@ function ChemicalEquilibriumVirtualLab({
 
               <div className={activeHalide === "S" && resolvedDryTestMode === "acid" ? "hidden" : "grid gap-4 md:grid-cols-3"}>
                 {analysisGuidance.filter((note) => {
+                  if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
+                    return !["Wet test focus", "Next steps"].includes(note.label);
+                  }
                   // For Bromide and Iodide checks, only show the Wet test focus note
                   if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                     return note.label === "Wet test focus";
@@ -5594,6 +5613,9 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries
                     .filter((entry) => {
+                      if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
+                        return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      }
                       if (activeHalide === "I" && resolvedDryTestMode === "acid") {
                         return entry.label === "INFERENCE 1";
                       }
@@ -5664,7 +5686,7 @@ function ChemicalEquilibriumVirtualLab({
                   <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                     <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
                       <span>Case 1 Indicator</span>
-                      <span>Chloride residue</span>
+                      <span>Chloride</span>
                     </div>
                     <div className="mt-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-300 relative">
                       <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-gray-700">Loop film</span>
@@ -5693,6 +5715,9 @@ function ChemicalEquilibriumVirtualLab({
                   <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
                   <ul className="mt-4 space-y-3">
                     {observationHighlights.filter((highlight, index) => {
+                      if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
+                        return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
                       if (activeHalide === "S" && resolvedDryTestMode === "acid") {
                         return index === 0;
                       }
