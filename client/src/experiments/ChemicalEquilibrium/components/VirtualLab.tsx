@@ -690,7 +690,7 @@ function ChemicalEquilibriumVirtualLab({
   const [wetBasicHeatingCount, setWetBasicHeatingCount] = useState(0);
   const [phPaperColor, setPhPaperColor] = useState<string | undefined>(undefined);
   const MNO2_CASE_TWO_RESULT =
-    "MnO₂ accelerates the rate of production of Br₂ gas.\n\n2KBr + 3H₂SO₄ + MnO₂ → 2KHSO₄ + MnSO₄ + 2H₂O + Br₂";
+    "On adding a small amount of MnO₂ to the mixture in the test tube and warming, a greenish-yellow gas is evolved.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
