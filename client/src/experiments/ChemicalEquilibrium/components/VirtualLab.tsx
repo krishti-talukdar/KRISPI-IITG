@@ -4811,6 +4811,7 @@ function ChemicalEquilibriumVirtualLab({
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
                 activeFlameTest={activeFlameTest}
+                onObservePlatinumWire={handleObserveFlameTest}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
                 chlorideHeatingCount={chlorideHeatingCount}
@@ -4871,8 +4872,6 @@ function ChemicalEquilibriumVirtualLab({
                             ? handleObserveWetTest
                             : isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Am" && normalizedEquipmentName.includes("ph") && normalizedEquipmentName.includes("paper")
                             ? handleObservePhPaper
-                            : isDryTestExperiment && dryTestMode === "basic" && activeFlameTest === "Fl" && normalizedEquipmentName.includes("platinum")
-                            ? handleObserveFlameTest
                             : undefined
                         }
                         observeBlinking={shouldBlinkObserveButton && equipment.id === "test_tubes"}
@@ -5111,6 +5110,7 @@ function ChemicalEquilibriumVirtualLab({
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
                 activeFlameTest={activeFlameTest}
+                onObservePlatinumWire={handleObserveFlameTest}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
                 chlorideHeatingCount={chlorideHeatingCount}

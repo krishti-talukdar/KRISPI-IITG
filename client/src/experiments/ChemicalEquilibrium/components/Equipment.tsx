@@ -543,19 +543,6 @@ export const Equipment: React.FC<EquipmentProps> = ({
               }}
             />
           </div>
-          {position && onObserve && isDryTest && dryTestMode === "basic" && activeFlameTest === "Fl" && (
-            <button
-              type="button"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                onObserve?.();
-              }}
-              className="lab-observe-button mt-2"
-            >
-              OBSERVE
-            </button>
-          )}
         </div>
       );
     }
