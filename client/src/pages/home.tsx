@@ -24,6 +24,15 @@ export default function Home() {
   const filteredExperiments =
     experiments?.filter((exp) => {
       if (selectedCategory === "All Experiments") return true;
+
+      if (
+        selectedCategory === "Qualitative Analysis" &&
+        exp.title ===
+          "Detection of Nitrogen, Sulphur, Chlorine, Bromine, and Iodine (Lassaigne's Test)"
+      ) {
+        return false;
+      }
+
       return (
         exp.category === selectedCategory || exp.difficulty === selectedCategory
       );
