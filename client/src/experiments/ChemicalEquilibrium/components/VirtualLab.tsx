@@ -1142,8 +1142,9 @@ function ChemicalEquilibriumVirtualLab({
     showBasicFlameObservations ??
     (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
   const shouldShowBasicFlameObservation = isBasicFlameAnalysis && isWorkbenchHeating;
-  const shouldUseBlueBasicFlame = basicFlameHeatingCount >= 3;
+  const shouldUseBlueBasicFlame = basicFlameHeatingCount === 3;
   const shouldUseGreenBasicFlame = basicFlameHeatingCount === 2;
+  const shouldUseReddishBrownBasicFlame = basicFlameHeatingCount >= 4;
   const saltHeatingIntervalRef = useRef<number | null>(null);
   const platinumWireHeatingAppliedRef = useRef(false);
   const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
@@ -4966,17 +4967,17 @@ function ChemicalEquilibriumVirtualLab({
                       viewBox="0 0 160 200"
                       className="mx-auto h-40 w-28 drop-shadow-lg"
                       role="img"
-                      aria-label={shouldUseBlueBasicFlame ? "Blue flame observed" : shouldUseGreenBasicFlame ? "Green flame observed" : "Yellow flame observed"}
+                      aria-label={shouldUseReddishBrownBasicFlame ? "Reddish-brown flame observed" : shouldUseBlueBasicFlame ? "Blue flame observed" : shouldUseGreenBasicFlame ? "Green flame observed" : "Yellow flame observed"}
                     >
                       <defs>
                         <radialGradient id="basicFlameCore" cx="50%" cy="30%" r="70%">
-                          <stop offset="0%" stopColor={shouldUseBlueBasicFlame ? "#DBEAFE" : shouldUseGreenBasicFlame ? "#DCFCE7" : "#FFF7B0"} />
-                          <stop offset="45%" stopColor={shouldUseBlueBasicFlame ? "#60A5FA" : shouldUseGreenBasicFlame ? "#4ADE80" : "#FFD84D"} />
-                          <stop offset="100%" stopColor={shouldUseBlueBasicFlame ? "#2563EB" : shouldUseGreenBasicFlame ? "#16A34A" : "#F59E0B"} />
+                          <stop offset="0%" stopColor={shouldUseReddishBrownBasicFlame ? "#FDE68A" : shouldUseBlueBasicFlame ? "#DBEAFE" : shouldUseGreenBasicFlame ? "#DCFCE7" : "#FFF7B0"} />
+                          <stop offset="45%" stopColor={shouldUseReddishBrownBasicFlame ? "#F59E0B" : shouldUseBlueBasicFlame ? "#60A5FA" : shouldUseGreenBasicFlame ? "#4ADE80" : "#FFD84D"} />
+                          <stop offset="100%" stopColor={shouldUseReddishBrownBasicFlame ? "#9A3412" : shouldUseBlueBasicFlame ? "#2563EB" : shouldUseGreenBasicFlame ? "#16A34A" : "#F59E0B"} />
                         </radialGradient>
                         <linearGradient id="basicFlameInner" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={shouldUseBlueBasicFlame ? "#EFF6FF" : shouldUseGreenBasicFlame ? "#F0FDF4" : "#FFFDE7"} />
-                          <stop offset="100%" stopColor={shouldUseBlueBasicFlame ? "#93C5FD" : shouldUseGreenBasicFlame ? "#86EFAC" : "#FDE047"} />
+                          <stop offset="0%" stopColor={shouldUseReddishBrownBasicFlame ? "#FEF3C7" : shouldUseBlueBasicFlame ? "#EFF6FF" : shouldUseGreenBasicFlame ? "#F0FDF4" : "#FFFDE7"} />
+                          <stop offset="100%" stopColor={shouldUseReddishBrownBasicFlame ? "#EA580C" : shouldUseBlueBasicFlame ? "#93C5FD" : shouldUseGreenBasicFlame ? "#86EFAC" : "#FDE047"} />
                         </linearGradient>
                       </defs>
                       <path
@@ -4988,7 +4989,7 @@ function ChemicalEquilibriumVirtualLab({
                         fill="url(#basicFlameInner)"
                         opacity="0.92"
                       />
-                      <ellipse cx="80" cy="173" rx="30" ry="10" fill={shouldUseBlueBasicFlame ? "#2563EB" : shouldUseGreenBasicFlame ? "#16A34A" : "#F59E0B"} opacity="0.25" />
+                      <ellipse cx="80" cy="173" rx="30" ry="10" fill={shouldUseReddishBrownBasicFlame ? "#9A3412" : shouldUseBlueBasicFlame ? "#2563EB" : shouldUseGreenBasicFlame ? "#16A34A" : "#F59E0B"} opacity="0.25" />
                     </svg>
                   ) : (
                     <div className="flex h-40 items-center justify-center rounded-md border border-dashed border-yellow-200 bg-white/70 text-xs font-medium tracking-[0.25em] text-yellow-700">
