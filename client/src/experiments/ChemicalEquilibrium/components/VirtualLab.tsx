@@ -836,10 +836,6 @@ function ChemicalEquilibriumVirtualLab({
   const instructionMessage = isDryTestExperiment
     ? dryTestInstructionMap[resolvedDryTestMode]
     : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
-  const isBasicFlameAnalysis =
-    showBasicFlameObservations ??
-    (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
-  const shouldShowBasicFlameObservation = isBasicFlameAnalysis && isWorkbenchHeating;
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const resultsReady = caseOneReady && caseTwoReady;
@@ -1141,6 +1137,10 @@ function ChemicalEquilibriumVirtualLab({
   };
   const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
+  const isBasicFlameAnalysis =
+    showBasicFlameObservations ??
+    (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
+  const shouldShowBasicFlameObservation = isBasicFlameAnalysis && isWorkbenchHeating;
   const saltHeatingIntervalRef = useRef<number | null>(null);
   const platinumWireHeatingAppliedRef = useRef(false);
   const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
