@@ -839,6 +839,7 @@ function ChemicalEquilibriumVirtualLab({
   const isBasicFlameAnalysis =
     showBasicFlameObservations ??
     (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
+  const shouldShowBasicFlameObservation = isBasicFlameAnalysis && isWorkbenchHeating;
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const resultsReady = caseOneReady && caseTwoReady;
@@ -4944,15 +4945,41 @@ function ChemicalEquilibriumVirtualLab({
             {isBasicFlameAnalysis && (
               <div className="mb-3">
                 <div className="text-sm font-bold mb-2 text-slate-900">OBSERVATIONS</div>
-                <div className="space-y-2">
-                  <div className="p-3 border rounded bg-white text-slate-900">
-                    <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">
-                      OBSERVATION 1
+                <div className="rounded-lg border border-yellow-200 bg-gradient-to-b from-yellow-50 via-orange-50 to-white p-3">
+                  {shouldShowBasicFlameObservation ? (
+                    <svg
+                      viewBox="0 0 160 200"
+                      className="mx-auto h-40 w-28 drop-shadow-lg"
+                      role="img"
+                      aria-label="Yellow flame observed"
+                    >
+                      <defs>
+                        <radialGradient id="yellowFlameCore" cx="50%" cy="30%" r="70%">
+                          <stop offset="0%" stopColor="#FFF7B0" />
+                          <stop offset="45%" stopColor="#FFD84D" />
+                          <stop offset="100%" stopColor="#F59E0B" />
+                        </radialGradient>
+                        <linearGradient id="yellowFlameInner" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#FFFDE7" />
+                          <stop offset="100%" stopColor="#FDE047" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M80 18C64 42 52 58 52 80c0 19 10 33 20 44-2-16 1-30 10-40 2 13 10 23 18 31 8 8 13 20 13 32 0 18-11 33-33 33-27 0-48-20-48-50 0-24 11-46 28-67 4-5 7-10 10-15 3 9 8 17 14 25 7-11 15-22 16-30z"
+                        fill="url(#yellowFlameCore)"
+                      />
+                      <path
+                        d="M80 56c-10 14-16 26-16 39 0 11 6 21 16 29 10-8 16-18 16-29 0-13-6-25-16-39z"
+                        fill="url(#yellowFlameInner)"
+                        opacity="0.92"
+                      />
+                      <ellipse cx="80" cy="173" rx="30" ry="10" fill="#F59E0B" opacity="0.25" />
+                    </svg>
+                  ) : (
+                    <div className="flex h-40 items-center justify-center rounded-md border border-dashed border-yellow-200 bg-white/70 text-xs font-medium tracking-[0.25em] text-yellow-700">
+                      START HEATING TO VIEW FLAME OBSERVATION
                     </div>
-                    <div className="mt-1 text-sm text-slate-800 whitespace-pre-wrap">
-                      Blue flame observed on the platinum wire.
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
