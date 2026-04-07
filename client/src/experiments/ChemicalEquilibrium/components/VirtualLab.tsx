@@ -1137,10 +1137,12 @@ function ChemicalEquilibriumVirtualLab({
   };
   const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
+  const [basicFlameHeatingCount, setBasicFlameHeatingCount] = useState(0);
   const isBasicFlameAnalysis =
     showBasicFlameObservations ??
     (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
   const shouldShowBasicFlameObservation = isBasicFlameAnalysis && isWorkbenchHeating;
+  const shouldUseGreenBasicFlame = basicFlameHeatingCount >= 2;
   const saltHeatingIntervalRef = useRef<number | null>(null);
   const platinumWireHeatingAppliedRef = useRef(false);
   const isAcidDryTest = isDryTestExperiment && resolvedDryTestMode === "acid";
@@ -1153,6 +1155,12 @@ function ChemicalEquilibriumVirtualLab({
     "blue" | "transitioning" | "pink"
   >("pink");
   const [step3WaterAdded, setStep3WaterAdded] = useState(false);
+
+  useEffect(() => {
+    if (!isBasicFlameAnalysis) {
+      setBasicFlameHeatingCount(0);
+    }
+  }, [isBasicFlameAnalysis]);
 
   // Listen for automatic step completion events
   useEffect(() => {
@@ -1727,6 +1735,7 @@ function ChemicalEquilibriumVirtualLab({
     setIodideWetSodaExtractAddedTracked(false);
     setWetBasicHeatingTriggered(false);
     setWetBasicHeatingCount(0);
+    setBasicFlameHeatingCount(0);
   }, [stepNumber, workbenchResetTrigger]);
 
   useEffect(() => {
@@ -3190,6 +3199,9 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleBunsenHeatingChange = useCallback(
     (heating: boolean) => {
+      if (heating && !isWorkbenchHeating && isBasicFlameAnalysis) {
+        setBasicFlameHeatingCount((count) => count + 1);
+      }
       setIsWorkbenchHeating(heating);
 
       if (
@@ -3446,6 +3458,8 @@ function ChemicalEquilibriumVirtualLab({
       sulfideWetHeatingCount,
       specialCasesWetHeatingCount,
       wetBasicHeatingCount,
+      isWorkbenchHeating,
+      isBasicFlameAnalysis,
     ],
   );
 
@@ -4951,29 +4965,29 @@ function ChemicalEquilibriumVirtualLab({
                       viewBox="0 0 160 200"
                       className="mx-auto h-40 w-28 drop-shadow-lg"
                       role="img"
-                      aria-label="Yellow flame observed"
+                      aria-label={shouldUseGreenBasicFlame ? "Green flame observed" : "Yellow flame observed"}
                     >
                       <defs>
-                        <radialGradient id="yellowFlameCore" cx="50%" cy="30%" r="70%">
-                          <stop offset="0%" stopColor="#FFF7B0" />
-                          <stop offset="45%" stopColor="#FFD84D" />
-                          <stop offset="100%" stopColor="#F59E0B" />
+                        <radialGradient id="basicFlameCore" cx="50%" cy="30%" r="70%">
+                          <stop offset="0%" stopColor={shouldUseGreenBasicFlame ? "#DCFCE7" : "#FFF7B0"} />
+                          <stop offset="45%" stopColor={shouldUseGreenBasicFlame ? "#4ADE80" : "#FFD84D"} />
+                          <stop offset="100%" stopColor={shouldUseGreenBasicFlame ? "#16A34A" : "#F59E0B"} />
                         </radialGradient>
-                        <linearGradient id="yellowFlameInner" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#FFFDE7" />
-                          <stop offset="100%" stopColor="#FDE047" />
+                        <linearGradient id="basicFlameInner" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor={shouldUseGreenBasicFlame ? "#F0FDF4" : "#FFFDE7"} />
+                          <stop offset="100%" stopColor={shouldUseGreenBasicFlame ? "#86EFAC" : "#FDE047"} />
                         </linearGradient>
                       </defs>
                       <path
                         d="M80 18C64 42 52 58 52 80c0 19 10 33 20 44-2-16 1-30 10-40 2 13 10 23 18 31 8 8 13 20 13 32 0 18-11 33-33 33-27 0-48-20-48-50 0-24 11-46 28-67 4-5 7-10 10-15 3 9 8 17 14 25 7-11 15-22 16-30z"
-                        fill="url(#yellowFlameCore)"
+                        fill="url(#basicFlameCore)"
                       />
                       <path
                         d="M80 56c-10 14-16 26-16 39 0 11 6 21 16 29 10-8 16-18 16-29 0-13-6-25-16-39z"
-                        fill="url(#yellowFlameInner)"
+                        fill="url(#basicFlameInner)"
                         opacity="0.92"
                       />
-                      <ellipse cx="80" cy="173" rx="30" ry="10" fill="#F59E0B" opacity="0.25" />
+                      <ellipse cx="80" cy="173" rx="30" ry="10" fill={shouldUseGreenBasicFlame ? "#16A34A" : "#F59E0B"} opacity="0.25" />
                     </svg>
                   ) : (
                     <div className="flex h-40 items-center justify-center rounded-md border border-dashed border-yellow-200 bg-white/70 text-xs font-medium tracking-[0.25em] text-yellow-700">
