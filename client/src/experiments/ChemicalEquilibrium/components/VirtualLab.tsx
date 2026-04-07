@@ -58,6 +58,7 @@ interface ChemicalEquilibriumVirtualLabProps {
   dryTestMode?: DryTestMode;
   activeHalide?: string;
   activeFlameTest?: string;
+  showBasicFlameObservations?: boolean;
 }
 
 type LabSnapshot = {
@@ -578,6 +579,7 @@ function ChemicalEquilibriumVirtualLab({
   dryTestMode,
   activeHalide,
   activeFlameTest,
+  showBasicFlameObservations,
 }: ChemicalEquilibriumVirtualLabProps) {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -834,10 +836,9 @@ function ChemicalEquilibriumVirtualLab({
   const instructionMessage = isDryTestExperiment
     ? dryTestInstructionMap[resolvedDryTestMode]
     : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
-  const showBasicFlameObservations =
-    isDryTestExperiment &&
-    resolvedDryTestMode === "basic" &&
-    activeFlameTest === "Fl";
+  const isBasicFlameAnalysis =
+    showBasicFlameObservations ??
+    (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const resultsReady = caseOneReady && caseTwoReady;
@@ -4940,7 +4941,7 @@ function ChemicalEquilibriumVirtualLab({
               </ul>
             </div>
 
-            {showBasicFlameObservations && (
+            {isBasicFlameAnalysis && (
               <div className="mb-3">
                 <div className="text-sm font-bold mb-2 text-slate-900">OBSERVATIONS</div>
                 <div className="space-y-2">
