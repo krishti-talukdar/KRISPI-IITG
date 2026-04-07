@@ -834,6 +834,10 @@ function ChemicalEquilibriumVirtualLab({
   const instructionMessage = isDryTestExperiment
     ? dryTestInstructionMap[resolvedDryTestMode]
     : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
+  const showBasicFlameObservations =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "basic" &&
+    activeFlameTest === "Fl";
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const resultsReady = caseOneReady && caseTwoReady;
@@ -4935,6 +4939,22 @@ function ChemicalEquilibriumVirtualLab({
                 ))}
               </ul>
             </div>
+
+            {showBasicFlameObservations && (
+              <div className="mb-3">
+                <div className="text-sm font-bold mb-2 text-slate-900">OBSERVATIONS</div>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded bg-white text-slate-900">
+                    <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500">
+                      OBSERVATION 1
+                    </div>
+                    <div className="mt-1 text-sm text-slate-800 whitespace-pre-wrap">
+                      Blue flame observed on the platinum wire.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="text-sm font-bold mb-2 text-slate-900">INFERENCE</div>
             <div className="space-y-2">
