@@ -3213,6 +3213,8 @@ function ChemicalEquilibriumVirtualLab({
           setCaseThreeResult("Blue colour flame is observed in both hot and cold condition,therefore Co²⁺ is present");
         } else if (nextCount === 4) {
           setCaseFourResult("Reddish-brown colour flame is observed in hot condition, therefore Ni²⁺ is present");
+        } else if (nextCount === 5) {
+          setCaseFiveResult("Violet colour flame is observed in both hot and cold condition, therefore Mn²⁺ is present");
         }
       }
       setIsWorkbenchHeating(heating);
