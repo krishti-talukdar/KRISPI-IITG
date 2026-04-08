@@ -3206,7 +3206,7 @@ function ChemicalEquilibriumVirtualLab({
         const nextCount = basicFlameHeatingCount + 1;
         setBasicFlameHeatingCount(nextCount);
         if (nextCount === 1) {
-          setCaseOneResult("Yellow colour flame in both hot and cold condition is observed, hence Fe³⁺ is present");
+          setCaseOneResult("Yellow colour flame is observed in both hot and cold condition , therefore Fe³⁺ is present");
         }
       }
       setIsWorkbenchHeating(heating);
@@ -3214,7 +3214,8 @@ function ChemicalEquilibriumVirtualLab({
       if (
         heating &&
         experiment.id === ChemicalEquilibriumData.id &&
-        resolvedDryTestMode === "basic"
+        resolvedDryTestMode === "basic" &&
+        !isBasicFlameAnalysis
       ) {
         setCaseOneResult(
           "Formation of white sublimate (ammonium chloride) shows NH₄⁺ is present.",
