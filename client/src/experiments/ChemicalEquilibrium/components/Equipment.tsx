@@ -7,7 +7,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import type { EquipmentPosition, CobaltReactionState, DryTestMode } from "../types";
-import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL, GLASS_ROD_FLAME_TEST_IMAGE_URL, GLASS_ROD_FLAME_TEST_DROPPED_IMAGE_URL, PH_PAPER_IMAGE_URL, PLATINUM_WIRE_IMAGE_URL } from "../constants";
+import { GLASS_CONTAINER_IMAGE_URL, GLASS_ROD_IMAGE_URL, GLASS_ROD_FLAME_TEST_IMAGE_URL, GLASS_ROD_FLAME_TEST_DROPPED_IMAGE_URL, PH_PAPER_IMAGE_URL, PLATINUM_WIRE_IMAGE_URL, WATCH_GLASS_IMAGE_URL } from "../constants";
 
 const NAOH_CHEMICAL_ID = "naoh";
 const NAOH_SOLUTION_COLOR = "#bfdbfe";
@@ -108,6 +108,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     normalizedName.includes("nh₄oh") ||
     normalizedName.includes("nh4oh");
   const isGlassRodEquipment = normalizedName.includes("glass rod");
+  const isWatchGlassEquipment = normalizedName.includes("watch glass");
   const isPlatinumWireEquipment = normalizedName.includes("platinum");
   const isBunsenBurnerEquipment = normalizedName.includes("bunsen");
   const isGlassContainerEquipment = normalizedName.includes("glass container");
@@ -118,6 +119,14 @@ export const Equipment: React.FC<EquipmentProps> = ({
     dryTestMode === "acid" &&
     specialCasesHeatingCount === 5 &&
     isHeating;
+  const hasSaltSampleInWorkbenchWatchGlass = Boolean(
+    allEquipmentPositions?.some(
+      (position) =>
+        position.id === id &&
+        position.chemicals?.some((chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0),
+    ),
+  );
+  const shouldShowWatchGlassParticles = isWatchGlassEquipment && Boolean(position) && hasSaltSampleInWorkbenchWatchGlass;
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -479,6 +488,30 @@ export const Equipment: React.FC<EquipmentProps> = ({
   const getEquipmentSpecificRendering = () => {
     if (!isOnWorkbench) {
       return icon;
+    }
+
+    if (isWatchGlassEquipment) {
+      return (
+        <div className="relative flex flex-col items-center pointer-events-none">
+          <div className="relative w-40 h-24">
+            <img
+              src={imageUrl ?? WATCH_GLASS_IMAGE_URL}
+              alt="Watch glass"
+              className="w-full h-full object-contain drop-shadow-lg"
+            />
+            {shouldShowWatchGlassParticles && (
+              <div className="absolute inset-0">
+                <span className="absolute left-[28%] top-[42%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
+                <span className="absolute left-[40%] top-[54%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
+                <span className="absolute left-[52%] top-[39%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
+                <span className="absolute left-[61%] top-[58%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
+                <span className="absolute left-[46%] top-[47%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
+                <span className="absolute left-[34%] top-[62%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
+              </div>
+            )}
+          </div>
+        </div>
+      );
     }
 
     if (isGlassRodEquipment) {

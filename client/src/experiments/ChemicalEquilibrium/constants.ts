@@ -14,6 +14,9 @@ export const GLASS_ROD_FLAME_TEST_IMAGE_URL =
 export const GLASS_ROD_FLAME_TEST_DROPPED_IMAGE_URL =
   "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F0067812922ee430c8cbe10fbde6b108b?format=webp&width=800&height=1200";
 
+export const WATCH_GLASS_IMAGE_URL =
+  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F9ac7ff7f623f4d48adbc719283c3c9b7?format=webp&width=800&height=1200";
+
 export const PLATINUM_WIRE_IMAGE_URL =
   "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Ff2801ecab9ab448f82e83ca29b5c6972?format=webp&width=800&height=1200";
 

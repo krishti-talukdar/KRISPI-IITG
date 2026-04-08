@@ -57,6 +57,7 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
     equipment: [
       "Test Tubes",
       "Salt Sample",
+      "Watch Glass",
       "Glass Rod",
       "Bunsen Burner (virtual heat source)",
       "Conc. HCl",

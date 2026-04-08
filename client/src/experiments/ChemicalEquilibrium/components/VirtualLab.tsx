@@ -19,6 +19,7 @@ import {
   CHEMICAL_EQUILIBRIUM_EQUIPMENT,
   DEFAULT_MEASUREMENTS,
   GLASS_CONTAINER_IMAGE_URL,
+  WATCH_GLASS_IMAGE_URL,
   PH_HCL_CHEMICALS,
   PH_HCL_EQUIPMENT,
 } from "../constants";
@@ -555,6 +556,22 @@ const mapDryTestEquipment = (names: string[] = []): EquipmentDefinition[] =>
         };
       }
 
+      if (normalized.includes("watch glass")) {
+        return {
+          ...base,
+          icon: (
+            <div className="flex items-center justify-center w-20 h-20">
+              <img
+                src={WATCH_GLASS_IMAGE_URL}
+                alt="Watch glass"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          ),
+          imageUrl: WATCH_GLASS_IMAGE_URL,
+        };
+      }
+
       return base;
     });
 
@@ -728,6 +745,11 @@ function ChemicalEquilibriumVirtualLab({
       : equipmentList;
   const glassContainerEquipmentId =
     displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass container"))?.id ?? null;
+  const watchGlassEquipmentId =
+    displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("watch glass"))?.id ?? null;
+  const isWatchGlassOnWorkbench = Boolean(
+    watchGlassEquipmentId && equipmentPositions.some((pos) => pos.id === watchGlassEquipmentId),
+  );
   const glassRodEquipmentId =
     displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass rod"))?.id ?? null;
   const glassContainerState = equipmentPositions.find((pos) => pos.id === glassContainerEquipmentId);
@@ -1141,6 +1163,10 @@ function ChemicalEquilibriumVirtualLab({
   const isBasicFlameAnalysis =
     showBasicFlameObservations ??
     (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
+  const shouldUseWatchGlassForSaltSample =
+    isDryTestExperiment &&
+    resolvedDryTestMode === "basic" &&
+    (activeFlameTest === "Fl" || isWatchGlassOnWorkbench);
   const shouldShowBasicFlameObservation = isBasicFlameAnalysis && isWorkbenchHeating;
   const shouldUseBlueBasicFlame = basicFlameHeatingCount === 3;
   const shouldUseGreenBasicFlame = basicFlameHeatingCount === 2;
@@ -3206,10 +3232,22 @@ function ChemicalEquilibriumVirtualLab({
         const nextCount = basicFlameHeatingCount + 1;
         setBasicFlameHeatingCount(nextCount);
         if (nextCount === 1) {
-          setCaseOneResult("Yellow colour flame in both hot and cold condition is observed, hence Fe³⁺ is present");
+          setCaseOneResult("Yellow colour flame is observed in both hot and cold condition , therefore Fe³⁺ is present");
+        } else if (nextCount === 2) {
+          setCaseTwoResult("Green colour flame is observed in both hot and cold condition, therefore Cu²⁺ is present");
+        } else if (nextCount === 3) {
+          setCaseThreeResult("Blue colour flame is observed in both hot and cold condition,therefore Co²⁺ is present");
+        } else if (nextCount === 4) {
+          setCaseFourResult("Reddish-brown colour flame is observed in hot condition, therefore Ni²⁺ is present");
+        } else if (nextCount === 5) {
+          setCaseFiveResult("Violet colour flame is observed in both hot and cold condition, therefore Mn²⁺ is present");
         }
       }
       setIsWorkbenchHeating(heating);
+
+      if (heating && isBasicFlameAnalysis) {
+        return;
+      }
 
       if (
         heating &&
@@ -3759,8 +3797,25 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
-    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
-      setSaltDialogError("Place the test tube on the workbench first.");
+    const targetEquipmentId = shouldUseWatchGlassForSaltSample
+      ? watchGlassEquipmentId
+      : "test_tubes";
+
+    if (!targetEquipmentId) {
+      setSaltDialogError(
+        shouldUseWatchGlassForSaltSample
+          ? "Place the watch glass on the workbench first."
+          : "Place the test tube on the workbench first.",
+      );
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === targetEquipmentId)) {
+      setSaltDialogError(
+        shouldUseWatchGlassForSaltSample
+          ? "Place the watch glass on the workbench first."
+          : "Place the test tube on the workbench first.",
+      );
       return;
     }
 
@@ -3768,7 +3823,7 @@ function ChemicalEquilibriumVirtualLab({
 
     setEquipmentPositions((prev) =>
       prev.map((pos) => {
-        if (pos.id !== "test_tubes") {
+        if (pos.id !== targetEquipmentId) {
           return pos;
         }
 
@@ -5019,6 +5074,9 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "INFERENCE 6", result: caseSixResult },
               ]
                 .filter((entry) => {
+                  if (isBasicFlameAnalysis) {
+                    return entry.label !== "INFERENCE 6";
+                  }
                   // Hide INFERENCE 3, 4, 5, 6 for Bromide Check in Dry Test for Acid Radicals
                   if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
                     return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
@@ -5347,7 +5405,9 @@ function ChemicalEquilibriumVirtualLab({
             <DialogHeader>
               <DialogTitle>Enter Mass</DialogTitle>
               <DialogDescription>
-                Enter the mass of the Salt Sample to add to the test tube.
+                {shouldUseWatchGlassForSaltSample
+                  ? "Enter the mass of the Salt Sample to add to the watch glass."
+                  : "Enter the mass of the Salt Sample to add to the test tube."}
               </DialogDescription>
             </DialogHeader>
 
@@ -5377,7 +5437,7 @@ function ChemicalEquilibriumVirtualLab({
                   Cancel
                 </Button>
                 <Button size="sm" onClick={handleAddSaltToTestTube}>
-                  Add to test tube
+                  {shouldUseWatchGlassForSaltSample ? "Add to watch glass" : "Add to test tube"}
                 </Button>
               </div>
             </DialogFooter>
