@@ -5027,6 +5027,9 @@ function ChemicalEquilibriumVirtualLab({
                 { label: "INFERENCE 6", result: caseSixResult },
               ]
                 .filter((entry) => {
+                  if (isBasicFlameAnalysis) {
+                    return entry.label !== "INFERENCE 6";
+                  }
                   // Hide INFERENCE 3, 4, 5, 6 for Bromide Check in Dry Test for Acid Radicals
                   if (activeHalide === "Br" && resolvedDryTestMode === "acid") {
                     return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
