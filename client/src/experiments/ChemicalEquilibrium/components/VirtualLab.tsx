@@ -3203,7 +3203,11 @@ function ChemicalEquilibriumVirtualLab({
   const handleBunsenHeatingChange = useCallback(
     (heating: boolean) => {
       if (heating && !isWorkbenchHeating && isBasicFlameAnalysis) {
-        setBasicFlameHeatingCount((count) => count + 1);
+        const nextCount = basicFlameHeatingCount + 1;
+        setBasicFlameHeatingCount(nextCount);
+        if (nextCount === 1) {
+          setCaseOneResult("Yellow colour flame in both hot and cold condition is observed, hence Fe³⁺ is present");
+        }
       }
       setIsWorkbenchHeating(heating);
 
@@ -3461,6 +3465,7 @@ function ChemicalEquilibriumVirtualLab({
       sulfideWetHeatingCount,
       specialCasesWetHeatingCount,
       wetBasicHeatingCount,
+      basicFlameHeatingCount,
       isWorkbenchHeating,
       isBasicFlameAnalysis,
     ],
@@ -4966,7 +4971,7 @@ function ChemicalEquilibriumVirtualLab({
                   {shouldShowBasicFlameObservation ? (
                     <svg
                       viewBox="0 0 160 200"
-                      className="mx-auto h-40 w-28 drop-shadow-lg"
+                      className="basic-flame-observation mx-auto h-40 w-28 drop-shadow-lg"
                       role="img"
                       aria-label={shouldUseVioletBasicFlame ? "Violet flame observed" : shouldUseReddishBrownBasicFlame ? "Reddish-brown flame observed" : shouldUseBlueBasicFlame ? "Blue flame observed" : shouldUseGreenBasicFlame ? "Green flame observed" : "Yellow flame observed"}
                     >
@@ -4984,13 +4989,15 @@ function ChemicalEquilibriumVirtualLab({
                       <path
                         d="M80 18C64 42 52 58 52 80c0 19 10 33 20 44-2-16 1-30 10-40 2 13 10 23 18 31 8 8 13 20 13 32 0 18-11 33-33 33-27 0-48-20-48-50 0-24 11-46 28-67 4-5 7-10 10-15 3 9 8 17 14 25 7-11 15-22 16-30z"
                         fill="url(#basicFlameCore)"
+                        className="basic-flame-observation__shape"
                       />
                       <path
                         d="M80 56c-10 14-16 26-16 39 0 11 6 21 16 29 10-8 16-18 16-29 0-13-6-25-16-39z"
                         fill="url(#basicFlameInner)"
                         opacity="0.92"
+                        className="basic-flame-observation__shape basic-flame-observation__shape--inner"
                       />
-                      <ellipse cx="80" cy="173" rx="30" ry="10" fill={shouldUseVioletBasicFlame ? "#7C3AED" : shouldUseReddishBrownBasicFlame ? "#9A3412" : shouldUseBlueBasicFlame ? "#2563EB" : shouldUseGreenBasicFlame ? "#16A34A" : "#F59E0B"} opacity="0.25" />
+                      <ellipse cx="80" cy="173" rx="30" ry="10" fill={shouldUseVioletBasicFlame ? "#7C3AED" : shouldUseReddishBrownBasicFlame ? "#9A3412" : shouldUseBlueBasicFlame ? "#2563EB" : shouldUseGreenBasicFlame ? "#16A34A" : "#F59E0B"} opacity="0.25" className="basic-flame-observation__base" />
                     </svg>
                   ) : (
                     <div className="flex h-40 items-center justify-center rounded-md border border-dashed border-yellow-200 bg-white/70 text-xs font-medium tracking-[0.25em] text-yellow-700">
