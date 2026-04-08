@@ -119,14 +119,14 @@ export const Equipment: React.FC<EquipmentProps> = ({
     dryTestMode === "acid" &&
     specialCasesHeatingCount === 5 &&
     isHeating;
-  const hasSaltSampleInWorkbenchTestTube = Boolean(
+  const hasSaltSampleInWorkbenchWatchGlass = Boolean(
     allEquipmentPositions?.some(
       (position) =>
-        position.id === "test_tubes" &&
+        position.id === id &&
         position.chemicals?.some((chemical) => chemical.id === "salt_sample" && (chemical.amount ?? 0) > 0),
     ),
   );
-  const shouldShowWatchGlassParticles = isWatchGlassEquipment && Boolean(position) && hasSaltSampleInWorkbenchTestTube;
+  const shouldShowWatchGlassParticles = isWatchGlassEquipment && Boolean(position) && hasSaltSampleInWorkbenchWatchGlass;
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [isDragging, setIsDragging] = useState(false);

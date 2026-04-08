@@ -745,6 +745,8 @@ function ChemicalEquilibriumVirtualLab({
       : equipmentList;
   const glassContainerEquipmentId =
     displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass container"))?.id ?? null;
+  const watchGlassEquipmentId =
+    displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("watch glass"))?.id ?? null;
   const glassRodEquipmentId =
     displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass rod"))?.id ?? null;
   const glassContainerState = equipmentPositions.find((pos) => pos.id === glassContainerEquipmentId);
@@ -1158,6 +1160,8 @@ function ChemicalEquilibriumVirtualLab({
   const isBasicFlameAnalysis =
     showBasicFlameObservations ??
     (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
+  const shouldUseWatchGlassForSaltSample =
+    isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl";
   const shouldShowBasicFlameObservation = isBasicFlameAnalysis && isWorkbenchHeating;
   const shouldUseBlueBasicFlame = basicFlameHeatingCount === 3;
   const shouldUseGreenBasicFlame = basicFlameHeatingCount === 2;
@@ -3788,8 +3792,25 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
-    if (!equipmentPositions.some((pos) => pos.id === "test_tubes")) {
-      setSaltDialogError("Place the test tube on the workbench first.");
+    const targetEquipmentId = shouldUseWatchGlassForSaltSample
+      ? watchGlassEquipmentId
+      : "test_tubes";
+
+    if (!targetEquipmentId) {
+      setSaltDialogError(
+        shouldUseWatchGlassForSaltSample
+          ? "Place the watch glass on the workbench first."
+          : "Place the test tube on the workbench first.",
+      );
+      return;
+    }
+
+    if (!equipmentPositions.some((pos) => pos.id === targetEquipmentId)) {
+      setSaltDialogError(
+        shouldUseWatchGlassForSaltSample
+          ? "Place the watch glass on the workbench first."
+          : "Place the test tube on the workbench first.",
+      );
       return;
     }
 
@@ -3797,7 +3818,7 @@ function ChemicalEquilibriumVirtualLab({
 
     setEquipmentPositions((prev) =>
       prev.map((pos) => {
-        if (pos.id !== "test_tubes") {
+        if (pos.id !== targetEquipmentId) {
           return pos;
         }
 
@@ -5379,7 +5400,9 @@ function ChemicalEquilibriumVirtualLab({
             <DialogHeader>
               <DialogTitle>Enter Mass</DialogTitle>
               <DialogDescription>
-                Enter the mass of the Salt Sample to add to the test tube.
+                {shouldUseWatchGlassForSaltSample
+                  ? "Enter the mass of the Salt Sample to add to the watch glass."
+                  : "Enter the mass of the Salt Sample to add to the test tube."}
               </DialogDescription>
             </DialogHeader>
 
@@ -5409,7 +5432,7 @@ function ChemicalEquilibriumVirtualLab({
                   Cancel
                 </Button>
                 <Button size="sm" onClick={handleAddSaltToTestTube}>
-                  Add to test tube
+                  {shouldUseWatchGlassForSaltSample ? "Add to watch glass" : "Add to test tube"}
                 </Button>
               </div>
             </DialogFooter>
