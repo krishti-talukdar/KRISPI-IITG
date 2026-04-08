@@ -747,6 +747,9 @@ function ChemicalEquilibriumVirtualLab({
     displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass container"))?.id ?? null;
   const watchGlassEquipmentId =
     displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("watch glass"))?.id ?? null;
+  const isWatchGlassOnWorkbench = Boolean(
+    watchGlassEquipmentId && equipmentPositions.some((pos) => pos.id === watchGlassEquipmentId),
+  );
   const glassRodEquipmentId =
     displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass rod"))?.id ?? null;
   const glassContainerState = equipmentPositions.find((pos) => pos.id === glassContainerEquipmentId);
@@ -1161,7 +1164,9 @@ function ChemicalEquilibriumVirtualLab({
     showBasicFlameObservations ??
     (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
   const shouldUseWatchGlassForSaltSample =
-    isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl";
+    isDryTestExperiment &&
+    resolvedDryTestMode === "basic" &&
+    (activeFlameTest === "Fl" || isWatchGlassOnWorkbench);
   const shouldShowBasicFlameObservation = isBasicFlameAnalysis && isWorkbenchHeating;
   const shouldUseBlueBasicFlame = basicFlameHeatingCount === 3;
   const shouldUseGreenBasicFlame = basicFlameHeatingCount === 2;
