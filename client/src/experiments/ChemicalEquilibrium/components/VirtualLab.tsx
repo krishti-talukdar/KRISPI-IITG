@@ -3211,11 +3211,14 @@ function ChemicalEquilibriumVirtualLab({
       }
       setIsWorkbenchHeating(heating);
 
+      if (heating && isBasicFlameAnalysis) {
+        return;
+      }
+
       if (
         heating &&
         experiment.id === ChemicalEquilibriumData.id &&
-        resolvedDryTestMode === "basic" &&
-        !isBasicFlameAnalysis
+        resolvedDryTestMode === "basic"
       ) {
         setCaseOneResult(
           "Formation of white sublimate (ammonium chloride) shows NH₄⁺ is present.",
