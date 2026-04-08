@@ -3203,7 +3203,11 @@ function ChemicalEquilibriumVirtualLab({
   const handleBunsenHeatingChange = useCallback(
     (heating: boolean) => {
       if (heating && !isWorkbenchHeating && isBasicFlameAnalysis) {
-        setBasicFlameHeatingCount((count) => count + 1);
+        const nextCount = basicFlameHeatingCount + 1;
+        setBasicFlameHeatingCount(nextCount);
+        if (nextCount === 1) {
+          setCaseOneResult("Yellow colour flame in both hot and cold condition is observed, hence Fe³⁺ is present");
+        }
       }
       setIsWorkbenchHeating(heating);
 
@@ -3461,6 +3465,7 @@ function ChemicalEquilibriumVirtualLab({
       sulfideWetHeatingCount,
       specialCasesWetHeatingCount,
       wetBasicHeatingCount,
+      basicFlameHeatingCount,
       isWorkbenchHeating,
       isBasicFlameAnalysis,
     ],
