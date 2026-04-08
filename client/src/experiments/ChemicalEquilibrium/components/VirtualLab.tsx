@@ -19,6 +19,7 @@ import {
   CHEMICAL_EQUILIBRIUM_EQUIPMENT,
   DEFAULT_MEASUREMENTS,
   GLASS_CONTAINER_IMAGE_URL,
+  WATCH_GLASS_IMAGE_URL,
   PH_HCL_CHEMICALS,
   PH_HCL_EQUIPMENT,
 } from "../constants";
@@ -552,6 +553,22 @@ const mapDryTestEquipment = (names: string[] = []): EquipmentDefinition[] =>
             </div>
           ),
           imageUrl: GLASS_CONTAINER_IMAGE_URL,
+        };
+      }
+
+      if (normalized.includes("watch glass")) {
+        return {
+          ...base,
+          icon: (
+            <div className="flex items-center justify-center w-20 h-20">
+              <img
+                src={WATCH_GLASS_IMAGE_URL}
+                alt="Watch glass"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          ),
+          imageUrl: WATCH_GLASS_IMAGE_URL,
         };
       }
 
