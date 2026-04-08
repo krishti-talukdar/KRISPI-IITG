@@ -3207,6 +3207,8 @@ function ChemicalEquilibriumVirtualLab({
         setBasicFlameHeatingCount(nextCount);
         if (nextCount === 1) {
           setCaseOneResult("Yellow colour flame is observed in both hot and cold condition , therefore Fe³⁺ is present");
+        } else if (nextCount === 2) {
+          setCaseTwoResult("Green colour flame is observed in both hot and cold condition, therefore Cu²⁺ is present");
         }
       }
       setIsWorkbenchHeating(heating);
