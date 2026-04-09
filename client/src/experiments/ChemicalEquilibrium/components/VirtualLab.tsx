@@ -621,6 +621,12 @@ function ChemicalEquilibriumVirtualLab({
     "A brown colour of NO gas or complex would indicate nitrite; observation says no brown colour, so NO₂⁻ is absent.";
   const CASE_FIVE_WET_ACETATE_RESULT =
     "A red or reddish-brown colour would indicate acetate due to ferric acetate; according to your table no red colour appears, so CH₃COO⁻ is absent.";
+  const BASIC_RADICAL_CASE_THREE_RESULT =
+    "In presence of NH₄Cl form insoluble ,Fe³⁺, Al³⁺, and Mn²⁺ are confirmed";
+  const BASIC_RADICAL_CASE_FOUR_RESULT =
+    "Form insoluble sulphide in presence of NH₄OH medium, Zn²⁺, Mn²⁺, Co²⁺& Ni²⁺ are confirmed";
+  const BASIC_RADICAL_CASE_FIVE_RESULT =
+    "Form insoluble Carbonate in  NH₄OH medium in presence of NH₄Cl, Ba²⁺, Sr²⁺& Ca²⁺ are confirmed ";
   const [equipmentPositions, setEquipmentPositions] = useState<
     EquipmentPosition[]
   >([]);
@@ -860,6 +866,19 @@ function ChemicalEquilibriumVirtualLab({
     : "Follow the steps shown. Use pH paper or the universal indicator to measure pH after adding HCl to a beaker.";
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
+  const isBasicRadicalsAnalysis = resolvedDryTestMode === "wetBasic" || resolvedDryTestMode === "basic";
+  const caseThreeDisplayResult =
+    isBasicRadicalsAnalysis && caseThreeResult === DEFAULT_CASE_RESULT
+      ? BASIC_RADICAL_CASE_THREE_RESULT
+      : caseThreeResult;
+  const caseFourDisplayResult =
+    isBasicRadicalsAnalysis && caseFourResult === DEFAULT_CASE_RESULT
+      ? BASIC_RADICAL_CASE_FOUR_RESULT
+      : caseFourResult;
+  const caseFiveDisplayResult =
+    isBasicRadicalsAnalysis && caseFiveResult === DEFAULT_CASE_RESULT
+      ? BASIC_RADICAL_CASE_FIVE_RESULT
+      : caseFiveResult;
   const resultsReady = caseOneReady && caseTwoReady;
   const iodideAnalysisReady =
     activeHalide === "I" && resolvedDryTestMode === "acid"
@@ -929,7 +948,7 @@ function ChemicalEquilibriumVirtualLab({
     },
     {
       label: "INFERENCE 3",
-      result: caseThreeResult,
+      result: caseThreeDisplayResult,
       indicator: "Phosphate",
       borderClass: "border-emerald-200",
       bgClass: "from-white via-emerald-50 to-emerald-100",
@@ -939,7 +958,7 @@ function ChemicalEquilibriumVirtualLab({
     },
     {
       label: "INFERENCE 4",
-      result: caseFourResult,
+      result: caseFourDisplayResult,
       indicator: "Oxalate",
       borderClass: "border-cyan-200",
       bgClass: "from-white via-cyan-50 to-sky-100",
@@ -949,7 +968,7 @@ function ChemicalEquilibriumVirtualLab({
     },
     {
       label: "INFERENCE 5",
-      result: caseFiveResult,
+      result: caseFiveDisplayResult,
       indicator: "Nitrate",
       borderClass: "border-purple-200",
       bgClass: "from-white via-purple-50 to-indigo-100",
@@ -987,17 +1006,17 @@ function ChemicalEquilibriumVirtualLab({
     {
       title: "Phosphate check",
       hint: "Inference 3",
-      description: caseThreeResult,
+      description: caseThreeDisplayResult,
     },
     {
       title: "Sulphite check",
       hint: "Inference 4",
-      description: caseFourResult,
+      description: caseFourDisplayResult,
     },
     {
       title: "Nitrate check",
       hint: "Inference 5",
-      description: caseFiveResult,
+      description: caseFiveDisplayResult,
     },
     {
       title: "Oxalate check",
@@ -1006,34 +1025,40 @@ function ChemicalEquilibriumVirtualLab({
     },
   ];
   const observationHighlights = [
-    activeHalide === "S" && resolvedDryTestMode === "acid"
-      ? `Inference confirms sulfide radicals: ${caseOneResult}`
-      : activeHalide === "Br" && resolvedDryTestMode === "acid"
-        ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
-        : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
-    `Inference 3 signals phosphate absence: ${caseThreeResult}`,
-    `Inference 4 confirms oxalate is absent: ${caseFourResult}`,
-    `Inference 5 confirms nitrate presence: ${caseFiveResult}`,
+    isBasicRadicalsAnalysis
+      ? `Inference 1 & 2 confirm the basic radical flow: ${caseOneResult} ${caseTwoResult}`
+      : activeHalide === "S" && resolvedDryTestMode === "acid"
+        ? `Inference confirms sulfide radicals: ${caseOneResult}`
+        : activeHalide === "Br" && resolvedDryTestMode === "acid"
+          ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
+          : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
+    `Inference 3: ${caseThreeDisplayResult}`,
+    `Inference 4: ${caseFourDisplayResult}`,
+    `Inference 5: ${caseFiveDisplayResult}`,
     `Inference 6 confirms oxalate presence: ${caseSixResult}`,
   ];
   const analysisGuidance = [
     {
       label: "Wet test focus",
-      description:
-        "Drop-in reagents highlight which acid radicals remain absent even after the dry sequence.",
+      description: isBasicRadicalsAnalysis
+        ? "Wet-test reagents highlight the basic radical groups confirmed by the dry and flame observations."
+        : "Drop-in reagents highlight which acid radicals remain absent even after the dry sequence.",
       accent: "from-fuchsia-50 to-purple-50",
       textColor: "text-fuchsia-600",
     },
     {
       label: "Next steps",
-      description:
-        "Record INFERENCE 3–5 while observing color shifts or precipitates to finish the acid radical map.",
+      description: isBasicRadicalsAnalysis
+        ? "Record INFERENCE 3–5 while observing the group-separation reactions for the basic radical map."
+        : "Record INFERENCE 3–5 while observing color shifts or precipitates to finish the acid radical map.",
       accent: "from-emerald-50 to-sky-50",
       textColor: "text-sky-600",
     },
     {
       label: "Confidence",
-      description: "Chloride residue and chlorine gas confirm the identity before reporting conclusions.",
+      description: isBasicRadicalsAnalysis
+        ? "The basic radical results are now complete, so you can report the confirmed group reactions with confidence."
+        : "Chloride residue and chlorine gas confirm the identity before reporting conclusions.",
       accent: "from-amber-50 to-amber-100",
       textColor: "text-amber-600",
     },
@@ -5691,6 +5716,8 @@ function ChemicalEquilibriumVirtualLab({
                     ? "Bromide detection through reddish-brown Br₂ gas production on heating with concentrated H₂SO₄, accelerated by MnO₂ catalyst."
                     : activeHalide === "I" && resolvedDryTestMode === "acid"
                     ? "These observations confirm the presence of iodide radicals through characteristic color and physical changes."
+                    : isBasicRadicalsAnalysis
+                    ? "These focused notes bring together the basic radical dry and wet observations, including the newly added Inferences 3–5."
                     : "These focused notes highlight how the additional wet-case drop-injections confirm which acid radicals remain absent after the primary dry tests."}
                 </p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
