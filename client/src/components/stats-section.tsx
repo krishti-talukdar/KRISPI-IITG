@@ -19,6 +19,7 @@ export default function StatsSection() {
   const [isRatingOpen, setIsRatingOpen] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
+  const [userRating, setUserRating] = useState(0);
 
   if (isLoading) {
     return (
@@ -58,7 +59,7 @@ export default function StatsSection() {
       tone: "text-slate-900",
     },
     {
-      value: stats.rating,
+      value: userRating.toFixed(1).replace(/\.0$/, ""),
       label: "Average Rating",
       tone: "text-emerald-600",
     },
@@ -68,6 +69,7 @@ export default function StatsSection() {
 
   const handleSubmitRating = () => {
     const ratingValue = selectedRating || 5;
+    setUserRating(ratingValue);
     toast({
       title: "Thanks for your rating",
       description: `You rated ChemVerse IITG ${ratingValue} out of 5 stars.`,
