@@ -6,13 +6,13 @@ export default function StatsSection() {
 
   if (isLoading) {
     return (
-      <section className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <section className="-mt-12 px-4 pb-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl rounded-3xl border border-white/70 bg-white/90 p-6 shadow-2xl shadow-slate-900/10 backdrop-blur">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="border-r border-gray-200 last:border-r-0">
-                <Skeleton className="h-8 w-16 mx-auto mb-2" />
-                <Skeleton className="h-4 w-24 mx-auto" />
+              <div key={i} className="text-center">
+                <Skeleton className="mx-auto mb-2 h-8 w-16" />
+                <Skeleton className="mx-auto h-4 w-24" />
               </div>
             ))}
           </div>
@@ -25,26 +25,39 @@ export default function StatsSection() {
     return null;
   }
 
+  const items = [
+    {
+      value: stats.experiments.toLocaleString(),
+      label: "Available Experiments",
+      tone: "text-emerald-600",
+    },
+    {
+      value: stats.students.toLocaleString(),
+      label: "Active Students",
+      tone: "text-sky-600",
+    },
+    {
+      value: stats.completed.toLocaleString(),
+      label: "Experiments Completed",
+      tone: "text-slate-900",
+    },
+    {
+      value: stats.rating,
+      label: "Average Rating",
+      tone: "text-emerald-600",
+    },
+  ];
+
   return (
-    <section className="py-12 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div className="border-r border-gray-200 last:border-r-0">
-            <div className="text-3xl font-bold text-blue-600 mb-2">8</div>
-            <div className="text-gray-600">Available Experiments</div>
-          </div>
-          <div className="border-r border-gray-200 last:border-r-0">
-            <div className="text-3xl font-bold text-green-600 mb-2">{stats.students.toLocaleString()}</div>
-            <div className="text-gray-600">Active Students</div>
-          </div>
-          <div className="border-r border-gray-200 last:border-r-0">
-            <div className="text-3xl font-bold text-blue-600 mb-2">{stats.completed.toLocaleString()}</div>
-            <div className="text-gray-600">Experiments Completed</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-green-600 mb-2">{stats.rating}</div>
-            <div className="text-gray-600">Average Rating</div>
-          </div>
+    <section className="-mt-12 px-4 pb-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl rounded-3xl border border-white/70 bg-white/90 p-6 shadow-2xl shadow-slate-900/10 backdrop-blur">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:divide-x md:divide-slate-200">
+          {items.map((item) => (
+            <div key={item.label} className="text-center md:px-6">
+              <div className={`text-3xl font-bold md:text-4xl ${item.tone}`}>{item.value}</div>
+              <div className="mt-2 text-sm text-slate-600 md:text-base">{item.label}</div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

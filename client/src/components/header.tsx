@@ -25,7 +25,7 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-4">
@@ -37,7 +37,7 @@ export default function Header() {
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#experiments" className="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">
+            <a href="#experiments" className="text-slate-700 font-medium border-b-2 border-emerald-600 pb-1 hover:text-emerald-700 transition-colors">
               Experiments
             </a>
             <ProgressModal>
@@ -51,7 +51,7 @@ export default function Header() {
               </button>
             </SafetyGuideModal>
             <SignInModal>
-              <Button className="bg-blue-600 text-white hover:bg-blue-700">
+              <Button className="rounded-full bg-slate-900 text-white hover:bg-slate-800 px-5">
                 Sign In
               </Button>
             </SignInModal>
@@ -70,7 +70,7 @@ export default function Header() {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-4">
-              <a href="#experiments" className="text-blue-600 font-medium px-4 py-2">
+              <a href="#experiments" className="text-emerald-700 font-medium px-4 py-2">
                 Experiments
               </a>
               <ProgressModal>
@@ -85,10 +85,10 @@ export default function Header() {
               </SafetyGuideModal>
               <div className="px-4">
                 <SignInModal>
-                  <Button className="w-full bg-blue-600 text-white hover:bg-blue-700">
-                    Sign In
-                  </Button>
-                </SignInModal>
+                <Button className="w-full rounded-full bg-slate-900 text-white hover:bg-slate-800">
+                  Sign In
+                </Button>
+              </SignInModal>
               </div>
             </div>
           </div>
