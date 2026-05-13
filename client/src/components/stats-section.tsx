@@ -6,9 +6,9 @@ export default function StatsSection() {
 
   if (isLoading) {
     return (
-      <section className="-mt-10 px-4 pb-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl rounded-[28px] border border-slate-100 bg-white/95 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur">
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:divide-x md:divide-slate-200">
+      <section className="-mt-8 px-4 pb-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl rounded-[26px] border border-slate-100 bg-white/95 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:divide-x md:divide-slate-200">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="text-center md:px-6">
                 <Skeleton className="mx-auto mb-2 h-8 w-16" />
@@ -49,12 +49,12 @@ export default function StatsSection() {
   ];
 
   return (
-    <section className="-mt-10 px-4 pb-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl rounded-[28px] border border-slate-100 bg-white/95 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur">
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:divide-x md:divide-slate-200">
+    <section className="-mt-8 px-4 pb-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl rounded-[26px] border border-slate-100 bg-white/95 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:divide-x md:divide-slate-200">
           {items.map((item) => (
             <div key={item.label} className="text-center md:px-6">
-              <div className={`text-3xl font-extrabold md:text-4xl ${item.tone}`}>{item.value}</div>
+              <div className={`text-3xl font-bold md:text-4xl ${item.tone}`}>{item.value}</div>
               <div className="mt-2 text-sm text-slate-600 md:text-base">{item.label}</div>
             </div>
           ))}
