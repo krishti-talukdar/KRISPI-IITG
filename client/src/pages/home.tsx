@@ -45,19 +45,19 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <Header />
       <HeroSection />
       <StatsSection />
 
       {/* Experiments Section */}
-      <section id="experiments" className="py-16 bg-gray-50">
+      <section id="experiments" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
             <h3 className="text-3xl font-bold text-gray-900 mb-4">
               Available Experiments
             </h3>
-            <p className="text-xl text-lab-gray max-w-2xl mx-auto">
+            <p className="text-xl text-lab-gray">
               Choose from our collection of interactive chemistry experiments,
               each designed to provide hands-on learning experience with
               real-world applications.
