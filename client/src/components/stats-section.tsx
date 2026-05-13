@@ -27,7 +27,7 @@ export default function StatsSection() {
 
   const items = [
     {
-      value: stats.experiments.toLocaleString(),
+      value: "8",
       label: "Available Experiments",
       tone: "text-slate-900",
     },
