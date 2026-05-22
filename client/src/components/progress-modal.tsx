@@ -60,7 +60,7 @@ export default function ProgressModal({ children }: ProgressModalProps) {
     }).length;
   };
 
-  const totalExperiments = experiments?.length || 0;
+  const totalExperiments = 8;
   const overallProgress = getTotalProgress();
   const completedExperiments = getCompletedExperiments();
   const totalStepsCompleted = userProgress?.reduce(
