@@ -30,15 +30,24 @@ export default function ProgressModal({ children }: ProgressModalProps) {
     },
   });
 
+  const hiddenExperimentTitles = new Set([
+    "Detection of Nitrogen, Sulphur, Chlorine, Bromine, and Iodine (Lassaigne's Test)",
+    "Study of Equilibrium Shift between Ferric Ions and Thiocyanate Ions",
+  ]);
+
+  const visibleExperiments = experiments?.filter(
+    (experiment: any) => !hiddenExperimentTitles.has(experiment.title),
+  );
+
   const getExperimentProgress = (experimentId: number) => {
     const progress = userProgress?.find((p: any) => p.experimentId === experimentId);
     return progress ? progress.currentStep ?? 0 : 0;
   };
 
   const getTotalProgress = () => {
-    if (!experiments || !userProgress) return 0;
+    if (!visibleExperiments || !userProgress) return 0;
 
-    const totalSteps = experiments.reduce(
+    const totalSteps = visibleExperiments.reduce(
       (sum: number, exp: any) => sum + (exp.stepDetails?.length ?? exp.steps ?? 0),
       0,
     );
@@ -51,16 +60,16 @@ export default function ProgressModal({ children }: ProgressModalProps) {
   };
 
   const getCompletedExperiments = () => {
-    if (!experiments || !userProgress) return 0;
+    if (!visibleExperiments || !userProgress) return 0;
 
     return userProgress.filter((p: any) => {
-      const experiment = experiments.find((exp: any) => exp.id === p.experimentId);
+      const experiment = visibleExperiments.find((exp: any) => exp.id === p.experimentId);
       const stepsCount = experiment ? (experiment.stepDetails?.length ?? experiment.steps ?? 0) : 0;
       return p.completed || (p.currentStep ?? 0) >= stepsCount;
     }).length;
   };
 
-  const totalExperiments = 8;
+  const totalExperiments = visibleExperiments?.length || 0;
   const overallProgress = getTotalProgress();
   const completedExperiments = getCompletedExperiments();
   const totalStepsCompleted = userProgress?.reduce(
@@ -158,7 +167,7 @@ export default function ProgressModal({ children }: ProgressModalProps) {
               </div>
 
               <div className="space-y-4">
-                {experiments?.map((experiment: any) => {
+                {visibleExperiments?.map((experiment: any) => {
                   const progress = getExperimentProgress(experiment.id);
                   const stepsCount = experiment.stepDetails?.length ?? experiment.steps ?? 0;
                   const progressPercentage = stepsCount > 0 ? Math.round((progress / stepsCount) * 100) : 0;
