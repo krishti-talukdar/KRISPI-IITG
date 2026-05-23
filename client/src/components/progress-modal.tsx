@@ -134,7 +134,6 @@ export default function ProgressModal({ children }: ProgressModalProps) {
                     { label: "Completion", value: `${overallProgress}%`, tone: "text-blue-600" },
                     { label: "Done", value: completedExperiments, tone: "text-emerald-600" },
                     { label: "Total", value: totalExperiments, tone: "text-violet-600" },
-                    { label: "Steps", value: totalStepsCompleted, tone: "text-slate-900" },
                   ].map((item) => (
                     <div key={item.label} className="rounded-2xl border border-white bg-white/80 p-4 text-center shadow-sm">
                       <div className={`text-2xl font-black ${item.tone}`}>{item.value}</div>
