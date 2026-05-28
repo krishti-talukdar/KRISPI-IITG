@@ -62,6 +62,7 @@ interface ChemicalEquilibriumVirtualLabProps {
   activeFlameTest?: string;
   activeTopLevelSection?: string;
   activeBasicRadicalsSubsection?: string | null;
+  onPreviousStep?: () => void;
   showBasicFlameObservations?: boolean;
 }
 
@@ -617,6 +618,7 @@ function ChemicalEquilibriumVirtualLab({
   activeFlameTest,
   activeTopLevelSection,
   activeBasicRadicalsSubsection,
+  onPreviousStep,
   showBasicFlameObservations,
 }: ChemicalEquilibriumVirtualLabProps) {
   const formatTime = (seconds: number) => {
@@ -5091,6 +5093,7 @@ function ChemicalEquilibriumVirtualLab({
                   onClick={() => {
                     if (currentStep > 1) {
                       setCurrentStep((prev) => Math.max(prev - 1, 1));
+                      onPreviousStep?.();
                     }
                   }}
                   disabled={currentStep <= 1}

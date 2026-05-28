@@ -694,8 +694,9 @@ export default function ChemicalEquilibriumApp({
   };
 
   const handlePreviousStep = () => {
-    // Disable going back to previous steps - steps are linear and non-reversible
-    return;
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
   };
 
   const currentStepData = activeStepDetails[currentStep];
@@ -1223,6 +1224,7 @@ export default function ChemicalEquilibriumApp({
                 activeFlameTest={activeFlameTest}
                 activeTopLevelSection={activeTopLevelSection}
                 activeBasicRadicalsSubsection={activeBasicRadicalsSubsection}
+                onPreviousStep={handlePreviousStep}
                 showBasicFlameObservations={
                   isDryTestExperiment &&
                   activeTopLevelSection === "BR" &&
