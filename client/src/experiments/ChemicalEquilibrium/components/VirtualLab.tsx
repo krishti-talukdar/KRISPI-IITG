@@ -5144,7 +5144,7 @@ function ChemicalEquilibriumVirtualLab({
                   className={`w-full py-2 px-4 rounded-lg text-sm font-bold transition ${
                     currentStep >= totalSteps
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                      : "bg-orange-500 hover:bg-orange-600 text-white animate-pulse"
+                      : "bg-orange-500 hover:bg-orange-600 text-white animate-pulse outline outline-4 outline-yellow-400 outline-offset-2 shadow-[0_0_12px_4px_rgba(250,204,21,0.8)]"
                   }`}
                 >
                   NEXT STEP
