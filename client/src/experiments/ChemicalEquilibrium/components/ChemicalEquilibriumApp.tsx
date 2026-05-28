@@ -654,16 +654,79 @@ export default function ChemicalEquilibriumApp({
     }
 
     if (isDryTestExperiment && activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "wet") {
-      return steps.map((step) => {
-        if (step.id === 3) {
-          return {
-            ...step,
-            title: "Step 3 : Add Dilute HCl in the test tube",
-            description: "Add dilute HCl in the test tube for the wet test sequence.",
-          };
-        }
-        return step;
-      });
+      return [
+        ...steps.slice(0, 5),
+        {
+          id: 6,
+          title: 'Step 6 : Press the "RESET WORKBENCH" button in the right',
+          description: 'Press the RESET WORKBENCH button in the right.',
+          completed: false,
+          duration: "3 minutes",
+        },
+        {
+          id: 7,
+          title: "Step 7 : Place the test tube in the workbench.",
+          description: "Place the test tube in the workbench.",
+          completed: false,
+          duration: "3 minutes",
+        },
+        {
+          id: 8,
+          title: "Step 8 : Add Salt sample in the test tube.",
+          description: "Add the salt sample in the test tube.",
+          completed: false,
+          duration: "3 minutes",
+        },
+        {
+          id: 9,
+          title: "Step 9 : Add Dilute HCl & H₂S Gas in the test tube.",
+          description: "Add Dilute HCl and H₂S Gas in the test tube.",
+          completed: false,
+          duration: "3 minutes",
+        },
+        {
+          id: 10,
+          title: "Step 10 : Add bunsen burner in the workbench & Press the start heating button",
+          description: "Add the bunsen burner in the workbench and press the start heating button.",
+          completed: false,
+          duration: "3 minutes",
+        },
+        {
+          id: 11,
+          title: 'Step 11 : Press the "RESET WORKBENCH" button in the right',
+          description: 'Press the RESET WORKBENCH button in the right.',
+          completed: false,
+          duration: "3 minutes",
+        },
+        {
+          id: 12,
+          title: "Step 12 : Place the test tube in the workbench & Add Salt sample in the test tube.",
+          description: "Place the test tube in the workbench and add the salt sample in the test tube.",
+          completed: false,
+          duration: "3 minutes",
+        },
+        {
+          id: 13,
+          title: "Step 13 : Add Solid NH₄Cl & NH₄OH in the test tube",
+          description: "Add solid NH₄Cl and NH₄OH in the test tube.",
+          completed: false,
+          duration: "3 minutes",
+        },
+        {
+          id: 14,
+          title: "Step 14 : Add bunsen burner in the workbench & Press the start heating button",
+          description: "Add the bunsen burner in the workbench and press the start heating button.",
+          completed: false,
+          duration: "3 minutes",
+        },
+        {
+          id: 15,
+          title: 'Step 15 : Press the "RESET WORKBENCH" button in the right',
+          description: 'Press the RESET WORKBENCH button in the right.',
+          completed: false,
+          duration: "3 minutes",
+        },
+      ];
     }
 
     if (isDryTestExperiment && activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest === "Am") {
