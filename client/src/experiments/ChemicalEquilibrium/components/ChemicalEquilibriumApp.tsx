@@ -546,8 +546,11 @@ export default function ChemicalEquilibriumApp({
         );
         // Add Na₂CO₃ and pH paper for Ammonium Radical Test
         dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Na₂CO₃", "pH paper"]));
+      } else if (activeFlameTest === "Fl") {
+        // Flame Test: Add Platinum Wire and Watch glass only (no Concentrated HCl)
+        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass"]));
       } else {
-        // Add Platinum Wire, Watch glass & concentrated HCL for other Basic Radicals tests (like Flame Test)
+        // Other Basic Radicals tests: Add Platinum Wire, Watch glass & Concentrated HCl
         dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Concentrated HCl"]));
       }
     } else if (activeBasicRadicalsSubsection === "wet") {
