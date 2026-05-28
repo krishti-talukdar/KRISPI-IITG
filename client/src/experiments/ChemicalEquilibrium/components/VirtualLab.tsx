@@ -3900,7 +3900,9 @@ function ChemicalEquilibriumVirtualLab({
       ? "Salt sample added. Moving to the next step."
       : shouldAdvanceAfterBasicSalt
         ? "Salt sample added. Moving to Step 7."
-        : `Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`;
+        : shouldUseWatchGlassForSaltSample
+          ? `Added ${mass.toFixed(2)} g of Salt Sample to the watch glass.`
+          : `Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`;
 
     setToastMessage(toastMessageText);
     setTimeout(() => setToastMessage(null), 3000);
