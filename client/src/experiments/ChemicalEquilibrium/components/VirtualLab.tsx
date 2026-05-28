@@ -5878,6 +5878,8 @@ function ChemicalEquilibriumVirtualLab({
 
               <div className={activeHalide === "S" && resolvedDryTestMode === "acid" ? "hidden" : "grid gap-4 md:grid-cols-3"}>
                 {analysisGuidance.filter((note) => {
+                  // Hide all guidance notes for Flame Test
+                  if (isBasicFlameAnalysis) return false;
                   if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
                     return !["Wet test focus", "Next steps"].includes(note.label);
                   }
