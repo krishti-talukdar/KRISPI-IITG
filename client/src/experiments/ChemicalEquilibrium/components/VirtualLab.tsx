@@ -3488,7 +3488,7 @@ function ChemicalEquilibriumVirtualLab({
           setDilH2SO4HeatingTriggered(true);
         }
 
-        if (activeHalide === "Br") {
+        if (activeHalide === "Br" && !isWorkbenchHeating) {
           const nextCount = bromideWetHeatingCount + 1;
           setBromideWetHeatingCount(nextCount);
           if (nextCount === 1) {
