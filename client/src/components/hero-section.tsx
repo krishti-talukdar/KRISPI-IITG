@@ -17,9 +17,9 @@ export default function HeroSection() {
         <img
           src={HERO_BACKGROUND_IMAGE}
           alt="Chemistry laboratory background"
-          className="h-full w-full object-cover object-center opacity-65"
+          className="h-full w-full object-cover object-center opacity-95"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/55 to-white/65" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/15 to-white/20" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
