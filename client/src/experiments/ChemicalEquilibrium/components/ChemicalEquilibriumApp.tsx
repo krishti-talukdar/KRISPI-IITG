@@ -519,14 +519,24 @@ export default function ChemicalEquilibriumApp({
       dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
         (name) => !groupsExclude.some(item => name.includes(item))
       );
-    } else {
-      // For Dry Test section, apply existing modifications
+    } else if (activeBasicRadicalsSubsection === "dry") {
+      // For Dry Test section, apply modifications
       const basicRadicalsExclude = ["MnO₂", "MnO2", "Glass container", "Concentrated H₂SO₄"];
       dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
         (name) =>
           !basicRadicalsExclude.some((item) => name.includes(item)) &&
           !name.toLowerCase().includes("test tube")
       );
+
+      // Add Test Tube just before Salt Sample for Basic Radicals
+      const equipment = dryTestEquipmentToUse as string[];
+      const saltSampleIndex = equipment.findIndex((item) => item.toLowerCase().includes("salt sample"));
+      if (saltSampleIndex !== -1) {
+        equipment.splice(saltSampleIndex, 0, "Test Tube");
+      } else {
+        equipment.unshift("Test Tube");
+      }
+      dryTestEquipmentToUse = equipment;
 
       // Specific modifications for different Basic Radicals tests
       if (activeFlameTest === "Am") {
@@ -539,6 +549,19 @@ export default function ChemicalEquilibriumApp({
       } else {
         // Add Platinum Wire, Watch glass, Salt & concentrated HCL for other Basic Radicals tests (like Flame Test)
         dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Salt", "Concentrated HCl"]));
+      }
+    } else if (activeBasicRadicalsSubsection === "wet") {
+      // For Wet Test section (non-GROUPS), ensure Test Tube is present before Salt Sample
+      const equipment = dryTestEquipmentToUse as string[];
+      const hasTestTube = equipment.some((item) => item.toLowerCase().includes("test tube"));
+      if (!hasTestTube) {
+        const saltSampleIndex = equipment.findIndex((item) => item.toLowerCase().includes("salt sample"));
+        if (saltSampleIndex !== -1) {
+          equipment.splice(saltSampleIndex, 0, "Test Tube");
+        } else {
+          equipment.unshift("Test Tube");
+        }
+        dryTestEquipmentToUse = equipment;
       }
     }
   }
