@@ -51,7 +51,7 @@ export default function Home() {
       <StatsSection />
 
       {/* Experiments Section */}
-      <section id="experiments" className="py-24 bg-white relative" style={{backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F9b1a21b12b24487c86e6b7b6d7570f96?format=webp&width=800&height=1200')", backgroundSize: "cover", backgroundAttachment: "fixed", backgroundOpacity: 0.05}}>
+      <section id="experiments" className="py-24 bg-white relative" style={{backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Feef538cc6581401c9f7487580c2d0494?format=webp&width=800&height=1200')", backgroundSize: "cover", backgroundAttachment: "fixed", backgroundOpacity: 0.05}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-12 max-w-3xl text-center">
             <h3 className="text-3xl font-bold text-gray-900 mb-4">

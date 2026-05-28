@@ -23,7 +23,7 @@ export default function StatsSection() {
 
   if (isLoading) {
     return (
-      <section className="-mt-8 px-4 pb-12 sm:px-6 lg:px-8 relative" style={{backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F9b1a21b12b24487c86e6b7b6d7570f96?format=webp&width=800&height=1200')", backgroundSize: "cover", backgroundAttachment: "fixed"}}>
+      <section className="-mt-8 px-4 pb-12 sm:px-6 lg:px-8 relative" style={{backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Feef538cc6581401c9f7487580c2d0494?format=webp&width=800&height=1200')", backgroundSize: "cover", backgroundAttachment: "fixed"}}>
         <div className="mx-auto max-w-6xl rounded-[26px] border border-slate-100 bg-white/95 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:divide-x md:divide-slate-200">
             {[...Array(4)].map((_, i) => (
@@ -81,7 +81,7 @@ export default function StatsSection() {
 
   return (
     <>
-      <section className="-mt-8 px-4 pb-12 sm:px-6 lg:px-8 relative" style={{backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F9b1a21b12b24487c86e6b7b6d7570f96?format=webp&width=800&height=1200')", backgroundSize: "cover", backgroundAttachment: "fixed"}}>
+      <section className="-mt-8 px-4 pb-12 sm:px-6 lg:px-8 relative" style={{backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Feef538cc6581401c9f7487580c2d0494?format=webp&width=800&height=1200')", backgroundSize: "cover", backgroundAttachment: "fixed"}}>
         <div className="mx-auto max-w-6xl rounded-[26px] border border-slate-100 bg-white/95 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:divide-x md:divide-slate-200">
             {items.map((item) =>
