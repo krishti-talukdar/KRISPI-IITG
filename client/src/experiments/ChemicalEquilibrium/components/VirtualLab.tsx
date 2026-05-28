@@ -3552,12 +3552,18 @@ function ChemicalEquilibriumVirtualLab({
         isDryTestExperiment &&
         activeHalide === "SC" &&
         resolvedDryTestMode === "acid" &&
-        activeFlameTest !== "Am"
+        activeFlameTest !== "Am" &&
+        !isWorkbenchHeating
       ) {
         const nextCount = specialCasesHeatingCount + 1;
         setSpecialCasesHeatingCount(nextCount);
 
         if (nextCount === 1) {
+          setCaseTwoResult(DEFAULT_CASE_RESULT);
+          setCaseThreeResult(DEFAULT_CASE_RESULT);
+          setCaseFourResult(DEFAULT_CASE_RESULT);
+          setCaseFiveResult(DEFAULT_CASE_RESULT);
+          setCaseSixResult(DEFAULT_CASE_RESULT);
           setCaseOneResult(
             "Rapid effervescence of colourless and odourless gas , therefore CO₃²⁻ is present",
           );
