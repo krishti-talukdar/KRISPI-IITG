@@ -28,7 +28,7 @@ export default function HeroSection() {
             Discover Chemistry Through Virtual Experiments
           </h2>
 
-          <p className="hero-initiative hero-initiative-font mt-5 text-[1.7rem] font-semibold text-slate-800 md:text-2xl">
+          <p className="hero-initiative hero-initiative-font mt-5 text-[1.7rem] font-semibold text-black md:text-2xl">
             An initiative by TIH, IITG
           </p>
 
