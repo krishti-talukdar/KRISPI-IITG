@@ -6062,10 +6062,14 @@ function ChemicalEquilibriumVirtualLab({
                       ? "Inference"
                       : insight.hint;
 
+                    const displayTitle = activeHalide === "SC" && resolvedDryTestMode === "wet" && ["Inference 1", "Inference 2", "Inference 3"].includes(insight.hint)
+                      ? ""
+                      : insight.title;
+
                     return (
                       <div key={insight.hint} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
                         <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{displayHint}</div>
-                        <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
+                        {displayTitle && <div className="mt-1 text-sm font-semibold text-white">{displayTitle}</div>}
                         <p className="mt-1 text-xs text-white/70 leading-tight whitespace-pre-wrap">{insight.description}</p>
                       </div>
                     );
