@@ -5865,6 +5865,10 @@ function ChemicalEquilibriumVirtualLab({
                     if ((activeHalide === "Br" || activeHalide === "Cl" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                       return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
                     }
+                    // Hide Inference 3, 4, 5, 6 for Bromide check in Wet Test for Acid Radicals
+                    if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
+                      return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
+                    }
                     return true;
                   }).map((insight) => {
                     const displayHint = ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid" && insight.hint === "Inference 1")
@@ -5891,6 +5895,10 @@ function ChemicalEquilibriumVirtualLab({
                   }
                   // For Bromide and Iodide checks, only show the Wet test focus note
                   if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                    return note.label === "Wet test focus";
+                  }
+                  // For Bromide check in Wet Test, only show the Wet test focus note
+                  if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                     return note.label === "Wet test focus";
                   }
                   return true;
@@ -5970,7 +5978,7 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && (
+              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && (
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                     <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
