@@ -6030,6 +6030,17 @@ function ChemicalEquilibriumVirtualLab({
                     if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                       return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
                     }
+                    // Hide Inference 3, 4, 5, 6 for Iodide check in Wet Test for Acid Radicals
+                    // Also hide Inference 2 until second heating
+                    if (activeHalide === "I" && resolvedDryTestMode === "wet") {
+                      if (["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint)) {
+                        return false;
+                      }
+                      if (insight.hint === "Inference 2" && iodideWetHeatingCount < 2) {
+                        return false;
+                      }
+                      return true;
+                    }
                     return true;
                   }).map((insight) => {
                     const displayHint = ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid" && insight.hint === "Inference 1")
