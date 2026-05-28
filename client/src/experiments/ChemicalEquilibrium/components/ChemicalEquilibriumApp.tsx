@@ -591,9 +591,9 @@ export default function ChemicalEquilibriumApp({
             ? experiment.stepDetails.slice(0, 5)
             : limitSaltAnalysisProgressSteps(experiment.stepDetails);
 
-    // For Flame Test, allow 7 steps instead of 6
+    // For Flame Test, allow 8 steps instead of 6
     const steps = isBasicRadicalsFlameTest
-      ? experiment.stepDetails.slice(0, 7)
+      ? experiment.stepDetails.slice(0, 8)
       : baseSteps;
 
     if (isBasicRadicalsFlameTest) {
@@ -638,6 +638,13 @@ export default function ChemicalEquilibriumApp({
             ...step,
             title: 'Step 7 : Press the "Start Heating" button of the bunsen burner and observe the colour of the flame in the "OBSERVATIONS" on the right side.',
             description: 'Click the "Start Heating" button on the bunsen burner and watch the flame colour appear in the OBSERVATIONS panel on the right.',
+          };
+        }
+        if (step.id === 8) {
+          return {
+            ...step,
+            title: 'Step 8 : Press the "Stop Heating" button of the bunsen burner and again press the "Start Heating" button of the bunsen burner. Do it 4 times for next 4 observations.',
+            description: 'Press "Stop Heating" then "Start Heating" repeatedly — do this 4 times to record the next 4 flame colour observations.',
           };
         }
         return step;
