@@ -653,6 +653,19 @@ export default function ChemicalEquilibriumApp({
       });
     }
 
+    if (isDryTestExperiment && activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "wet") {
+      return steps.map((step) => {
+        if (step.id === 3) {
+          return {
+            ...step,
+            title: "Step 3 : Add Dilute HCl in the test tube",
+            description: "Add dilute HCl in the test tube for the wet test sequence.",
+          };
+        }
+        return step;
+      });
+    }
+
     if (isDryTestExperiment && activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest === "Am") {
       return steps.filter((step) => step.id !== 6);
     }
