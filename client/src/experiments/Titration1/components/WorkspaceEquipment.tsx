@@ -20,7 +20,7 @@ export const WorkspaceEquipment: React.FC<WorkspaceEquipmentProps> = ({
       <Card className="h-fit">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-blue-600" />
+            <CheckCircle className="w-5 h-5 text-green-600" />
             Required Equipment
           </CardTitle>
           <p className="text-sm text-muted-foreground">
@@ -34,7 +34,7 @@ export const WorkspaceEquipment: React.FC<WorkspaceEquipmentProps> = ({
                 key={equipment.id}
                 className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${
                   selectedEquipment.includes(equipment.id)
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
+                    ? 'border-blue-500 bg-green-50 dark:bg-blue-950'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
                 onClick={() => onEquipmentSelect?.(equipment.id)}
@@ -146,7 +146,7 @@ export const WorkspaceEquipment: React.FC<WorkspaceEquipmentProps> = ({
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-3">
-              <h4 className="font-medium text-blue-600">1. Arrange Equipment</h4>
+              <h4 className="font-medium text-green-600">1. Arrange Equipment</h4>
               <ul className="text-sm space-y-1 text-muted-foreground">
                 <li>• Set up burette stand on stable surface</li>
                 <li>• Position white tile under conical flask</li>

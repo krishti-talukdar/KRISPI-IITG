@@ -111,14 +111,14 @@ export const CalculationDisplay: React.FC<CalculationDisplayProps> = ({
       <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <Calculator className="w-6 h-6 text-blue-600" />
+            <Calculator className="w-6 h-6 text-green-600" />
             <span>Standard Solution Calculation</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
+          <div className="bg-green-50 p-4 rounded-lg">
             <h3 className="font-semibold text-blue-900 mb-2">Objective</h3>
-            <p className="text-blue-800 text-sm">
+            <p className="text-green-800 text-sm">
               Calculate the mass of oxalic acid dihydrate (H₂C₂O₄·2H₂O) needed to prepare{" "}
               {targetVolume * 1000} mL of {targetMolarity} M solution.
             </p>
@@ -162,7 +162,7 @@ export const CalculationDisplay: React.FC<CalculationDisplayProps> = ({
                     <h4 className="font-semibold text-gray-900">{step.title}</h4>
                     
                     <div className="bg-white p-3 rounded border font-mono text-sm">
-                      <div className="text-blue-600 font-semibold mb-1">{step.formula}</div>
+                      <div className="text-green-600 font-semibold mb-1">{step.formula}</div>
                       <div className="text-gray-700 whitespace-pre-line">{step.substitution}</div>
                       {step.result && (
                         <div className="mt-2 pt-2 border-t">

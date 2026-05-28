@@ -55,7 +55,7 @@ export default function GenericExperimentApp({ experimentId, onBack }: Props) {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Experiment Not Found</h2>
           <p className="text-gray-600 mb-6">The requested experiment (ID: {experimentId}) is not available.</p>
-          <Button onClick={onBack} className="bg-blue-600 hover:bg-blue-700 text-white">Return</Button>
+          <Button onClick={onBack} className="bg-green-600 hover:bg-green-700 text-white">Return</Button>
         </div>
       </div>
     );
@@ -85,7 +85,7 @@ export default function GenericExperimentApp({ experimentId, onBack }: Props) {
               <h1 className="text-2xl font-bold text-gray-900 mb-2">{experiment.title}</h1>
               <p className="text-gray-700 mb-3">{experiment.description}</p>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className={`h-2 rounded-full ${isCompleted ? 'bg-green-600' : 'bg-blue-600'}`} style={{ width: `${percent}%` }} />
+                <div className={`h-2 rounded-full ${isCompleted ? 'bg-green-600' : 'bg-green-600'}`} style={{ width: `${percent}%` }} />
               </div>
               <div className="text-sm text-gray-600 mt-1">Progress: {percent}%</div>
             </div>

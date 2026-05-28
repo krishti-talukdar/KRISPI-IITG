@@ -120,7 +120,7 @@ export const CHEMICAL_EQUILIBRIUM_EQUIPMENT: Equipment[] = [
         height: "36",
         viewBox: "0 0 36 36",
         fill: "none",
-        className: "text-blue-600",
+        className: "text-green-600",
       },
       [
         React.createElement("path", {
@@ -233,7 +233,7 @@ export const PH_HCL_EQUIPMENT: Equipment[] = [
   {
     id: "wash_bottle",
     name: "Wash Bottle",
-    icon: React.createElement("svg", { width: 36, height: 36, viewBox: "0 0 36 36", fill: "none", className: "text-blue-600" }, [React.createElement("path", { key: "w", d: "M6 8h24v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8z", stroke: "currentColor", strokeWidth: "2", fill: "rgba(59,130,246,0.08)" })])
+    icon: React.createElement("svg", { width: 36, height: 36, viewBox: "0 0 36 36", fill: "none", className: "text-green-600" }, [React.createElement("path", { key: "w", d: "M6 8h24v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8z", stroke: "currentColor", strokeWidth: "2", fill: "rgba(59,130,246,0.08)" })])
   },
   {
     id: "ph_paper",

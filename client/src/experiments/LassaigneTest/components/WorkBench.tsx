@@ -272,7 +272,7 @@ export default function WorkBench({ step, totalSteps, equipmentItems, onNext, on
 
       <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
         <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse" />
+          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
           <span className="text-sm font-medium text-gray-700">Step {step + 1} of {totalSteps}</span>
         </div>
       </div>
@@ -325,7 +325,7 @@ export default function WorkBench({ step, totalSteps, equipmentItems, onNext, on
               : Filter;
           const colorClass =
             p.id === "ignition-tube"
-              ? "text-blue-600"
+              ? "text-green-600"
               : p.id === "sodium-piece"
               ? "text-emerald-600"
               : p.id === "bunsen-burner"
@@ -333,7 +333,7 @@ export default function WorkBench({ step, totalSteps, equipmentItems, onNext, on
               : p.id === "organic-compound"
               ? "text-purple-600"
               : p.id === "water-bath"
-              ? "text-blue-500"
+              ? "text-green-500"
               : p.id === "distilled-water"
               ? "text-sky-500"
               : "text-amber-600";
@@ -606,7 +606,7 @@ export default function WorkBench({ step, totalSteps, equipmentItems, onNext, on
 
       {placed.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="text-sm text-blue-500 bg-blue-50 border border-blue-200 rounded-md px-3 py-1 shadow-sm">
+          <div className="text-sm text-green-500 bg-green-50 border border-blue-200 rounded-md px-3 py-1 shadow-sm">
             Drag equipment here
           </div>
         </div>

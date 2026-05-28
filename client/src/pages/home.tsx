@@ -73,8 +73,8 @@ export default function Home() {
                 variant={selectedCategory === category ? "default" : "outline"}
                 className={
                   selectedCategory === category
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-white border-gray-300 text-gray-600 hover:border-blue-600 hover:text-blue-600"
+                    ? "bg-green-600 text-white hover:bg-green-700"
+                    : "bg-white border-gray-300 text-gray-600 hover:border-green-600 hover:text-green-600"
                 }
               >
                 {category}

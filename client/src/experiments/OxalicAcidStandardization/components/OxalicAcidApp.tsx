@@ -152,7 +152,7 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
               </div>
               <div className="flex items-center space-x-2">
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-blue-600">{formatTime(timer)}</p>
+                  <p className="text-2xl font-bold text-green-600">{formatTime(timer)}</p>
                   <p className="text-sm text-gray-600">Elapsed Time</p>
                 </div>
                 <Button
@@ -181,10 +181,10 @@ export default function OxalicAcidApp({ onBack }: OxalicAcidAppProps) {
             {[experiment.stepDetails[currentStep]].map((step) => (
               <div
                 key={step.id}
-                className={`p-4 rounded-lg border transition-colors bg-blue-50 border-blue-200`}
+                className={`p-4 rounded-lg border transition-colors bg-green-50 border-blue-200`}
               >
                 <div className="flex items-start space-x-3 mb-3">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-blue-500 text-white flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-green-500 text-white flex-shrink-0">
                     {currentStep + 1}
                   </div>
                   <div className="flex-1">

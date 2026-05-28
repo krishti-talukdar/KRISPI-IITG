@@ -53,7 +53,7 @@ export const Controls: React.FC<ControlsProps> = ({
       {onSave && (
         <button
           onClick={onSave}
-          className="flex items-center space-x-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
+          className="flex items-center space-x-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors"
         >
           <Save size={20} />
           <span>Save Setup</span>

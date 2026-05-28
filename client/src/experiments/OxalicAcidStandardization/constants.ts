@@ -155,7 +155,7 @@ export const OXALIC_ACID_EQUIPMENT: Equipment[] = [
         height: "36",
         viewBox: "0 0 36 36",
         fill: "none",
-        className: "text-blue-600",
+        className: "text-green-600",
       },
       [
         React.createElement("path", {

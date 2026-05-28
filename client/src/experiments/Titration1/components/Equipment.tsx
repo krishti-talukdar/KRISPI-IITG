@@ -135,7 +135,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
             ? 'absolute min-w-[80px] p-0 border-0 bg-transparent rounded-none shadow-none'
             : 'absolute min-w-[80px] p-3 rounded-lg border-2 border-gray-200 bg-white')
     ) : 'w-full p-3 rounded-lg border-2 border-gray-200 bg-white'}
-    ${!isPositioned && isActive ? 'border-blue-500 bg-blue-50' : ''}
+    ${!isPositioned && isActive ? 'border-blue-500 bg-green-50' : ''}
   `;
 
   const equipmentElement = (
@@ -167,14 +167,14 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
       {/* Drag indicator for burette */}
       {isPositioned && id === 'burette' && !isDragging && (
-        <div className="absolute -top-1 -left-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity">
+        <div className="absolute -top-1 -left-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity">
           <div className="w-2 h-2 bg-white rounded-full"></div>
         </div>
       )}
 
       {/* Dragging overlay */}
       {isDragging && (
-        <div className="absolute inset-0 bg-blue-500/20 border-2 border-blue-500 border-dashed rounded-lg animate-pulse"></div>
+        <div className="absolute inset-0 bg-green-500/20 border-2 border-blue-500 border-dashed rounded-lg animate-pulse"></div>
       )}
 
       {/* Equipment icon with custom styling for specific items */}
@@ -276,7 +276,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
         )}
         
         {volume !== undefined && (
-          <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
+          <div className="absolute -bottom-1 -right-1 bg-green-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
             {Math.round(volume)}
           </div>
         )}
@@ -284,7 +284,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
       <span className={`text-center font-medium ${
         isPositioned
-          ? (id === 'burette' ? 'text-xs font-semibold text-blue-700 mt-1' : 'text-xs mt-2')
+          ? (id === 'burette' ? 'text-xs font-semibold text-green-700 mt-1' : 'text-xs mt-2')
           : 'text-sm mt-2'
       }`}>
         {id === 'burette' && isPositioned ? (

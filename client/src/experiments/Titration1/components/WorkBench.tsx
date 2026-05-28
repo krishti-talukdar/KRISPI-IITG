@@ -76,7 +76,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       {/* Step indicator */}
       <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md border border-gray-200">
         <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
           <span className="text-sm font-medium text-gray-700">
             Step {currentStep} of 6
           </span>
@@ -102,10 +102,10 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
       {/* Drop zone indicator */}
       {isDragOver && (
-        <div className="absolute inset-0 flex items-center justify-center bg-blue-500/10 backdrop-blur-sm">
+        <div className="absolute inset-0 flex items-center justify-center bg-green-500/10 backdrop-blur-sm">
           <div className="bg-white rounded-xl shadow-xl p-8 border-2 border-blue-400 border-dashed">
             <div className="flex flex-col items-center space-y-4">
-              <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center animate-bounce">
+              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center animate-bounce">
                 <svg
                   className="w-8 h-8 text-white"
                   fill="none"
@@ -120,7 +120,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
                   />
                 </svg>
               </div>
-              <p className="text-lg font-semibold text-blue-600">
+              <p className="text-lg font-semibold text-green-600">
                 Drop Equipment Here
               </p>
               <p className="text-sm text-gray-600 text-center">

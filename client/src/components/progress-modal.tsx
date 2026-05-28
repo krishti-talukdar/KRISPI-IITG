@@ -131,7 +131,7 @@ export default function ProgressModal({ children }: ProgressModalProps) {
                 </div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:w-[60%]">
                   {[
-                    { label: "Completion", value: `${overallProgress}%`, tone: "text-blue-600" },
+                    { label: "Completion", value: `${overallProgress}%`, tone: "text-green-600" },
                     { label: "Done", value: completedExperiments, tone: "text-green-600" },
                     { label: "Total", value: totalExperiments, tone: "text-emerald-600" },
                   ].map((item) => (

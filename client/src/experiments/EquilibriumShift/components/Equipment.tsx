@@ -71,7 +71,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
               }
             `}
           >
-            <div className="text-3xl mb-2 text-blue-600">
+            <div className="text-3xl mb-2 text-green-600">
               {icon}
             </div>
             <span className="text-sm font-medium text-gray-700 text-center">
@@ -175,10 +175,10 @@ export const Equipment: React.FC<EquipmentProps> = ({
                 style={{ backgroundColor: '#e0f2fe' }}
               >
                 <div className="absolute inset-x-0 bottom-0 h-4/5 bg-gradient-to-t from-blue-200 to-transparent opacity-60"></div>
-                <Beaker className="w-7 h-7 absolute top-2 left-1/2 transform -translate-x-1/2 text-blue-600 opacity-50" />
+                <Beaker className="w-7 h-7 absolute top-2 left-1/2 transform -translate-x-1/2 text-green-600 opacity-50" />
               </div>
               <span className="text-xs font-medium text-center">{name}</span>
-              <span className="text-xs text-blue-600 font-semibold">H₂O</span>
+              <span className="text-xs text-green-600 font-semibold">H₂O</span>
             </div>
           ) : id === 'cobalt-ii-solution' ? (
             <div className="flex flex-col items-center">
@@ -206,7 +206,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
             </div>
           ) : (
             <div className="flex flex-col items-center">
-              <div className="text-2xl mb-2 text-blue-600">
+              <div className="text-2xl mb-2 text-green-600">
                 {icon}
               </div>
               <span className="text-xs font-medium text-center">{name}</span>

@@ -673,7 +673,7 @@ export default function ChemicalEquilibriumApp({
           {onBack ? (
             <button
               onClick={onBack}
-              className="text-blue-600 hover:text-blue-700 flex items-center"
+              className="text-green-600 hover:text-green-700 flex items-center"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Experiments
@@ -681,7 +681,7 @@ export default function ChemicalEquilibriumApp({
           ) : (
             <Link
               href="/"
-              className="text-blue-600 hover:text-blue-700 flex items-center"
+              className="text-green-600 hover:text-green-700 flex items-center"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Experiments
@@ -717,7 +717,7 @@ export default function ChemicalEquilibriumApp({
                 aria-pressed={activeTopLevelSection === "AR"}
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-sm">AR</span>
                   </div>
                   <div className="flex-1">
@@ -858,7 +858,7 @@ export default function ChemicalEquilibriumApp({
                             aria-expanded={isActiveFlameTest}
                           >
                             <div className="flex items-start gap-3">
-                              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                              <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
                                 <span className="text-white font-bold text-sm">{section.symbol}</span>
                               </div>
                               <div className="flex-1">
@@ -898,7 +898,7 @@ export default function ChemicalEquilibriumApp({
                             aria-expanded={isActiveWetTest}
                           >
                             <div className="flex items-start gap-3">
-                              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                              <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
                                 <span className="text-white font-bold text-sm">{section.symbol}</span>
                               </div>
                               <div className="flex-1">
@@ -995,7 +995,7 @@ export default function ChemicalEquilibriumApp({
             <>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-gray-700">Overall Progress</span>
-                <span className="text-sm text-blue-600 font-semibold">{progressPercentage}%</span>
+                <span className="text-sm text-green-600 font-semibold">{progressPercentage}%</span>
               </div>
               <Progress value={progressPercentage} className="h-2" />
             </>
@@ -1024,13 +1024,13 @@ export default function ChemicalEquilibriumApp({
               <div className="px-6 py-5 space-y-4">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                   <div className="flex-1">
-                    <p className="text-xs font-semibold uppercase tracking-[2px] text-blue-600">Experiment Progress</p>
+                    <p className="text-xs font-semibold uppercase tracking-[2px] text-green-600">Experiment Progress</p>
                     <h3 className="text-lg font-semibold text-gray-900 mt-1">{currentStepData?.title ?? experiment.title}</h3>
                     <p className="text-xs text-gray-500 mt-1">Follow the guided steps below to complete the dry tests.</p>
                   </div>
                   <div className="flex flex-col items-start md:items-end gap-2">
                     <span className="text-xs text-gray-500">Step {currentStep + 1} of {activeStepDetails.length}</span>
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500 text-white text-xs font-bold">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500 text-white text-xs font-bold">
                       <div className="w-2 h-2 bg-white rounded-full" />
                       <span>STEP {currentStep + 1}</span>
                     </div>
@@ -1056,7 +1056,7 @@ export default function ChemicalEquilibriumApp({
             <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-center justify-center">
               <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200 max-w-md">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Play className="w-8 h-8 text-blue-600" />
+                  <Play className="w-8 h-8 text-green-600" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   Ready to Start?
@@ -1115,7 +1115,7 @@ export default function ChemicalEquilibriumApp({
                             <span className="text-sm text-gray-600">
                               {currentStep + 1} / {activeStepDetails.length}
                             </span>
-                            <span className="inline-flex items-center px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">
+                            <span className="inline-flex items-center px-2 py-1 bg-green-500 text-white text-xs font-bold rounded-full">
                               <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse mr-1"></div>
                               STEP {currentStep + 1}
                             </span>
@@ -1137,7 +1137,7 @@ export default function ChemicalEquilibriumApp({
                     <div className="flex items-center space-x-2">
                       <div className="flex items-center space-x-2 px-2">
                         <span className="text-sm text-gray-600">{currentStep + 1} / {activeStepDetails.length}</span>
-                        <span className="inline-flex items-center px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">STEP {currentStep + 1}</span>
+                        <span className="inline-flex items-center px-2 py-1 bg-green-500 text-white text-xs font-bold rounded-full">STEP {currentStep + 1}</span>
                       </div>
                     </div>
                   )}
@@ -1209,34 +1209,34 @@ export default function ChemicalEquilibriumApp({
                     </thead>
                     <tbody>
                       <tr className="hover:bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">I</td>
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-green-50 text-blue-900">I</td>
                         <td className="border border-gray-300 px-4 py-3">Pb²⁺</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">II</td>
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-green-50 text-blue-900">II</td>
                         <td className="border border-gray-300 px-4 py-3">Pb²⁺, Cu²⁺, As³⁺</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">III</td>
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-green-50 text-blue-900">III</td>
                         <td className="border border-gray-300 px-4 py-3">Fe³⁺, Al³⁺, Mn²⁺</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">IV</td>
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-green-50 text-blue-900">IV</td>
                         <td className="border border-gray-300 px-4 py-3">Zn²⁺, Mn²⁺, Co²⁺, Ni²⁺</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">V</td>
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-green-50 text-blue-900">V</td>
                         <td className="border border-gray-300 px-4 py-3">Ba²⁺, Sr²⁺, Ca²⁺</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-blue-50 text-blue-900">VI</td>
+                        <td className="border border-gray-300 px-4 py-3 font-bold text-center bg-green-50 text-blue-900">VI</td>
                         <td className="border border-gray-300 px-4 py-3">Mg²⁺</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
 
-                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="mt-6 p-4 bg-green-50 border border-blue-200 rounded-lg">
                   <p className="text-sm text-gray-700">
                     These groups represent the classification of cations based on their precipitation behavior with specific reagents in wet test procedures. Each group contains cations that exhibit similar chemical reactions and can be identified through systematic qualitative analysis.
                   </p>

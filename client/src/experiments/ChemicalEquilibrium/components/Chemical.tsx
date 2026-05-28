@@ -146,7 +146,7 @@ export const Chemical: React.FC<ChemicalProps> = ({
           disabled
             ? "opacity-50 cursor-not-allowed bg-gray-100"
             : selected
-              ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-xl scale-105 transform ring-4 ring-blue-300 hover:ring-blue-400"
+              ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-xl scale-105 transform ring-4 ring-green-300 hover:ring-green-400"
               : "bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-blue-400 shadow-md hover:shadow-xl active:scale-95 transform hover:scale-105"
         }
       `}
@@ -252,7 +252,7 @@ export const Chemical: React.FC<ChemicalProps> = ({
         {/* Drag amount badge */}
         <div
           className={`absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-            selected ? "bg-white text-blue-600" : "bg-blue-500 text-white"
+            selected ? "bg-white text-green-600" : "bg-green-500 text-white"
           } shadow-lg`}
         >
           {dragAmount}
@@ -326,13 +326,13 @@ export const Chemical: React.FC<ChemicalProps> = ({
       {/* Selection indicator */}
       {selected && (
         <div className="absolute top-2 right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center">
-          <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
         </div>
       )}
 
       {/* Drop hint when selected */}
       {selected && !disabled && (
-        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-3 py-1 rounded-lg text-xs font-medium animate-bounce whitespace-nowrap shadow-lg">
+        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-lg text-xs font-medium animate-bounce whitespace-nowrap shadow-lg">
           Drag to equipment
         </div>
       )}

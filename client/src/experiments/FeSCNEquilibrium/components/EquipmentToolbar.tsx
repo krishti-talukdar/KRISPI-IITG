@@ -68,9 +68,9 @@ export const EquipmentToolbar: React.FC<EquipmentToolbarProps> = ({
       </div>
       
       {/* Equipment usage hints */}
-      <div className="mt-3 text-xs text-gray-600 bg-blue-50 rounded-lg p-2">
+      <div className="mt-3 text-xs text-gray-600 bg-green-50 rounded-lg p-2">
         <div className="flex items-start space-x-2">
-          <div className="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+          <div className="w-1 h-1 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
           <div>
             <strong>Step {currentStep} Equipment:</strong>
             {currentStep <= 1 && " Start with test tube rack A and graduated pipette"}

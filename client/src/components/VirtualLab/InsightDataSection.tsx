@@ -18,11 +18,11 @@ export const InsightDataSection: React.FC<InsightDataSectionProps> = ({
         <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border-2 border-blue-200">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center space-x-3">
-              <div className="bg-blue-500 rounded-full p-2">
+              <div className="bg-green-500 rounded-full p-2">
                 <Beaker className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-blue-800">
+                <h1 className="text-xl sm:text-2xl font-bold text-green-800">
                   Color Change Analysis
                 </h1>
                 <p className="text-gray-600 text-sm sm:text-base">
@@ -33,7 +33,7 @@ export const InsightDataSection: React.FC<InsightDataSectionProps> = ({
             <Button
               onClick={onBack}
               variant="outline"
-              className="border-blue-300 text-blue-700 hover:bg-blue-50 w-fit"
+              className="border-blue-300 text-green-700 hover:bg-green-50 w-fit"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
@@ -55,12 +55,12 @@ export const InsightDataSection: React.FC<InsightDataSectionProps> = ({
                   Hydrated cobalt complex
                 </p>
               </div>
-              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                <Beaker className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                <h3 className="font-semibold text-blue-800 text-center">
+              <div className="bg-green-50 rounded-lg p-4 border border-blue-200">
+                <Beaker className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                <h3 className="font-semibold text-green-800 text-center">
                   Blue Solution
                 </h3>
-                <p className="text-sm text-blue-600 text-center">
+                <p className="text-sm text-green-600 text-center">
                   Chloride complex
                 </p>
               </div>
@@ -80,7 +80,7 @@ export const InsightDataSection: React.FC<InsightDataSectionProps> = ({
           <div className="bg-white rounded-lg shadow-lg border-2 border-blue-200">
             <div className="p-6">
               <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center justify-center">
-                <Beaker className="mr-2 h-6 w-6 text-blue-500" />
+                <Beaker className="mr-2 h-6 w-6 text-green-500" />
                 Color Change Analysis Table
               </h2>
 
@@ -132,7 +132,7 @@ export const InsightDataSection: React.FC<InsightDataSectionProps> = ({
                           Pink
                         </span>
                         <span className="text-gray-500">→</span>
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 ml-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-green-800 ml-2">
                           Blue
                         </span>
                       </td>
@@ -153,7 +153,7 @@ export const InsightDataSection: React.FC<InsightDataSectionProps> = ({
                           Pink/Blue
                         </span>
                         <span className="text-gray-500">→</span>
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 ml-1">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-green-800 ml-1">
                           Darker Blue
                         </span>
                       </td>
@@ -170,7 +170,7 @@ export const InsightDataSection: React.FC<InsightDataSectionProps> = ({
                         Cooled the solution in ice water
                       </td>
                       <td className="border border-gray-300 px-4 py-3">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-green-800 mr-2">
                           Blue
                         </span>
                         <span className="text-gray-500">→</span>
@@ -191,7 +191,7 @@ export const InsightDataSection: React.FC<InsightDataSectionProps> = ({
                         Diluted blue solution with distilled water
                       </td>
                       <td className="border border-gray-300 px-4 py-3">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-green-800 mr-2">
                           Blue
                         </span>
                         <span className="text-gray-500">→</span>
@@ -208,11 +208,11 @@ export const InsightDataSection: React.FC<InsightDataSectionProps> = ({
                 </table>
               </div>
 
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="text-lg font-semibold text-blue-800 mb-2">
+              <div className="mt-6 p-4 bg-green-50 rounded-lg border border-blue-200">
+                <h3 className="text-lg font-semibold text-green-800 mb-2">
                   🔬 Le Chatelier's Principle in Action
                 </h3>
-                <p className="text-blue-700 text-sm leading-relaxed">
+                <p className="text-green-700 text-sm leading-relaxed">
                   This experiment demonstrates how chemical equilibrium responds
                   to changes in concentration, temperature, and dilution. The
                   reversible reaction between [Co(H₂O)₆]²⁺ (pink) and [CoCl��]²⁻

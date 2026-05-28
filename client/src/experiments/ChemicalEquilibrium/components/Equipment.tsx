@@ -1278,13 +1278,13 @@ export const Equipment: React.FC<EquipmentProps> = ({
           )}
 
           {showCoolingMessage && (
-            <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold animate-bounce shadow-lg whitespace-nowrap z-50">
+            <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-bold animate-bounce shadow-lg whitespace-nowrap z-50">
               Temperature of test tube is falling!
             </div>
           )}
 
           {showEndothermicMessage && (
-            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold animate-bounce shadow-xl whitespace-nowrap z-[9999] border-2 border-white">
+            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-bold animate-bounce shadow-xl whitespace-nowrap z-[9999] border-2 border-white">
               🧪 Solution became blue again due to Endothermic Reaction! 🧪
             </div>
           )}
@@ -1369,7 +1369,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
             ))}
           </div>
 
-          <div className="absolute -top-4 -right-4 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+          <div className="absolute -top-4 -right-4 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
             C
           </div>
 
@@ -1457,7 +1457,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
       {isContainer && !isOnWorkbench && (
         <div
           className={`absolute -top-3 -right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
-            isDragOver ? "bg-green-500 scale-125 shadow-lg" : "bg-blue-500"
+            isDragOver ? "bg-green-500 scale-125 shadow-lg" : "bg-green-500"
           }`}
         >
           <Droplet size={14} className="text-white" />
@@ -1479,7 +1479,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
 
       <div
         className={`mb-3 transition-all duration-300 relative ${
-          isOnWorkbench ? "text-blue-700" : "text-blue-600"
+          isOnWorkbench ? "text-green-700" : "text-green-600"
         } ${isDragOver ? "scale-110" : ""} ${isOnWorkbench ? "transform scale-110" : ""}`}
       >
         {getEquipmentSpecificRendering()}
@@ -1527,7 +1527,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
       )}
 
       {isDragging && (
-        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium animate-pulse">
+        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-2 py-1 rounded text-xs font-medium animate-pulse">
           Moving...
         </div>
       )}

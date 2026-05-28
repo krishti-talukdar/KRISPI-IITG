@@ -160,7 +160,7 @@ export const TransferAnimation: React.FC<TransferAnimationProps> = ({
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={`rinse-${i}`}
-                className="absolute rounded-full bg-blue-200 opacity-60"
+                className="absolute rounded-full bg-green-200 opacity-60"
                 style={{
                   width: 2,
                   height: 2,
@@ -187,7 +187,7 @@ export const TransferAnimation: React.FC<TransferAnimationProps> = ({
         animate={{ opacity: 1, x: 0 }}
       >
         <div className="flex items-center space-x-2 text-sm font-semibold text-gray-900 mb-3">
-          <FlaskConical className="w-4 h-4 text-blue-600" />
+          <FlaskConical className="w-4 h-4 text-green-600" />
           <span>Transfer Progress</span>
         </div>
 
@@ -202,7 +202,7 @@ export const TransferAnimation: React.FC<TransferAnimationProps> = ({
           </div>
           <div className="w-full rounded-full bg-gray-200 h-2 mt-2">
             <div
-              className="h-2 rounded-full bg-blue-500 transition-all duration-300"
+              className="h-2 rounded-full bg-green-500 transition-all duration-300"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -210,7 +210,7 @@ export const TransferAnimation: React.FC<TransferAnimationProps> = ({
 
         <div className="mt-3 space-y-2 text-xs">
           {transferPhase === "pouring" && (
-            <div className="transfer-phase-tip bg-blue-100 text-blue-700">
+            <div className="transfer-phase-tip bg-blue-100 text-green-700">
               <Droplets className="w-3 h-3" />
               <span>Transferring solution via funnel</span>
             </div>

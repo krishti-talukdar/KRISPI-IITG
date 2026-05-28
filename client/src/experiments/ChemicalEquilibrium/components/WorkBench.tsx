@@ -375,7 +375,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
   const dryTestWorkbenchClass = `relative w-full h-full min-h-[500px] rounded-lg overflow-hidden transition-all duration-300 shadow-sm ${
     isDragOver
-      ? "bg-[#d1d5db] border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
+      ? "bg-[#d1d5db] border-blue-400 ring-4 ring-green-300 ring-opacity-50"
       : "bg-[#d3d3d3] border border-[#bcbcbc]"
   }`;
 
@@ -383,7 +383,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
     ? dryTestWorkbenchClass
     : `relative w-full h-full min-h-[500px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-gray-400 ${
         isDragOver
-          ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
+          ? "bg-gray-300 border-blue-400 ring-4 ring-green-300 ring-opacity-50"
           : ""
       }`;
 
@@ -532,7 +532,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
               )}
 
               {selectedChemical && (
-                <div className="bg-blue-500 text-white rounded-lg px-3 py-2 shadow-md">
+                <div className="bg-green-500 text-white rounded-lg px-3 py-2 shadow-md">
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
                     <span className="text-xs font-medium">Chemical Selected</span>
@@ -592,7 +592,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
               {/* Chemical selection indicator */}
               {selectedChemical && (
-                <div className="bg-blue-500 text-white rounded-lg px-3 py-2 shadow-md">
+                <div className="bg-green-500 text-white rounded-lg px-3 py-2 shadow-md">
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
                     <span className="text-xs font-medium">Chemical Selected</span>
@@ -614,15 +614,15 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
           {/* Drop zone indicator */}
           {isDragOver && (
-            <div className="absolute inset-0 flex items-center justify-center bg-blue-500/10 backdrop-blur-sm">
+            <div className="absolute inset-0 flex items-center justify-center bg-green-500/10 backdrop-blur-sm">
               <div className="bg-white rounded-xl shadow-xl p-8 border-2 border-blue-400 border-dashed">
                 <div className="flex flex-col items-center space-y-4">
-                  <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center animate-bounce">
+                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center animate-bounce">
                     <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                     </svg>
                   </div>
-                  <p className="text-lg font-semibold text-blue-600">Drop Equipment Here</p>
+                  <p className="text-lg font-semibold text-green-600">Drop Equipment Here</p>
                   <p className="text-sm text-gray-600 text-center">Position your laboratory equipment on the workbench</p>
                 </div>
               </div>
@@ -641,7 +641,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
           {isDryTestWorkbench && (
             <>
               <div className="absolute top-4 left-4 flex items-center gap-2 rounded-full px-3 py-1 bg-white/90 border border-gray-200 shadow-sm text-xs font-semibold text-gray-700">
-                <span className="inline-flex w-2 h-2 bg-blue-500 rounded-full"></span>
+                <span className="inline-flex w-2 h-2 bg-green-500 rounded-full"></span>
                 <span>{dryStepLabel}</span>
               </div>
               <div className="absolute top-4 right-4 rounded-full px-3 py-1 bg-white/90 border border-gray-200 shadow-sm text-xs font-semibold text-gray-700">

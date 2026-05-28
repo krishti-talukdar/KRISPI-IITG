@@ -42,7 +42,7 @@ export default function ExperimentCard({ experiment, progress, onViewDetails }: 
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'Organic Chemistry':
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-blue-100 text-green-700';
       case 'Equilibrium':
         return 'bg-purple-100 text-purple-700';
       default:
@@ -115,13 +115,13 @@ export default function ExperimentCard({ experiment, progress, onViewDetails }: 
         <div className="mb-4">
           <div className="flex items-center justify-between text-sm mb-2">
             <span className="text-gray-600">Progress</span>
-            <span className={`font-medium ${isCompleted ? 'text-green-600' : 'text-blue-600'}`}>
+            <span className={`font-medium ${isCompleted ? 'text-green-600' : 'text-green-600'}`}>
               {progressPercentage}%
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
-              className={`h-2 rounded-full ${isCompleted ? 'bg-green-600' : 'bg-blue-600'}`}
+              className={`h-2 rounded-full ${isCompleted ? 'bg-green-600' : 'bg-green-600'}`}
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
@@ -130,9 +130,9 @@ export default function ExperimentCard({ experiment, progress, onViewDetails }: 
         <Button 
           onClick={handleStartExperiment}
           className={`w-full py-3 font-semibold transition-colors ${
-            isCompleted 
-              ? 'bg-green-600 hover:bg-green-700 text-white' 
-              : 'bg-blue-600 hover:bg-blue-700 text-white'
+            isCompleted
+              ? 'bg-green-600 hover:bg-green-700 text-white'
+              : 'bg-green-600 hover:bg-green-700 text-white'
           }`}
         >
           {isCompleted ? (

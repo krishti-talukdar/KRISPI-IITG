@@ -68,11 +68,11 @@ export default function VirtualLab({
   ];
 
   const equipmentItems = [
-    { id: "ignition-tube", label: "Fusion Tube", icon: <TestTube className="w-8 h-8 text-blue-600 mb-2" /> },
+    { id: "ignition-tube", label: "Fusion Tube", icon: <TestTube className="w-8 h-8 text-green-600 mb-2" /> },
     { id: "sodium-piece", label: "Sodium Piece (under kerosene)", icon: <Beaker className="w-8 h-8 text-emerald-600 mb-2" /> },
     { id: "organic-compound", label: "Organic Compound", icon: <FlaskConical className="w-8 h-8 text-purple-600 mb-2" /> },
     { id: "bunsen-burner", label: "Bunsen Burner", icon: <Flame className="w-8 h-8 text-orange-500 mb-2" /> },
-    { id: "water-bath", label: "China Dish", icon: <Droplets className="w-8 h-8 text-blue-500 mb-2" /> },
+    { id: "water-bath", label: "China Dish", icon: <Droplets className="w-8 h-8 text-green-500 mb-2" /> },
     { id: "distilled-water", label: "Distilled Water", icon: <Droplets className="w-8 h-8 text-sky-500 mb-2" /> },
     { id: "filter-funnel", label: "Filter Paper & Funnel", icon: <Filter className="w-8 h-8 text-amber-600 mb-2" /> },
   ];
@@ -207,7 +207,7 @@ export default function VirtualLab({
         <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-10 flex items-center justify-center">
           <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200 max-w-lg">
             <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Play className="w-8 h-8 text-blue-600" />
+              <Play className="w-8 h-8 text-green-600" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">Ready to Explore Lassaigne's Test?</h3>
             <p className="text-gray-600 mb-6">Start your interactive journey with qualitative analysis. Prepare Lassaigne's extract and detect nitrogen, sulphur, and halides using classic spot tests.</p>
@@ -224,14 +224,14 @@ export default function VirtualLab({
         <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-20 flex items-center justify-center p-4">
           <div className="w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden">
             <div className="bg-gradient-to-r from-blue-50 to-emerald-50 px-6 py-4">
-              <h3 className="text-lg font-semibold text-blue-700">Lassaigne's Extract Preparation Protocol</h3>
+              <h3 className="text-lg font-semibold text-green-700">Lassaigne's Extract Preparation Protocol</h3>
               <p className="text-sm text-gray-600">Watch the proper technique for safe sodium fusion and extract preparation.</p>
             </div>
             <div className="px-6 py-6 text-center">
               {!prepStarted ? (
                 <>
                   <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FlaskConical className="w-8 h-8 text-blue-600" />
+                    <FlaskConical className="w-8 h-8 text-green-600" />
                   </div>
                   <h4 className="text-xl font-bold text-gray-900 mb-2">Interactive Extract Preparation</h4>
                   <p className="text-gray-700 mb-4">Follow a short guided sequence to prepare a clear sodium fusion extract used in all subsequent tests.</p>
@@ -250,14 +250,14 @@ export default function VirtualLab({
                   <div className="mb-4 text-left">
                     <div className="text-sm text-gray-600">Step {prepStep + 1} of {preparationSteps.length}</div>
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                      <div className="h-2 rounded-full bg-blue-600" style={{ width: `${((prepStep + 1) / preparationSteps.length) * 100}%` }} />
+                      <div className="h-2 rounded-full bg-green-600" style={{ width: `${((prepStep + 1) / preparationSteps.length) * 100}%` }} />
                     </div>
                   </div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">{preparationSteps[prepStep].title}</h4>
                   <p className="text-gray-700 mb-6">{preparationSteps[prepStep].detail}</p>
                   <div className="flex items-center justify-center gap-3">
                     {prepStep < preparationSteps.length - 1 ? (
-                      <Button onClick={() => setPrepStep((s) => s + 1)} className="bg-blue-600 hover:bg-blue-700 text-white">Next</Button>
+                      <Button onClick={() => setPrepStep((s) => s + 1)} className="bg-green-600 hover:bg-green-700 text-white">Next</Button>
                     ) : (
                       <Button onClick={finishPreparation} className="bg-emerald-600 hover:bg-emerald-700 text-white">Finish & Use Extract</Button>
                     )}
@@ -274,18 +274,18 @@ export default function VirtualLab({
           <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-semibold text-gray-800">Preparation Progress</h3>
-              <span className="text-sm text-blue-600 font-medium">Step {prepStep + 1} of {preparationSteps.length}</span>
+              <span className="text-sm text-green-600 font-medium">Step {prepStep + 1} of {preparationSteps.length}</span>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold">{prepStep + 1}</div>
+              <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-sm font-bold">{prepStep + 1}</div>
               <div className="flex-1">
                 <h4 className="font-semibold text-gray-800 mb-1">{preparationSteps[prepStep].title}</h4>
                 <p className="text-sm text-gray-600 mb-2">{preparationSteps[prepStep].detail}</p>
-                <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Follow the step on the workbench</div>
+                <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-green-700 rounded-full text-xs font-medium">Follow the step on the workbench</div>
               </div>
               <div className="flex items-center gap-2">
                 {prepStep < preparationSteps.length - 1 ? (
-                  <Button onClick={() => setPrepStep((s) => s + 1)} className="bg-blue-600 hover:bg-blue-700 text-white">Next</Button>
+                  <Button onClick={() => setPrepStep((s) => s + 1)} className="bg-green-600 hover:bg-green-700 text-white">Next</Button>
                 ) : (
                   <Button onClick={finishPreparation} className="bg-emerald-600 hover:bg-emerald-700 text-white">Finish</Button>
                 )}
@@ -298,7 +298,7 @@ export default function VirtualLab({
             <div className="lg:col-span-3 space-y-4">
               <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                  <Wrench className="w-5 h-5 mr-2 text-blue-600" />
+                  <Wrench className="w-5 h-5 mr-2 text-green-600" />
                   Equipment
                 </h3>
 
@@ -319,7 +319,7 @@ export default function VirtualLab({
                   ))}
                 </div>
 
-                <div className="mt-4 p-3 bg-blue-50 rounded-lg text-xs text-blue-700">
+                <div className="mt-4 p-3 bg-green-50 rounded-lg text-xs text-green-700">
                   Drag equipment into the workbench center area.
                 </div>
               </div>
@@ -409,10 +409,10 @@ export default function VirtualLab({
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-0">
           {actions.filter(a => hasExtract ? a.id !== 1 : true).map((action) => (
-            <Card key={action.id} className={`transition-all ${currentGuidedStep + 1 === action.id ? 'ring-2 ring-blue-400' : ''}`}>
+            <Card key={action.id} className={`transition-all ${currentGuidedStep + 1 === action.id ? 'ring-2 ring-green-400' : ''}`}>
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">{action.icon}</div>
+                  <div className="w-9 h-9 rounded-full bg-green-50 text-green-600 flex items-center justify-center">{action.icon}</div>
                   <h4 className="font-semibold text-gray-900">{action.title}</h4>
                 </div>
                 <p className="text-sm text-gray-600 mb-4">{action.description}</p>

@@ -142,8 +142,8 @@ export const MeniscusGuide: React.FC<MeniscusGuideProps> = ({
           onMouseEnter={() => setEyeLevel(true)}
           onMouseLeave={() => setEyeLevel(false)}
         >
-          <Eye className="w-6 h-6 text-blue-600" />
-          <div className="ml-2 text-xs text-blue-600 whitespace-nowrap">
+          <Eye className="w-6 h-6 text-green-600" />
+          <div className="ml-2 text-xs text-green-600 whitespace-nowrap">
             Eye Level
           </div>
         </motion.div>
@@ -194,7 +194,7 @@ export const MeniscusGuide: React.FC<MeniscusGuideProps> = ({
             <div className="mt-3 p-2 bg-gray-100 rounded text-center">
               <div className="text-xs text-gray-600">Current Volume</div>
               <div className={`font-bold ${
-                isAtTarget ? 'text-green-600' : 'text-blue-600'
+                isAtTarget ? 'text-green-600' : 'text-green-600'
               }`}>
                 {(meniscusPosition / graduationMarkPosition * targetVolume).toFixed(1)} mL
               </div>

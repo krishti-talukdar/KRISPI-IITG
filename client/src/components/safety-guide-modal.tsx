@@ -83,7 +83,7 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
             {isAmmoniumBuffer ? (
               <>
                 <section className="bg-white border-l-4 border-blue-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-                  <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-blue-700">
+                  <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-green-700">
                     <Info className="h-5 w-5" />
                     1. Objective of Safety Measures
                   </h3>
@@ -890,7 +890,7 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
                 {/* Chemical Handling */}
                 <section>
                   <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <Droplets className="h-5 w-5 text-blue-600" />
+                    <Droplets className="h-5 w-5 text-green-600" />
                     Chemical Handling
                   </h3>
                   <ul className="space-y-2 text-sm">

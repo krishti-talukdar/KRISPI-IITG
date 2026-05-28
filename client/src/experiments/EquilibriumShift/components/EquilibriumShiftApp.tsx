@@ -149,7 +149,7 @@ export default function EquilibriumShiftApp({
           {onBack ? (
             <button
               onClick={onBack}
-              className="text-blue-600 hover:text-blue-700 flex items-center"
+              className="text-green-600 hover:text-green-700 flex items-center"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Experiments
@@ -157,7 +157,7 @@ export default function EquilibriumShiftApp({
           ) : (
             <Link
               href="/"
-              className="text-blue-600 hover:text-blue-700 flex items-center"
+              className="text-green-600 hover:text-green-700 flex items-center"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Experiments
@@ -175,7 +175,7 @@ export default function EquilibriumShiftApp({
           {/* Mode Toggle and Progress */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
-              <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">
+              <span className="px-3 py-1 rounded-full bg-blue-100 text-green-700 text-sm font-medium">
                 Guided Mode
               </span>
               <span className="text-sm text-gray-600">
@@ -186,7 +186,7 @@ export default function EquilibriumShiftApp({
               <span className="text-sm font-medium text-gray-700">
                 Progress
               </span>
-              <span className="text-sm text-blue-600 font-semibold">
+              <span className="text-sm text-green-600 font-semibold">
                 {progressPercentage}%
               </span>
             </div>
@@ -206,7 +206,7 @@ export default function EquilibriumShiftApp({
             <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-center justify-center">
               <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200 max-w-lg">
                 <div className="w-16 h-16 bg-gradient-to-br from-pink-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Play className="w-8 h-8 text-blue-600" />
+                  <Play className="w-8 h-8 text-green-600" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   Ready to Explore Equilibrium?
