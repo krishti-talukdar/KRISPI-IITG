@@ -1088,9 +1088,15 @@ function ChemicalEquilibriumVirtualLab({
           ? bromideWetHeatingCount >= 2
             ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
             : `Inference 1 confirms bromide radicals: ${caseOneResult}`
-          : activeHalide === "Br" && resolvedDryTestMode === "acid"
-            ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
-            : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
+          : activeHalide === "I" && resolvedDryTestMode === "wet"
+            ? iodideWetHeatingCount >= 2
+              ? `Inference 1 & 2 confirm iodide radicals: ${caseOneResult}\n\n${caseTwoResult}`
+              : iodideWetHeatingCount === 1
+                ? `Inference 1 confirms iodide radicals: ${caseOneResult}`
+                : DEFAULT_CASE_RESULT
+            : activeHalide === "Br" && resolvedDryTestMode === "acid"
+              ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
+              : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
     `Inference 3: ${caseThreeDisplayResult}`,
     `Inference 4: ${caseFourDisplayResult}`,
     `Inference 5: ${caseFiveDisplayResult}`,
