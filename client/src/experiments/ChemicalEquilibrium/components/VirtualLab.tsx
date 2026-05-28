@@ -6084,6 +6084,10 @@ function ChemicalEquilibriumVirtualLab({
                   if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                     return note.label === "Wet test focus";
                   }
+                  // Hide guidance cards for Special Cases dry test
+                  if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+                    return false;
+                  }
                   // For Iodide check in Wet Test, hide Next steps and Confidence
                   if (activeHalide === "I" && resolvedDryTestMode === "wet") {
                     return note.label === "Wet test focus";
@@ -6169,7 +6173,7 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && !(activeHalide === "I" && resolvedDryTestMode === "wet") && (
+              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && !(activeHalide === "I" && resolvedDryTestMode === "wet") && !(activeHalide === "SC" && resolvedDryTestMode === "acid") && (
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                     <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
