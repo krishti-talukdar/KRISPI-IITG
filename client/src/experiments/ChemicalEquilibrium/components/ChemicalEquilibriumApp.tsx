@@ -574,8 +574,8 @@ export default function ChemicalEquilibriumApp({
     ? FLAME_TEST_SECTIONS.filter((section) => section.symbol !== "Ch" && section.symbol !== "Co" && section.symbol !== "BB")
     : FLAME_TEST_SECTIONS;
 
-  const limitSaltAnalysisProgressSteps = (steps: ExperimentStep[]) =>
-    experiment.id === ChemicalEquilibriumData.id ? steps.slice(0, 6) : steps;
+  const limitSaltAnalysisProgressSteps = (steps: ExperimentStep[], limit: number = 6) =>
+    experiment.id === ChemicalEquilibriumData.id ? steps.slice(0, limit) : steps;
 
   const isBasicRadicalsFlameTest = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest !== null && activeFlameTest !== "Am";
 
@@ -586,10 +586,12 @@ export default function ChemicalEquilibriumApp({
         : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
           ? BROMIDE_WET_TEST_STEPS
           : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "I"
-          ? IODIDE_WET_TEST_STEPS
-          : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"
-            ? experiment.stepDetails.slice(0, 5)
-            : limitSaltAnalysisProgressSteps(experiment.stepDetails);
+            ? IODIDE_WET_TEST_STEPS
+            : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"
+              ? experiment.stepDetails.slice(0, 5)
+              : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "I"
+                ? limitSaltAnalysisProgressSteps(experiment.stepDetails, 5)
+                : limitSaltAnalysisProgressSteps(experiment.stepDetails);
 
     // For Flame Test, allow 8 steps instead of 6
     const steps = isBasicRadicalsFlameTest
