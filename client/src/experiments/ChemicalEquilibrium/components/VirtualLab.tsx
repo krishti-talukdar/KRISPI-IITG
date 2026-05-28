@@ -911,6 +911,9 @@ function ChemicalEquilibriumVirtualLab({
     activeHalide === "S" && resolvedDryTestMode === "acid"
       ? caseOneReady
       : resultsReady;
+  const isBasicFlameAnalysis =
+    showBasicFlameObservations ??
+    (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
   const canViewResults =
     isBasicFlameAnalysis
       ? caseOneReady
@@ -1221,9 +1224,6 @@ function ChemicalEquilibriumVirtualLab({
   const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const [basicFlameHeatingCount, setBasicFlameHeatingCount] = useState(0);
-  const isBasicFlameAnalysis =
-    showBasicFlameObservations ??
-    (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
   const shouldUseWatchGlassForSaltSample =
     isDryTestExperiment &&
     resolvedDryTestMode === "basic" &&
