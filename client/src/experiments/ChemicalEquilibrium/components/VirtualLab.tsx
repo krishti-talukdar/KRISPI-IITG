@@ -4879,6 +4879,18 @@ function ChemicalEquilibriumVirtualLab({
 
             {isDryTestExperiment && (
               <div className="mt-4 space-y-2">
+                {isBasicFlameAnalysis && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      pushHistorySnapshot();
+                      setEquipmentPositions([]);
+                    }}
+                    className="w-full px-3 py-2 rounded shadow-sm transition bg-red-500 hover:bg-red-600 text-white font-semibold"
+                  >
+                    RESET WORKBENCH
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={handleUndoStep}
