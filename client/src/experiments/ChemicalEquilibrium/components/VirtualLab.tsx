@@ -3573,11 +3573,11 @@ function ChemicalEquilibriumVirtualLab({
           );
         } else if (nextCount === 3) {
           setCaseThreeResult(
-            "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO₃⁻ is present",
+            "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO₃²⁻ is present",
           );
         } else if (nextCount === 4) {
           setCaseFourResult(
-            "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO₃²⁻ is present",
+            "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO₃⁻ is present",
           );
         } else if (nextCount === 5) {
           setCaseFiveResult(
