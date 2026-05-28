@@ -3737,7 +3737,7 @@ function ChemicalEquilibriumVirtualLab({
           if (nextCount === 1) {
             setSpecialCasesWetHeatingTriggered(true);
             setCaseOneResult(
-              "Heavy white precipitate is formed , therefore SO4^2- is present",
+              "Heavy white precipitate is formed , therefore SO₄²⁻ is present",
             );
           } else if (nextCount === 2) {
             setCaseTwoResult(
