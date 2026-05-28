@@ -261,9 +261,9 @@ export const IODIDE_WET_TEST_STEPS: ExperimentStep[] = [
 export const BASIC_DRY_TEST_STEPS: ExperimentStep[] = [
   {
     id: 1,
-    title: "Drag the test tube in the workbench",
+    title: "Place the test tube, drag the platinum wire and watch glass in the workbench.",
     description:
-      "Move a clean test tube from the rack onto the workbench to begin the basic radical dry test.",
+      "Move a clean test tube from the rack onto the workbench, and drag the platinum wire and watch glass to begin the basic radical dry test.",
     completed: false,
     duration: "3 minutes",
   },

@@ -26,7 +26,7 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white relative" style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Feef538cc6581401c9f7487580c2d0494?format=webp&width=800&height=1200')", backgroundSize: "cover", backgroundAttachment: "fixed"}}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h3 className="text-3xl font-bold text-gray-900 mb-4">Why Choose ChemVerse IITG?</h3>

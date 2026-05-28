@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import SafetyGuideModal from "./safety-guide-modal";
 
 const HERO_BACKGROUND_IMAGE =
-  "https://images.pexels.com/photos/5428266/pexels-photo-5428266.jpeg?auto=compress&cs=tinysrgb&w=1600";
+  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F766443c4dfda4acdbbccf3e3a35b1953?format=webp&width=800&height=1200";
 
 export default function HeroSection() {
   const scrollToExperiments = () => {
@@ -17,18 +17,18 @@ export default function HeroSection() {
         <img
           src={HERO_BACKGROUND_IMAGE}
           alt="Chemistry laboratory background"
-          className="h-full w-full object-cover object-center opacity-65"
+          className="h-full w-full object-cover object-center opacity-95"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/55 to-white/65" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/15 to-white/20" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-[64vh] flex-col items-center justify-center py-10 text-center">
-          <h2 className="max-w-4xl text-[2.85rem] font-black leading-[1.05] tracking-tight text-slate-900 md:text-6xl lg:text-[4.5rem]">
+          <h2 className="max-w-4xl text-[2.25rem] font-black leading-[1.05] tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
             Discover Chemistry Through Virtual Experiments
           </h2>
 
-          <p className="hero-initiative hero-initiative-font mt-5 text-[1.7rem] font-semibold text-slate-800 md:text-2xl">
+          <p className="hero-initiative hero-initiative-font mt-5 text-[1.7rem] font-semibold text-black md:text-2xl">
             An initiative by TIH, IITG
           </p>
 

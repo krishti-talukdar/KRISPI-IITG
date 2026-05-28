@@ -60,6 +60,9 @@ interface ChemicalEquilibriumVirtualLabProps {
   dryTestMode?: DryTestMode;
   activeHalide?: string;
   activeFlameTest?: string;
+  activeTopLevelSection?: string;
+  activeBasicRadicalsSubsection?: string | null;
+  onPreviousStep?: () => void;
   showBasicFlameObservations?: boolean;
 }
 
@@ -613,6 +616,9 @@ function ChemicalEquilibriumVirtualLab({
   dryTestMode,
   activeHalide,
   activeFlameTest,
+  activeTopLevelSection,
+  activeBasicRadicalsSubsection,
+  onPreviousStep,
   showBasicFlameObservations,
 }: ChemicalEquilibriumVirtualLabProps) {
   const formatTime = (seconds: number) => {
@@ -905,12 +911,17 @@ function ChemicalEquilibriumVirtualLab({
     activeHalide === "S" && resolvedDryTestMode === "acid"
       ? caseOneReady
       : resultsReady;
+  const isBasicFlameAnalysis =
+    showBasicFlameObservations ??
+    (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
   const canViewResults =
-    (activeHalide === "I" && resolvedDryTestMode === "acid"
-      ? iodideAnalysisReady
-      : activeHalide === "S" && resolvedDryTestMode === "acid"
-        ? sulfideAnalysisReady
-        : resultsReady);
+    isBasicFlameAnalysis
+      ? caseOneReady
+      : (activeHalide === "I" && resolvedDryTestMode === "acid"
+          ? iodideAnalysisReady
+          : activeHalide === "S" && resolvedDryTestMode === "acid"
+            ? sulfideAnalysisReady
+            : resultsReady);
 
   useEffect(() => {
     if (!isSaltAnalysisExperiment) {
@@ -946,7 +957,7 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "INFERENCE 1",
       result: caseOneResult,
-      indicator: (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas" : "Residue",
+      indicator: isBasicFlameAnalysis ? "Yellow flame (Fe³⁺)" : (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas" : "Residue",
       borderClass: "border-rose-200",
       bgClass: "from-white via-rose-50 to-rose-100",
       titleColorClass: "text-rose-400",
@@ -956,7 +967,7 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "INFERENCE 2",
       result: caseTwoResult,
-      indicator: (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas acceleration" : "Gas evolution",
+      indicator: isBasicFlameAnalysis ? "Green flame (Cu²⁺)" : (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas acceleration" : "Gas evolution",
       borderClass: "border-amber-200",
       bgClass: "from-white via-amber-50 to-orange-100",
       titleColorClass: "text-amber-500",
@@ -965,8 +976,8 @@ function ChemicalEquilibriumVirtualLab({
     },
     {
       label: "INFERENCE 3",
-      result: caseThreeDisplayResult,
-      indicator: "Phosphate",
+      result: isBasicFlameAnalysis ? caseThreeResult : caseThreeDisplayResult,
+      indicator: isBasicFlameAnalysis ? "Blue flame (Co²⁺)" : "Phosphate",
       borderClass: "border-emerald-200",
       bgClass: "from-white via-emerald-50 to-emerald-100",
       titleColorClass: "text-emerald-500",
@@ -975,8 +986,8 @@ function ChemicalEquilibriumVirtualLab({
     },
     {
       label: "INFERENCE 4",
-      result: caseFourDisplayResult,
-      indicator: "Oxalate",
+      result: isBasicFlameAnalysis ? caseFourResult : caseFourDisplayResult,
+      indicator: isBasicFlameAnalysis ? "Reddish-brown flame (Ni²⁺)" : "Oxalate",
       borderClass: "border-cyan-200",
       bgClass: "from-white via-cyan-50 to-sky-100",
       titleColorClass: "text-cyan-500",
@@ -985,8 +996,8 @@ function ChemicalEquilibriumVirtualLab({
     },
     {
       label: "INFERENCE 5",
-      result: caseFiveDisplayResult,
-      indicator: "Nitrate",
+      result: isBasicFlameAnalysis ? caseFiveResult : caseFiveDisplayResult,
+      indicator: isBasicFlameAnalysis ? "Violet flame (Mn²⁺)" : "Nitrate",
       borderClass: "border-purple-200",
       bgClass: "from-white via-purple-50 to-indigo-100",
       titleColorClass: "text-purple-500",
@@ -1006,8 +1017,9 @@ function ChemicalEquilibriumVirtualLab({
   ];
   const detailedInsights = [
     {
-      title:
-        activeHalide === "Br" && resolvedDryTestMode === "acid"
+      title: isBasicFlameAnalysis
+        ? "Yellow flame - Fe³⁺"
+        : activeHalide === "Br" && resolvedDryTestMode === "acid"
           ? "Bromide gas formation"
           : activeHalide === "S" && resolvedDryTestMode === "acid"
             ? "Sulfide present"
@@ -1016,24 +1028,28 @@ function ChemicalEquilibriumVirtualLab({
       description: caseOneResult,
     },
     {
-      title: activeHalide === "Br" && resolvedDryTestMode === "acid" ? "Bromide gas acceleration" : "Chlorine confirmation",
+      title: isBasicFlameAnalysis
+        ? "Green flame - Cu²⁺"
+        : activeHalide === "Br" && resolvedDryTestMode === "acid"
+          ? "Bromide gas acceleration"
+          : "Chlorine confirmation",
       hint: "Inference 2",
       description: caseTwoResult,
     },
     {
-      title: "Phosphate check",
+      title: isBasicFlameAnalysis ? "Blue flame - Co²⁺" : "Phosphate check",
       hint: "Inference 3",
-      description: caseThreeDisplayResult,
+      description: isBasicFlameAnalysis ? caseThreeResult : caseThreeDisplayResult,
     },
     {
-      title: "Sulphite check",
+      title: isBasicFlameAnalysis ? "Reddish-brown flame - Ni²⁺" : "Sulphite check",
       hint: "Inference 4",
-      description: caseFourDisplayResult,
+      description: isBasicFlameAnalysis ? caseFourResult : caseFourDisplayResult,
     },
     {
-      title: "Nitrate check",
+      title: isBasicFlameAnalysis ? "Violet flame - Mn²⁺" : "Nitrate check",
       hint: "Inference 5",
-      description: caseFiveDisplayResult,
+      description: isBasicFlameAnalysis ? caseFiveResult : caseFiveDisplayResult,
     },
     {
       title: "Oxalate check",
@@ -1041,7 +1057,13 @@ function ChemicalEquilibriumVirtualLab({
       description: caseSixResult,
     },
   ];
-  const observationHighlights = [
+  const observationHighlights = isBasicFlameAnalysis ? [
+    `Inference 1: ${caseOneResult}`,
+    `Inference 2: ${caseTwoResult}`,
+    `Inference 3: ${caseThreeResult}`,
+    `Inference 4: ${caseFourResult}`,
+    `Inference 5: ${caseFiveResult}`,
+  ] : [
     isBasicRadicalsAnalysis
       ? `Inference 1 & 2 confirm the basic radical flow: ${caseOneResult} ${caseTwoResult}`
       : activeHalide === "S" && resolvedDryTestMode === "acid"
@@ -1202,9 +1224,6 @@ function ChemicalEquilibriumVirtualLab({
   const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const [basicFlameHeatingCount, setBasicFlameHeatingCount] = useState(0);
-  const isBasicFlameAnalysis =
-    showBasicFlameObservations ??
-    (isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl");
   const shouldUseWatchGlassForSaltSample =
     isDryTestExperiment &&
     resolvedDryTestMode === "basic" &&
@@ -2307,8 +2326,52 @@ function ChemicalEquilibriumVirtualLab({
       // If the equipment is Platinum Wire and we are in Salt Analysis -> Basic Radicals -> Dry -> Flame Test,
       // skip the amount dialog and add immediately
       const isPlatinumEquipment = (equipment.name || "").toLowerCase().includes("platinum");
+      const isFlameTestContext =
+        activeTopLevelSection === "BR" &&
+        activeBasicRadicalsSubsection === "dry" &&
+        activeFlameTest === "Fl";
       // Always skip the amount dialog for Platinum Wire and add immediately
       if (isPlatinumEquipment) {
+        if (isFlameTestContext) {
+          // Place the main platinum wire via the standard add button (preserves automations),
+          // then add 4 additional wires directly with offsets so all 5 are visible.
+          handleEquipmentAddButton(equipment.id);
+          const workbenchEl =
+            typeof document !== "undefined"
+              ? document.querySelector('[data-workbench="true"]')
+              : null;
+          const workbenchRect = workbenchEl?.getBoundingClientRect() ?? null;
+          const spacing = workbenchRect ? Math.min(70, workbenchRect.width / 8) : 60;
+          const baseIdPrefix = equipment.id.replace(/-\d+$/, "");
+          pushHistorySnapshot();
+          setEquipmentPositions((prev) => {
+            const main = prev.find((pos) => stripEquipmentIdSuffix(pos.id) === "platinum-wire");
+            const baseX = main?.x ?? (workbenchRect ? workbenchRect.left + workbenchRect.width / 2 : 200);
+            const baseY = main?.y ?? (workbenchRect ? workbenchRect.top + workbenchRect.height / 2 : 200);
+            const additions = [];
+            for (let i = 1; i <= 4; i++) {
+              const newId = `${baseIdPrefix}-${200 + i}`;
+              if (!prev.some((pos) => pos.id === newId)) {
+                additions.push({
+                  id: newId,
+                  x: baseX + i * spacing,
+                  y: baseY + (i % 2 === 0 ? 20 : -20),
+                  chemicals: [],
+                });
+              }
+            }
+            return [...prev, ...additions];
+          });
+        } else {
+          handleEquipmentAddButton(equipment.id);
+        }
+        return;
+      }
+
+      // For Watch Glass in Basic Radicals dry test flame tests, skip the amount dialog and add immediately
+      const isWatchGlassEquipment = (equipment.name || "").toLowerCase().includes("watch glass");
+      const isBasicRadicalsDryFlameTest = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest !== null;
+      if (isWatchGlassEquipment && isBasicRadicalsDryFlameTest) {
         handleEquipmentAddButton(equipment.id);
         return;
       }
@@ -2317,7 +2380,7 @@ function ChemicalEquilibriumVirtualLab({
       setAddDialogAmount("3.0");
       setAddDialogError(null);
     },
-    [handleEquipmentAddButton, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest],
+    [handleEquipmentAddButton, handleEquipmentDrop, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest, activeTopLevelSection, activeBasicRadicalsSubsection, setEquipmentPositions, pushHistorySnapshot],
   );
 
   const handleEquipmentAddDialogClose = useCallback(() => {
@@ -4769,6 +4832,11 @@ function ChemicalEquilibriumVirtualLab({
                       (isCaClCard && hasCaClBeenUsed) ||
                       (isFeCl3Card && hasFeCl3BeenUsed));
                   const addButtonDisabled = showAddButton && shouldDisableAddButton;
+                  const isWatchGlass = normalizedEquipmentName.includes("watch glass");
+                  const isPlatinumWire = normalizedEquipmentName.includes("platinum wire");
+                  const isBasicRadicalsDryFlameTest = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest !== null;
+                  const shouldShowDragButton = isBasicRadicalsDryFlameTest && (isWatchGlass || isPlatinumWire);
+                  const buttonLabel = shouldShowDragButton ? "DRAG" : "ADD";
                   return (
                     <div
                       key={equipment.id}
@@ -4810,7 +4878,7 @@ function ChemicalEquilibriumVirtualLab({
                                 : "bg-orange-500 hover:bg-orange-600"
                             }`}
                           >
-                            ADD
+                            {buttonLabel}
                           </button>
                         )}
                       </div>
@@ -4824,6 +4892,18 @@ function ChemicalEquilibriumVirtualLab({
 
             {isDryTestExperiment && (
               <div className="mt-4 space-y-2">
+                {isBasicFlameAnalysis && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      pushHistorySnapshot();
+                      setEquipmentPositions([]);
+                    }}
+                    className="w-full px-3 py-2 rounded shadow-sm transition bg-red-500 hover:bg-red-600 text-white font-semibold"
+                  >
+                    RESET WORKBENCH
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={handleUndoStep}
@@ -5050,18 +5130,57 @@ function ChemicalEquilibriumVirtualLab({
               <div className="mt-1 text-sm">{allSteps[currentStep - 1]?.title ?? 'No step selected'}</div>
             </div>
 
-            <div className="text-xs text-gray-600 mb-3">
-              <div className="font-medium">Completed Steps</div>
-              <ul
-                className={`list-disc list-inside mt-2 ${
-                  isAcidDryTest ? "text-lime-300 font-bold text-sm" : ""
-                }`}
-              >
-                {allSteps.slice(0, Math.max(0, currentStep - 1)).map((s) => (
-                  <li key={s.id}>{s.title}</li>
-                ))}
-              </ul>
-            </div>
+            {isBasicFlameAnalysis ? (
+              <div className="mb-3 flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (currentStep < totalSteps) {
+                      onStepComplete();
+                      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+                    }
+                  }}
+                  disabled={currentStep >= totalSteps}
+                  className={`w-full py-2 px-4 rounded-lg text-sm font-bold transition ${
+                    currentStep >= totalSteps
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-orange-500 hover:bg-orange-600 text-white animate-pulse outline outline-4 outline-yellow-400 outline-offset-2 shadow-[0_0_12px_4px_rgba(250,204,21,0.8)]"
+                  }`}
+                >
+                  NEXT STEP
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (currentStep > 1) {
+                      setCurrentStep((prev) => Math.max(prev - 1, 1));
+                      onPreviousStep?.();
+                    }
+                  }}
+                  disabled={currentStep <= 1}
+                  className={`w-full py-2 px-4 rounded-lg text-sm font-bold transition ${
+                    currentStep <= 1
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-slate-500 hover:bg-slate-600 text-white"
+                  }`}
+                >
+                  PREVIOUS STEP
+                </button>
+              </div>
+            ) : (
+              <div className="text-xs text-gray-600 mb-3">
+                <div className="font-medium">Completed Steps</div>
+                <ul
+                  className={`list-disc list-inside mt-2 ${
+                    isAcidDryTest ? "text-lime-300 font-bold text-sm" : ""
+                  }`}
+                >
+                  {allSteps.slice(0, Math.max(0, currentStep - 1)).map((s) => (
+                    <li key={s.id}>{s.title}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {isBasicFlameAnalysis && (
               <div className="mb-3">
@@ -5731,6 +5850,8 @@ function ChemicalEquilibriumVirtualLab({
                 </p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
                   {detailedInsights.filter((insight) => {
+                    // For Flame Test show Inferences 1-5 only
+                    if (isBasicFlameAnalysis) return insight.hint !== "Inference 6";
                     if ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") {
                       return insight.hint === "Inference 1";
                     }
@@ -5757,6 +5878,8 @@ function ChemicalEquilibriumVirtualLab({
 
               <div className={activeHalide === "S" && resolvedDryTestMode === "acid" ? "hidden" : "grid gap-4 md:grid-cols-3"}>
                 {analysisGuidance.filter((note) => {
+                  // Hide all guidance notes for Flame Test
+                  if (isBasicFlameAnalysis) return false;
                   if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
                     return !["Wet test focus", "Next steps"].includes(note.label);
                   }
@@ -5781,6 +5904,8 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries
                     .filter((entry) => {
+                      // For Flame Test show INFERENCE 1-5 only
+                      if (isBasicFlameAnalysis) return entry.label !== "INFERENCE 6";
                       if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
                         return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
@@ -5873,6 +5998,8 @@ function ChemicalEquilibriumVirtualLab({
                   <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
                   <ul className="mt-4 space-y-3">
                     {observationHighlights.filter((highlight, index) => {
+                      // For Flame Test show all 5 inference highlights
+                      if (isBasicFlameAnalysis) return true;
                       if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
                         return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                       }

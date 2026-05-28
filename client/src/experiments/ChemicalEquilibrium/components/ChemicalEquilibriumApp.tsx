@@ -519,14 +519,24 @@ export default function ChemicalEquilibriumApp({
       dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
         (name) => !groupsExclude.some(item => name.includes(item))
       );
-    } else {
-      // For Dry Test section, apply existing modifications
+    } else if (activeBasicRadicalsSubsection === "dry") {
+      // For Dry Test section, apply modifications
       const basicRadicalsExclude = ["MnO₂", "MnO2", "Glass container", "Concentrated H₂SO₄"];
       dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
         (name) =>
           !basicRadicalsExclude.some((item) => name.includes(item)) &&
           !name.toLowerCase().includes("test tube")
       );
+
+      // Add Test Tube just before Salt Sample for Basic Radicals
+      const equipment = dryTestEquipmentToUse as string[];
+      const saltSampleIndex = equipment.findIndex((item) => item.toLowerCase().includes("salt sample"));
+      if (saltSampleIndex !== -1) {
+        equipment.splice(saltSampleIndex, 0, "Test Tube");
+      } else {
+        equipment.unshift("Test Tube");
+      }
+      dryTestEquipmentToUse = equipment;
 
       // Specific modifications for different Basic Radicals tests
       if (activeFlameTest === "Am") {
@@ -536,9 +546,25 @@ export default function ChemicalEquilibriumApp({
         );
         // Add Na₂CO₃ and pH paper for Ammonium Radical Test
         dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Na₂CO₃", "pH paper"]));
+      } else if (activeFlameTest === "Fl") {
+        // Flame Test: Add Platinum Wire and Watch glass only (no Concentrated HCl)
+        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass"]));
       } else {
-        // Add Platinum Wire, Watch glass, Salt & concentrated HCL for other Basic Radicals tests (like Flame Test)
-        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Salt", "Concentrated HCl"]));
+        // Other Basic Radicals tests: Add Platinum Wire, Watch glass & Concentrated HCl
+        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Concentrated HCl"]));
+      }
+    } else if (activeBasicRadicalsSubsection === "wet") {
+      // For Wet Test section (non-GROUPS), ensure Test Tube is present before Salt Sample
+      const equipment = dryTestEquipmentToUse as string[];
+      const hasTestTube = equipment.some((item) => item.toLowerCase().includes("test tube"));
+      if (!hasTestTube) {
+        const saltSampleIndex = equipment.findIndex((item) => item.toLowerCase().includes("salt sample"));
+        if (saltSampleIndex !== -1) {
+          equipment.splice(saltSampleIndex, 0, "Test Tube");
+        } else {
+          equipment.unshift("Test Tube");
+        }
+        dryTestEquipmentToUse = equipment;
       }
     }
   }
@@ -551,16 +577,82 @@ export default function ChemicalEquilibriumApp({
   const limitSaltAnalysisProgressSteps = (steps: ExperimentStep[]) =>
     experiment.id === ChemicalEquilibriumData.id ? steps.slice(0, 6) : steps;
 
-  const activeStepDetails =
-    isDryTestExperiment && activeDryTestMode === "basic"
-      ? limitSaltAnalysisProgressSteps(BASIC_DRY_TEST_STEPS)
-      : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
-        ? limitSaltAnalysisProgressSteps(BROMIDE_WET_TEST_STEPS)
-        : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "I"
-        ? IODIDE_WET_TEST_STEPS
-        : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"
-          ? experiment.stepDetails.slice(0, 5)
-          : limitSaltAnalysisProgressSteps(experiment.stepDetails);
+  const isBasicRadicalsFlameTest = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest !== null && activeFlameTest !== "Am";
+
+  const activeStepDetails = (() => {
+    const baseSteps =
+      isDryTestExperiment && activeDryTestMode === "basic"
+        ? limitSaltAnalysisProgressSteps(BASIC_DRY_TEST_STEPS)
+        : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
+          ? limitSaltAnalysisProgressSteps(BROMIDE_WET_TEST_STEPS)
+          : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "I"
+          ? IODIDE_WET_TEST_STEPS
+          : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"
+            ? experiment.stepDetails.slice(0, 5)
+            : limitSaltAnalysisProgressSteps(experiment.stepDetails);
+
+    // For Flame Test, allow 8 steps instead of 6
+    const steps = isBasicRadicalsFlameTest
+      ? experiment.stepDetails.slice(0, 8)
+      : baseSteps;
+
+    if (isBasicRadicalsFlameTest) {
+      return steps.map((step) => {
+        if (step.id === 1) {
+          return {
+            ...step,
+            title: "Step 1 : Place the test tube, drag the platinum wire and watch glass in the workbench.",
+            description: "Move a clean test tube onto the workbench, and drag the platinum wire and watch glass to begin the flame test.",
+          };
+        }
+        if (step.id === 3) {
+          return {
+            ...step,
+            title: "Step 3 : Pour the salt sample in the test tube to the watch glass.",
+            description: "Pour the salt sample from the test tube onto the watch glass for the flame test.",
+          };
+        }
+        if (step.id === 4) {
+          return {
+            ...step,
+            title: "Step 4 : Dip the platinum wire in the salt sample of the watch glass.",
+            description: "Dip the platinum wire into the salt sample placed on the watch glass before heating.",
+          };
+        }
+        if (step.id === 5) {
+          return {
+            ...step,
+            title: 'Step 5 : Reset the workbench by pressing the "RESET WORKBENCH" button.',
+            description: 'Press the "RESET WORKBENCH" button to clear the current setup before proceeding.',
+          };
+        }
+        if (step.id === 6) {
+          return {
+            ...step,
+            title: "Step 6 : Add the bunsen burner and 5 samples of platinum wire dipped in salt sample in the workbench one by one.",
+            description: "Drag the bunsen burner onto the workbench, then add each of the 5 platinum wire samples dipped in the salt sample one by one.",
+          };
+        }
+        if (step.id === 7) {
+          return {
+            ...step,
+            title: 'Step 7 : Press the "Start Heating" button of the bunsen burner and observe the colour of the flame in the "OBSERVATIONS" on the right side.',
+            description: 'Click the "Start Heating" button on the bunsen burner and watch the flame colour appear in the OBSERVATIONS panel on the right.',
+          };
+        }
+        if (step.id === 8) {
+          return {
+            ...step,
+            title: 'Step 8 : Press the "Stop Heating" button of the bunsen burner and again press the "Start Heating" button of the bunsen burner. Do it 4 times for next 4 observations.',
+            description: 'Press "Stop Heating" then "Start Heating" repeatedly — do this 4 times to record the next 4 flame colour observations.',
+          };
+        }
+        return step;
+      });
+    }
+
+    return steps;
+  })();
 
   // Auto-start when URL contains ?autostart=1 for the PH experiment
   useEffect(() => {
@@ -645,8 +737,9 @@ export default function ChemicalEquilibriumApp({
   };
 
   const handlePreviousStep = () => {
-    // Disable going back to previous steps - steps are linear and non-reversible
-    return;
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
   };
 
   const currentStepData = activeStepDetails[currentStep];
@@ -1172,6 +1265,9 @@ export default function ChemicalEquilibriumApp({
                 toggleTimer={toggleTimer}
                 activeHalide={activeHalide}
                 activeFlameTest={activeFlameTest}
+                activeTopLevelSection={activeTopLevelSection}
+                activeBasicRadicalsSubsection={activeBasicRadicalsSubsection}
+                onPreviousStep={handlePreviousStep}
                 showBasicFlameObservations={
                   isDryTestExperiment &&
                   activeTopLevelSection === "BR" &&
