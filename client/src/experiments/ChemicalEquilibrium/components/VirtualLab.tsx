@@ -5138,20 +5138,10 @@ function ChemicalEquilibriumVirtualLab({
                   if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
                     return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
-                  // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the respective heating count is reached
+                  // Hide special-case inferences until each heating step fills them in
                   if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
-                    if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
-                      return false;
-                    }
-                    if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
-                      return false;
-                    }
-                    if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
-                      return false;
-                    }
-                    if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
-                      return false;
-                    }
+                    const inferenceNumber = Number(entry.label.split(" ")[1] ?? 0);
+                    return specialCasesHeatingCount >= inferenceNumber && entry.result !== DEFAULT_CASE_RESULT;
                   }
                   return true;
                 })
@@ -5802,20 +5792,10 @@ function ChemicalEquilibriumVirtualLab({
                       if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
                         return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
-                      // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
+                      // Hide special-case inferences until each heating step fills them in
                       if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
-                        if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
-                          return false;
-                        }
-                        if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
-                          return false;
-                        }
-                        if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
-                          return false;
-                        }
-                        if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
-                          return false;
-                        }
+                        const inferenceNumber = Number(entry.label.split(" ")[1] ?? 0);
+                        return specialCasesHeatingCount >= inferenceNumber && entry.result !== DEFAULT_CASE_RESULT;
                       }
                       return true;
                     })
