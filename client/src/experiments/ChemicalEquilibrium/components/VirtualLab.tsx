@@ -3678,7 +3678,7 @@ function ChemicalEquilibriumVirtualLab({
             setIodideWetHeatingTriggered(true);
             setCaseTwoResult(DEFAULT_CASE_RESULT);
             setCaseOneResult(
-              "Yellow coloured precipitate insoluble in HNO3 and NH4OH is formed , therefore I⁻ is present",
+              "Yellow coloured solution insoluble in HNO₃ and NH₄OH is formed , therefore I⁻ is present",
             );
           } else if (nextCount === 2) {
             setCaseTwoResult("Organic layer turns violet in colour");
