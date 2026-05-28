@@ -912,11 +912,13 @@ function ChemicalEquilibriumVirtualLab({
       ? caseOneReady
       : resultsReady;
   const canViewResults =
-    (activeHalide === "I" && resolvedDryTestMode === "acid"
-      ? iodideAnalysisReady
-      : activeHalide === "S" && resolvedDryTestMode === "acid"
-        ? sulfideAnalysisReady
-        : resultsReady);
+    isBasicFlameAnalysis
+      ? caseOneReady
+      : (activeHalide === "I" && resolvedDryTestMode === "acid"
+          ? iodideAnalysisReady
+          : activeHalide === "S" && resolvedDryTestMode === "acid"
+            ? sulfideAnalysisReady
+            : resultsReady);
 
   useEffect(() => {
     if (!isSaltAnalysisExperiment) {
@@ -952,7 +954,7 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "INFERENCE 1",
       result: caseOneResult,
-      indicator: (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas" : "Residue",
+      indicator: isBasicFlameAnalysis ? "Yellow flame (Fe³⁺)" : (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas" : "Residue",
       borderClass: "border-rose-200",
       bgClass: "from-white via-rose-50 to-rose-100",
       titleColorClass: "text-rose-400",
@@ -962,7 +964,7 @@ function ChemicalEquilibriumVirtualLab({
     {
       label: "INFERENCE 2",
       result: caseTwoResult,
-      indicator: (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas acceleration" : "Gas evolution",
+      indicator: isBasicFlameAnalysis ? "Green flame (Cu²⁺)" : (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas acceleration" : "Gas evolution",
       borderClass: "border-amber-200",
       bgClass: "from-white via-amber-50 to-orange-100",
       titleColorClass: "text-amber-500",
@@ -971,8 +973,8 @@ function ChemicalEquilibriumVirtualLab({
     },
     {
       label: "INFERENCE 3",
-      result: caseThreeDisplayResult,
-      indicator: "Phosphate",
+      result: isBasicFlameAnalysis ? caseThreeResult : caseThreeDisplayResult,
+      indicator: isBasicFlameAnalysis ? "Blue flame (Co²⁺)" : "Phosphate",
       borderClass: "border-emerald-200",
       bgClass: "from-white via-emerald-50 to-emerald-100",
       titleColorClass: "text-emerald-500",
@@ -981,8 +983,8 @@ function ChemicalEquilibriumVirtualLab({
     },
     {
       label: "INFERENCE 4",
-      result: caseFourDisplayResult,
-      indicator: "Oxalate",
+      result: isBasicFlameAnalysis ? caseFourResult : caseFourDisplayResult,
+      indicator: isBasicFlameAnalysis ? "Reddish-brown flame (Ni²⁺)" : "Oxalate",
       borderClass: "border-cyan-200",
       bgClass: "from-white via-cyan-50 to-sky-100",
       titleColorClass: "text-cyan-500",
@@ -991,8 +993,8 @@ function ChemicalEquilibriumVirtualLab({
     },
     {
       label: "INFERENCE 5",
-      result: caseFiveDisplayResult,
-      indicator: "Nitrate",
+      result: isBasicFlameAnalysis ? caseFiveResult : caseFiveDisplayResult,
+      indicator: isBasicFlameAnalysis ? "Violet flame (Mn²⁺)" : "Nitrate",
       borderClass: "border-purple-200",
       bgClass: "from-white via-purple-50 to-indigo-100",
       titleColorClass: "text-purple-500",
@@ -1012,8 +1014,9 @@ function ChemicalEquilibriumVirtualLab({
   ];
   const detailedInsights = [
     {
-      title:
-        activeHalide === "Br" && resolvedDryTestMode === "acid"
+      title: isBasicFlameAnalysis
+        ? "Yellow flame - Fe³⁺"
+        : activeHalide === "Br" && resolvedDryTestMode === "acid"
           ? "Bromide gas formation"
           : activeHalide === "S" && resolvedDryTestMode === "acid"
             ? "Sulfide present"
@@ -1022,24 +1025,28 @@ function ChemicalEquilibriumVirtualLab({
       description: caseOneResult,
     },
     {
-      title: activeHalide === "Br" && resolvedDryTestMode === "acid" ? "Bromide gas acceleration" : "Chlorine confirmation",
+      title: isBasicFlameAnalysis
+        ? "Green flame - Cu²⁺"
+        : activeHalide === "Br" && resolvedDryTestMode === "acid"
+          ? "Bromide gas acceleration"
+          : "Chlorine confirmation",
       hint: "Inference 2",
       description: caseTwoResult,
     },
     {
-      title: "Phosphate check",
+      title: isBasicFlameAnalysis ? "Blue flame - Co²⁺" : "Phosphate check",
       hint: "Inference 3",
-      description: caseThreeDisplayResult,
+      description: isBasicFlameAnalysis ? caseThreeResult : caseThreeDisplayResult,
     },
     {
-      title: "Sulphite check",
+      title: isBasicFlameAnalysis ? "Reddish-brown flame - Ni²⁺" : "Sulphite check",
       hint: "Inference 4",
-      description: caseFourDisplayResult,
+      description: isBasicFlameAnalysis ? caseFourResult : caseFourDisplayResult,
     },
     {
-      title: "Nitrate check",
+      title: isBasicFlameAnalysis ? "Violet flame - Mn²⁺" : "Nitrate check",
       hint: "Inference 5",
-      description: caseFiveDisplayResult,
+      description: isBasicFlameAnalysis ? caseFiveResult : caseFiveDisplayResult,
     },
     {
       title: "Oxalate check",
@@ -1047,7 +1054,13 @@ function ChemicalEquilibriumVirtualLab({
       description: caseSixResult,
     },
   ];
-  const observationHighlights = [
+  const observationHighlights = isBasicFlameAnalysis ? [
+    `Inference 1: ${caseOneResult}`,
+    `Inference 2: ${caseTwoResult}`,
+    `Inference 3: ${caseThreeResult}`,
+    `Inference 4: ${caseFourResult}`,
+    `Inference 5: ${caseFiveResult}`,
+  ] : [
     isBasicRadicalsAnalysis
       ? `Inference 1 & 2 confirm the basic radical flow: ${caseOneResult} ${caseTwoResult}`
       : activeHalide === "S" && resolvedDryTestMode === "acid"
@@ -5837,6 +5850,8 @@ function ChemicalEquilibriumVirtualLab({
                 </p>
                 <div className="mt-4 grid gap-3 md:grid-cols-3">
                   {detailedInsights.filter((insight) => {
+                    // For Flame Test show Inferences 1-5 only
+                    if (isBasicFlameAnalysis) return insight.hint !== "Inference 6";
                     if ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") {
                       return insight.hint === "Inference 1";
                     }
@@ -5887,6 +5902,8 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {caseSummaryEntries
                     .filter((entry) => {
+                      // For Flame Test show INFERENCE 1-5 only
+                      if (isBasicFlameAnalysis) return entry.label !== "INFERENCE 6";
                       if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
                         return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
@@ -5979,6 +5996,8 @@ function ChemicalEquilibriumVirtualLab({
                   <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500">Observation Highlights</div>
                   <ul className="mt-4 space-y-3">
                     {observationHighlights.filter((highlight, index) => {
+                      // For Flame Test show all 5 inference highlights
+                      if (isBasicFlameAnalysis) return true;
                       if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
                         return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                       }
