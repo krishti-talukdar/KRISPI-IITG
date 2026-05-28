@@ -687,6 +687,16 @@ function ChemicalEquilibriumVirtualLab({
   const [bromideWetSodaExtractAddedTracked, setBromideWetSodaExtractAddedTracked] = useState(false);
   const [bromideWetHNO3AddedTracked, setBromideWetHNO3AddedTracked] = useState(false);
   const [bromideWetAgNO3AddedTracked, setBromideWetAgNO3AddedTracked] = useState(false);
+  const [bromideWetBunsenAddedTracked, setBromideWetBunsenAddedTracked] = useState(false);
+  const [bromideWetFirstHeatingTracked, setBromideWetFirstHeatingTracked] = useState(false);
+  const [bromideWetResetTracked, setBromideWetResetTracked] = useState(false);
+  const [bromideWetSecondTestTubeTracked, setBromideWetSecondTestTubeTracked] = useState(false);
+  const [bromideWetSecondSaltTracked, setBromideWetSecondSaltTracked] = useState(false);
+  const [bromideWetSecondSodaTracked, setBromideWetSecondSodaTracked] = useState(false);
+  const [bromideWetDilHClTracked, setBromideWetDilHClTracked] = useState(false);
+  const [bromideWetCHCl3Tracked, setBromideWetCHCl3Tracked] = useState(false);
+  const [bromideWetKMnO4Tracked, setBromideWetKMnO4Tracked] = useState(false);
+  const [bromideWetSecondBunsenTracked, setBromideWetSecondBunsenTracked] = useState(false);
   const [iodideWetTestTubeTracked, setIodideWetTestTubeTracked] = useState(false);
   const [iodideWetSaltAddedTracked, setIodideWetSaltAddedTracked] = useState(false);
   const [iodideWetSodaExtractAddedTracked, setIodideWetSodaExtractAddedTracked] = useState(false);
@@ -1544,6 +1554,125 @@ function ChemicalEquilibriumVirtualLab({
       setCurrentStep(6);
       setToastMessage("AgNO₃ added. Moving to Step 6.");
       setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    const hasBunsenBurner = equipmentPositions.some((pos) =>
+      pos.id === "bunsen-burner-virtual-heat-source",
+    );
+
+    if (currentStep === 6 && hasBunsenBurner && !bromideWetBunsenAddedTracked) {
+      setBromideWetBunsenAddedTracked(true);
+      onStepComplete();
+      setCurrentStep(7);
+      setToastMessage("Bunsen burner added. Moving to Step 7.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (currentStep === 7 && bromideWetHeatingCount >= 1 && !bromideWetFirstHeatingTracked) {
+      setBromideWetFirstHeatingTracked(true);
+      onStepComplete();
+      setCurrentStep(8);
+      setToastMessage("Start heating pressed. Moving to Step 8.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (currentStep === 9 && hasTestTube && !bromideWetSecondTestTubeTracked) {
+      setBromideWetSecondTestTubeTracked(true);
+      onStepComplete();
+      setCurrentStep(10);
+      setToastMessage("Test tube added. Moving to Step 10.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (currentStep === 10 && hasSaltSample && !bromideWetSecondSaltTracked) {
+      setBromideWetSecondSaltTracked(true);
+      onStepComplete();
+      setCurrentStep(11);
+      setToastMessage("Salt sample added. Moving to Step 11.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (currentStep === 11 && hasSodaExtract && !bromideWetSecondSodaTracked) {
+      setBromideWetSecondSodaTracked(true);
+      onStepComplete();
+      setCurrentStep(12);
+      setToastMessage("Soda extract added. Moving to Step 12.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    const hasDilHCl = Boolean(
+      testTube?.chemicals.some((chemical) => {
+        const name = (chemical.name ?? "").toLowerCase();
+        const id = (chemical.id ?? "").toLowerCase();
+        return (
+          (chemical.amount ?? 0) > 0 &&
+          (id.includes("hcl") || (name.includes("hcl") && !name.includes("hclo")))
+        );
+      }),
+    );
+
+    if (currentStep === 12 && hasDilHCl && !bromideWetDilHClTracked) {
+      setBromideWetDilHClTracked(true);
+      onStepComplete();
+      setCurrentStep(13);
+      setToastMessage("Dil. HCL added. Moving to Step 13.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    const hasCHCl3 = Boolean(
+      testTube?.chemicals.some((chemical) => {
+        const name = (chemical.name ?? "").toLowerCase();
+        const id = (chemical.id ?? "").toLowerCase();
+        return (
+          (chemical.amount ?? 0) > 0 &&
+          (id.includes("chcl") || name.includes("chcl"))
+        );
+      }),
+    );
+
+    if (currentStep === 13 && hasCHCl3 && !bromideWetCHCl3Tracked) {
+      setBromideWetCHCl3Tracked(true);
+      onStepComplete();
+      setCurrentStep(14);
+      setToastMessage("CHCl₃ added. Moving to Step 14.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    const hasKMnO4 = Boolean(
+      testTube?.chemicals.some((chemical) => {
+        const name = (chemical.name ?? "").toLowerCase();
+        const id = (chemical.id ?? "").toLowerCase();
+        return (
+          (chemical.amount ?? 0) > 0 &&
+          (id.includes("kmno") || name.includes("kmno"))
+        );
+      }),
+    );
+
+    if (currentStep === 14 && hasKMnO4 && !bromideWetKMnO4Tracked) {
+      setBromideWetKMnO4Tracked(true);
+      onStepComplete();
+      setCurrentStep(15);
+      setToastMessage("KMnO₄ added. Moving to Step 15.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (currentStep === 15 && hasBunsenBurner && !bromideWetSecondBunsenTracked) {
+      setBromideWetSecondBunsenTracked(true);
+      onStepComplete();
+      setCurrentStep(16);
+      setToastMessage("Bunsen burner added. Moving to Step 16.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
     }
   }, [
     activeHalide,
@@ -1552,8 +1681,43 @@ function ChemicalEquilibriumVirtualLab({
     bromideWetSaltAddedTracked,
     bromideWetSodaExtractAddedTracked,
     bromideWetTestTubeTracked,
+    bromideWetBunsenAddedTracked,
+    bromideWetFirstHeatingTracked,
+    bromideWetSecondTestTubeTracked,
+    bromideWetSecondSaltTracked,
+    bromideWetSecondSodaTracked,
+    bromideWetDilHClTracked,
+    bromideWetCHCl3Tracked,
+    bromideWetKMnO4Tracked,
+    bromideWetSecondBunsenTracked,
+    bromideWetHeatingCount,
     currentStep,
     equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    onStepComplete,
+    resolvedDryTestMode,
+    totalSteps,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      resolvedDryTestMode !== "wet" ||
+      (activeHalide ?? "").toLowerCase() !== "br"
+    ) {
+      return;
+    }
+    if (currentStep === 16 && bromideWetHeatingCount >= 2) {
+      onStepComplete();
+      setToastMessage("Start heating pressed. Experiment complete.");
+      setTimeout(() => setToastMessage(null), 3000);
+    }
+  }, [
+    activeHalide,
+    bromideWetHeatingCount,
+    currentStep,
     experimentStarted,
     isDryTestExperiment,
     onStepComplete,
@@ -1830,6 +1994,16 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetSodaExtractAddedTracked(false);
     setBromideWetHNO3AddedTracked(false);
     setBromideWetAgNO3AddedTracked(false);
+    setBromideWetBunsenAddedTracked(false);
+    setBromideWetFirstHeatingTracked(false);
+    setBromideWetResetTracked(false);
+    setBromideWetSecondTestTubeTracked(false);
+    setBromideWetSecondSaltTracked(false);
+    setBromideWetSecondSodaTracked(false);
+    setBromideWetDilHClTracked(false);
+    setBromideWetCHCl3Tracked(false);
+    setBromideWetKMnO4Tracked(false);
+    setBromideWetSecondBunsenTracked(false);
     setIodideWetTestTubeTracked(false);
     setIodideWetSaltAddedTracked(false);
     setIodideWetSodaExtractAddedTracked(false);
@@ -1855,6 +2029,11 @@ function ChemicalEquilibriumVirtualLab({
       activeHalide === "Br" &&
       currentStep === 6 &&
       !workbenchResetStepTracked;
+    const isBromideWetResetStep =
+      resolvedDryTestMode === "wet" &&
+      activeHalide === "Br" &&
+      currentStep === 8 &&
+      !bromideWetResetTracked;
     const isChlorideResetStep =
       resolvedDryTestMode === "acid" &&
       activeHalide === "Cl" &&
@@ -1867,9 +2046,13 @@ function ChemicalEquilibriumVirtualLab({
 
     if (
       workbenchResetTrigger !== workbenchResetTriggerRef.current &&
-      (isAcidResetStep || isBromideResetStep || isChlorideResetStep || isBasicResetStep)
+      (isAcidResetStep || isBromideResetStep || isChlorideResetStep || isBasicResetStep || isBromideWetResetStep)
     ) {
-      setWorkbenchResetStepTracked(true);
+      if (isBromideWetResetStep) {
+        setBromideWetResetTracked(true);
+      } else {
+        setWorkbenchResetStepTracked(true);
+      }
       onStepComplete();
       setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
       setToastMessage("Workbench reset. Moving to the next step.");
@@ -1881,6 +2064,7 @@ function ChemicalEquilibriumVirtualLab({
     workbenchResetTrigger,
     currentStep,
     workbenchResetStepTracked,
+    bromideWetResetTracked,
     experimentStarted,
     isDryTestExperiment,
     resolvedDryTestMode,

@@ -584,7 +584,7 @@ export default function ChemicalEquilibriumApp({
       isDryTestExperiment && activeDryTestMode === "basic"
         ? limitSaltAnalysisProgressSteps(BASIC_DRY_TEST_STEPS)
         : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
-          ? limitSaltAnalysisProgressSteps(BROMIDE_WET_TEST_STEPS)
+          ? BROMIDE_WET_TEST_STEPS
           : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "I"
           ? IODIDE_WET_TEST_STEPS
           : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"

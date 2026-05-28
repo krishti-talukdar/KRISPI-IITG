@@ -175,7 +175,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
   },
   {
     id: 7,
-    title: "Step 7 : Press the start heating button ",
+    title: "Step 7 : Press the start heating button of bunsen burner ",
     description:
       "Press the start heating button to begin heating the wet test setup.",
     completed: false,
@@ -183,7 +183,7 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
   },
   {
     id: 8,
-    title: "Step 8 : Press the reset workbench button ",
+    title: 'Step 8 : Press the "RESET WORKBENCH" button in the right side',
     description:
       "Press the reset workbench button to clear the setup.",
     completed: false,
@@ -191,9 +191,65 @@ export const BROMIDE_WET_TEST_STEPS: ExperimentStep[] = [
   },
   {
     id: 9,
-    title: "Step 9 : Add the test tube in the workbench",
+    title: "Step 9 : Add the test tube in the workbench ",
     description:
       "Add the test tube again after reset to repeat the wet test sequence.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 10,
+    title: "Step 10 : Add salt sample in the test tube ",
+    description:
+      "Add the salt sample into the test tube.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 11,
+    title: "Step 11 : Add soda extract in the test tube",
+    description:
+      "Add soda extract to the test tube.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 12,
+    title: "Step 12 : Add Dil. HCL in the test tube ",
+    description:
+      "Add dilute HCl to the test tube.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 13,
+    title: "Step 13 : Add CHCl₃ in the test tube ",
+    description:
+      "Add CHCl₃ to the test tube.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 14,
+    title: "Step 14 : Add KMnO₄ in the test tube",
+    description:
+      "Add KMnO₄ to the test tube.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 15,
+    title: "Step 15 : Add bunsen burner in the test tube ",
+    description:
+      "Place the bunsen burner in the workbench.",
+    completed: false,
+    duration: "3 minutes",
+  },
+  {
+    id: 16,
+    title: "Step 16 : Press the start heating button of bunsen burner ",
+    description:
+      "Press the start heating button to begin heating.",
     completed: false,
     duration: "3 minutes",
   },
