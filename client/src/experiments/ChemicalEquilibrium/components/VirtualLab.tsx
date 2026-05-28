@@ -901,6 +901,7 @@ function ChemicalEquilibriumVirtualLab({
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const isBasicRadicalsAnalysis = resolvedDryTestMode === "wetBasic" || resolvedDryTestMode === "basic";
   const isBasicRadicalsWetResults = resolvedDryTestMode === "wetBasic";
+  const isAmmoniumRadicalAnalysis = isDryTestExperiment && activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest === "Am";
   const isSpecialCasesAnalysis = isDryTestExperiment && activeHalide === "SC" && (resolvedDryTestMode === "acid" || resolvedDryTestMode === "wet");
   const caseThreeDisplayResult =
     isBasicRadicalsAnalysis && caseThreeResult === DEFAULT_CASE_RESULT
@@ -5312,7 +5313,7 @@ function ChemicalEquilibriumVirtualLab({
               <div className="mt-1 text-sm">{allSteps[stepNumber - 1]?.title ?? 'No step selected'}</div>
             </div>
 
-            {isBasicFlameAnalysis || isBasicRadicalsWetResults || isSpecialCasesAnalysis ? (
+            {isBasicFlameAnalysis || isBasicRadicalsWetResults || isAmmoniumRadicalAnalysis || isSpecialCasesAnalysis ? (
               <div className="mb-3 flex flex-col gap-2">
                 <button
                   type="button"
