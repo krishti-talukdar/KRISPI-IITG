@@ -900,6 +900,7 @@ function ChemicalEquilibriumVirtualLab({
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const isBasicRadicalsAnalysis = resolvedDryTestMode === "wetBasic" || resolvedDryTestMode === "basic";
+  const isBasicRadicalsWetResults = resolvedDryTestMode === "wetBasic";
   const caseThreeDisplayResult =
     isBasicRadicalsAnalysis && caseThreeResult === DEFAULT_CASE_RESULT
       ? BASIC_RADICAL_CASE_THREE_RESULT
@@ -6062,7 +6063,7 @@ function ChemicalEquilibriumVirtualLab({
                       ? "Inference"
                       : insight.hint;
 
-                    const displayTitle = activeHalide === "SC" && resolvedDryTestMode === "wet" && ["Inference 1", "Inference 2", "Inference 3"].includes(insight.hint)
+                    const displayTitle = isBasicRadicalsWetResults || (activeHalide === "SC" && resolvedDryTestMode === "wet" && ["Inference 1", "Inference 2", "Inference 3"].includes(insight.hint))
                       ? ""
                       : insight.title;
 
@@ -6091,6 +6092,9 @@ function ChemicalEquilibriumVirtualLab({
                   // For Bromide check in Wet Test, only show the Wet test focus note
                   if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                     return note.label === "Wet test focus";
+                  }
+                  if (isBasicRadicalsWetResults) {
+                    return false;
                   }
                   // Hide guidance cards for Special Cases dry test
                   if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
@@ -6170,6 +6174,7 @@ function ChemicalEquilibriumVirtualLab({
                       : (activeFlameTest === "Am" && entry.label === "INFERENCE 1")
                         ? "INFERENCE "
                         : entry.label;
+                    const displayIndicator = isBasicRadicalsWetResults ? "" : entry.indicator;
 
                       return (
                         <div
@@ -6178,16 +6183,18 @@ function ChemicalEquilibriumVirtualLab({
                         >
                           <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{displayLabel}</div>
                           <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed whitespace-pre-wrap`}>{entry.result}</p>
-                          <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
-                            {entry.indicator}
-                          </div>
+                          {displayIndicator && (
+                            <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
+                              {displayIndicator}
+                            </div>
+                          )}
                         </div>
                       );
                     })}
                 </div>
               </div>
 
-              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && !(activeHalide === "I" && resolvedDryTestMode === "wet") && !(activeHalide === "SC" && resolvedDryTestMode === "acid") && !(activeHalide === "SC" && resolvedDryTestMode === "wet") && (
+              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && !(activeHalide === "I" && resolvedDryTestMode === "wet") && !(activeHalide === "SC" && resolvedDryTestMode === "acid") && !(activeHalide === "SC" && resolvedDryTestMode === "wet") && !isBasicRadicalsWetResults && (
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                     <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
