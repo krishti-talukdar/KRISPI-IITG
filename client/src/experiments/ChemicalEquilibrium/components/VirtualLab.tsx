@@ -5311,7 +5311,7 @@ function ChemicalEquilibriumVirtualLab({
               <div className="mt-1 text-sm">{allSteps[stepNumber - 1]?.title ?? 'No step selected'}</div>
             </div>
 
-            {isBasicFlameAnalysis ? (
+            {isBasicFlameAnalysis || isBasicRadicalsWetResults ? (
               <div className="mb-3 flex flex-col gap-2">
                 <button
                   type="button"
