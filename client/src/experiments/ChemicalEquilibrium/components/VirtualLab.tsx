@@ -5067,18 +5067,40 @@ function ChemicalEquilibriumVirtualLab({
               <div className="mt-1 text-sm">{allSteps[currentStep - 1]?.title ?? 'No step selected'}</div>
             </div>
 
-            <div className="text-xs text-gray-600 mb-3">
-              <div className="font-medium">Completed Steps</div>
-              <ul
-                className={`list-disc list-inside mt-2 ${
-                  isAcidDryTest ? "text-lime-300 font-bold text-sm" : ""
-                }`}
-              >
-                {allSteps.slice(0, Math.max(0, currentStep - 1)).map((s) => (
-                  <li key={s.id}>{s.title}</li>
-                ))}
-              </ul>
-            </div>
+            {isBasicFlameAnalysis ? (
+              <div className="mb-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (currentStep < totalSteps) {
+                      onStepComplete();
+                      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+                    }
+                  }}
+                  disabled={currentStep >= totalSteps}
+                  className={`w-full py-2 px-4 rounded-lg text-sm font-bold transition ${
+                    currentStep >= totalSteps
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-orange-500 hover:bg-orange-600 text-white"
+                  }`}
+                >
+                  NEXT STEP
+                </button>
+              </div>
+            ) : (
+              <div className="text-xs text-gray-600 mb-3">
+                <div className="font-medium">Completed Steps</div>
+                <ul
+                  className={`list-disc list-inside mt-2 ${
+                    isAcidDryTest ? "text-lime-300 font-bold text-sm" : ""
+                  }`}
+                >
+                  {allSteps.slice(0, Math.max(0, currentStep - 1)).map((s) => (
+                    <li key={s.id}>{s.title}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {isBasicFlameAnalysis && (
               <div className="mb-3">
