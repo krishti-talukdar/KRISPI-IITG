@@ -964,16 +964,18 @@ function ChemicalEquilibriumVirtualLab({
       resultTextClass: "text-rose-900",
       indicatorColorClass: "text-rose-500",
     },
-    {
-      label: "INFERENCE 2",
-      result: caseTwoResult,
-      indicator: isBasicFlameAnalysis ? "Green flame (Cu²⁺)" : (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas acceleration" : "Gas evolution",
-      borderClass: "border-amber-200",
-      bgClass: "from-white via-amber-50 to-orange-100",
-      titleColorClass: "text-amber-500",
-      resultTextClass: "text-orange-900",
-      indicatorColorClass: "text-orange-500",
-    },
+    ...(activeHalide === "Br" && resolvedDryTestMode === "wet" && bromideWetHeatingCount < 2
+      ? []
+      : [{
+        label: "INFERENCE 2",
+        result: caseTwoResult,
+        indicator: isBasicFlameAnalysis ? "Green flame (Cu²⁺)" : (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas acceleration" : "Gas evolution",
+        borderClass: "border-amber-200",
+        bgClass: "from-white via-amber-50 to-orange-100",
+        titleColorClass: "text-amber-500",
+        resultTextClass: "text-orange-900",
+        indicatorColorClass: "text-orange-500",
+      }]),
     {
       label: "INFERENCE 3",
       result: isBasicFlameAnalysis ? caseThreeResult : caseThreeDisplayResult,
