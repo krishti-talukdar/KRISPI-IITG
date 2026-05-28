@@ -653,6 +653,10 @@ export default function ChemicalEquilibriumApp({
       });
     }
 
+    if (isDryTestExperiment && activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest === "Am") {
+      return steps.filter((step) => step.id !== 6);
+    }
+
     return steps;
   })();
 

@@ -6033,6 +6033,7 @@ function ChemicalEquilibriumVirtualLab({
                   {detailedInsights.filter((insight) => {
                     // For Flame Test show Inferences 1-5 only
                     if (isBasicFlameAnalysis) return insight.hint !== "Inference 6";
+                    if (isAmmoniumRadicalAnalysis) return insight.hint !== "Inference 2";
                     if ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") {
                       return insight.hint === "Inference 1";
                     }
@@ -6129,6 +6130,7 @@ function ChemicalEquilibriumVirtualLab({
                     .filter((entry) => {
                       // For Flame Test show INFERENCE 1-5 only
                       if (isBasicFlameAnalysis) return entry.label !== "INFERENCE 6";
+                      if (isAmmoniumRadicalAnalysis) return entry.label !== "INFERENCE 2";
                       if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
                         return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
@@ -6240,6 +6242,7 @@ function ChemicalEquilibriumVirtualLab({
                     {observationHighlights.filter((highlight, index) => {
                       // For Flame Test show all 5 inference highlights
                       if (isBasicFlameAnalysis) return true;
+                      if (isAmmoniumRadicalAnalysis) return !highlight.includes("Inference 2");
                       if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
                         return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                       }
