@@ -2425,7 +2425,7 @@ function ChemicalEquilibriumVirtualLab({
     const isCaClAddition = lowerName.includes("cacl");
     const isFeCl3Addition = lowerName.includes("fecl");
     const isSodaExtractAddition = lowerName.includes("soda") && lowerName.includes("extract");
-    const isAgNO3Addition = lowerName.includes("agno3") || lowerName.includes("silver nitrate") || (lowerName.includes("agno") && lowerName.includes("silver"));
+    const isAgNO3Addition = lowerName.includes("agno3") || lowerName.includes("agno₃") || lowerName.includes("silver nitrate") || (lowerName.includes("agno") && lowerName.includes("silver"));
     const isDiluteHNO3Addition = lowerName.includes("dil") && lowerName.includes("hno");
 
     if (requiresDropValidation && isBaClAddition) {
