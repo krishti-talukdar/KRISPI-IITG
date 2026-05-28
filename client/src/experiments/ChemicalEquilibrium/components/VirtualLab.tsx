@@ -3751,7 +3751,7 @@ function ChemicalEquilibriumVirtualLab({
         }
       }
 
-      if (heating && isDryTestExperiment && resolvedDryTestMode === "wetBasic") {
+      if (heating && isDryTestExperiment && resolvedDryTestMode === "wetBasic" && !isWorkbenchHeating) {
         const nextCount = wetBasicHeatingCount + 1;
         setWetBasicHeatingCount(nextCount);
         if (nextCount === 1) {
