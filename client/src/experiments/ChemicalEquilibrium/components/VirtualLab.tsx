@@ -2317,11 +2317,19 @@ function ChemicalEquilibriumVirtualLab({
         return;
       }
 
+      // For Watch Glass in Basic Radicals dry test flame tests, skip the amount dialog and add immediately
+      const isWatchGlassEquipment = (equipment.name || "").toLowerCase().includes("watch glass");
+      const isBasicRadicalsDryFlameTest = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest !== null;
+      if (isWatchGlassEquipment && isBasicRadicalsDryFlameTest) {
+        handleEquipmentAddButton(equipment.id);
+        return;
+      }
+
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
       setAddDialogAmount("3.0");
       setAddDialogError(null);
     },
-    [handleEquipmentAddButton, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest],
+    [handleEquipmentAddButton, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest, activeTopLevelSection, activeBasicRadicalsSubsection],
   );
 
   const handleEquipmentAddDialogClose = useCallback(() => {
