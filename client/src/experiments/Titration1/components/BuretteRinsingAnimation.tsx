@@ -208,7 +208,7 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
           {!isAnimating && !showComplete && (
             <div className="text-center space-y-6">
               <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto">
-                <FlaskConical className="w-12 h-12 text-blue-600" />
+                <FlaskConical className="w-12 h-12 text-green-600" />
               </div>
               
               <div>
@@ -373,7 +373,7 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
                     <span className="text-sm font-medium text-gray-700">
                       Step {currentStep + 1} of {animationSteps.length}
                     </span>
-                    <span className="text-sm text-blue-600 font-semibold">
+                    <span className="text-sm text-green-600 font-semibold">
                       {Math.round(progress)}%
                     </span>
                   </div>
@@ -408,7 +408,7 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
                       size="sm"
                       className={`w-full sm:w-auto px-5 py-2 font-semibold transition-all ${
                         stepAnimationComplete
-                          ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                          ? 'bg-green-500 hover:bg-green-600 text-white'
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
                     >
@@ -445,7 +445,7 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
                           completedSteps.includes(index)
                             ? 'bg-green-50 text-green-800 border border-green-200'
                             : index === currentStep
-                            ? 'bg-blue-50 text-blue-800 border border-blue-200 shadow-sm'
+                            ? 'bg-green-50 text-green-800 border border-blue-200 shadow-sm'
                             : 'bg-gray-50 text-gray-400'
                         }`}
                       >
@@ -453,7 +453,7 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
                           {completedSteps.includes(index) ? (
                             <CheckCircle className="w-4 h-4 text-green-600" />
                           ) : index === currentStep ? (
-                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                           ) : (
                             <span className="text-gray-400">{index + 1}</span>
                           )}

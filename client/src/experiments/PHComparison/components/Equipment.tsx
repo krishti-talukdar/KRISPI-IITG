@@ -76,7 +76,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
     const toolbarStateClass = disabled
       ? "border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
       : "border-gray-300 bg-white hover:border-blue-400 hover:shadow-lg cursor-pointer";
-    const iconLayoutClass = toolbarLayout === "card" ? "text-3xl flex-shrink-0 text-blue-600" : "text-3xl mb-2 text-blue-600";
+    const iconLayoutClass = toolbarLayout === "card" ? "text-3xl flex-shrink-0 text-green-600" : "text-3xl mb-2 text-green-600";
     const nameLayoutClass = toolbarLayout === "card" ? "text-sm font-medium text-gray-700 text-left" : "text-sm font-medium text-gray-700 text-center";
 
     return (
@@ -118,7 +118,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   const isAmmoniumOrSodium = lowerName.includes('sodium') || lowerName.includes('ammonium hydroxide') || lowerName.includes('nh4oh') || lowerName.includes('ammonium chloride') || lowerName.includes('nh4cl');
 
   const bottleBgClass = isAceticOrSodium ? 'bg-bottle-yellow' : (isHCl || isAmmoniumOrSodium ? 'bg-bottle-blue' : 'bg-bottle-yellow');
-  const dropletColorClass = isAceticOrSodium ? 'text-yellow-700' : (isHCl || isAmmoniumOrSodium ? 'text-blue-600' : 'text-yellow-700');
+  const dropletColorClass = isAceticOrSodium ? 'text-yellow-700' : (isHCl || isAmmoniumOrSodium ? 'text-green-600' : 'text-yellow-700');
   const isPH = name.toLowerCase().includes('ph') || id.toLowerCase().includes('ph');
 
   const renderNameParts = (n: string) => {
@@ -196,7 +196,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
             </div>
           ) : (
             <div className="flex flex-col items-center">
-              <div className="text-2xl mb-2 text-blue-600">{icon}</div>
+              <div className="text-2xl mb-2 text-green-600">{icon}</div>
               {renderNameParts(name)}
             </div>
           )}

@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertTriangle, Eye, Shield, Thermometer, Droplets } from "lucide-react";
+import { AlertTriangle, Eye, Shield, Thermometer, Droplets, CheckCircle, AlertCircle, Info, Zap } from "lucide-react";
 import { useRoute } from "wouter";
 
 interface SafetyGuideModalProps {
@@ -28,10 +28,12 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[80vh]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Shield className="h-6 w-6 text-red-600" />
+      <DialogContent className="max-w-4xl max-h-[80vh] bg-gradient-to-b from-white to-slate-50">
+        <DialogHeader className="bg-gradient-to-r from-red-50 to-orange-50 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b-2 border-red-100 rounded-t-lg">
+          <DialogTitle className="flex items-center gap-3 text-2xl">
+            <div className="bg-red-100 p-2 rounded-lg">
+              <Shield className="h-6 w-6 text-red-600" />
+            </div>
             {isAmmoniumBuffer
               ? "Safety Guide — To study the change in pH of ammonium hydroxide solution on addition of ammonium chloride"
               : isEthanoicBuffer
@@ -77,16 +79,22 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="h-[60vh] pr-4">
-          <div className="space-y-6">
+          <div className="space-y-4 px-2">
             {isAmmoniumBuffer ? (
               <>
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">🧪 1. Objective of Safety Measures</h3>
-                  <p className="text-sm">To ensure safe handling of chemicals and apparatus during the experiment involving <strong>ammonium hydroxide (NH₄OH)</strong> and <strong>ammonium chloride (NH₄Cl)</strong>, both of which can cause irritation or harm if misused.</p>
+                <section className="bg-white border-l-4 border-blue-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-green-700">
+                    <Info className="h-5 w-5" />
+                    1. Objective of Safety Measures
+                  </h3>
+                  <p className="text-sm text-gray-700">To ensure safe handling of chemicals and apparatus during the experiment involving <strong>ammonium hydroxide (NH₄OH)</strong> and <strong>ammonium chloride (NH₄Cl)</strong>, both of which can cause irritation or harm if misused.</p>
                 </section>
 
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">⚗ 2. Chemical Hazards</h3>
+                <section className="bg-white border-l-4 border-orange-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-orange-700">
+                    <AlertCircle className="h-5 w-5" />
+                    2. Chemical Hazards
+                  </h3>
                   <div className="overflow-auto">
                     <table className="w-full text-sm border-collapse">
                       <thead>
@@ -132,8 +140,11 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
                   </ul>
                 </section>
 
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">🌬 4. Laboratory Environment</h3>
+                <section className="bg-white border-l-4 border-purple-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-purple-700">
+                    <Zap className="h-5 w-5" />
+                    4. Laboratory Environment
+                  </h3>
                   <ul className="space-y-2 text-sm">
                     <li>• Perform the experiment in a well-ventilated laboratory or fume hood.</li>
                     <li>• Keep chemical containers tightly closed when not in use.</li>
@@ -142,8 +153,11 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
                   </ul>
                 </section>
 
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">⚖ 5. Handling and Storage</h3>
+                <section className="bg-white border-l-4 border-yellow-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-yellow-700">
+                    <AlertTriangle className="h-5 w-5" />
+                    5. Handling and Storage
+                  </h3>
                   <ul className="space-y-2 text-sm">
                     <li>• Label all bottles and beakers clearly (NH₄OH, NH₄Cl, distilled water).</li>
                     <li>• Store NH₄OH in a cool, shaded area away from acids.</li>
@@ -154,8 +168,11 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
                   </ul>
                 </section>
 
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">🚱 6. Waste Disposal</h3>
+                <section className="bg-white border-l-4 border-red-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-red-700">
+                    <AlertTriangle className="h-5 w-5" />
+                    6. Waste Disposal
+                  </h3>
                   <ul className="space-y-2 text-sm">
                     <li>• Do not pour concentrated NH₄OH into the sink directly.</li>
                     <li>• Collect waste solution (mixture of NH₄OH and NH₄Cl) in a labeled container.</li>
@@ -164,8 +181,11 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
                   </ul>
                 </section>
 
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">🚨 7. First Aid Measures</h3>
+                <section className="bg-white border-l-4 border-pink-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-pink-700">
+                    <AlertCircle className="h-5 w-5" />
+                    7. First Aid Measures
+                  </h3>
                   <div className="overflow-auto">
                     <table className="w-full text-sm border-collapse">
                       <thead>
@@ -200,8 +220,11 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
                   </div>
                 </section>
 
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">🔥 8. Emergency and Good Laboratory Practices</h3>
+                <section className="bg-white border-l-4 border-amber-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-amber-700">
+                    <Eye className="h-5 w-5" />
+                    8. Emergency and Good Laboratory Practices
+                  </h3>
                   <ul className="space-y-2 text-sm">
                     <li>• Know the location of eye-wash station, safety shower, and first-aid box.</li>
                     <li>• Do not eat, drink, or apply cosmetics in the laboratory.</li>
@@ -211,8 +234,11 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
                   </ul>
                 </section>
 
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">✅ 9. Post-Experiment Cleanup</h3>
+                <section className="bg-white border-l-4 border-green-600 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-green-700">
+                    <CheckCircle className="h-5 w-5" />
+                    9. Post-Experiment Cleanup
+                  </h3>
                   <ul className="space-y-2 text-sm">
                     <li>• Rinse glassware thoroughly with tap water followed by distilled water.</li>
                     <li>• Switch off the pH meter and clean the electrode as per manufacturer instructions.</li>
@@ -221,8 +247,11 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
                   </ul>
                 </section>
 
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">⚠ 10. Safety Summary</h3>
+                <section className="bg-white border-l-4 border-indigo-500 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-indigo-700">
+                    <Shield className="h-5 w-5" />
+                    10. Safety Summary
+                  </h3>
                   <div className="overflow-auto">
                     <table className="w-full text-sm border-collapse">
                       <thead>
@@ -861,7 +890,7 @@ export default function SafetyGuideModal({ children }: SafetyGuideModalProps) {
                 {/* Chemical Handling */}
                 <section>
                   <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <Droplets className="h-5 w-5 text-blue-600" />
+                    <Droplets className="h-5 w-5 text-green-600" />
                     Chemical Handling
                   </h3>
                   <ul className="space-y-2 text-sm">

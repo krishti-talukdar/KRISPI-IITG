@@ -46,7 +46,7 @@ export const ExperimentSteps: React.FC<ExperimentStepsProps> = ({
     if (step.status === "completed") {
       return <CheckCircle className="text-green-500" size={20} />;
     } else if (step.status === "active") {
-      return <Clock className="text-blue-500 animate-pulse" size={20} />;
+      return <Clock className="text-green-500 animate-pulse" size={20} />;
     } else if (step.status === "warning") {
       return <AlertTriangle className="text-yellow-500" size={20} />;
     } else {
@@ -58,7 +58,7 @@ export const ExperimentSteps: React.FC<ExperimentStepsProps> = ({
     if (step.status === "completed") {
       return "bg-green-50 border-green-200";
     } else if (step.status === "active") {
-      return "bg-blue-50 border-blue-300 shadow-md";
+      return "bg-green-50 border-blue-300 shadow-md";
     } else if (step.status === "warning") {
       return "bg-yellow-50 border-yellow-200";
     } else {
@@ -103,7 +103,7 @@ export const ExperimentSteps: React.FC<ExperimentStepsProps> = ({
                     </div>
                     {step.status === "active" && (
                       <div className="mb-2">
-                        <span className="inline-flex items-center px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">
+                        <span className="inline-flex items-center px-2 py-1 bg-green-500 text-white text-xs font-bold rounded-full">
                           <div className="w-2 h-2 bg-white rounded-full animate-pulse mr-1"></div>
                           CURRENT STEP
                         </span>

@@ -177,7 +177,7 @@ export const Chemical: React.FC<ChemicalProps> = ({
     <div
     className={`chemical-card p-4 rounded-lg border-2 transition-all duration-200 ${
       selected
-        ? "border-blue-500 bg-blue-50 shadow-md"
+        ? "border-blue-500 bg-green-50 shadow-md"
         : disabled
         ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
         : "border-gray-300 bg-white hover:border-blue-300 hover:shadow-sm"
@@ -270,7 +270,7 @@ export const Chemical: React.FC<ChemicalProps> = ({
         {/* Drag Indicator */}
         {!disabled && (
           <div className="text-center">
-            <p className="text-xs text-blue-600 mt-2">{id === "oxalic_acid" ? "Drag to balance" : "Drag to add"}</p>
+            <p className="text-xs text-green-600 mt-2">{id === "oxalic_acid" ? "Drag to balance" : "Drag to add"}</p>
           </div>
         )}
       </div>

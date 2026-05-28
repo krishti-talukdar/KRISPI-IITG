@@ -170,7 +170,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
           </div>
         ) : id === 'graduated-pipette' ? (
           <div className="flex flex-col items-center">
-            <Pipette className="w-8 h-8 text-blue-600 mb-2" />
+            <Pipette className="w-8 h-8 text-green-600 mb-2" />
             <h4 className="text-sm font-semibold text-gray-800">{name}</h4>
             <div className="text-xs text-gray-600 mt-1">
               Precision: ±0.1 mL

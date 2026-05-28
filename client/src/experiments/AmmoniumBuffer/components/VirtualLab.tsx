@@ -457,21 +457,21 @@ useEffect(() => {
     <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-800">Experiment Progress</h3>
-        <span className="text-sm text-blue-600 font-medium">Step {currentStep} of {GUIDED_STEPS.length}</span>
+        <span className="text-sm text-green-600 font-medium">Step {currentStep} of {GUIDED_STEPS.length}</span>
       </div>
       <div className="flex space-x-2 mb-4">
         {GUIDED_STEPS.map((step) => (
-          <div key={step.id} className={`flex-1 h-2 rounded-full ${completedSteps.includes(step.id) ? 'bg-green-500' : currentStep === step.id ? 'bg-blue-500' : 'bg-gray-200'}`} />
+          <div key={step.id} className={`flex-1 h-2 rounded-full ${completedSteps.includes(step.id) ? 'bg-green-500' : currentStep === step.id ? 'bg-green-500' : 'bg-gray-200'}`} />
         ))}
       </div>
       <div className="flex items-start space-x-3">
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${completedSteps.includes(currentStep) ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${completedSteps.includes(currentStep) ? 'bg-green-500 text-white' : 'bg-green-500 text-white'}`}>
           {completedSteps.includes(currentStep) ? <CheckCircle className="w-4 h-4" /> : <span className="text-sm font-bold">{currentStep}</span>}
         </div>
         <div className="flex-1">
           <h4 className="font-semibold text-gray-800 mb-1">{GUIDED_STEPS[currentStep-1].title}</h4>
           <p className="text-sm text-gray-600 mb-2">{GUIDED_STEPS[currentStep-1].description}</p>
-          <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+          <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-green-700 rounded-full text-xs font-medium">
             <ArrowRight className="w-3 h-3 mr-1" />
             {GUIDED_STEPS[currentStep-1].action}
           </div>
@@ -489,7 +489,7 @@ useEffect(() => {
           <div className="lg:col-span-3 space-y-4">
             <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <Wrench className="w-5 h-5 mr-2 text-blue-600" />
+                <Wrench className="w-5 h-5 mr-2 text-green-600" />
                 Equipment
               </h3>
               <div className="space-y-3">
@@ -497,8 +497,8 @@ useEffect(() => {
                   <Equipment key={eq.id} id={eq.id} name={eq.name} icon={eq.icon} disabled={!experimentStarted} onInteract={handleInteract} />
                 ))}
               </div>
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <p className="text-xs text-blue-700"><strong>Tip:</strong> Drag equipment to the workbench following the steps.</p>
+              <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                <p className="text-xs text-green-700"><strong>Tip:</strong> Drag equipment to the workbench following the steps.</p>
               </div>
             </div>
 
@@ -519,7 +519,7 @@ useEffect(() => {
                   setCompareInitiated(false);
                   if (onStepComplete && !completedSteps.includes(6)) onStepComplete(6);
                   setIsRunning(false); setShowResultsModal(true);
-                }} className="w-full bg-blue-500 hover:bg-blue-600 text-white">View Results & Analysis</Button>
+                }} className="w-full bg-green-500 hover:bg-green-600 text-white">View Results & Analysis</Button>
               )}
             </div>
           </div>
@@ -677,7 +677,7 @@ useEffect(() => {
                   </div>
                 </div>
 
-                {showToast && <p className="text-xs text-blue-700 mt-2">{showToast}</p>}
+                {showToast && <p className="text-xs text-green-700 mt-2">{showToast}</p>}
               </div>
             </div>
           </div>
@@ -700,9 +700,9 @@ useEffect(() => {
           <div className="space-y-6 pt-4 px-6 pb-6 text-black">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-5 border-2 border-blue-400 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 shadow-md">
-                <div className="text-xs font-bold uppercase tracking-wider text-blue-700 mb-1">Initial Solution</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-green-700 mb-1">Initial Solution</div>
                 <div className="text-sm font-medium text-gray-700 mb-2">Ammonium hydroxide + Indicator</div>
-                <div className="text-3xl font-bold text-blue-600">{initialPhDisplay}</div>
+                <div className="text-3xl font-bold text-green-600">{initialPhDisplay}</div>
                 <div className={`text-xs font-semibold mt-1 ${ammoniumInitialPH != null ? (ammoniumInitialPH < 7 ? 'text-red-600' : ammoniumInitialPH > 7 ? 'text-green-600' : 'text-gray-600') : 'text-gray-500'}`}>
                   {ammoniumInitialPH != null ? `(${describePhLabel(ammoniumInitialPH)})` : 'Awaiting measurement'}
                 </div>
@@ -720,7 +720,7 @@ useEffect(() => {
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-lg border-l-4 border-blue-500">
               <h4 className="text-lg font-bold text-blue-900 mb-3">📊 pH Comparison Analysis</h4>
               <p className="text-sm text-gray-700 leading-relaxed">
-                Initial pH: <span className="font-bold text-blue-700">{ammoniumInitialPH != null ? ammoniumInitialPH.toFixed(2) : 'N/A'}</span>. After adding NH₄Cl the pH shifted to <span className="font-bold text-emerald-700">{bufferedPhResult != null ? bufferedPhResult.toFixed(2) : 'N/A'}</span>, indicating <span className="font-semibold text-black">buffer formation (NH₄OH/NH₄⁺)</span> that we interpret using Henderson–Hasselbalch.
+                Initial pH: <span className="font-bold text-green-700">{ammoniumInitialPH != null ? ammoniumInitialPH.toFixed(2) : 'N/A'}</span>. After adding NH₄Cl the pH shifted to <span className="font-bold text-emerald-700">{bufferedPhResult != null ? bufferedPhResult.toFixed(2) : 'N/A'}</span>, indicating <span className="font-semibold text-black">buffer formation (NH₄OH/NH₄⁺)</span> that we interpret using Henderson–Hasselbalch.
               </p>
             </div>
 
@@ -872,7 +872,7 @@ useEffect(() => {
                 </Link>
                 <Button onClick={() => setShowQuizModal(true)} className="bg-amber-600 hover:bg-amber-700 text-white">QUIZ</Button>
               </div>
-              <Button onClick={() => setShowResultsModal(false)} className="bg-blue-500 hover:bg-blue-600 text-white">Close Analysis</Button>
+              <Button onClick={() => setShowResultsModal(false)} className="bg-green-500 hover:bg-green-600 text-white">Close Analysis</Button>
             </div>
           </DialogFooter>
         </DialogContent>
@@ -886,7 +886,7 @@ useEffect(() => {
               <div className="flex items-center justify-between w-full">
                 <CardTitle className="text-2xl">NH4OH / NH4Cl — Quiz</CardTitle>
                 {quizSubmitted && (
-                  <div className="text-blue-600 font-semibold">Marks obtained ({quizScore} / 5)</div>
+                  <div className="text-green-600 font-semibold">Marks obtained ({quizScore} / 5)</div>
                 )}
               </div>
             </CardHeader>

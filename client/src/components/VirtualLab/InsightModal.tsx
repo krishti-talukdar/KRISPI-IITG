@@ -26,11 +26,11 @@ export const InsightModal: React.FC<InsightModalProps> = ({
       <DialogContent className="sm:max-w-[500px] bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200">
         <DialogHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="bg-blue-500 rounded-full p-3">
+            <div className="bg-green-500 rounded-full p-3">
               <Beaker className="h-8 w-8 text-white" />
             </div>
           </div>
-          <DialogTitle className="text-2xl font-bold text-blue-800 mb-2">
+          <DialogTitle className="text-2xl font-bold text-green-800 mb-2">
             Experiment Analysis
           </DialogTitle>
         </DialogHeader>

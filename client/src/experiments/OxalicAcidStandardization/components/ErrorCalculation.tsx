@@ -145,7 +145,7 @@ export const ErrorCalculation: React.FC<ErrorCalculationProps> = ({
   const getAccuracyColor = (accuracy: string) => {
     switch (accuracy) {
       case "Excellent": return "text-green-600 bg-green-100 border-green-300";
-      case "Good": return "text-blue-600 bg-blue-100 border-blue-300";
+      case "Good": return "text-green-600 bg-blue-100 border-blue-300";
       case "Acceptable": return "text-yellow-600 bg-yellow-100 border-yellow-300";
       case "Poor": return "text-red-600 bg-red-100 border-red-300";
       default: return "text-gray-600 bg-gray-100 border-gray-300";
@@ -174,7 +174,7 @@ export const ErrorCalculation: React.FC<ErrorCalculationProps> = ({
       <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <TrendingUp className="w-6 h-6 text-blue-600" />
+            <TrendingUp className="w-6 h-6 text-green-600" />
             <span>Error Analysis & Accuracy Assessment</span>
           </CardTitle>
         </CardHeader>
@@ -194,15 +194,15 @@ export const ErrorCalculation: React.FC<ErrorCalculationProps> = ({
               </div>
             </div>
 
-            <div className="p-4 rounded-lg border-2 bg-blue-50 border-blue-200">
+            <div className="p-4 rounded-lg border-2 bg-green-50 border-blue-200">
               <div className="flex items-center space-x-2 mb-2">
-                <Target className="w-5 h-5 text-blue-600" />
-                <span className="font-semibold text-blue-600">Mass Precision</span>
+                <Target className="w-5 h-5 text-green-600" />
+                <span className="font-semibold text-green-600">Mass Precision</span>
               </div>
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-2xl font-bold text-green-600">
                 {analysis.massError.toFixed(3)}%
               </div>
-              <div className="text-sm text-blue-600">
+              <div className="text-sm text-green-600">
                 Δm = {(actualMass - targetMass).toFixed(4)} g
               </div>
             </div>
@@ -244,7 +244,7 @@ export const ErrorCalculation: React.FC<ErrorCalculationProps> = ({
                     index < currentStep
                       ? "bg-green-500 text-white"
                       : index === currentStep
-                      ? "bg-blue-500 text-white"
+                      ? "bg-green-500 text-white"
                       : "bg-gray-300 text-gray-600"
                   }`}>
                     {index + 1}
@@ -254,7 +254,7 @@ export const ErrorCalculation: React.FC<ErrorCalculationProps> = ({
                     <h4 className="font-semibold text-gray-900 mb-2">{step.title}</h4>
                     
                     <div className="bg-gray-100 p-3 rounded font-mono text-sm space-y-1">
-                      <div className="text-blue-600 font-semibold">{step.formula}</div>
+                      <div className="text-green-600 font-semibold">{step.formula}</div>
                       <div className="text-gray-700">{step.calculation}</div>
                       {step.result !== 0 && (
                         <div className="text-green-600 font-semibold">

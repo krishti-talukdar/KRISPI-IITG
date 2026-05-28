@@ -35,7 +35,7 @@ export default function ExperimentModal({ experiment, isOpen, onClose }: Experim
       <div
         key={step.id}
         className={`flex items-start space-x-4 p-4 rounded-lg ${
-          isActive ? 'bg-blue-50 border-l-4 border-science-blue' :
+          isActive ? 'bg-green-50 border-l-4 border-science-blue' :
           isCompleted ? 'bg-gray-50' : 
           'bg-gray-50 opacity-60'
         }`}
@@ -128,7 +128,7 @@ export default function ExperimentModal({ experiment, isOpen, onClose }: Experim
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
-          <Button onClick={handleStartExperiment} className="flex-1 bg-science-blue hover:bg-blue-700">
+          <Button onClick={handleStartExperiment} className="flex-1 bg-science-blue hover:bg-green-700">
             <Play className="mr-2 h-4 w-4" />
             Start Virtual Experiment
           </Button>

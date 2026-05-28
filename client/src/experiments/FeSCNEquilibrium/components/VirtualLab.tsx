@@ -342,7 +342,7 @@ export default function VirtualLab({
                   </TooltipTrigger>
                   <TooltipContent side="right" className="max-w-xs">
                     <p>{solution.description}</p>
-                    <p className="text-xs text-blue-600 mt-1">Drag to equipment on workbench</p>
+                    <p className="text-xs text-green-600 mt-1">Drag to equipment on workbench</p>
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -364,7 +364,7 @@ export default function VirtualLab({
             <div className="m-4 bg-white rounded-xl p-4 shadow-sm border border-gray-200 text-center">
               <h4 className="text-sm font-semibold text-gray-700 mb-2">Chemical Equilibrium</h4>
               <div className="text-lg font-mono">
-                <span className="text-blue-600">Fe³⁺</span>
+                <span className="text-green-600">Fe³⁺</span>
                 <span className="mx-2">+</span>
                 <span className="text-green-600">SCN⁻</span>
                 <span className="mx-3">⇌</span>
@@ -412,16 +412,16 @@ export default function VirtualLab({
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
               <h4 className="font-semibold text-sm text-gray-700 mb-2">Experiment Progress</h4>
               <div className="space-y-2">
-                <div className={`flex items-center space-x-2 ${phase.partACompleted ? 'text-green-600' : phase.current === 'part-a' ? 'text-blue-600' : 'text-gray-400'}`}>
-                  <div className={`w-3 h-3 rounded-full ${phase.partACompleted ? 'bg-green-500' : phase.current === 'part-a' ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
+                <div className={`flex items-center space-x-2 ${phase.partACompleted ? 'text-green-600' : phase.current === 'part-a' ? 'text-green-600' : 'text-gray-400'}`}>
+                  <div className={`w-3 h-3 rounded-full ${phase.partACompleted ? 'bg-green-500' : phase.current === 'part-a' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                   <span className="text-sm">Part A: [SCN⁻] variation</span>
                 </div>
-                <div className={`flex items-center space-x-2 ${phase.partBCompleted ? 'text-green-600' : phase.current === 'part-b' ? 'text-blue-600' : 'text-gray-400'}`}>
-                  <div className={`w-3 h-3 rounded-full ${phase.partBCompleted ? 'bg-green-500' : phase.current === 'part-b' ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
+                <div className={`flex items-center space-x-2 ${phase.partBCompleted ? 'text-green-600' : phase.current === 'part-b' ? 'text-green-600' : 'text-gray-400'}`}>
+                  <div className={`w-3 h-3 rounded-full ${phase.partBCompleted ? 'bg-green-500' : phase.current === 'part-b' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                   <span className="text-sm">Part B: [Fe³⁺] variation</span>
                 </div>
-                <div className={`flex items-center space-x-2 ${phase.current === 'analysis' ? 'text-blue-600' : 'text-gray-400'}`}>
-                  <div className={`w-3 h-3 rounded-full ${phase.current === 'analysis' ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
+                <div className={`flex items-center space-x-2 ${phase.current === 'analysis' ? 'text-green-600' : 'text-gray-400'}`}>
+                  <div className={`w-3 h-3 rounded-full ${phase.current === 'analysis' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                   <span className="text-sm">Analysis & Conclusions</span>
                 </div>
               </div>
@@ -492,7 +492,7 @@ export default function VirtualLab({
         {pipetteAction && (
           <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
             <div className="animate-bounce bg-white rounded-lg p-4 shadow-xl border-2 border-blue-300">
-              <Droplets className="w-8 h-8 text-blue-500 mx-auto" />
+              <Droplets className="w-8 h-8 text-green-500 mx-auto" />
               <p className="text-sm text-center mt-2">Adding solution...</p>
             </div>
           </div>

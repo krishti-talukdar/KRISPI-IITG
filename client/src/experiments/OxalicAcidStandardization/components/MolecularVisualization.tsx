@@ -173,7 +173,7 @@ export const MolecularVisualization: React.FC<MolecularVisualizationProps> = ({
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setCurrentView(currentView === "3d" ? "lewis" : currentView === "lewis" ? "spacefilling" : "3d")}
-              className="px-3 py-1 bg-blue-600 rounded text-sm hover:bg-blue-700"
+              className="px-3 py-1 bg-green-600 rounded text-sm hover:bg-green-700"
             >
               <Eye className="w-4 h-4 inline mr-1" />
               {currentView.toUpperCase()}

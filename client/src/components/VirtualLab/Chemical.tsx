@@ -265,7 +265,7 @@ export const Chemical: React.FC<ChemicalProps> = ({
             {formula}
           </div>
           {concentration && (
-            <div className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-1 rounded-full inline-block mt-1">
+            <div className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full inline-block mt-1">
               {concentration}
             </div>
           )}

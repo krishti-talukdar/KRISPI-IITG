@@ -49,8 +49,8 @@ export const CompletionModal: React.FC<CompletionModalProps> = ({
             </p>
           </div>
 
-          <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-            <p className="text-sm text-blue-700">
+          <div className="bg-green-50 rounded-lg p-4 border border-blue-200">
+            <p className="text-sm text-green-700">
               💡 You can always come back later to explore the detailed insights
               about the color changes!
             </p>

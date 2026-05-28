@@ -83,9 +83,9 @@ export default function BufferPHApp({ onBack }: Props) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center mb-6">
           {onBack ? (
-            <button onClick={onBack} className="text-blue-600 hover:text-blue-700 flex items-center"><ArrowLeft className="mr-2 h-4 w-4" />Back to Experiments</button>
+            <button onClick={onBack} className="text-green-600 hover:text-green-700 flex items-center"><ArrowLeft className="mr-2 h-4 w-4" />Back to Experiments</button>
           ) : (
-            <Link href="/" className="text-blue-600 hover:text-blue-700 flex items-center"><ArrowLeft className="mr-2 h-4 w-4" />Back to Experiments</Link>
+            <Link href="/" className="text-green-600 hover:text-green-700 flex items-center"><ArrowLeft className="mr-2 h-4 w-4" />Back to Experiments</Link>
           )}
         </div>
 
@@ -94,7 +94,7 @@ export default function BufferPHApp({ onBack }: Props) {
           <p className="text-gray-600 mb-4">{experiment.description}</p>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
-              <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">Guided Mode</span>
+              <span className="px-3 py-1 rounded-full bg-blue-100 text-green-700 text-sm font-medium">Guided Mode</span>
               <span className="text-sm text-gray-600">Step {currentStep} of {totalSteps}</span>
             </div>
             <div className="flex items-center space-x-2">

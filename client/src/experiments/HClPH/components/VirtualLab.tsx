@@ -266,15 +266,15 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
     <div className="mb-4 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-800">Experiment Progress</h3>
-        <span className="text-sm text-blue-600 font-medium">Step {currentStep} of {experiment.stepDetails.length}</span>
+        <span className="text-sm text-green-600 font-medium">Step {currentStep} of {experiment.stepDetails.length}</span>
       </div>
       <div className="flex space-x-2 mb-3">
         {experiment.stepDetails.map((step) => (
-          <div key={step.id} className={`flex-1 h-2 rounded-full ${completedSteps.includes(step.id) ? 'bg-green-500' : currentStep === step.id ? 'bg-blue-500' : 'bg-gray-200'}`} />
+          <div key={step.id} className={`flex-1 h-2 rounded-full ${completedSteps.includes(step.id) ? 'bg-green-500' : currentStep === step.id ? 'bg-green-500' : 'bg-gray-200'}`} />
         ))}
       </div>
       <div className="flex items-start space-x-3">
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${completedSteps.includes(currentStep) ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${completedSteps.includes(currentStep) ? 'bg-green-500 text-white' : 'bg-green-500 text-white'}`}>
           {completedSteps.includes(currentStep) ? <CheckCircle className="w-4 h-4" /> : <span className="text-sm font-bold">{currentStep}</span>}
         </div>
         <div className="flex-1">
@@ -309,8 +309,8 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
                   <Button onClick={resetHcl} variant="outline" className={`w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100 ${shouldBlinkReset ? 'blink-until-pressed' : ''}`}>RESET HCL</Button>
                 </div>
               </div>
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <p className="text-xs text-blue-700"><strong>Tip:</strong> Drag equipment to the workbench following the steps.</p>
+              <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                <p className="text-xs text-green-700"><strong>Tip:</strong> Drag equipment to the workbench following the steps.</p>
               </div>
             </div>
             <div className="space-y-2">
@@ -320,7 +320,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
 
               {/* View Results button inserted between Undo and Reset Experiment */}
               {results['0.001 M'] != null && (
-                <Button onClick={() => setShowResultsModal(true)} className="w-full bg-blue-500 hover:bg-blue-600 text-white">View Results &amp; Analysis</Button>
+                <Button onClick={() => setShowResultsModal(true)} className="w-full bg-green-500 hover:bg-green-600 text-white">View Results &amp; Analysis</Button>
               )}
 
               <Button onClick={() => { setEquipmentOnBench([]); onReset(); }} variant="outline" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100">Reset Experiment</Button>
@@ -423,7 +423,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
                   ))}
                 </div>
 
-                {showToast && <p className="text-xs text-blue-700 mt-2">{showToast}</p>}
+                {showToast && <p className="text-xs text-green-700 mt-2">{showToast}</p>}
               </div>
             </div>
           </div>
@@ -488,7 +488,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
               </div>
 
               <div className="p-6 rounded-lg shadow-md bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
-                <div className="text-sm font-semibold text-blue-700">Latest recorded concentration</div>
+                <div className="text-sm font-semibold text-green-700">Latest recorded concentration</div>
                 <div className="text-2xl font-bold mt-3 text-black">{lastUsedHclLabel ? lastUsedHclLabel : '—'}</div>
                 <div className="mt-2 text-lg font-semibold" style={{ color: lastUsedHclLabel && results[lastUsedHclLabel] != null ? getPhColor(results[lastUsedHclLabel]) : undefined }}>
                   {lastUsedHclLabel && results[lastUsedHclLabel] != null ? `${results[lastUsedHclLabel].toFixed(2)} (${results[lastUsedHclLabel] < 7 ? 'Acidic' : results[lastUsedHclLabel] > 7 ? 'Basic' : 'Neutral'})` : 'No result'}
@@ -574,7 +574,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
                 <Button onClick={() => setShowQuizModal(true)} className="bg-amber-600 hover:bg-amber-700 text-white">QUIZ</Button>
               </div>
 
-              <Button onClick={() => setShowResultsModal(false)} className="bg-blue-500 hover:bg-blue-600 text-white">Close Analysis</Button>
+              <Button onClick={() => setShowResultsModal(false)} className="bg-green-500 hover:bg-green-600 text-white">Close Analysis</Button>
             </div>
           </DialogFooter>
         </DialogContent>
@@ -588,7 +588,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
               <div className="flex items-center justify-between w-full">
                 <CardTitle className="text-2xl">HCl pH — Quiz</CardTitle>
                 {quizSubmitted && (
-                  <div className="text-blue-600 font-semibold">Marks obtained ({score} / 5)</div>
+                  <div className="text-green-600 font-semibold">Marks obtained ({score} / 5)</div>
                 )}
               </div>
             </CardHeader>

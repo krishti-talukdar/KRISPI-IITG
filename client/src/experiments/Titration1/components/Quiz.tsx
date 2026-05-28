@@ -100,7 +100,7 @@ export default function TitrationQuiz() {
             <div className="flex items-center justify-between w-full">
               <CardTitle className="text-2xl">Titration 1 — Quiz</CardTitle>
               {quizSubmitted && (
-                <div className="text-blue-600 font-semibold">Marks obtained ({score} / {questions.length})</div>
+                <div className="text-green-600 font-semibold">Marks obtained ({score} / {questions.length})</div>
               )}
             </div>
           </CardHeader>
@@ -154,7 +154,7 @@ export default function TitrationQuiz() {
                 </Link>
                 </div>
                 <div className="flex items-center gap-2 ml-auto">
-                  <Button onClick={submitQuiz} className="bg-blue-600 text-white">Submit</Button>
+                  <Button onClick={submitQuiz} className="bg-green-600 text-white">Submit</Button>
                   <Button variant="outline" onClick={resetQuiz}>Reset</Button>
                 </div>
               </div>

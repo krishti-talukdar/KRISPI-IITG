@@ -389,21 +389,21 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
     <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-black">Experiment Progress</h3>
-        <span className="text-sm text-blue-600 font-medium">Step {currentStep} of {GUIDED_STEPS.length}</span>
+        <span className="text-sm text-green-600 font-medium">Step {currentStep} of {GUIDED_STEPS.length}</span>
       </div>
       <div className="flex space-x-2 mb-4">
         {GUIDED_STEPS.map((step) => (
-          <div key={step.id} className={`flex-1 h-2 rounded-full ${completedSteps.includes(step.id) ? 'bg-green-500' : currentStep === step.id ? 'bg-blue-500' : 'bg-gray-200'}`} />
+          <div key={step.id} className={`flex-1 h-2 rounded-full ${completedSteps.includes(step.id) ? 'bg-green-500' : currentStep === step.id ? 'bg-green-500' : 'bg-gray-200'}`} />
         ))}
       </div>
       <div className="flex items-start space-x-3">
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${completedSteps.includes(currentStep) ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${completedSteps.includes(currentStep) ? 'bg-green-500 text-white' : 'bg-green-500 text-white'}`}>
           {completedSteps.includes(currentStep) ? <CheckCircle className="w-4 h-4" /> : <span className="text-sm font-bold">{currentStep}</span>}
         </div>
         <div className="flex-1">
           <h4 className="font-semibold text-black mb-1">{GUIDED_STEPS[currentStep-1].title}</h4>
           <p className="text-sm text-gray-600 mb-2">{GUIDED_STEPS[currentStep-1].description}</p>
-          <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+          <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-green-700 rounded-full text-xs font-medium">
             <ArrowRight className="w-3 h-3 mr-1" />
             {GUIDED_STEPS[currentStep-1].action}
           </div>
@@ -539,7 +539,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
           <div className="lg:col-span-3 space-y-4">
             <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm">
               <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
-                <Wrench className="w-5 h-5 mr-2 text-blue-600" />
+                <Wrench className="w-5 h-5 mr-2 text-green-600" />
                 Equipment
               </h3>
               <div className="space-y-3">
@@ -547,8 +547,8 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                   <Equipment key={eq.id} id={eq.id} name={eq.name} icon={eq.icon} disabled={!experimentStarted} onInteract={handleInteract} />
                 ))}
               </div>
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <p className="text-xs text-blue-700"><strong>Tip:</strong> Drag equipment to the workbench following the steps.</p>
+              <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                <p className="text-xs text-green-700"><strong>Tip:</strong> Drag equipment to the workbench following the steps.</p>
               </div>
             </div>
 
@@ -561,7 +561,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
               {compareMode && (
                 <Button onClick={() => {
                   setShowResultsModal(true);
-                }} className="w-full bg-blue-500 hover:bg-blue-600 text-white mt-2 flex items-center justify-center">
+                }} className="w-full bg-green-500 hover:bg-green-600 text-white mt-2 flex items-center justify-center">
                   <span>View Results & Analysis</span>
                 </Button>
               )}
@@ -576,7 +576,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                   <Equipment id="test-tube" name="25ml Test Tube" icon={<TestTube className="w-8 h-8" />} position={getEquipmentPosition('test-tube')} onRemove={handleRemove} onInteract={() => {}} color={testTube.colorHex} volume={testTube.volume} displayVolume={showHclDialog && previewHclVolume != null ? previewHclVolume : showAceticDialog && previewAceticVolume != null ? previewAceticVolume : showIndicatorDialog && previewIndicatorVolume != null ? Math.min(20, testTube.volume + previewIndicatorVolume) : testTube.volume} isActive={true} />
                   {shouldShowRestore && (
                     <div style={{ position: 'absolute', left: getEquipmentPosition('test-tube').x, top: getEquipmentPosition('test-tube').y + 220, transform: 'translate(-50%, 0)' }}>
-                      <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm animate-pulse" onClick={handleRestore}>RESET</Button>
+                      <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white shadow-sm animate-pulse" onClick={handleRestore}>RESET</Button>
                     </div>
                   )}
 
@@ -737,7 +737,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
             </div>
 
             {showToast && (
-              <div className="p-3 rounded bg-blue-50 border border-blue-200 text-blue-700 text-sm">{showToast}</div>
+              <div className="p-3 rounded bg-green-50 border border-blue-200 text-green-700 text-sm">{showToast}</div>
             )}
           </div>
         </div>
@@ -771,7 +771,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                       <div className="uppercase tracking-wide">Steps</div>
                     </div>
                     <div className="rounded-lg border border-red-100 bg-red-50 p-3">
-                      <div className="text-lg font-bold text-blue-700">{hclActionsCount}</div>
+                      <div className="text-lg font-bold text-green-700">{hclActionsCount}</div>
                       <div className="uppercase tracking-wide">Actions</div>
                     </div>
                     <div className="rounded-lg border border-red-100 bg-red-50 p-3">
@@ -791,7 +791,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
                       <div className="uppercase tracking-wide">Steps</div>
                     </div>
                     <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
-                      <div className="text-lg font-bold text-blue-700">{aceticActionsCount}</div>
+                      <div className="text-lg font-bold text-green-700">{aceticActionsCount}</div>
                       <div className="uppercase tracking-wide">Actions</div>
                     </div>
                     <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
@@ -870,7 +870,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
             </Link>
             <div className="flex items-center space-x-2">
               <Button onClick={() => setShowQuizModal(true)} className="bg-amber-600 hover:bg-amber-700 text-white">QUIZ</Button>
-              <Button onClick={() => setShowResultsModal(false)} className="bg-blue-500 hover:bg-blue-600 text-white">Close Analysis</Button>
+              <Button onClick={() => setShowResultsModal(false)} className="bg-green-500 hover:bg-green-600 text-white">Close Analysis</Button>
             </div>
           </div>
         </DialogContent>
@@ -884,7 +884,7 @@ export default function VirtualLab({ experimentStarted, onStartExperiment, isRun
               <div className="flex items-center justify-between w-full">
                 <CardTitle className="text-2xl">pH Comparison — Quiz</CardTitle>
                 {quizSubmitted && (
-                  <div className="text-blue-600 font-semibold">Marks obtained ({quizScore} / 5)</div>
+                  <div className="text-green-600 font-semibold">Marks obtained ({quizScore} / 5)</div>
                 )}
               </div>
             </CardHeader>

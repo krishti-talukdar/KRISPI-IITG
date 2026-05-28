@@ -175,7 +175,7 @@ export default function FeSCNEquilibriumApp({
           {onBack ? (
             <button
               onClick={onBack}
-              className="text-blue-600 hover:text-blue-700 flex items-center"
+              className="text-green-600 hover:text-green-700 flex items-center"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Experiments
@@ -183,7 +183,7 @@ export default function FeSCNEquilibriumApp({
           ) : (
             <Link
               href="/"
-              className="text-blue-600 hover:text-blue-700 flex items-center"
+              className="text-green-600 hover:text-green-700 flex items-center"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Experiments
@@ -208,11 +208,11 @@ export default function FeSCNEquilibriumApp({
                 </span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${phase.partACompleted ? 'bg-green-500' : phase.current === 'part-a' ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
+                <div className={`w-3 h-3 rounded-full ${phase.partACompleted ? 'bg-green-500' : phase.current === 'part-a' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                 <span className="text-xs text-gray-600">Part A</span>
-                <div className={`w-3 h-3 rounded-full ${phase.partBCompleted ? 'bg-green-500' : phase.current === 'part-b' ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
+                <div className={`w-3 h-3 rounded-full ${phase.partBCompleted ? 'bg-green-500' : phase.current === 'part-b' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                 <span className="text-xs text-gray-600">Part B</span>
-                <div className={`w-3 h-3 rounded-full ${phase.current === 'analysis' ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
+                <div className={`w-3 h-3 rounded-full ${phase.current === 'analysis' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                 <span className="text-xs text-gray-600">Analysis</span>
               </div>
             </div>
@@ -291,7 +291,7 @@ export default function FeSCNEquilibriumApp({
             <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-center justify-center">
               <div className="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-200 max-w-2xl">
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <BarChart3 className="w-10 h-10 text-blue-600" />
+                  <BarChart3 className="w-10 h-10 text-green-600" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-3">
                   Which series would you like to continue first?
@@ -344,8 +344,8 @@ export default function FeSCNEquilibriumApp({
                   </button>
                 </div>
 
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <p className="text-sm text-blue-700">
+                <div className="bg-green-50 rounded-lg p-4">
+                  <p className="text-sm text-green-700">
                     <strong>Note:</strong> You can complete both series during the experiment. This choice only determines your starting point.
                   </p>
                 </div>

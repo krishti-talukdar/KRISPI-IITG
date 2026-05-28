@@ -69,7 +69,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       onDrop={handleDrop}
       className={`relative w-full h-full min-h-[600px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-gray-400 ${
         isDragOver
-          ? "bg-gray-300 border-blue-400 ring-4 ring-blue-300 ring-opacity-50"
+          ? "bg-gray-300 border-blue-400 ring-4 ring-green-300 ring-opacity-50"
           : ""
       }`}
       style={{
@@ -113,7 +113,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
 
         {/* Solution selection indicator */}
         {selectedSolution && (
-          <div className="bg-blue-500 text-white rounded-lg px-3 py-2 shadow-md">
+          <div className="bg-green-500 text-white rounded-lg px-3 py-2 shadow-md">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
               <span className="text-xs font-medium">Solution Ready</span>

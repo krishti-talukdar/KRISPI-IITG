@@ -340,7 +340,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
                 onDragStart={(e) => e.preventDefault()}
               />
             ) : (
-              <FlaskConical className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+              <FlaskConical className="w-8 h-8 mx-auto mb-2 text-green-600" />
             )}
             <div className="text-xs space-y-1">
               <div>250 mL</div>
@@ -412,7 +412,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
           <div className="relative flex justify-center">
             <button
               type="button"
-              className="flex items-center justify-center rounded-full bg-transparent p-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="flex items-center justify-center rounded-full bg-transparent p-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
               data-open-acid-reminder="true"
               onClick={(event) => {
                 event.stopPropagation();
@@ -548,7 +548,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
             <button
               onMouseDown={(e) => e.stopPropagation()}
               onClick={(e) => { e.stopPropagation(); onAction?.("weigh", id); }}
-              className="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+              className="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
             >
               Record Weight
             </button>
@@ -589,7 +589,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
           <button
             onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => { e.stopPropagation(); onAction?.("rinse", id); }}
-            className="text-xs bg-blue-400 text-white px-2 py-1 rounded hover:bg-blue-500"
+            className="text-xs bg-blue-400 text-white px-2 py-1 rounded hover:bg-green-500"
           >
             Rinse Beaker
           </button>
@@ -783,7 +783,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>

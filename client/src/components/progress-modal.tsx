@@ -30,15 +30,24 @@ export default function ProgressModal({ children }: ProgressModalProps) {
     },
   });
 
+  const hiddenExperimentTitles = new Set([
+    "Detection of Nitrogen, Sulphur, Chlorine, Bromine, and Iodine (Lassaigne's Test)",
+    "Study of Equilibrium Shift between Ferric Ions and Thiocyanate Ions",
+  ]);
+
+  const visibleExperiments = experiments?.filter(
+    (experiment: any) => !hiddenExperimentTitles.has(experiment.title),
+  );
+
   const getExperimentProgress = (experimentId: number) => {
     const progress = userProgress?.find((p: any) => p.experimentId === experimentId);
     return progress ? progress.currentStep ?? 0 : 0;
   };
 
   const getTotalProgress = () => {
-    if (!experiments || !userProgress) return 0;
+    if (!visibleExperiments || !userProgress) return 0;
 
-    const totalSteps = experiments.reduce(
+    const totalSteps = visibleExperiments.reduce(
       (sum: number, exp: any) => sum + (exp.stepDetails?.length ?? exp.steps ?? 0),
       0,
     );
@@ -51,16 +60,16 @@ export default function ProgressModal({ children }: ProgressModalProps) {
   };
 
   const getCompletedExperiments = () => {
-    if (!experiments || !userProgress) return 0;
+    if (!visibleExperiments || !userProgress) return 0;
 
     return userProgress.filter((p: any) => {
-      const experiment = experiments.find((exp: any) => exp.id === p.experimentId);
+      const experiment = visibleExperiments.find((exp: any) => exp.id === p.experimentId);
       const stepsCount = experiment ? (experiment.stepDetails?.length ?? experiment.steps ?? 0) : 0;
       return p.completed || (p.currentStep ?? 0) >= stepsCount;
     }).length;
   };
 
-  const totalExperiments = experiments?.length || 0;
+  const totalExperiments = visibleExperiments?.length || 0;
   const overallProgress = getTotalProgress();
   const completedExperiments = getCompletedExperiments();
   const totalStepsCompleted = userProgress?.reduce(
@@ -71,65 +80,64 @@ export default function ProgressModal({ children }: ProgressModalProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-5xl overflow-hidden border-white/70 bg-gradient-to-b from-white to-slate-50 p-0 shadow-2xl sm:max-h-[88vh]">
-        <div className="bg-gradient-to-r from-slate-950 via-indigo-950 to-emerald-950 px-6 py-6 text-white sm:px-8">
+      <DialogContent className="max-w-5xl overflow-hidden border-white/70 bg-gradient-to-b from-white to-green-50 p-0 shadow-2xl sm:max-h-[88vh]">
+        <div className="bg-gradient-to-r from-slate-900 via-green-900 to-emerald-800 px-6 py-6 text-white sm:px-8">
           <DialogHeader className="space-y-2">
             <DialogTitle className="flex items-center gap-3 text-2xl font-bold text-white sm:text-3xl">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/15 backdrop-blur">
-                <Trophy className="h-6 w-6 text-amber-300" />
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-400/20 ring-1 ring-green-400/30 backdrop-blur">
+                <Trophy className="h-6 w-6 text-green-300" />
               </span>
               My Learning Progress
             </DialogTitle>
-            <DialogDescription className="max-w-2xl text-sm text-white/80 sm:text-base">
+            <DialogDescription className="max-w-2xl text-sm text-green-100 sm:text-base">
               Track your progress across all chemistry experiments and see where you stand at a glance.
             </DialogDescription>
           </DialogHeader>
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 shadow-lg backdrop-blur">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/60">
+            <div className="rounded-3xl border border-green-400/30 bg-gradient-to-br from-blue-500/20 to-blue-600/10 p-4 shadow-lg backdrop-blur hover:shadow-xl transition-shadow">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.35em] text-green-200">
                 Overall Completion
               </div>
-              <div className="mt-3 text-4xl font-black text-white">{overallProgress}%</div>
-              <p className="mt-2 text-sm text-white/75">Your learning journey so far</p>
+              <div className="mt-3 text-4xl font-black text-blue-200">{overallProgress}%</div>
+              <p className="mt-2 text-sm text-green-100">Your learning journey so far</p>
             </div>
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 shadow-lg backdrop-blur">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/60">
+            <div className="rounded-3xl border border-green-400/30 bg-gradient-to-br from-green-500/20 to-green-600/10 p-4 shadow-lg backdrop-blur hover:shadow-xl transition-shadow">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.35em] text-green-200">
                 Experiments Completed
               </div>
-              <div className="mt-3 text-4xl font-black text-emerald-300">{completedExperiments}</div>
-              <p className="mt-2 text-sm text-white/75">Finished with all required steps</p>
+              <div className="mt-3 text-4xl font-black text-green-300">{completedExperiments}</div>
+              <p className="mt-2 text-sm text-green-100">Finished with all required steps</p>
             </div>
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 shadow-lg backdrop-blur">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/60">
+            <div className="rounded-3xl border border-green-400/30 bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 p-4 shadow-lg backdrop-blur hover:shadow-xl transition-shadow">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.35em] text-green-200">
                 Total Experiments
               </div>
-              <div className="mt-3 text-4xl font-black text-violet-300">{totalExperiments}</div>
-              <p className="mt-2 text-sm text-white/75">Available in the chemistry lab</p>
+              <div className="mt-3 text-4xl font-black text-emerald-300">{totalExperiments}</div>
+              <p className="mt-2 text-sm text-green-100">Available in the chemistry lab</p>
             </div>
           </div>
         </div>
 
         <ScrollArea className="max-h-[60vh]">
           <div className="space-y-8 px-6 py-6 sm:px-8">
-            <section className="rounded-[28px] border border-sky-100 bg-gradient-to-r from-sky-50 via-indigo-50 to-white p-5 shadow-sm">
+            <section className="rounded-[28px] border border-green-200 bg-gradient-to-r from-green-50 via-emerald-50 to-white p-5 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
+                  <div className="text-xs font-semibold uppercase tracking-[0.35em] text-green-600">
                     Overall Progress
                   </div>
                   <h3 className="mt-2 text-xl font-bold text-slate-900">Your current summary</h3>
                 </div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:w-[60%]">
                   {[
-                    { label: "Completion", value: `${overallProgress}%`, tone: "text-blue-600" },
-                    { label: "Done", value: completedExperiments, tone: "text-emerald-600" },
-                    { label: "Total", value: totalExperiments, tone: "text-violet-600" },
-                    { label: "Steps", value: totalStepsCompleted, tone: "text-slate-900" },
+                    { label: "Completion", value: `${overallProgress}%`, tone: "text-green-600" },
+                    { label: "Done", value: completedExperiments, tone: "text-green-600" },
+                    { label: "Total", value: totalExperiments, tone: "text-emerald-600" },
                   ].map((item) => (
-                    <div key={item.label} className="rounded-2xl border border-white bg-white/80 p-4 text-center shadow-sm">
+                    <div key={item.label} className="rounded-2xl border border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 p-4 text-center shadow-sm hover:shadow-md transition-shadow">
                       <div className={`text-2xl font-black ${item.tone}`}>{item.value}</div>
-                      <div className="mt-1 text-xs font-medium uppercase tracking-[0.25em] text-slate-500">
+                      <div className="mt-1 text-xs font-medium uppercase tracking-[0.25em] text-green-600">
                         {item.label}
                       </div>
                     </div>
@@ -144,21 +152,21 @@ export default function ProgressModal({ children }: ProgressModalProps) {
             <section>
               <div className="mb-4 flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
+                  <div className="text-xs font-semibold uppercase tracking-[0.35em] text-green-600">
                     Experiment Progress
                   </div>
                   <h3 className="mt-2 text-xl font-bold text-slate-900">
                     Where each experiment stands
                   </h3>
                 </div>
-                <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm sm:flex">
-                  <Sparkles className="h-4 w-4 text-amber-500" />
+                <div className="hidden items-center gap-2 rounded-full border border-green-300 bg-green-50 px-4 py-2 text-sm font-medium text-green-700 shadow-sm sm:flex">
+                  <Sparkles className="h-4 w-4 text-green-500" />
                   Keep going — progress updates live
                 </div>
               </div>
 
               <div className="space-y-4">
-                {experiments?.map((experiment: any) => {
+                {visibleExperiments?.map((experiment: any) => {
                   const progress = getExperimentProgress(experiment.id);
                   const stepsCount = experiment.stepDetails?.length ?? experiment.steps ?? 0;
                   const progressPercentage = stepsCount > 0 ? Math.round((progress / stepsCount) * 100) : 0;
@@ -167,7 +175,7 @@ export default function ProgressModal({ children }: ProgressModalProps) {
                   return (
                     <div
                       key={experiment.id}
-                      className="rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition-shadow hover:shadow-[0_14px_40px_rgba(15,23,42,0.1)]"
+                      className="rounded-3xl border border-green-200 bg-gradient-to-r from-white via-green-50 to-white p-5 shadow-[0_10px_30px_rgba(16,185,129,0.06)] transition-shadow hover:shadow-[0_14px_40px_rgba(16,185,129,0.1)]"
                     >
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div className="flex items-start gap-3">
@@ -192,9 +200,9 @@ export default function ProgressModal({ children }: ProgressModalProps) {
                             <h4 className="text-base font-semibold text-slate-900 sm:text-lg">
                               {experiment.title}
                             </h4>
-                            <div className="mt-2 flex flex-wrap gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-slate-500">
-                              <span className="rounded-full bg-slate-100 px-3 py-1">{experiment.category}</span>
-                              <span className="rounded-full bg-slate-100 px-3 py-1">{experiment.difficulty}</span>
+                            <div className="mt-2 flex flex-wrap gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-green-600">
+                              <span className="rounded-full bg-green-100 px-3 py-1">{experiment.category}</span>
+                              <span className="rounded-full bg-green-100 px-3 py-1">{experiment.difficulty}</span>
                             </div>
                           </div>
                         </div>
@@ -219,18 +227,18 @@ export default function ProgressModal({ children }: ProgressModalProps) {
               </div>
             </section>
 
-            <section className="rounded-[28px] border border-slate-200 bg-gradient-to-r from-white via-slate-50 to-white p-5 shadow-sm">
-              <div className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
+            <section className="rounded-[28px] border border-green-200 bg-gradient-to-r from-white via-green-50 to-white p-5 shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-xs font-semibold uppercase tracking-[0.35em] text-green-600">
                 Learning Statistics
               </div>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                  <div className="text-sm text-slate-500">Total Steps Completed</div>
-                  <div className="mt-1 text-2xl font-bold text-slate-900">{totalStepsCompleted}</div>
+                <div className="rounded-2xl border border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 p-4 hover:shadow-md transition-shadow">
+                  <div className="text-sm text-green-600 font-medium">Total Steps Completed</div>
+                  <div className="mt-1 text-2xl font-bold text-green-700">{totalStepsCompleted}</div>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-white p-4">
-                  <div className="text-sm text-slate-500">Average Progress</div>
-                  <div className="mt-1 text-2xl font-bold text-slate-900">{overallProgress}%</div>
+                <div className="rounded-2xl border border-green-200 bg-gradient-to-br from-emerald-50 to-green-50 p-4 hover:shadow-md transition-shadow">
+                  <div className="text-sm text-green-600 font-medium">Average Progress</div>
+                  <div className="mt-1 text-2xl font-bold text-green-700">{overallProgress}%</div>
                 </div>
               </div>
             </section>

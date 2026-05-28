@@ -158,26 +158,26 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
     if (!calc) return null;
 
     return (
-      <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
+      <div className="mt-3 bg-green-50 border border-blue-200 rounded-lg p-3">
         <div className="flex items-center space-x-2 mb-2">
-          <Calculator className="text-blue-600" size={16} />
+          <Calculator className="text-green-600" size={16} />
           <span className="text-sm font-medium text-blue-900">Calculations & Analysis</span>
         </div>
         
         <div className="grid grid-cols-2 gap-3 text-xs">
           {calc.volumeAdded && (
             <div className="flex items-center space-x-1">
-              <Droplets className="text-blue-500" size={12} />
+              <Droplets className="text-green-500" size={12} />
               <span className="text-gray-600">Volume Added:</span>
-              <span className="font-medium text-blue-700">{calc.volumeAdded.toFixed(1)} mL</span>
+              <span className="font-medium text-green-700">{calc.volumeAdded.toFixed(1)} mL</span>
             </div>
           )}
           
           {calc.totalVolume && (
             <div className="flex items-center space-x-1">
-              <Beaker className="text-blue-500" size={12} />
+              <Beaker className="text-green-500" size={12} />
               <span className="text-gray-600">Total Volume:</span>
-              <span className="font-medium text-blue-700">{calc.totalVolume.toFixed(1)} mL</span>
+              <span className="font-medium text-green-700">{calc.totalVolume.toFixed(1)} mL</span>
             </div>
           )}
           
@@ -205,7 +205,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
           {calc.ph && (
             <div>
               <span className="text-gray-600">pH:</span>
-              <span className={`font-medium ml-1 ${calc.ph < 7 ? 'text-red-600' : calc.ph > 7 ? 'text-blue-600' : 'text-green-600'}`}>
+              <span className={`font-medium ml-1 ${calc.ph < 7 ? 'text-red-600' : calc.ph > 7 ? 'text-green-600' : 'text-green-600'}`}>
                 {calc.ph.toFixed(2)}
               </span>
             </div>
@@ -288,7 +288,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
                   {calc.thermodynamics.deltaH && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Enthalpy Change (ΔH):</span>
-                      <span className={`font-medium ${calc.thermodynamics.deltaH < 0 ? 'text-red-600' : 'text-blue-600'}`}>
+                      <span className={`font-medium ${calc.thermodynamics.deltaH < 0 ? 'text-red-600' : 'text-green-600'}`}>
                         {calc.thermodynamics.deltaH > 0 ? '+' : ''}{calc.thermodynamics.deltaH} kJ/mol
                         <span className="text-xs ml-1">
                           ({calc.thermodynamics.deltaH < 0 ? 'Exothermic' : 'Endothermic'})
@@ -369,13 +369,13 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
       <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
-            <BarChart3 className="text-blue-600" size={20} />
+            <BarChart3 className="text-green-600" size={20} />
             <h4 className="font-semibold text-blue-900">Experiment Results</h4>
           </div>
           <div className="flex space-x-2">
             <button
               onClick={() => setIsAddingTrial(true)}
-              className="flex items-center space-x-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors"
+              className="flex items-center space-x-1 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium transition-colors"
             >
               <Plus size={16} />
               <span>Add Trial</span>
@@ -395,7 +395,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
         {isAddingTrial && (
           <div className="mb-4 bg-white rounded-lg border p-4">
             <h5 className="font-medium text-gray-900 mb-3 flex items-center">
-              <Edit3 className="text-blue-600 mr-2" size={16} />
+              <Edit3 className="text-green-600 mr-2" size={16} />
               Add New Trial Data
             </h5>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -408,7 +408,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
                   step="0.01"
                   value={newTrial.initialReading}
                   onChange={(e) => setNewTrial(prev => ({ ...prev, initialReading: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-blue-500"
                   placeholder="0.00"
                 />
               </div>
@@ -421,7 +421,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
                   step="0.01"
                   value={newTrial.finalReading}
                   onChange={(e) => setNewTrial(prev => ({ ...prev, finalReading: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-blue-500"
                   placeholder="23.50"
                 />
               </div>
@@ -432,7 +432,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
                 <select
                   value={newTrial.colorChange}
                   onChange={(e) => setNewTrial(prev => ({ ...prev, colorChange: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-blue-500"
                 >
                   <option value="Colorless to light pink">Colorless to light pink</option>
                   <option value="Colorless to pink">Colorless to pink</option>
@@ -447,7 +447,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
                 <select
                   value={newTrial.endpoint.toString()}
                   onChange={(e) => setNewTrial(prev => ({ ...prev, endpoint: e.target.value === 'true' }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-green-500 focus:border-blue-500"
                 >
                   <option value="true">Yes</option>
                   <option value="false">No</option>
@@ -499,7 +499,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
                 ) : (
                   titrationTrials.map((trial, index) => (
                     <tr key={trial.trial} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="px-4 py-3 font-medium text-blue-600">{trial.trial}</td>
+                      <td className="px-4 py-3 font-medium text-green-600">{trial.trial}</td>
                       <td className="px-4 py-3 text-gray-900">{trial.initialReading.toFixed(2)}</td>
                       <td className="px-4 py-3 text-gray-900">{trial.finalReading.toFixed(2)}</td>
                       <td className="px-4 py-3 font-medium text-purple-600">{trial.volumeUsed.toFixed(2)}</td>
@@ -527,13 +527,13 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
             {/* Statistics */}
             <div className="bg-white rounded-lg border p-4">
               <h5 className="font-medium text-gray-900 mb-3 flex items-center">
-                <Calculator className="text-blue-600 mr-2" size={16} />
+                <Calculator className="text-green-600 mr-2" size={16} />
                 Statistical Analysis
               </h5>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Average Volume:</span>
-                  <span className="font-medium text-blue-700">{stats.average} mL</span>
+                  <span className="font-medium text-green-700">{stats.average} mL</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Standard Deviation:</span>
@@ -549,7 +549,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
                   <span className="text-gray-600">Precision:</span>
                   <span className={`font-medium ${
                     stats.precision === 'Excellent' ? 'text-green-600' : 
-                    stats.precision === 'Good' ? 'text-blue-600' : 
+                    stats.precision === 'Good' ? 'text-green-600' : 
                     stats.precision === 'Acceptable' ? 'text-yellow-600' : 'text-red-600'
                   }`}>
                     {stats.precision}
@@ -571,7 +571,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">NaOH Molarity:</span>
-                  <span className="font-medium text-blue-700">0.1000 M</span>
+                  <span className="font-medium text-green-700">0.1000 M</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">HCl Volume:</span>
@@ -604,7 +604,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
       <div className="p-4 bg-gray-50 border-b">
         <div className="grid grid-cols-5 gap-4 text-center">
           <div className="bg-white rounded-lg p-3 shadow-sm">
-            <div className="text-2xl font-bold text-blue-600">{results.length}</div>
+            <div className="text-2xl font-bold text-green-600">{results.length}</div>
             <div className="text-xs text-gray-600">Total Events</div>
           </div>
           <div className="bg-white rounded-lg p-3 shadow-sm">
@@ -616,7 +616,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, onClear }) 
             <div className="text-xs text-gray-600">Reactions</div>
           </div>
           <div className="bg-white rounded-lg p-3 shadow-sm">
-            <div className={`text-2xl font-bold ${averagePH < 7 ? 'text-red-600' : averagePH > 7 ? 'text-blue-600' : 'text-green-600'}`}>
+            <div className={`text-2xl font-bold ${averagePH < 7 ? 'text-red-600' : averagePH > 7 ? 'text-green-600' : 'text-green-600'}`}>
               {averagePH ? averagePH.toFixed(1) : '--'}
             </div>
             <div className="text-xs text-gray-600">Avg pH</div>

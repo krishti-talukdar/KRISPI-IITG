@@ -20,6 +20,7 @@ import {
   DEFAULT_MEASUREMENTS,
   GLASS_CONTAINER_IMAGE_URL,
   WATCH_GLASS_IMAGE_URL,
+  SALT_IMAGE_URL,
   PH_HCL_CHEMICALS,
   PH_HCL_EQUIPMENT,
 } from "../constants";
@@ -518,7 +519,7 @@ const stripEquipmentIdSuffix = (value: string) => value.replace(/-\d+$/, "");
 
 const getEquipmentIcon = (name: string) => {
   const key = name.toLowerCase();
-  if (key.includes("test tube")) return <TestTube size={36} className="text-blue-600" />;
+  if (key.includes("test tube")) return <TestTube size={36} className="text-green-600" />;
   if (key.includes("beaker")) return <Beaker size={36} className="text-cyan-600" />;
   if (key.includes("pipette") || key.includes("dropper")) return <Droplet size={36} className="text-amber-500" />;
   if (key.includes("bunsen")) return <Flame size={36} className="text-orange-600" />;
@@ -569,6 +570,22 @@ const mapDryTestEquipment = (names: string[] = []): EquipmentDefinition[] =>
             </div>
           ),
           imageUrl: WATCH_GLASS_IMAGE_URL,
+        };
+      }
+
+      if (normalized.includes("salt") && !normalized.includes("salt sample")) {
+        return {
+          ...base,
+          icon: (
+            <div className="flex items-center justify-center w-20 h-20">
+              <img
+                src={SALT_IMAGE_URL}
+                alt="Salt"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          ),
+          imageUrl: SALT_IMAGE_URL,
         };
       }
 
@@ -3900,7 +3917,9 @@ function ChemicalEquilibriumVirtualLab({
       ? "Salt sample added. Moving to the next step."
       : shouldAdvanceAfterBasicSalt
         ? "Salt sample added. Moving to Step 7."
-        : `Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`;
+        : shouldUseWatchGlassForSaltSample
+          ? `Added ${mass.toFixed(2)} g of Salt Sample to the watch glass.`
+          : `Added ${mass.toFixed(2)} g of Salt Sample to the test tube.`;
 
     setToastMessage(toastMessageText);
     setTimeout(() => setToastMessage(null), 3000);
@@ -4642,7 +4661,7 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="text-xs font-medium text-gray-700 mb-1">Experiment Progress</div>
                 <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                   <div
-                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${Math.round((currentStep / totalSteps) * 100)}%` }}
                   />
                 </div>
@@ -4654,7 +4673,7 @@ function ChemicalEquilibriumVirtualLab({
                     return (
                       <div
                         key={stepIndex}
-                        className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-medium ${active ? 'bg-blue-500 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}
+                        className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-medium ${active ? 'bg-green-500 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}
                       >
                         {stepIndex}
                       </div>
@@ -4821,8 +4840,8 @@ function ChemicalEquilibriumVirtualLab({
                   onClick={handleViewResults}
                   className={`w-full px-3 py-2 rounded shadow-sm transition ${
                     canViewResults
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "bg-blue-200 text-blue-800 opacity-80"
+                      ? "bg-green-600 text-white hover:bg-green-700"
+                      : "bg-green-200 text-green-800 opacity-80"
                   }`}
                 >
                   View Results &amp; Analysis
@@ -4848,7 +4867,7 @@ function ChemicalEquilibriumVirtualLab({
                     <div className="mt-4">
                       <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                         <div
-                          className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                          className="bg-green-500 h-2 rounded-full transition-all duration-300"
                           style={{ width: `${Math.round((currentStep / totalSteps) * 100)}%` }}
                         />
                       </div>
@@ -4860,7 +4879,7 @@ function ChemicalEquilibriumVirtualLab({
                             const active = stepIndex <= currentStep;
                             return (
                               <div key={stepIndex} className="flex flex-col items-center mr-2">
-                                <div className={`w-8 h-8 flex items-center justify-center rounded-full text-xs font-medium ${active ? 'bg-blue-500 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}>
+                                <div className={`w-8 h-8 flex items-center justify-center rounded-full text-xs font-medium ${active ? 'bg-green-500 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}>
                                   {stepIndex}
                                 </div>
                               </div>
@@ -5118,9 +5137,9 @@ function ChemicalEquilibriumVirtualLab({
                   if (activeHalide === "I" && resolvedDryTestMode === "acid") {
                     return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
-                  // Hide INFERENCE 4, 5, 6 for Chloride Check in Dry Test for Acid Radicals
+                  // Hide INFERENCE 3, 4, 5, 6 for Chloride Check in Dry Test for Acid Radicals
                   if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
-                    return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                    return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
                   // Hide INFERENCE 2, 3, 4, 5, 6 for Chloride Check in Wet Test for Acid Radicals
                   if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
@@ -5138,20 +5157,10 @@ function ChemicalEquilibriumVirtualLab({
                   if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
                     return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                   }
-                  // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the respective heating count is reached
+                  // Hide special-case inferences until each heating step fills them in
                   if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
-                    if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
-                      return false;
-                    }
-                    if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
-                      return false;
-                    }
-                    if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
-                      return false;
-                    }
-                    if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
-                      return false;
-                    }
+                    const inferenceNumber = Number(entry.label.split(" ")[1] ?? 0);
+                    return specialCasesHeatingCount >= inferenceNumber && entry.result !== DEFAULT_CASE_RESULT;
                   }
                   return true;
                 })
@@ -5196,10 +5205,10 @@ function ChemicalEquilibriumVirtualLab({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <h4 className="font-semibold text-gray-800 text-sm flex items-center">
-                <Atom className="w-4 h-4 mr-2 text-blue-600" />
+                <Atom className="w-4 h-4 mr-2 text-green-600" />
                   {experimentTitle} - Equipment
                 </h4>
-                <span className="inline-flex items-center px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded-full">
+                <span className="inline-flex items-center px-2 py-1 bg-green-500 text-white text-xs font-bold rounded-full">
                   <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse mr-1"></div>
                   STEP {currentStep}
                 </span>
@@ -5334,7 +5343,7 @@ function ChemicalEquilibriumVirtualLab({
               {/* Reagents Bar - Bottom Horizontal */}
               <div className="bg-white/90 backdrop-blur-sm border-t border-gray-200 p-3">
                 <h4 className="font-semibold text-gray-800 text-sm flex items-center mb-2">
-                  <BookOpen className="w-4 h-4 mr-2 text-blue-600" />
+                  <BookOpen className="w-4 h-4 mr-2 text-green-600" />
                   Chemical Reagents
                 </h4>
                 <div className="flex items-center space-x-3 overflow-x-auto pb-2">
@@ -5393,7 +5402,7 @@ function ChemicalEquilibriumVirtualLab({
                 Quantity
               </label>
               <input
-                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
                 type="number"
                 min="0.1"
                 step="0.1"
@@ -5441,7 +5450,7 @@ function ChemicalEquilibriumVirtualLab({
                 Mass (g)
               </label>
               <input
-                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
                 type="number"
                 min={MIN_SALT_MASS}
                 max={MAX_SALT_MASS}
@@ -5802,20 +5811,10 @@ function ChemicalEquilibriumVirtualLab({
                       if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
                         return !["INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
-                      // Hide INFERENCE 3, 4, 5, 6 for Special Cases until the appropriate heating count is reached and result is set
+                      // Hide special-case inferences until each heating step fills them in
                       if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
-                        if (entry.label === "INFERENCE 3" && (specialCasesHeatingCount < 3 || entry.result === DEFAULT_CASE_RESULT)) {
-                          return false;
-                        }
-                        if (entry.label === "INFERENCE 4" && (specialCasesHeatingCount < 4 || entry.result === DEFAULT_CASE_RESULT)) {
-                          return false;
-                        }
-                        if (entry.label === "INFERENCE 5" && (specialCasesHeatingCount < 5 || entry.result === DEFAULT_CASE_RESULT)) {
-                          return false;
-                        }
-                        if (entry.label === "INFERENCE 6" && (specialCasesHeatingCount < 6 || entry.result === DEFAULT_CASE_RESULT)) {
-                          return false;
-                        }
+                        const inferenceNumber = Number(entry.label.split(" ")[1] ?? 0);
+                        return specialCasesHeatingCount >= inferenceNumber && entry.result !== DEFAULT_CASE_RESULT;
                       }
                       return true;
                     })
@@ -5960,7 +5959,7 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="flex items-center justify-between w-full">
                   <CardTitle className="text-2xl text-slate-900">{saltQuizHeaderTitle}</CardTitle>
                   {quizSubmitted && (
-                    <div className="text-blue-600 font-semibold">
+                    <div className="text-green-600 font-semibold">
                       Marks obtained ({saltQuizScore} / {activeSaltQuizItems.length})
                     </div>
                   )}

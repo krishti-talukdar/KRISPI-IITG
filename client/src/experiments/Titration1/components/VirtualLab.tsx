@@ -733,7 +733,7 @@ export default function VirtualLab({
         <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-800">Titration Progress</h3>
-            <span className="text-sm text-blue-600 font-medium">
+            <span className="text-sm text-green-600 font-medium">
               Step {currentStep} of {GUIDED_STEPS.length}
             </span>
           </div>
@@ -747,7 +747,7 @@ export default function VirtualLab({
                   completedSteps.includes(step.id)
                     ? 'bg-green-500'
                     : currentStep === step.id
-                    ? 'bg-blue-500'
+                    ? 'bg-green-500'
                     : 'bg-gray-200'
                 }`}
               />
@@ -759,7 +759,7 @@ export default function VirtualLab({
             <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
               completedSteps.includes(currentStep) 
                 ? 'bg-green-500 text-white' 
-                : 'bg-blue-500 text-white'
+                : 'bg-green-500 text-white'
             }`}>
               {completedSteps.includes(currentStep) ? (
                 <CheckCircle className="w-4 h-4" />
@@ -775,7 +775,7 @@ export default function VirtualLab({
                 {currentStep === 4 ? "burette already filled with NaOH, Start the titration!" : currentStepData.description}
               </p>
               {currentStep !== 4 && (
-                <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-green-700 rounded-full text-xs font-medium">
                   <ArrowRight className="w-3 h-3 mr-1" />
                   {currentStepData.action}
                 </div>
@@ -790,7 +790,7 @@ export default function VirtualLab({
           <div className={`${experimentCompleted ? "hidden" : ""} lg:col-span-3 space-y-4`}>
             <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <Wrench className="w-5 h-5 mr-2 text-blue-600" />
+                <Wrench className="w-5 h-5 mr-2 text-green-600" />
                 Equipment
               </h3>
               
@@ -806,8 +806,8 @@ export default function VirtualLab({
                 ))}
               </div>
 
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <p className="text-xs text-blue-700">
+              <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                <p className="text-xs text-green-700">
                   <strong>Tip:</strong> Drag equipment to the workbench following the step-by-step instructions.
                 </p>
               </div>
@@ -887,7 +887,7 @@ export default function VirtualLab({
                     <div className="absolute pointer-events-none" style={{ left: left + 160, top, zIndex: 80 }}>
                       <div className="flex items-start space-x-3">
                         {/* Burette scale (downcounting 10→1) - moved to side */}
-                        <div className="flex flex-col items-center bg-white p-2 rounded-md shadow-lg ring-1 ring-blue-200" style={{ width: 60, zIndex: 70 }}>
+                        <div className="flex flex-col items-center bg-white p-2 rounded-md shadow-lg ring-1 ring-green-200" style={{ width: 60, zIndex: 70 }}>
                           {Array.from({ length: 10 }).map((_, idx) => {
                             const n = 10 - idx; // Downcount from 10 to 1
                             const used = burette.reading >= (10 - n + 1); // Show as used when passed
@@ -912,7 +912,7 @@ export default function VirtualLab({
                           {autoTitrating && (
                             <div className="mt-2 bg-white/95 p-2 rounded-lg shadow text-center text-sm">
                               <div className="text-xs text-gray-500">Auto-stop at</div>
-                              <div className="text-lg font-bold text-blue-600">10.0 mL</div>
+                              <div className="text-lg font-bold text-green-600">10.0 mL</div>
                               <div className="text-xs text-gray-700">{Math.max(0, Math.ceil(((10 - burette.reading) / 0.5 * 300) / 1000))}s remaining</div>
                             </div>
                           )}
@@ -1090,7 +1090,7 @@ export default function VirtualLab({
               {burette.reading > 0 && (
                 <div className="mb-4">
                   <h4 className="font-semibold text-sm text-gray-700 mb-2">Burette Reading</h4>
-                  <div className="text-2xl font-mono font-bold text-blue-600">
+                  <div className="text-2xl font-mono font-bold text-green-600">
                     {burette.reading.toFixed(1)} mL
                   </div>
                 </div>
@@ -1125,7 +1125,7 @@ export default function VirtualLab({
                         <div className="font-medium">{log.action}</div>
                         <div className="text-gray-600">{log.observation}</div>
                         {log.volume && (
-                          <div className="text-blue-600 font-mono">
+                          <div className="text-green-600 font-mono">
                             {log.volume.toFixed(1)} mL
                           </div>
                         )}
@@ -1151,7 +1151,7 @@ export default function VirtualLab({
         {titrationAction && (
           <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
             <div className="animate-bounce bg-white rounded-lg p-4 shadow-xl border-2 border-blue-300">
-              <Droplets className="w-8 h-8 text-blue-500 mx-auto" />
+              <Droplets className="w-8 h-8 text-green-500 mx-auto" />
               <p className="text-sm text-center mt-2">Adding solution...</p>
             </div>
           </div>
@@ -1173,7 +1173,7 @@ export default function VirtualLab({
                 value={pipetteVolumeInput}
                 onChange={(e) => setPipetteVolumeInput(e.target.value)}
               />
-              <p className="text-xs text-blue-600">Recommendation: add 10ml of oxalic acid</p>
+              <p className="text-xs text-green-600">Recommendation: add 10ml of oxalic acid</p>
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setShowPipetteVolumeModal(false)}>Cancel</Button>
                 <Button onClick={() => {
@@ -1190,7 +1190,7 @@ export default function VirtualLab({
 
         {/* Toast Notification */}
         {showToast && (
-          <div className="fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce">
+          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
               <span className="text-sm font-medium">{showToast}</span>
@@ -1333,7 +1333,7 @@ export default function VirtualLab({
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center">
-                <TrendingUp className="w-6 h-6 mr-2 text-blue-600" />
+                <TrendingUp className="w-6 h-6 mr-2 text-green-600" />
                 Titration Results & Analysis
               </DialogTitle>
               <DialogDescription className="text-gray-600">
@@ -1345,13 +1345,13 @@ export default function VirtualLab({
               {/* Titration Summary */}
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                  <FlaskConical className="w-5 h-5 mr-2 text-blue-600" />
+                  <FlaskConical className="w-5 h-5 mr-2 text-green-600" />
                   Titration Summary
                 </h3>
                 {titrationData.length > 0 && (
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="bg-white rounded-lg p-4 shadow-sm">
-                      <div className="text-2xl font-bold text-blue-600">{titrationData[0].volume.toFixed(1)} mL</div>
+                      <div className="text-2xl font-bold text-green-600">{titrationData[0].volume.toFixed(1)} mL</div>
                       <div className="text-sm text-gray-600">Titre Volume</div>
                     </div>
                     <div className="bg-white rounded-lg p-4 shadow-sm">
@@ -1405,7 +1405,7 @@ export default function VirtualLab({
                       log.isEndpoint ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
                     }`}>
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                        log.isEndpoint ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
+                        log.isEndpoint ? 'bg-green-500 text-white' : 'bg-green-500 text-white'
                       }`}>
                         {index + 1}
                       </div>
@@ -1413,7 +1413,7 @@ export default function VirtualLab({
                         <div className="font-medium text-gray-800">{log.action}</div>
                         <div className="text-sm text-gray-600">{log.observation}</div>
                         {log.volume && (
-                          <div className="text-xs font-mono text-blue-600 mt-1">
+                          <div className="text-xs font-mono text-green-600 mt-1">
                             Volume: {log.volume.toFixed(1)} mL
                           </div>
                         )}
@@ -1433,7 +1433,7 @@ export default function VirtualLab({
               </Link>
               <Button
                 onClick={() => setShowResultsModal(false)}
-                className="bg-blue-500 hover:bg-blue-600 text-white"
+                className="bg-green-500 hover:bg-green-600 text-white"
               >
                 Close Analysis
               </Button>

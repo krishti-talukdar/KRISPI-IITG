@@ -452,15 +452,15 @@ const stepsProgress = (
     <div className="mb-4 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-800">Experiment Progress</h3>
-        <span className="text-sm text-blue-600 font-medium">Step {currentStep} of {totalSteps}</span>
+        <span className="text-sm text-green-600 font-medium">Step {currentStep} of {totalSteps}</span>
       </div>
       <div className="flex space-x-2 mb-3">
         {experiment.stepDetails.map((step) => (
-          <div key={step.id} className={`flex-1 h-2 rounded-full ${completedSteps.includes(step.id) ? 'bg-green-500' : currentStep === step.id ? 'bg-blue-500' : 'bg-gray-200'}`} />
+          <div key={step.id} className={`flex-1 h-2 rounded-full ${completedSteps.includes(step.id) ? 'bg-green-500' : currentStep === step.id ? 'bg-green-500' : 'bg-gray-200'}`} />
         ))}
       </div>
       <div className="flex items-start space-x-3">
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${completedSteps.includes(currentStep) ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${completedSteps.includes(currentStep) ? 'bg-green-500 text-white' : 'bg-green-500 text-white'}`}>
           {completedSteps.includes(currentStep) ? <CheckCircle className="w-4 h-4" /> : <span className="text-sm font-bold">{currentStep}</span>}
         </div>
         <div className="flex-1">
@@ -504,7 +504,7 @@ const stepsProgress = (
           <div className="lg:col-span-3 space-y-4">
             <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <Wrench className="w-5 h-5 mr-2 text-blue-600" />
+                <Wrench className="w-5 h-5 mr-2 text-green-600" />
                 Equipment
               </h3>
               <div className="space-y-3">
@@ -520,8 +520,8 @@ const stepsProgress = (
                   />
                 ))}
               </div>
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <p className="text-xs text-blue-700"><strong>Tip:</strong> Drag equipment to the workbench following the steps.</p>
+              <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                <p className="text-xs text-green-700"><strong>Tip:</strong> Drag equipment to the workbench following the steps.</p>
               </div>
             </div>
             <div className="space-y-2">
@@ -540,7 +540,7 @@ const stepsProgress = (
 
               <Button
                 onClick={handleViewResults}
-                className={`w-full flex items-center justify-center text-white rounded-md transition ${resultsReady ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-400 hover:bg-blue-500 opacity-90'}`}
+                className={`w-full flex items-center justify-center text-white rounded-md transition ${resultsReady ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-400 hover:bg-green-500 opacity-90'}`}
               >
                 <CheckCircle className="w-4 h-4 mr-2" />
                 View Results & Analysis
@@ -749,7 +749,7 @@ const stepsProgress = (
                 </div>
               </div>
 
-              {showToast && <p className="text-xs text-blue-700 mt-2">{showToast}</p>}
+              {showToast && <p className="text-xs text-green-700 mt-2">{showToast}</p>}
             </div>
           </div>
         </div>
@@ -952,7 +952,7 @@ const stepsProgress = (
                 <Button onClick={() => setShowQuizModal(true)} className="bg-amber-600 hover:bg-amber-700 text-white">QUIZ</Button>
               </div>
 
-              <Button onClick={() => setShowResultsModal(false)} className="bg-blue-500 hover:bg-blue-600 text-white">Close Analysis</Button>
+              <Button onClick={() => setShowResultsModal(false)} className="bg-green-500 hover:bg-green-600 text-white">Close Analysis</Button>
             </div>
           </DialogFooter>
         </DialogContent>
@@ -966,7 +966,7 @@ const stepsProgress = (
               <div className="flex items-center justify-between w-full">
                 <CardTitle className="text-2xl">Buffer pH — Quiz</CardTitle>
                 {quizSubmitted && (
-                  <div className="text-blue-600 font-semibold">Marks obtained ({score} / 5)</div>
+                  <div className="text-green-600 font-semibold">Marks obtained ({score} / 5)</div>
                 )}
               </div>
             </CardHeader>

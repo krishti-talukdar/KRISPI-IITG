@@ -628,7 +628,7 @@ export default function VirtualLab({
         <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-800">Experiment Progress</h3>
-            <span className="text-sm text-blue-600 font-medium">
+            <span className="text-sm text-green-600 font-medium">
               Step {currentStep} of {GUIDED_STEPS.length}
             </span>
           </div>
@@ -642,7 +642,7 @@ export default function VirtualLab({
                   completedSteps.includes(step.id)
                     ? 'bg-green-500'
                     : currentStep === step.id
-                    ? 'bg-blue-500'
+                    ? 'bg-green-500'
                     : 'bg-gray-200'
                 }`}
               />
@@ -654,7 +654,7 @@ export default function VirtualLab({
             <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
               completedSteps.includes(currentStep) 
                 ? 'bg-green-500 text-white' 
-                : 'bg-blue-500 text-white'
+                : 'bg-green-500 text-white'
             }`}>
               {completedSteps.includes(currentStep) ? (
                 <CheckCircle className="w-4 h-4" />
@@ -669,7 +669,7 @@ export default function VirtualLab({
               <p className="text-sm text-gray-600 mb-2">
                 {currentStepData.description}
               </p>
-              <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+              <div className="inline-flex items-center px-3 py-1 bg-blue-100 text-green-700 rounded-full text-xs font-medium">
                 <ArrowRight className="w-3 h-3 mr-1" />
                 {currentStepData.action}
               </div>
@@ -683,7 +683,7 @@ export default function VirtualLab({
           <div className="lg:col-span-3 space-y-4">
             <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <Wrench className="w-5 h-5 mr-2 text-blue-600" />
+                <Wrench className="w-5 h-5 mr-2 text-green-600" />
                 Equipment
               </h3>
               
@@ -699,8 +699,8 @@ export default function VirtualLab({
                 ))}
               </div>
 
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <p className="text-xs text-blue-700">
+              <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                <p className="text-xs text-green-700">
                   <strong>Tip:</strong> Drag equipment to the workbench following the step-by-step instructions.
                 </p>
               </div>
@@ -741,7 +741,7 @@ export default function VirtualLab({
             {experimentCompleted && (
               <Button
                 onClick={() => setShowResultsModal(true)}
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold"
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold"
               >
                 📊 View Results & Analysis
               </Button>
@@ -889,7 +889,7 @@ export default function VirtualLab({
         {dropperAction && (
           <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
             <div className="animate-bounce bg-white rounded-lg p-4 shadow-xl border-2 border-blue-300">
-              <Droplets className="w-8 h-8 text-blue-500 mx-auto" />
+              <Droplets className="w-8 h-8 text-green-500 mx-auto" />
               <p className="text-sm text-center mt-2">Adding solution...</p>
             </div>
           </div>
@@ -897,7 +897,7 @@ export default function VirtualLab({
 
         {/* Toast Notification */}
         {showToast && (
-          <div className="fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce">
+          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
               <span className="text-sm font-medium">{showToast}</span>
@@ -910,7 +910,7 @@ export default function VirtualLab({
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-blue-600 bg-clip-text text-transparent flex items-center">
-                <TrendingUp className="w-6 h-6 mr-2 text-blue-600" />
+                <TrendingUp className="w-6 h-6 mr-2 text-green-600" />
                 Experiment Results & Analysis
               </DialogTitle>
               <DialogDescription className="text-gray-600">
@@ -922,7 +922,7 @@ export default function VirtualLab({
               {/* Experiment Summary */}
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                  <FlaskConical className="w-5 h-5 mr-2 text-blue-600" />
+                  <FlaskConical className="w-5 h-5 mr-2 text-green-600" />
                   Experiment Summary
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -931,7 +931,7 @@ export default function VirtualLab({
                     <div className="text-sm text-gray-600">Steps Completed</div>
                   </div>
                   <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <div className="text-2xl font-bold text-blue-600">{experimentLog.length}</div>
+                    <div className="text-2xl font-bold text-green-600">{experimentLog.length}</div>
                     <div className="text-sm text-gray-600">Actions Performed</div>
                   </div>
                   <div className="bg-white rounded-lg p-4 shadow-sm">
@@ -968,9 +968,9 @@ export default function VirtualLab({
                         <li>• Low Cl⁻ concentration</li>
                       </ul>
                     </div>
-                    <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                      <h4 className="font-semibold text-blue-800 mb-2">Chloride Complex [CoCl₄]²⁻</h4>
-                      <ul className="text-sm text-blue-700 space-y-1">
+                    <div className="bg-green-50 rounded-lg p-4 border border-blue-200">
+                      <h4 className="font-semibold text-green-800 mb-2">Chloride Complex [CoCl₄]²⁻</h4>
+                      <ul className="text-sm text-green-700 space-y-1">
                         <li>• Blue color</li>
                         <li>• Tetrahedral geometry</li>
                         <li>• Favored by excess Cl⁻</li>
@@ -990,7 +990,7 @@ export default function VirtualLab({
                 <div className="space-y-3 max-h-64 overflow-y-auto">
                   {experimentLog.map((log, index) => (
                     <div key={log.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
                         {index + 1}
                       </div>
                       <div className="flex-1">
@@ -1072,7 +1072,7 @@ export default function VirtualLab({
                 <Button onClick={() => setShowQuizModal(true)} className="bg-amber-600 hover:bg-amber-700 text-white">QUIZ</Button>
                 <Button
                   onClick={() => setShowResultsModal(false)}
-                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                  className="bg-green-500 hover:bg-green-600 text-white"
                 >
                   Close Analysis
                 </Button>
@@ -1089,7 +1089,7 @@ export default function VirtualLab({
                 <div className="flex items-center justify-between w-full">
                   <CardTitle className="text-2xl">Equilibrium Shift — Quiz</CardTitle>
                   {quizSubmitted && (
-                    <div className="text-blue-600 font-semibold">Marks obtained ({quizScore} / 5)</div>
+                    <div className="text-green-600 font-semibold">Marks obtained ({quizScore} / 5)</div>
                   )}
                 </div>
               </CardHeader>
@@ -1299,7 +1299,7 @@ export default function VirtualLab({
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle className="text-xl font-semibold text-gray-800 flex items-center">
-                <Droplets className="w-5 h-5 mr-2 text-blue-600" />
+                <Droplets className="w-5 h-5 mr-2 text-green-600" />
                 Enter Volume
               </DialogTitle>
               <DialogDescription className="text-gray-600">
@@ -1336,7 +1336,7 @@ export default function VirtualLab({
                     }
                   }}
                   placeholder="Enter volume in mL"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   autoFocus
                 />
                 {volumeError && (
@@ -1375,7 +1375,7 @@ export default function VirtualLab({
                     setVolumeError(null);
                     handleVolumeSubmit(volume);
                   }}
-                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                  className="bg-green-500 hover:bg-green-600 text-white"
                   disabled={!volumeInput || isNaN(parseFloat(volumeInput)) || !!volumeError}
                 >
                   Add Solution

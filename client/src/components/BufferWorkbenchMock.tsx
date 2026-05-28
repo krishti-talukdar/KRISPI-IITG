@@ -25,22 +25,22 @@ export default function BufferWorkbenchMock() {
                 {/* Left column - Equipment toolbar */}
                 <aside className="lg:col-span-3 space-y-4">
                   <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center"><Wrench className="w-5 h-5 mr-2 text-blue-600" />Equipment</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center"><Wrench className="w-5 h-5 mr-2 text-green-600" />Equipment</h3>
                     <div className="space-y-3">
-                      <EquipmentCard icon={<TestTube className="w-6 h-6 text-blue-600" />} title="25ml Test Tube" />
+                      <EquipmentCard icon={<TestTube className="w-6 h-6 text-green-600" />} title="25ml Test Tube" />
                       <EquipmentCard icon={<Droplets className="w-6 h-6 text-yellow-600" />} title="0.1 M Ethanoic (Acetic) Acid" />
-                      <EquipmentCard icon={<Droplets className="w-6 h-6 text-blue-600" />} title="0.1 M Sodium Ethanoate (Sodium Acetate)" />
+                      <EquipmentCard icon={<Droplets className="w-6 h-6 text-green-600" />} title="0.1 M Sodium Ethanoate (Sodium Acetate)" />
                       <EquipmentCard icon={<FlaskConical className="w-6 h-6 text-purple-700" />} title="pH Meter or pH Paper" />
                     </div>
 
-                    <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                      <p className="text-xs text-blue-700"><strong>Tip:</strong> Drag equipment to the workbench following the steps.</p>
+                    <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                      <p className="text-xs text-green-700"><strong>Tip:</strong> Drag equipment to the workbench following the steps.</p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Button variant="outline" className="w-full bg-white border-gray-200 text-gray-700 hover:bg-gray-100 flex items-center justify-center"><Undo2 className="w-4 h-4 mr-2" />UNDO</Button>
-                    <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center"><CheckCircle className="w-4 h-4 mr-2 text-white" />View Results & Analysis</Button>
+                    <Button className="w-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center"><CheckCircle className="w-4 h-4 mr-2 text-white" />View Results & Analysis</Button>
                     <Button variant="destructive" className="w-full bg-red-50 border-red-200 text-red-700 hover:bg-red-100">Reset Experiment</Button>
                   </div>
                 </aside>
@@ -49,7 +49,7 @@ export default function BufferWorkbenchMock() {
                 <main className="lg:col-span-6">
                   <div className="lab-workbench ethanoic-workbench relative p-6 rounded-lg">
                     <div className="workbench-step-badge absolute top-4 left-4 bg-white/90 rounded-full px-3 py-2 border shadow-sm flex items-center">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse mr-2" />
+                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse mr-2" />
                       <span className="text-sm font-medium text-gray-700">Step 8 of 9</span>
                     </div>
 
@@ -71,7 +71,7 @@ export default function BufferWorkbenchMock() {
                         </div>
 
                         <div className="bg-white rounded-xl border p-3 shadow-sm flex items-center">
-                          <div className="w-12 h-12 bg-blue-50 rounded-md flex items-center justify-center mr-3 chemical-bottle-shadow"><Droplets className="w-6 h-6 text-blue-600" /></div>
+                          <div className="w-12 h-12 bg-green-50 rounded-md flex items-center justify-center mr-3 chemical-bottle-shadow"><Droplets className="w-6 h-6 text-green-600" /></div>
                           <div className="text-sm">0.1 M Sodium Ethanoate</div>
                         </div>
 
@@ -141,7 +141,7 @@ export default function BufferWorkbenchMock() {
 
 const EquipmentCard: React.FC<{ icon: React.ReactNode; title: string }> = ({ icon, title }) => (
   <div className="flex items-center p-3 rounded-lg border-2 border-gray-200 bg-white hover:border-blue-400 hover:shadow-lg">
-    <div className="text-2xl mb-0 mr-3 text-blue-600">{icon}</div>
+    <div className="text-2xl mb-0 mr-3 text-green-600">{icon}</div>
     <div className="text-sm font-medium text-gray-700">{title}</div>
   </div>
 );

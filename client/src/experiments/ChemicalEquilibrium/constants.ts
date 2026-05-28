@@ -23,6 +23,9 @@ export const PLATINUM_WIRE_IMAGE_URL =
 export const PH_PAPER_IMAGE_URL =
   "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Fa1eea72a49464b2f93611a90f0edd819?format=webp&width=800";
 
+export const SALT_IMAGE_URL =
+  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F9ac7ff7f623f4d48adbc719283c3c9b7?format=webp&width=800&height=1200";
+
 // Chemical reagents specific to Chemical Equilibrium experiment
 export const CHEMICAL_EQUILIBRIUM_CHEMICALS: Chemical[] = [
   {
@@ -117,7 +120,7 @@ export const CHEMICAL_EQUILIBRIUM_EQUIPMENT: Equipment[] = [
         height: "36",
         viewBox: "0 0 36 36",
         fill: "none",
-        className: "text-blue-600",
+        className: "text-green-600",
       },
       [
         React.createElement("path", {
@@ -230,7 +233,7 @@ export const PH_HCL_EQUIPMENT: Equipment[] = [
   {
     id: "wash_bottle",
     name: "Wash Bottle",
-    icon: React.createElement("svg", { width: 36, height: 36, viewBox: "0 0 36 36", fill: "none", className: "text-blue-600" }, [React.createElement("path", { key: "w", d: "M6 8h24v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8z", stroke: "currentColor", strokeWidth: "2", fill: "rgba(59,130,246,0.08)" })])
+    icon: React.createElement("svg", { width: 36, height: 36, viewBox: "0 0 36 36", fill: "none", className: "text-green-600" }, [React.createElement("path", { key: "w", d: "M6 8h24v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8z", stroke: "currentColor", strokeWidth: "2", fill: "rgba(59,130,246,0.08)" })])
   },
   {
     id: "ph_paper",
