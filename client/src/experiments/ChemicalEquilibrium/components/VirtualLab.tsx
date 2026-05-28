@@ -3544,7 +3544,7 @@ function ChemicalEquilibriumVirtualLab({
       }
 
       if (heating && isDryTestExperiment && activeFlameTest === "Am") {
-        setCaseOneResult("Strong pungent smell of NH₃ gas");
+        setCaseOneResult("Strong pungent smell of NH₃ gas, therefore NH₄⁺  is present.");
       }
 
       if (
@@ -6167,7 +6167,9 @@ function ChemicalEquilibriumVirtualLab({
                     .map((entry) => {
                       const displayLabel = ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1")
                       ? "Inference"
-                      : entry.label;
+                      : (activeFlameTest === "Am" && entry.label === "INFERENCE 1")
+                        ? "INFERENCE "
+                        : entry.label;
 
                       return (
                         <div
