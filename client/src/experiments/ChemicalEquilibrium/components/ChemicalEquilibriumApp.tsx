@@ -544,8 +544,8 @@ export default function ChemicalEquilibriumApp({
         dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter(
           (name) => !name.includes("Platinum Wire") && !name.includes("Watch glass") && !name.includes("Concentrated HCl") && !name.includes("Conc. HCl")
         );
-        // Add Na₂CO₃ and pH paper for Ammonium Radical Test
-        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Na₂CO₃", "pH paper"]));
+        // Add Na₂CO₃ for Ammonium Radical Test
+        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Na₂CO₃"]));
       } else if (activeFlameTest === "Fl") {
         // Flame Test: Add Platinum Wire and Watch glass only (no Concentrated HCl)
         dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass"]));
