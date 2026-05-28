@@ -35,7 +35,7 @@ export default function HeroSection() {
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center">
             <Button
               onClick={scrollToExperiments}
-              className="rounded-md bg-green-600 px-9 py-5 text-sm font-medium text-white shadow-md shadow-green-600/20 hover:bg-green-700"
+              className="rounded-md bg-green-600 px-9 py-5 text-sm font-medium text-white shadow-md shadow-green-600/20 hover:bg-green-700 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 hover:scale-105"
             >
               <Play className="mr-2 h-4 w-4" />
               Start Experimenting
@@ -44,7 +44,7 @@ export default function HeroSection() {
             <SafetyGuideModal>
               <Button
                 variant="outline"
-                className="rounded-md border-2 border-gray-400 bg-white px-9 py-5 text-sm font-medium text-slate-900 hover:bg-gray-50"
+                className="rounded-md border-2 border-gray-400 bg-white px-9 py-5 text-sm font-medium text-slate-900 hover:bg-gray-50 hover:shadow-lg hover:scale-105 transition-all duration-200"
               >
                 <Book className="mr-2 h-4 w-4" />
                 View Safety Guide

@@ -71,11 +71,11 @@ export default function Home() {
                 key={category}
                 onClick={() => setSelectedCategory(category)}
                 variant={selectedCategory === category ? "default" : "outline"}
-                className={
+                className={`transition-all duration-200 hover:shadow-lg hover:scale-105 ${
                   selectedCategory === category
                     ? "bg-green-600 text-white hover:bg-green-700"
                     : "bg-white border-gray-300 text-gray-600 hover:border-green-600 hover:text-green-600"
-                }
+                }`}
               >
                 {category}
               </Button>

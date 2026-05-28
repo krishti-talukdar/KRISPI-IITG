@@ -41,17 +41,17 @@ export default function Header() {
               Experiments
             </a>
             <ProgressModal>
-              <button className="text-gray-600 hover:text-gray-900 transition-colors">
+              <button className="text-gray-600 hover:text-gray-900 transition-all duration-200 hover:scale-105">
                 My Progress
               </button>
             </ProgressModal>
             <SafetyGuideModal>
-              <button className="text-gray-600 hover:text-gray-900 transition-colors">
+              <button className="text-gray-600 hover:text-gray-900 transition-all duration-200 hover:scale-105">
                 Safety Guide
               </button>
             </SafetyGuideModal>
             <SignInModal>
-              <Button className="rounded-full bg-slate-900 text-white hover:bg-slate-800 px-5">
+              <Button className="rounded-full bg-slate-900 text-white hover:bg-slate-800 px-5 transition-all duration-200 hover:shadow-lg hover:scale-105">
                 Sign In
               </Button>
             </SignInModal>
@@ -74,18 +74,18 @@ export default function Header() {
                 Experiments
               </a>
               <ProgressModal>
-                <button className="text-gray-600 hover:text-gray-900 px-4 py-2 text-left">
+                <button className="text-gray-600 hover:text-gray-900 px-4 py-2 text-left transition-all duration-200 hover:scale-105 inline-block">
                   My Progress
                 </button>
               </ProgressModal>
               <SafetyGuideModal>
-                <button className="text-gray-600 hover:text-gray-900 px-4 py-2 text-left">
+                <button className="text-gray-600 hover:text-gray-900 px-4 py-2 text-left transition-all duration-200 hover:scale-105 inline-block">
                   Safety Guide
                 </button>
               </SafetyGuideModal>
               <div className="px-4">
                 <SignInModal>
-                <Button className="w-full rounded-full bg-slate-900 text-white hover:bg-slate-800">
+                <Button className="w-full rounded-full bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 hover:shadow-lg hover:scale-105">
                   Sign In
                 </Button>
               </SignInModal>

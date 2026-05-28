@@ -127,9 +127,9 @@ export default function ExperimentCard({ experiment, progress, onViewDetails }: 
           </div>
         </div>
         
-        <Button 
+        <Button
           onClick={handleStartExperiment}
-          className={`w-full py-3 font-semibold transition-colors ${
+          className={`w-full py-3 font-semibold transition-all duration-200 hover:shadow-lg hover:scale-105 ${
             isCompleted
               ? 'bg-green-600 hover:bg-green-700 text-white'
               : 'bg-green-600 hover:bg-green-700 text-white'
