@@ -6176,7 +6176,8 @@ function ChemicalEquilibriumVirtualLab({
                         : entry.label;
                     const displayIndicator =
                       isBasicRadicalsWetResults ||
-                      (activeHalide === "SC" && (resolvedDryTestMode === "acid" || resolvedDryTestMode === "wet"))
+                      (activeHalide === "SC" && (resolvedDryTestMode === "acid" || resolvedDryTestMode === "wet")) ||
+                      (activeHalide === "S" && resolvedDryTestMode === "acid")
                         ? ""
                         : entry.indicator;
 
