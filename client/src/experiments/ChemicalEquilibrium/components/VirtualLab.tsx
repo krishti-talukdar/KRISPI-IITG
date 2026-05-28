@@ -60,6 +60,8 @@ interface ChemicalEquilibriumVirtualLabProps {
   dryTestMode?: DryTestMode;
   activeHalide?: string;
   activeFlameTest?: string;
+  activeTopLevelSection?: string;
+  activeBasicRadicalsSubsection?: string | null;
   showBasicFlameObservations?: boolean;
 }
 
@@ -613,6 +615,8 @@ function ChemicalEquilibriumVirtualLab({
   dryTestMode,
   activeHalide,
   activeFlameTest,
+  activeTopLevelSection,
+  activeBasicRadicalsSubsection,
   showBasicFlameObservations,
 }: ChemicalEquilibriumVirtualLabProps) {
   const formatTime = (seconds: number) => {

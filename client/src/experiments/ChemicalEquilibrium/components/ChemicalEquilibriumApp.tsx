@@ -1195,6 +1195,8 @@ export default function ChemicalEquilibriumApp({
                 toggleTimer={toggleTimer}
                 activeHalide={activeHalide}
                 activeFlameTest={activeFlameTest}
+                activeTopLevelSection={activeTopLevelSection}
+                activeBasicRadicalsSubsection={activeBasicRadicalsSubsection}
                 showBasicFlameObservations={
                   isDryTestExperiment &&
                   activeTopLevelSection === "BR" &&
