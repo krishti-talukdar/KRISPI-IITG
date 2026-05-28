@@ -2819,7 +2819,6 @@ function ChemicalEquilibriumVirtualLab({
       resolvedDryTestMode === "wet" &&
       (activeHalide ?? "").toLowerCase() === "br" &&
       currentStep === 5 &&
-      bromideWetHNO3AddedTracked &&
       !bromideWetAgNO3AddedTracked
     ) {
       setBromideWetAgNO3AddedTracked(true);
