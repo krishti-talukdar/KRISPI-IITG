@@ -6212,6 +6212,13 @@ function ChemicalEquilibriumVirtualLab({
                       if (activeHalide === "S" && resolvedDryTestMode === "wet") {
                         return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                       }
+                      // Hide Inference 2, 3, 4, 5, 6 highlights for Iodide Check in Wet Test until second heating
+                      if (activeHalide === "I" && resolvedDryTestMode === "wet") {
+                        if (iodideWetHeatingCount < 2 && highlight.includes("Inference 2")) {
+                          return false;
+                        }
+                        return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
                       // Hide Inference 4, 5, 6 highlights for Special Cases in Wet Test for Acid Radicals
                       if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
                         return !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
