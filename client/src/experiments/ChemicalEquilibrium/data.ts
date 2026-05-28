@@ -47,7 +47,7 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     },
     {
       id: 3,
-      title: "Step 3 : Add concentrated H₂SO₄ in the test tube",
+      title: "Step 3 : Add Na₂CO₃ in the test tube",
       description:
         "Add concentrated H₂SO₄ carefully to the test tube.",
       completed: false,

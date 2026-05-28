@@ -748,7 +748,7 @@ function ChemicalEquilibriumVirtualLab({
   const [wetBasicHeatingCount, setWetBasicHeatingCount] = useState(0);
   const [phPaperColor, setPhPaperColor] = useState<string | undefined>(undefined);
   const MNO2_CASE_TWO_RESULT =
-    "On adding a small amount of MnO₂ to the mixture in the test tube a greenish-yellow gas is evolved.";
+    "On adding a small amount of MnO₂ to the mixture in the test tube accelarates the formation of brown fumes.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
@@ -900,6 +900,7 @@ function ChemicalEquilibriumVirtualLab({
   const caseOneReady = caseOneResult !== DEFAULT_CASE_RESULT;
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const isBasicRadicalsAnalysis = resolvedDryTestMode === "wetBasic" || resolvedDryTestMode === "basic";
+  const isBasicRadicalsWetResults = resolvedDryTestMode === "wetBasic";
   const caseThreeDisplayResult =
     isBasicRadicalsAnalysis && caseThreeResult === DEFAULT_CASE_RESULT
       ? BASIC_RADICAL_CASE_THREE_RESULT
@@ -3544,7 +3545,7 @@ function ChemicalEquilibriumVirtualLab({
       }
 
       if (heating && isDryTestExperiment && activeFlameTest === "Am") {
-        setCaseOneResult("Strong pungent smell of NH₃ gas");
+        setCaseOneResult("Strong pungent smell of NH₃ gas, therefore NH₄⁺  is present.");
       }
 
       if (
@@ -3731,13 +3732,13 @@ function ChemicalEquilibriumVirtualLab({
           }
         }
 
-        if ((activeHalide ?? "").toLowerCase() === "sc") {
+        if ((activeHalide ?? "").toLowerCase() === "sc" && !isWorkbenchHeating) {
           const nextCount = specialCasesWetHeatingCount + 1;
           setSpecialCasesWetHeatingCount(nextCount);
           if (nextCount === 1) {
             setSpecialCasesWetHeatingTriggered(true);
             setCaseOneResult(
-              "Heavy white precipitate is formed , therefore SO4^2- is present",
+              "Heavy white precipitate is formed , therefore SO₄²⁻ is present",
             );
           } else if (nextCount === 2) {
             setCaseTwoResult(
@@ -3751,7 +3752,7 @@ function ChemicalEquilibriumVirtualLab({
         }
       }
 
-      if (heating && isDryTestExperiment && resolvedDryTestMode === "wetBasic") {
+      if (heating && isDryTestExperiment && resolvedDryTestMode === "wetBasic" && !isWorkbenchHeating) {
         const nextCount = wetBasicHeatingCount + 1;
         setWetBasicHeatingCount(nextCount);
         if (nextCount === 1) {
@@ -6041,6 +6042,10 @@ function ChemicalEquilibriumVirtualLab({
                     if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                       return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
                     }
+                    // Hide Inference 4, 5, 6 for Special Cases in Wet Test for Acid Radicals
+                    if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
+                      return !["Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
+                    }
                     // Hide Inference 3, 4, 5, 6 for Iodide check in Wet Test for Acid Radicals
                     // Also hide Inference 2 until second heating
                     if (activeHalide === "I" && resolvedDryTestMode === "wet") {
@@ -6058,10 +6063,14 @@ function ChemicalEquilibriumVirtualLab({
                       ? "Inference"
                       : insight.hint;
 
+                    const displayTitle = isBasicRadicalsWetResults || (activeHalide === "SC" && resolvedDryTestMode === "wet" && ["Inference 1", "Inference 2", "Inference 3"].includes(insight.hint))
+                      ? ""
+                      : insight.title;
+
                     return (
                       <div key={insight.hint} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
                         <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{displayHint}</div>
-                        <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
+                        {displayTitle && <div className="mt-1 text-sm font-semibold text-white">{displayTitle}</div>}
                         <p className="mt-1 text-xs text-white/70 leading-tight whitespace-pre-wrap">{insight.description}</p>
                       </div>
                     );
@@ -6084,11 +6093,18 @@ function ChemicalEquilibriumVirtualLab({
                   if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                     return note.label === "Wet test focus";
                   }
+                  if (isBasicRadicalsWetResults) {
+                    return false;
+                  }
                   // Hide guidance cards for Special Cases dry test
                   if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
                     return false;
                   }
-                  // For Iodide check in Wet Test, hide Next steps and Confidence
+                  // For Special Cases wet test, keep only the Wet test focus note
+                  if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
+                    return note.label === "Wet test focus";
+                  }
+                  // For Iodide check in Wet Test, keep only the Wet test focus note
                   if (activeHalide === "I" && resolvedDryTestMode === "wet") {
                     return note.label === "Wet test focus";
                   }
@@ -6155,7 +6171,18 @@ function ChemicalEquilibriumVirtualLab({
                     .map((entry) => {
                       const displayLabel = ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid" && entry.label === "INFERENCE 1")
                       ? "Inference"
-                      : entry.label;
+                      : (activeFlameTest === "Am" && entry.label === "INFERENCE 1")
+                        ? "INFERENCE "
+                        : entry.label;
+                    const displayIndicator =
+                      isBasicRadicalsWetResults ||
+                      (activeHalide === "SC" && (resolvedDryTestMode === "acid" || resolvedDryTestMode === "wet")) ||
+                      (activeHalide === "S" && resolvedDryTestMode === "acid") ||
+                      (activeHalide === "Cl" && resolvedDryTestMode === "acid") ||
+                      (activeHalide === "I" && (resolvedDryTestMode === "acid" || resolvedDryTestMode === "wet")) ||
+                      (activeHalide === "Br" && resolvedDryTestMode === "wet")
+                        ? ""
+                        : entry.indicator;
 
                       return (
                         <div
@@ -6164,16 +6191,18 @@ function ChemicalEquilibriumVirtualLab({
                         >
                           <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.titleColorClass}`}>{displayLabel}</div>
                           <p className={`mt-2 text-lg font-bold ${entry.resultTextClass} leading-relaxed whitespace-pre-wrap`}>{entry.result}</p>
-                          <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
-                            {entry.indicator}
-                          </div>
+                          {displayIndicator && (
+                            <div className={`mt-3 text-[11px] font-semibold uppercase tracking-[0.3em] ${entry.indicatorColorClass}`}>
+                              {displayIndicator}
+                            </div>
+                          )}
                         </div>
                       );
                     })}
                 </div>
               </div>
 
-              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && !(activeHalide === "I" && resolvedDryTestMode === "wet") && !(activeHalide === "SC" && resolvedDryTestMode === "acid") && (
+              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && !(activeHalide === "I" && resolvedDryTestMode === "wet") && !(activeHalide === "SC" && resolvedDryTestMode === "acid") && !(activeHalide === "SC" && resolvedDryTestMode === "wet") && !isBasicRadicalsWetResults && (
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                     <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
