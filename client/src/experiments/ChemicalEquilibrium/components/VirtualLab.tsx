@@ -687,6 +687,16 @@ function ChemicalEquilibriumVirtualLab({
   const [bromideWetSodaExtractAddedTracked, setBromideWetSodaExtractAddedTracked] = useState(false);
   const [bromideWetHNO3AddedTracked, setBromideWetHNO3AddedTracked] = useState(false);
   const [bromideWetAgNO3AddedTracked, setBromideWetAgNO3AddedTracked] = useState(false);
+  const [bromideWetBunsenAddedTracked, setBromideWetBunsenAddedTracked] = useState(false);
+  const [bromideWetFirstHeatingTracked, setBromideWetFirstHeatingTracked] = useState(false);
+  const [bromideWetResetTracked, setBromideWetResetTracked] = useState(false);
+  const [bromideWetSecondTestTubeTracked, setBromideWetSecondTestTubeTracked] = useState(false);
+  const [bromideWetSecondSaltTracked, setBromideWetSecondSaltTracked] = useState(false);
+  const [bromideWetSecondSodaTracked, setBromideWetSecondSodaTracked] = useState(false);
+  const [bromideWetDilHClTracked, setBromideWetDilHClTracked] = useState(false);
+  const [bromideWetCHCl3Tracked, setBromideWetCHCl3Tracked] = useState(false);
+  const [bromideWetKMnO4Tracked, setBromideWetKMnO4Tracked] = useState(false);
+  const [bromideWetSecondBunsenTracked, setBromideWetSecondBunsenTracked] = useState(false);
   const [iodideWetTestTubeTracked, setIodideWetTestTubeTracked] = useState(false);
   const [iodideWetSaltAddedTracked, setIodideWetSaltAddedTracked] = useState(false);
   const [iodideWetSodaExtractAddedTracked, setIodideWetSodaExtractAddedTracked] = useState(false);
@@ -738,7 +748,7 @@ function ChemicalEquilibriumVirtualLab({
   const [wetBasicHeatingCount, setWetBasicHeatingCount] = useState(0);
   const [phPaperColor, setPhPaperColor] = useState<string | undefined>(undefined);
   const MNO2_CASE_TWO_RESULT =
-    "On adding a small amount of MnO₂ to the mixture in the test tube and warming, a greenish-yellow gas is evolved.";
+    "On adding a small amount of MnO₂ to the mixture in the test tube a greenish-yellow gas is evolved.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
@@ -964,16 +974,18 @@ function ChemicalEquilibriumVirtualLab({
       resultTextClass: "text-rose-900",
       indicatorColorClass: "text-rose-500",
     },
-    {
-      label: "INFERENCE 2",
-      result: caseTwoResult,
-      indicator: isBasicFlameAnalysis ? "Green flame (Cu²⁺)" : (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas acceleration" : "Gas evolution",
-      borderClass: "border-amber-200",
-      bgClass: "from-white via-amber-50 to-orange-100",
-      titleColorClass: "text-amber-500",
-      resultTextClass: "text-orange-900",
-      indicatorColorClass: "text-orange-500",
-    },
+    ...(activeHalide === "Br" && resolvedDryTestMode === "wet" && bromideWetHeatingCount < 2
+      ? []
+      : [{
+        label: "INFERENCE 2",
+        result: caseTwoResult,
+        indicator: isBasicFlameAnalysis ? "Green flame (Cu²⁺)" : (activeHalide === "Br" && resolvedDryTestMode === "acid") ? "Br₂ gas acceleration" : "Gas evolution",
+        borderClass: "border-amber-200",
+        bgClass: "from-white via-amber-50 to-orange-100",
+        titleColorClass: "text-amber-500",
+        resultTextClass: "text-orange-900",
+        indicatorColorClass: "text-orange-500",
+      }]),
     {
       label: "INFERENCE 3",
       result: isBasicFlameAnalysis ? caseThreeResult : caseThreeDisplayResult,
@@ -1021,9 +1033,13 @@ function ChemicalEquilibriumVirtualLab({
         ? "Yellow flame - Fe³⁺"
         : activeHalide === "Br" && resolvedDryTestMode === "acid"
           ? "Bromide gas formation"
-          : activeHalide === "S" && resolvedDryTestMode === "acid"
-            ? "Sulfide present"
-            : "Initial chloride clues",
+          : activeHalide === "Br" && resolvedDryTestMode === "wet"
+            ? ""
+            : activeHalide === "I" && resolvedDryTestMode === "wet"
+              ? ""
+              : activeHalide === "S" && resolvedDryTestMode === "acid"
+                ? "Sulfide present"
+                : "Initial chloride clues",
       hint: "Inference 1",
       description: caseOneResult,
     },
@@ -1032,7 +1048,11 @@ function ChemicalEquilibriumVirtualLab({
         ? "Green flame - Cu²⁺"
         : activeHalide === "Br" && resolvedDryTestMode === "acid"
           ? "Bromide gas acceleration"
-          : "Chlorine confirmation",
+          : activeHalide === "Br" && resolvedDryTestMode === "wet"
+            ? ""
+            : activeHalide === "I" && resolvedDryTestMode === "wet"
+              ? ""
+              : "Chlorine confirmation",
       hint: "Inference 2",
       description: caseTwoResult,
     },
@@ -1068,9 +1088,19 @@ function ChemicalEquilibriumVirtualLab({
       ? `Inference 1 & 2 confirm the basic radical flow: ${caseOneResult} ${caseTwoResult}`
       : activeHalide === "S" && resolvedDryTestMode === "acid"
         ? `Inference confirms sulfide radicals: ${caseOneResult}`
-        : activeHalide === "Br" && resolvedDryTestMode === "acid"
-          ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
-          : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
+        : activeHalide === "Br" && resolvedDryTestMode === "wet"
+          ? bromideWetHeatingCount >= 2
+            ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
+            : `Inference 1 confirms bromide radicals: ${caseOneResult}`
+          : activeHalide === "I" && resolvedDryTestMode === "wet"
+            ? iodideWetHeatingCount >= 2
+              ? `Inference 1 & 2 confirm iodide radicals: ${caseOneResult}\n\n${caseTwoResult}`
+              : iodideWetHeatingCount === 1
+                ? `Inference 1 confirms iodide radicals: ${caseOneResult}`
+                : DEFAULT_CASE_RESULT
+            : activeHalide === "Br" && resolvedDryTestMode === "acid"
+              ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
+              : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
     `Inference 3: ${caseThreeDisplayResult}`,
     `Inference 4: ${caseFourDisplayResult}`,
     `Inference 5: ${caseFiveDisplayResult}`,
@@ -1221,7 +1251,6 @@ function ChemicalEquilibriumVirtualLab({
     if (!allSaltQuizAnswered) return;
     setQuizSubmitted(true);
   };
-  const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const [basicFlameHeatingCount, setBasicFlameHeatingCount] = useState(0);
   const shouldUseWatchGlassForSaltSample =
@@ -1255,13 +1284,11 @@ function ChemicalEquilibriumVirtualLab({
   // Listen for automatic step completion events
   useEffect(() => {
     const handleStepComplete = (event: CustomEvent) => {
-      if (event.detail?.nextStep === 5 && currentStep === 4) {
-        setCurrentStep(5);
+      if (event.detail?.nextStep === 5 && stepNumber === 4) {
         onStepComplete();
         setToastMessage("Moving to Step 5...");
         setTimeout(() => setToastMessage(null), 3000);
-      } else if (event.detail?.nextStep === 6 && currentStep === 5) {
-        setCurrentStep(6);
+      } else if (event.detail?.nextStep === 6 && stepNumber === 5) {
         onStepComplete();
         setToastMessage("Solution turned pink! Moving to Step 6...");
         setTimeout(() => setToastMessage(null), 800);
@@ -1279,7 +1306,7 @@ function ChemicalEquilibriumVirtualLab({
         handleStepComplete as EventListener,
       );
     };
-  }, [currentStep, onStepComplete]);
+  }, [stepNumber, onStepComplete]);
 
   useEffect(() => {
     return () => {
@@ -1303,13 +1330,13 @@ function ChemicalEquilibriumVirtualLab({
       (pos) => pos.id === "test_tubes",
     );
 
-    const shouldAdvanceFirstTube = hasPlacedTestTube && !testTubePlacementTracked && currentStep === 1;
-    const shouldAdvanceSecondTube = hasPlacedTestTube && !secondTestTubePlacementTracked && currentStep === 8;
+    const shouldAdvanceFirstTube = hasPlacedTestTube && !testTubePlacementTracked && stepNumber === 1;
+    const shouldAdvanceSecondTube = hasPlacedTestTube && !secondTestTubePlacementTracked && stepNumber === 8;
 
     if (shouldAdvanceFirstTube) {
       setTestTubePlacementTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
       setToastMessage("Test tube placed on the workbench. Moving to the next step.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1318,7 +1345,7 @@ function ChemicalEquilibriumVirtualLab({
     if (shouldAdvanceSecondTube) {
       setSecondTestTubePlacementTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
       setToastMessage("Fresh test tube placed on the workbench. Moving to the next step.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1339,7 +1366,7 @@ function ChemicalEquilibriumVirtualLab({
     resolvedDryTestMode,
     testTubePlacementTracked,
     secondTestTubePlacementTracked,
-    currentStep,
+    stepNumber,
     totalSteps,
     onStepComplete,
   ]);
@@ -1360,11 +1387,11 @@ function ChemicalEquilibriumVirtualLab({
     if (
       hasPlacedTestTube &&
       !testTubePlacementTracked &&
-      currentStep === 1
+      stepNumber === 1
     ) {
       setTestTubePlacementTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
       setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1373,12 +1400,12 @@ function ChemicalEquilibriumVirtualLab({
     const shouldAdvanceSecondTubeStep =
       hasPlacedTestTube &&
       !basicSecondTubeTracked &&
-      currentStep === 5;
+      stepNumber === 5;
 
     if (shouldAdvanceSecondTubeStep) {
       setBasicSecondTubeTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
       setToastMessage("Test tube placed on the workbench. Moving to Step 6.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1399,7 +1426,7 @@ function ChemicalEquilibriumVirtualLab({
     resolvedDryTestMode,
     testTubePlacementTracked,
     basicSecondTubeTracked,
-    currentStep,
+    stepNumber,
     totalSteps,
     onStepComplete,
   ]);
@@ -1413,7 +1440,7 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
-    if (currentStep !== 2) {
+    if (stepNumber !== 2) {
       if (sampleAddedTracked) {
         setSampleAddedTracked(false);
       }
@@ -1430,7 +1457,7 @@ function ChemicalEquilibriumVirtualLab({
     if (hasSaltSample && !sampleAddedTracked) {
       setSampleAddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
       setToastMessage("Salt sample added. Advancing to Step 3.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1445,7 +1472,7 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment,
     resolvedDryTestMode,
     sampleAddedTracked,
-    currentStep,
+    stepNumber,
     totalSteps,
     onStepComplete,
   ]);
@@ -1486,54 +1513,159 @@ function ChemicalEquilibriumVirtualLab({
       ),
     );
 
-    if (currentStep === 1) {
+    if (stepNumber === 1) {
       if (hasTestTube && !bromideWetTestTubeTracked) {
         setBromideWetTestTubeTracked(true);
         onStepComplete();
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
         setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
         setTimeout(() => setToastMessage(null), 3000);
       }
       return;
     }
 
-    if (currentStep === 2) {
+    if (stepNumber === 2) {
       if (hasSaltSample && !bromideWetSaltAddedTracked) {
         setBromideWetSaltAddedTracked(true);
         onStepComplete();
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
         setToastMessage("Salt sample added. Moving to Step 3.");
         setTimeout(() => setToastMessage(null), 3000);
       }
       return;
     }
 
-    if (currentStep === 3) {
+    if (stepNumber === 3) {
       if (hasSodaExtract && !bromideWetSodaExtractAddedTracked) {
         setBromideWetSodaExtractAddedTracked(true);
         onStepComplete();
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
         setToastMessage("Soda extract added. Moving to Step 4.");
         setTimeout(() => setToastMessage(null), 3000);
       }
       return;
     }
 
-    if (currentStep === 4 && hasDiluteHNO3 && !bromideWetHNO3AddedTracked) {
+    if (stepNumber === 4 && hasDiluteHNO3 && !bromideWetHNO3AddedTracked) {
       setBromideWetHNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep(5);
       setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
     }
 
-    if (currentStep === 5 && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
+    if (stepNumber === 5 && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
       setBromideWetAgNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep(6);
       setToastMessage("AgNO₃ added. Moving to Step 6.");
       setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    const hasBunsenBurner = equipmentPositions.some((pos) =>
+      pos.id === "bunsen-burner-virtual-heat-source",
+    );
+
+    if (stepNumber === 6 && hasBunsenBurner && !bromideWetBunsenAddedTracked) {
+      setBromideWetBunsenAddedTracked(true);
+      onStepComplete();
+      setToastMessage("Bunsen burner added. Moving to Step 7.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (stepNumber === 7 && bromideWetHeatingCount >= 1 && !bromideWetFirstHeatingTracked) {
+      setBromideWetFirstHeatingTracked(true);
+      onStepComplete();
+      setToastMessage("Start heating pressed. Moving to Step 8.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (stepNumber === 9 && hasTestTube && !bromideWetSecondTestTubeTracked) {
+      setBromideWetSecondTestTubeTracked(true);
+      onStepComplete();
+      setToastMessage("Test tube added. Moving to Step 10.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (stepNumber === 10 && hasSaltSample && !bromideWetSecondSaltTracked) {
+      setBromideWetSecondSaltTracked(true);
+      onStepComplete();
+      setToastMessage("Salt sample added. Moving to Step 11.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (stepNumber === 11 && hasSodaExtract && !bromideWetSecondSodaTracked) {
+      setBromideWetSecondSodaTracked(true);
+      onStepComplete();
+      setToastMessage("Soda extract added. Moving to Step 12.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    const hasDilHCl = Boolean(
+      testTube?.chemicals.some((chemical) => {
+        const name = (chemical.name ?? "").toLowerCase();
+        const id = (chemical.id ?? "").toLowerCase();
+        return (
+          (chemical.amount ?? 0) > 0 &&
+          (id.includes("hcl") || (name.includes("hcl") && !name.includes("hclo")))
+        );
+      }),
+    );
+
+    if (stepNumber === 12 && hasDilHCl && !bromideWetDilHClTracked) {
+      setBromideWetDilHClTracked(true);
+      onStepComplete();
+      setToastMessage("Dil. HCL added. Moving to Step 13.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    const hasCHCl3 = Boolean(
+      testTube?.chemicals.some((chemical) => {
+        const name = (chemical.name ?? "").toLowerCase();
+        const id = (chemical.id ?? "").toLowerCase();
+        return (
+          (chemical.amount ?? 0) > 0 &&
+          (id.includes("chcl") || name.includes("chcl"))
+        );
+      }),
+    );
+
+    if (stepNumber === 13 && hasCHCl3 && !bromideWetCHCl3Tracked) {
+      setBromideWetCHCl3Tracked(true);
+      onStepComplete();
+      setToastMessage("CHCl₃ added. Moving to Step 14.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    const hasKMnO4 = Boolean(
+      testTube?.chemicals.some((chemical) => {
+        const name = (chemical.name ?? "").toLowerCase();
+        const id = (chemical.id ?? "").toLowerCase();
+        return (
+          (chemical.amount ?? 0) > 0 &&
+          (id.includes("kmno") || name.includes("kmno"))
+        );
+      }),
+    );
+
+    if (stepNumber === 14 && hasKMnO4 && !bromideWetKMnO4Tracked) {
+      setBromideWetKMnO4Tracked(true);
+      onStepComplete();
+      setToastMessage("KMnO₄ added. Moving to Step 15.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (stepNumber === 15 && hasBunsenBurner && !bromideWetSecondBunsenTracked) {
+      setBromideWetSecondBunsenTracked(true);
+      onStepComplete();
+      setToastMessage("Bunsen burner added. Moving to Step 16.");
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
     }
   }, [
     activeHalide,
@@ -1542,8 +1674,43 @@ function ChemicalEquilibriumVirtualLab({
     bromideWetSaltAddedTracked,
     bromideWetSodaExtractAddedTracked,
     bromideWetTestTubeTracked,
-    currentStep,
+    bromideWetBunsenAddedTracked,
+    bromideWetFirstHeatingTracked,
+    bromideWetSecondTestTubeTracked,
+    bromideWetSecondSaltTracked,
+    bromideWetSecondSodaTracked,
+    bromideWetDilHClTracked,
+    bromideWetCHCl3Tracked,
+    bromideWetKMnO4Tracked,
+    bromideWetSecondBunsenTracked,
+    bromideWetHeatingCount,
+    stepNumber,
     equipmentPositions,
+    experimentStarted,
+    isDryTestExperiment,
+    onStepComplete,
+    resolvedDryTestMode,
+    totalSteps,
+  ]);
+
+  useEffect(() => {
+    if (
+      !experimentStarted ||
+      !isDryTestExperiment ||
+      resolvedDryTestMode !== "wet" ||
+      (activeHalide ?? "").toLowerCase() !== "br"
+    ) {
+      return;
+    }
+    if (stepNumber === 16 && bromideWetHeatingCount >= 2) {
+      onStepComplete();
+      setToastMessage("Start heating pressed. Experiment complete.");
+      setTimeout(() => setToastMessage(null), 3000);
+    }
+  }, [
+    activeHalide,
+    bromideWetHeatingCount,
+    stepNumber,
     experimentStarted,
     isDryTestExperiment,
     onStepComplete,
@@ -1575,40 +1742,40 @@ function ChemicalEquilibriumVirtualLab({
       ),
     );
 
-    if (currentStep === 1) {
+    if (stepNumber === 1) {
       if (hasTestTube && !iodideWetTestTubeTracked) {
         setIodideWetTestTubeTracked(true);
         onStepComplete();
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+  
         setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
         setTimeout(() => setToastMessage(null), 3000);
       }
       return;
     }
 
-    if (currentStep === 2) {
+    if (stepNumber === 2) {
       if (hasSaltSample && !iodideWetSaltAddedTracked) {
         setIodideWetSaltAddedTracked(true);
         onStepComplete();
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+  
         setToastMessage("Salt sample added. Moving to Step 3.");
         setTimeout(() => setToastMessage(null), 3000);
       }
       return;
     }
 
-    if (currentStep === 3) {
+    if (stepNumber === 3) {
       if (hasSodaExtract && !iodideWetSodaExtractAddedTracked) {
         setIodideWetSodaExtractAddedTracked(true);
         onStepComplete();
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+  
         setToastMessage("Soda extract added. Moving to Step 4.");
         setTimeout(() => setToastMessage(null), 3000);
       }
     }
   }, [
     activeHalide,
-    currentStep,
+    stepNumber,
     equipmentPositions,
     experimentStarted,
     iodideWetSaltAddedTracked,
@@ -1637,11 +1804,11 @@ function ChemicalEquilibriumVirtualLab({
     if (
       hasBunsen &&
       !bunsenPlacedTracked &&
-      currentStep === expectedStep
+      stepNumber === expectedStep
     ) {
       setBunsenPlacedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
       setToastMessage("Bunsen burner placed. Moving to the next step.");
       setTimeout(() => setToastMessage(null), 3000);
     } else if (!hasBunsen && bunsenPlacedTracked) {
@@ -1653,7 +1820,7 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment,
     resolvedDryTestMode,
     bunsenPlacedTracked,
-    currentStep,
+    stepNumber,
     totalSteps,
     onStepComplete,
   ]);
@@ -1667,7 +1834,7 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
-    if (currentStep !== 8) {
+    if (stepNumber !== 8) {
       if (basicSecondBunsenTracked) {
         setBasicSecondBunsenTracked(false);
       }
@@ -1681,7 +1848,7 @@ function ChemicalEquilibriumVirtualLab({
     if (hasBunsen && !basicSecondBunsenTracked) {
       setBasicSecondBunsenTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
       setToastMessage("Bunsen burner placed. Moving to Step 9.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1696,7 +1863,7 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment,
     resolvedDryTestMode,
     basicSecondBunsenTracked,
-    currentStep,
+    stepNumber,
     totalSteps,
     onStepComplete,
   ]);
@@ -1722,11 +1889,11 @@ function ChemicalEquilibriumVirtualLab({
     if (
       readyForGlassSetup &&
       !glassRodContainerTracked &&
-      currentStep === 5
+      stepNumber === 5
     ) {
       setGlassRodContainerTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
       setToastMessage("Glass rod and container placed. Moving to the next step.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1741,7 +1908,7 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment,
     resolvedDryTestMode,
     glassRodContainerTracked,
-    currentStep,
+    stepNumber,
     totalSteps,
     onStepComplete,
   ]);
@@ -1755,7 +1922,7 @@ function ChemicalEquilibriumVirtualLab({
       return;
     }
 
-    if (currentStep !== 9) {
+    if (stepNumber !== 9) {
       if (basicGlassSetupTracked) {
         setBasicGlassSetupTracked(false);
       }
@@ -1776,7 +1943,7 @@ function ChemicalEquilibriumVirtualLab({
     ) {
       setBasicGlassSetupTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
       setToastMessage("Glass rod and container placed. Moving to Step 10.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1791,7 +1958,7 @@ function ChemicalEquilibriumVirtualLab({
     isDryTestExperiment,
     resolvedDryTestMode,
     basicGlassSetupTracked,
-    currentStep,
+    stepNumber,
     totalSteps,
     onStepComplete,
   ]);
@@ -1820,6 +1987,16 @@ function ChemicalEquilibriumVirtualLab({
     setBromideWetSodaExtractAddedTracked(false);
     setBromideWetHNO3AddedTracked(false);
     setBromideWetAgNO3AddedTracked(false);
+    setBromideWetBunsenAddedTracked(false);
+    setBromideWetFirstHeatingTracked(false);
+    setBromideWetResetTracked(false);
+    setBromideWetSecondTestTubeTracked(false);
+    setBromideWetSecondSaltTracked(false);
+    setBromideWetSecondSodaTracked(false);
+    setBromideWetDilHClTracked(false);
+    setBromideWetCHCl3Tracked(false);
+    setBromideWetKMnO4Tracked(false);
+    setBromideWetSecondBunsenTracked(false);
     setIodideWetTestTubeTracked(false);
     setIodideWetSaltAddedTracked(false);
     setIodideWetSodaExtractAddedTracked(false);
@@ -1838,30 +2015,39 @@ function ChemicalEquilibriumVirtualLab({
       resolvedDryTestMode === "acid" &&
       activeHalide !== "Cl" &&
       activeHalide !== "Br" &&
-      currentStep === 7 &&
+      stepNumber === 7 &&
       !workbenchResetStepTracked;
     const isBromideResetStep =
       resolvedDryTestMode === "acid" &&
       activeHalide === "Br" &&
-      currentStep === 6 &&
+      stepNumber === 6 &&
       !workbenchResetStepTracked;
+    const isBromideWetResetStep =
+      resolvedDryTestMode === "wet" &&
+      activeHalide === "Br" &&
+      stepNumber + 1 === 8 &&
+      !bromideWetResetTracked;
     const isChlorideResetStep =
       resolvedDryTestMode === "acid" &&
       activeHalide === "Cl" &&
-      currentStep === 6 &&
+      stepNumber === 6 &&
       !workbenchResetStepTracked;
     const isBasicResetStep =
       resolvedDryTestMode === "basic" &&
-      currentStep === 4 &&
+      stepNumber === 4 &&
       !workbenchResetStepTracked;
 
     if (
       workbenchResetTrigger !== workbenchResetTriggerRef.current &&
-      (isAcidResetStep || isBromideResetStep || isChlorideResetStep || isBasicResetStep)
+      (isAcidResetStep || isBromideResetStep || isChlorideResetStep || isBasicResetStep || isBromideWetResetStep)
     ) {
-      setWorkbenchResetStepTracked(true);
+      if (isBromideWetResetStep) {
+        setBromideWetResetTracked(true);
+      } else {
+        setWorkbenchResetStepTracked(true);
+      }
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
       setToastMessage("Workbench reset. Moving to the next step.");
       setTimeout(() => setToastMessage(null), 3000);
     }
@@ -1869,8 +2055,9 @@ function ChemicalEquilibriumVirtualLab({
     workbenchResetTriggerRef.current = workbenchResetTrigger;
   }, [
     workbenchResetTrigger,
-    currentStep,
+    stepNumber,
     workbenchResetStepTracked,
+    bromideWetResetTracked,
     experimentStarted,
     isDryTestExperiment,
     resolvedDryTestMode,
@@ -1905,7 +2092,7 @@ function ChemicalEquilibriumVirtualLab({
       ...pos,
       chemicals: pos.chemicals.map((chem) => ({ ...chem })),
     })),
-    currentStep,
+    stepNumber,
     cobaltChlorideAdded,
     distilledWaterAdded,
     stirrerActive,
@@ -2005,12 +2192,11 @@ function ChemicalEquilibriumVirtualLab({
         resolvedDryTestMode === "basic" &&
         id === "test_tubes" &&
         !testTubePlacementTracked &&
-        currentStep === 1;
+        stepNumber === 1;
 
       if (shouldCaptureBasicStep1Placement) {
         setTestTubePlacementTracked(true);
         onStepComplete();
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
         setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
         setTimeout(() => setToastMessage(null), 3000);
       }
@@ -2051,11 +2237,11 @@ function ChemicalEquilibriumVirtualLab({
         if (existing) {
           // Auto-alignment logic for Chemical Equilibrium
           if (id === "beaker_hot_water") {
-            if (currentStep === 4) {
+            if (stepNumber === 4) {
               pendingToastMessage = "Drop the test tube into the hot water beaker!";
             }
           } else if (id === "beaker_cold_water") {
-            if (currentStep === 5) {
+            if (stepNumber === 5) {
               pendingToastMessage = "Drop the test tube into the cold water beaker!";
             }
 
@@ -2086,7 +2272,7 @@ function ChemicalEquilibriumVirtualLab({
                   Math.pow(y - hotWaterBeaker.y, 2),
               );
               if (distance < 200) {
-                if (currentStep === 4) {
+                if (stepNumber === 4) {
                   shouldClearToastMessage = true;
                 }
                 return prev.map((pos) =>
@@ -2101,7 +2287,7 @@ function ChemicalEquilibriumVirtualLab({
               }
             }
 
-            if (coldWaterBeaker && currentStep === 5) {
+            if (coldWaterBeaker && stepNumber === 5) {
               const distance = Math.sqrt(
                 Math.pow(x - coldWaterBeaker.x, 2) +
                   Math.pow(y - coldWaterBeaker.y, 2),
@@ -2192,7 +2378,6 @@ function ChemicalEquilibriumVirtualLab({
 
             setTimeout(() => {
               onStepComplete();
-              setCurrentStep(currentStep + 1);
               setToastMessage("Step completed! Moving to next step...");
               setTimeout(() => setToastMessage(null), 3000);
             }, 1000);
@@ -2200,7 +2385,7 @@ function ChemicalEquilibriumVirtualLab({
         }, 1000);
       }
     },
-    [currentStep, distilledWaterAdded, experimentStarted, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode, testTubePlacementTracked, totalSteps],
+    [stepNumber, distilledWaterAdded, experimentStarted, onStepComplete, isDryTestExperiment, pushHistorySnapshot, resolvedDryTestMode, testTubePlacementTracked, totalSteps],
   );
 
   const handleEquipmentAddButton = useCallback(
@@ -2415,7 +2600,7 @@ function ChemicalEquilibriumVirtualLab({
     const isCaClAddition = lowerName.includes("cacl");
     const isFeCl3Addition = lowerName.includes("fecl");
     const isSodaExtractAddition = lowerName.includes("soda") && lowerName.includes("extract");
-    const isAgNO3Addition = lowerName.includes("agno3") || lowerName.includes("silver nitrate") || (lowerName.includes("agno") && lowerName.includes("silver"));
+    const isAgNO3Addition = lowerName.includes("agno3") || lowerName.includes("agno₃") || lowerName.includes("silver nitrate") || (lowerName.includes("agno") && lowerName.includes("silver"));
     const isDiluteHNO3Addition = lowerName.includes("dil") && lowerName.includes("hno");
 
     if (requiresDropValidation && isBaClAddition) {
@@ -2787,7 +2972,7 @@ function ChemicalEquilibriumVirtualLab({
       isDryTestExperiment &&
       resolvedDryTestMode === "wet" &&
       (activeHalide ?? "").toLowerCase() === "br" &&
-      currentStep === 4 &&
+      stepNumber === 4 &&
       !bromideWetHNO3AddedTracked;
 
     if (requiresDropValidation && isSodiumNitroprussideAddition) {
@@ -2800,7 +2985,6 @@ function ChemicalEquilibriumVirtualLab({
     if (shouldAdvanceAfterDiluteHNO3) {
       setBromideWetHNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep(5);
       setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
     } else if (
       requiresDropValidation &&
@@ -2808,13 +2992,11 @@ function ChemicalEquilibriumVirtualLab({
       isDryTestExperiment &&
       resolvedDryTestMode === "wet" &&
       (activeHalide ?? "").toLowerCase() === "br" &&
-      currentStep === 5 &&
-      bromideWetHNO3AddedTracked &&
+      stepNumber === 5 &&
       !bromideWetAgNO3AddedTracked
     ) {
       setBromideWetAgNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep(6);
       setToastMessage("AgNO₃ added. Moving to Step 6.");
     } else {
       setToastMessage(`Added ${addDialogAmount} of ${addDialogEquipment.name} to the workbench.`);
@@ -2826,13 +3008,12 @@ function ChemicalEquilibriumVirtualLab({
     addDialogAmount,
     addDialogEquipment,
     bromideWetHNO3AddedTracked,
-    currentStep,
+    stepNumber,
     handleEquipmentAddButton,
     handleEquipmentAddDialogClose,
     isDryTestExperiment,
     onStepComplete,
     resolvedDryTestMode,
-    setCurrentStep,
     setEquipmentPositions,
     setBaClUsed,
     setSodiumNitroprussideAdded,
@@ -3199,14 +3380,13 @@ function ChemicalEquilibriumVirtualLab({
             } else if (chemicalId === "water" && cobaltChlorideAdded) {
               setDistilledWaterAdded(true);
 
-              if (currentStep === 3) {
+              if (stepNumber === 3) {
                 setStep3WaterAdded(true);
                 setToastMessage(
                   "Color changing back to pink as the equilibrium shifts in the reverse direction!",
                 );
                 setTimeout(() => {
                   setToastMessage(null);
-                  setCurrentStep(4);
                   onStepComplete();
                 }, 3000);
               } else {
@@ -3223,7 +3403,6 @@ function ChemicalEquilibriumVirtualLab({
               );
               setTimeout(() => {
                 setToastMessage(null);
-                setCurrentStep(3);
                 setToastMessage("Moving to the next step...");
                 setTimeout(() => setToastMessage(null), 3000);
               }, 2000);
@@ -3373,12 +3552,18 @@ function ChemicalEquilibriumVirtualLab({
         isDryTestExperiment &&
         activeHalide === "SC" &&
         resolvedDryTestMode === "acid" &&
-        activeFlameTest !== "Am"
+        activeFlameTest !== "Am" &&
+        !isWorkbenchHeating
       ) {
         const nextCount = specialCasesHeatingCount + 1;
         setSpecialCasesHeatingCount(nextCount);
 
         if (nextCount === 1) {
+          setCaseTwoResult(DEFAULT_CASE_RESULT);
+          setCaseThreeResult(DEFAULT_CASE_RESULT);
+          setCaseFourResult(DEFAULT_CASE_RESULT);
+          setCaseFiveResult(DEFAULT_CASE_RESULT);
+          setCaseSixResult(DEFAULT_CASE_RESULT);
           setCaseOneResult(
             "Rapid effervescence of colourless and odourless gas , therefore CO₃²⁻ is present",
           );
@@ -3388,11 +3573,11 @@ function ChemicalEquilibriumVirtualLab({
           );
         } else if (nextCount === 3) {
           setCaseThreeResult(
-            "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO₃⁻ is present",
+            "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO₃²⁻ is present",
           );
         } else if (nextCount === 4) {
           setCaseFourResult(
-            "Evolution of colourless gas having suffocating odour of burning sulphur, therefore SO₃²⁻ is present",
+            "On strong heating reddish-brown fumes evolve, and solution turns blue colour ; therefore NO₃⁻ is present",
           );
         } else if (nextCount === 5) {
           setCaseFiveResult(
@@ -3416,8 +3601,7 @@ function ChemicalEquilibriumVirtualLab({
           "Reddish-brown Br₂ gas is produced.\n\n2KBr + 3H₂SO₄ → 2KHSO₄ + H₂O + SO₂ + Br₂",
         );
 
-        if (currentStep === 5) {
-          setCurrentStep(6);
+        if (stepNumber === 5) {
           onStepComplete();
           setToastMessage("Start heating pressed. Moving to Step 6...");
           setTimeout(() => setToastMessage(null), 3000);
@@ -3450,8 +3634,7 @@ function ChemicalEquilibriumVirtualLab({
 
         if (nextCount === 1) {
           setCaseOneResult("Colourless gas vapours produced");
-          if (currentStep === 5) {
-            setCurrentStep(6);
+          if (stepNumber === 5) {
             onStepComplete();
             setToastMessage("Start heating pressed. Moving to Step 6...");
             setTimeout(() => setToastMessage(null), 3000);
@@ -3482,29 +3665,30 @@ function ChemicalEquilibriumVirtualLab({
           setDilH2SO4HeatingTriggered(true);
         }
 
-        if (activeHalide === "Br") {
+        if (activeHalide === "Br" && !isWorkbenchHeating) {
           const nextCount = bromideWetHeatingCount + 1;
           setBromideWetHeatingCount(nextCount);
           if (nextCount === 1) {
             setBromideWetHeatingTriggered(true);
             setCaseTwoResult(DEFAULT_CASE_RESULT);
             setCaseOneResult(
-              "pale yellow Precipitation insoluble in HNO₃ but sparingly soluble in NH₄OH , therefore Br⁻ is present",
+              "pale yellow solution insoluble in HNO₃ but sparingly soluble in NH₄OH , therefore Br⁻ is present",
             );
           } else if (nextCount === 2) {
             setCaseTwoResult(
-              "Organic layer becomes orange-brown in colour , therefore Br⁻ is present",
+              "Organic solution becomes orange-brown in colour , therefore Br⁻ is present",
             );
           }
         }
 
-        if (activeHalide === "I") {
+        if (activeHalide === "I" && !isWorkbenchHeating) {
           const nextCount = iodideWetHeatingCount + 1;
           setIodideWetHeatingCount(nextCount);
           if (nextCount === 1) {
             setIodideWetHeatingTriggered(true);
+            setCaseTwoResult(DEFAULT_CASE_RESULT);
             setCaseOneResult(
-              "Yellow coloured precipitate insoluble in HNO3 and NH4OH is formed , therefore I⁻ is present",
+              "Yellow coloured solution insoluble in HNO₃ and NH₄OH is formed , therefore I⁻ is present",
             );
           } else if (nextCount === 2) {
             setCaseTwoResult("Organic layer turns violet in colour");
@@ -3598,7 +3782,7 @@ function ChemicalEquilibriumVirtualLab({
       testTubeState,
       activeHalide,
       activeFlameTest,
-      currentStep,
+      stepNumber,
       onStepComplete,
       specialCasesHeatingCount,
       chlorideHeatingCount,
@@ -3738,7 +3922,7 @@ function ChemicalEquilibriumVirtualLab({
       experimentStarted &&
       isDryTestExperiment &&
       resolvedDryTestMode === "basic" &&
-      currentStep === 10 &&
+      stepNumber === 10 &&
       !basicGlassAcidAddedTracked;
     const acidToast = shouldAdvanceAfterBasicGlassAcid
       ? "Concentrated HCl added to the glass container. Moving to Step 11."
@@ -3750,7 +3934,7 @@ function ChemicalEquilibriumVirtualLab({
     if (shouldAdvanceAfterBasicGlassAcid) {
       setBasicGlassAcidAddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
     }
   };
 
@@ -3836,7 +4020,7 @@ function ChemicalEquilibriumVirtualLab({
       experimentStarted &&
       isDryTestExperiment &&
       resolvedDryTestMode === "basic" &&
-      currentStep === 7 &&
+      stepNumber === 7 &&
       !basicNaOHAddedTracked;
     const naohToast = shouldAdvanceAfterBasicNaOH
       ? "NaOH solution added. Moving to Step 8."
@@ -3850,7 +4034,7 @@ function ChemicalEquilibriumVirtualLab({
     if (shouldAdvanceAfterBasicNaOH) {
       setBasicNaOHAddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
     }
   };
 
@@ -3958,19 +4142,19 @@ function ChemicalEquilibriumVirtualLab({
       experimentStarted &&
       isDryTestExperiment &&
       resolvedDryTestMode === "acid" &&
-      currentStep === 2 &&
+      stepNumber === 2 &&
       !sampleAddedTracked;
     const shouldAdvanceAfterSecondSample =
       experimentStarted &&
       isDryTestExperiment &&
       resolvedDryTestMode === "acid" &&
-      currentStep === 9 &&
+      stepNumber === 9 &&
       !secondSampleAddedTracked;
     const shouldAdvanceAfterBasicSalt =
       experimentStarted &&
       isDryTestExperiment &&
       resolvedDryTestMode === "basic" &&
-      currentStep === 6 &&
+      stepNumber === 6 &&
       !basicSaltAddedTracked;
 
     const shouldAdvanceAfterSample =
@@ -3995,11 +4179,11 @@ function ChemicalEquilibriumVirtualLab({
         setSecondSampleAddedTracked(true);
       }
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
     } else if (shouldAdvanceAfterBasicSalt) {
       setBasicSaltAddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
     }
   };
 
@@ -4057,7 +4241,7 @@ function ChemicalEquilibriumVirtualLab({
       experimentStarted &&
       isDryTestExperiment &&
       resolvedDryTestMode === "acid" &&
-      currentStep === 11 &&
+      stepNumber === 11 &&
       !mno2AddedTracked;
 
     setToastMessage(
@@ -4071,7 +4255,7 @@ function ChemicalEquilibriumVirtualLab({
     if (shouldAdvanceAfterMnO2) {
       setMno2AddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
     }
   };
 
@@ -4128,13 +4312,13 @@ function ChemicalEquilibriumVirtualLab({
       experimentStarted &&
       isDryTestExperiment &&
       resolvedDryTestMode === "acid" &&
-      currentStep === 3 &&
+      stepNumber === 3 &&
       !acidAddedTracked;
     const shouldAdvanceAfterSecondAcid =
       experimentStarted &&
       isDryTestExperiment &&
       resolvedDryTestMode === "acid" &&
-      currentStep === 10 &&
+      stepNumber === 10 &&
       !secondAcidAddedTracked;
 
     const shouldAdvanceAfterAcid =
@@ -4155,7 +4339,7 @@ function ChemicalEquilibriumVirtualLab({
         setSecondAcidAddedTracked(true);
       }
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
     }
   };
 
@@ -4211,10 +4395,9 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    if (!bromideWetHNO3AddedTracked && currentStep === 4) {
+    if (!bromideWetHNO3AddedTracked && stepNumber === 4) {
       setBromideWetHNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
       setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
     } else {
       setToastMessage(`Added ${DILUTE_HNO3_VOLUME_INCREMENT} mL of dil. HNO₃ to the test tube.`);
@@ -4222,13 +4405,12 @@ function ChemicalEquilibriumVirtualLab({
     setTimeout(() => setToastMessage(null), 2500);
   }, [
     bromideWetHNO3AddedTracked,
-    currentStep,
+    stepNumber,
     equipmentPositions,
     isDryTestExperiment,
     onStepComplete,
     pushHistorySnapshot,
     resolvedDryTestMode,
-    setCurrentStep,
     setEquipmentPositions,
     setToastMessage,
     totalSteps,
@@ -4354,7 +4536,7 @@ function ChemicalEquilibriumVirtualLab({
       experimentStarted &&
       isDryTestExperiment &&
       resolvedDryTestMode === "acid" &&
-      currentStep === 6 &&
+      stepNumber === 6 &&
       !ammoniumAddedTracked;
 
     const ammoniumToast = shouldAdvanceAfterAmmonium
@@ -4368,7 +4550,7 @@ function ChemicalEquilibriumVirtualLab({
     if (shouldAdvanceAfterAmmonium) {
       setAmmoniumAddedTracked(true);
       onStepComplete();
-      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+
     }
   };
 
@@ -4486,7 +4668,6 @@ function ChemicalEquilibriumVirtualLab({
     setSelectedChemical(null);
     setIsRunning(false);
     setResults([]);
-    setCurrentStep(stepNumber);
     setMeasurements(DEFAULT_MEASUREMENTS);
     setToastMessage(null);
     setCobaltChlorideAdded(false);
@@ -4642,7 +4823,6 @@ function ChemicalEquilibriumVirtualLab({
         chemicals: pos.chemicals.map((chem) => ({ ...chem })),
       })),
     );
-    setCurrentStep(lastSnapshot.currentStep);
     setSelectedChemical(lastSnapshot.selectedChemical);
     setCobaltChlorideAdded(lastSnapshot.cobaltChlorideAdded);
     setDistilledWaterAdded(lastSnapshot.distilledWaterAdded);
@@ -4725,14 +4905,14 @@ function ChemicalEquilibriumVirtualLab({
                 <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                   <div
                     className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${Math.round((currentStep / totalSteps) * 100)}%` }}
+                    style={{ width: `${Math.round((stepNumber / totalSteps) * 100)}%` }}
                   />
                 </div>
 
                 <div className="flex items-center gap-2 mt-2">
                   {Array.from({ length: totalSteps }).map((_, i) => {
                     const stepIndex = i + 1;
-                    const active = stepIndex <= currentStep;
+                    const active = stepIndex <= stepNumber;
                     return (
                       <div
                         key={stepIndex}
@@ -4948,7 +5128,7 @@ function ChemicalEquilibriumVirtualLab({
                       <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                         <div
                           className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${Math.round((currentStep / totalSteps) * 100)}%` }}
+                          style={{ width: `${Math.round((stepNumber / totalSteps) * 100)}%` }}
                         />
                       </div>
 
@@ -4956,7 +5136,7 @@ function ChemicalEquilibriumVirtualLab({
                         <div className="flex items-center space-x-3">
                           {Array.from({ length: totalSteps }).map((_, i) => {
                             const stepIndex = i + 1;
-                            const active = stepIndex <= currentStep;
+                            const active = stepIndex <= stepNumber;
                             return (
                               <div key={stepIndex} className="flex flex-col items-center mr-2">
                                 <div className={`w-8 h-8 flex items-center justify-center rounded-full text-xs font-medium ${active ? 'bg-green-500 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}>
@@ -4967,7 +5147,7 @@ function ChemicalEquilibriumVirtualLab({
                           })}
                         </div>
 
-                        <div className="text-xs text-gray-600">Step {currentStep} of {totalSteps}</div>
+                        <div className="text-xs text-gray-600">Step {stepNumber} of {totalSteps}</div>
                       </div>
                     </div>
                   </div>
@@ -4977,8 +5157,8 @@ function ChemicalEquilibriumVirtualLab({
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="text-xs font-medium text-gray-600">Current Step</div>
-                          <div className="font-semibold text-sm mt-1">{allSteps[currentStep - 1]?.title ?? 'No step selected'}</div>
-                          <div className="text-xs text-gray-500 mt-1">{allSteps[currentStep - 1]?.description ?? ''}</div>
+                          <div className="font-semibold text-sm mt-1">{allSteps[stepNumber - 1]?.title ?? 'No step selected'}</div>
+                          <div className="text-xs text-gray-500 mt-1">{allSteps[stepNumber - 1]?.description ?? ''}</div>
                         </div>
 
                         <div className="flex flex-col items-end space-y-2">
@@ -4991,7 +5171,7 @@ function ChemicalEquilibriumVirtualLab({
                       </div>
 
                       <div className="mt-3 flex items-center justify-between">
-                        <button onClick={() => setCurrentStep(Math.max(1, currentStep - 1))} className="text-xs px-2 py-1 bg-gray-100 rounded">Undo</button>
+                        <button onClick={() => onPreviousStep?.()} className="text-xs px-2 py-1 bg-gray-100 rounded">Undo</button>
                       </div>
                     </div>
                   </div>
@@ -5007,7 +5187,7 @@ function ChemicalEquilibriumVirtualLab({
                 isRunning={isRunning}
                 experimentTitle={experimentTitle}
                 equipmentPositions={equipmentPositions}
-                currentGuidedStep={currentStep}
+                currentGuidedStep={stepNumber}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
                 showRinseButton={shouldShowRinseButton}
                 onRinse={handleRinseAction}
@@ -5074,7 +5254,7 @@ function ChemicalEquilibriumVirtualLab({
                         onInteract={interactHandler}
                         cobaltReactionState={cobaltReactionState}
                         allEquipmentPositions={equipmentPositions}
-                        currentStep={currentStep}
+                        currentStep={stepNumber}
                         disabled={!experimentStarted}
                         isDryTest={isDryTestExperiment}
                         dryTestMode={resolvedDryTestMode}
@@ -5122,12 +5302,12 @@ function ChemicalEquilibriumVirtualLab({
                 <span className="w-3 h-3 bg-lime-300 rounded-full shadow-lg shadow-lime-200 animate-pulse" />
                 <h4 className="text-base font-bold text-slate-900">Live Analysis</h4>
               </div>
-              <div className="text-xs text-gray-500">Step {currentStep} of {totalSteps}</div>
+              <div className="text-xs text-gray-500">Step {stepNumber} of {totalSteps}</div>
             </div>
 
             <div className="text-xs text-gray-600 mb-3">
               <div className="font-medium">Current Step</div>
-              <div className="mt-1 text-sm">{allSteps[currentStep - 1]?.title ?? 'No step selected'}</div>
+              <div className="mt-1 text-sm">{allSteps[stepNumber - 1]?.title ?? 'No step selected'}</div>
             </div>
 
             {isBasicFlameAnalysis ? (
@@ -5135,14 +5315,13 @@ function ChemicalEquilibriumVirtualLab({
                 <button
                   type="button"
                   onClick={() => {
-                    if (currentStep < totalSteps) {
+                    if (stepNumber < totalSteps) {
                       onStepComplete();
-                      setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
                     }
                   }}
-                  disabled={currentStep >= totalSteps}
+                  disabled={stepNumber >= totalSteps}
                   className={`w-full py-2 px-4 rounded-lg text-sm font-bold transition ${
-                    currentStep >= totalSteps
+                    stepNumber >= totalSteps
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : "bg-orange-500 hover:bg-orange-600 text-white animate-pulse outline outline-4 outline-yellow-400 outline-offset-2 shadow-[0_0_12px_4px_rgba(250,204,21,0.8)]"
                   }`}
@@ -5152,14 +5331,13 @@ function ChemicalEquilibriumVirtualLab({
                 <button
                   type="button"
                   onClick={() => {
-                    if (currentStep > 1) {
-                      setCurrentStep((prev) => Math.max(prev - 1, 1));
+                    if (stepNumber > 1) {
                       onPreviousStep?.();
                     }
                   }}
-                  disabled={currentStep <= 1}
+                  disabled={stepNumber <= 1}
                   className={`w-full py-2 px-4 rounded-lg text-sm font-bold transition ${
-                    currentStep <= 1
+                    stepNumber <= 1
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : "bg-slate-500 hover:bg-slate-600 text-white"
                   }`}
@@ -5175,7 +5353,7 @@ function ChemicalEquilibriumVirtualLab({
                     isAcidDryTest ? "text-lime-300 font-bold text-sm" : ""
                   }`}
                 >
-                  {allSteps.slice(0, Math.max(0, currentStep - 1)).map((s) => (
+                  {allSteps.slice(0, Math.max(0, stepNumber - 1)).map((s) => (
                     <li key={s.id}>{s.title}</li>
                   ))}
                 </ul>
@@ -5329,7 +5507,7 @@ function ChemicalEquilibriumVirtualLab({
                 </h4>
                 <span className="inline-flex items-center px-2 py-1 bg-green-500 text-white text-xs font-bold rounded-full">
                   <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse mr-1"></div>
-                  STEP {currentStep}
+                  STEP {stepNumber}
                 </span>
               </div>
               <div className="flex items-center space-x-2">
@@ -5360,7 +5538,7 @@ function ChemicalEquilibriumVirtualLab({
                       }
                       onInteract={equipmentInteractHandler}
                       allEquipmentPositions={equipmentPositions}
-                      currentStep={currentStep}
+                      currentStep={stepNumber}
                       disabled={!experimentStarted}
                       isDryTest={isDryTestExperiment}
                       dryTestMode={resolvedDryTestMode}
@@ -5382,7 +5560,7 @@ function ChemicalEquilibriumVirtualLab({
                 isRunning={isRunning}
                 experimentTitle={experimentTitle}
                 equipmentPositions={equipmentPositions}
-                currentGuidedStep={currentStep}
+                currentGuidedStep={stepNumber}
                 totalGuidedSteps={isDryTestExperiment ? totalGuidedSteps : undefined}
                 showRinseButton={shouldShowRinseButton}
                 onRinse={handleRinseAction}
@@ -5426,7 +5604,7 @@ function ChemicalEquilibriumVirtualLab({
                       }
                       cobaltReactionState={cobaltReactionState}
                       allEquipmentPositions={equipmentPositions}
-                      currentStep={currentStep}
+                      currentStep={stepNumber}
                       disabled={!experimentStarted}
                       isDryTest={isDryTestExperiment}
                       dryTestMode={resolvedDryTestMode}
@@ -5859,6 +6037,21 @@ function ChemicalEquilibriumVirtualLab({
                     if ((activeHalide === "Br" || activeHalide === "Cl" || activeHalide === "I") && resolvedDryTestMode === "acid") {
                       return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
                     }
+                    // Hide Inference 3, 4, 5, 6 for Bromide check in Wet Test for Acid Radicals
+                    if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
+                      return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
+                    }
+                    // Hide Inference 3, 4, 5, 6 for Iodide check in Wet Test for Acid Radicals
+                    // Also hide Inference 2 until second heating
+                    if (activeHalide === "I" && resolvedDryTestMode === "wet") {
+                      if (["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint)) {
+                        return false;
+                      }
+                      if (insight.hint === "Inference 2" && iodideWetHeatingCount < 2) {
+                        return false;
+                      }
+                      return true;
+                    }
                     return true;
                   }).map((insight) => {
                     const displayHint = ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid" && insight.hint === "Inference 1")
@@ -5866,7 +6059,7 @@ function ChemicalEquilibriumVirtualLab({
                       : insight.hint;
 
                     return (
-                      <div key={insight.title} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
+                      <div key={insight.hint} className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-lg shadow-white/10">
                         <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">{displayHint}</div>
                         <div className="mt-1 text-sm font-semibold text-white">{insight.title}</div>
                         <p className="mt-1 text-xs text-white/70 leading-tight whitespace-pre-wrap">{insight.description}</p>
@@ -5885,6 +6078,18 @@ function ChemicalEquilibriumVirtualLab({
                   }
                   // For Bromide and Iodide checks, only show the Wet test focus note
                   if ((activeHalide === "Br" || activeHalide === "I") && resolvedDryTestMode === "acid") {
+                    return note.label === "Wet test focus";
+                  }
+                  // For Bromide check in Wet Test, only show the Wet test focus note
+                  if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
+                    return note.label === "Wet test focus";
+                  }
+                  // Hide guidance cards for Special Cases dry test
+                  if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
+                    return false;
+                  }
+                  // For Iodide check in Wet Test, hide Next steps and Confidence
+                  if (activeHalide === "I" && resolvedDryTestMode === "wet") {
                     return note.label === "Wet test focus";
                   }
                   return true;
@@ -5923,6 +6128,10 @@ function ChemicalEquilibriumVirtualLab({
                       // Hide INFERENCE 2, 3, 4, 5, 6 for Chloride Check in Wet Test for Acid Radicals
                       if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
                         return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      }
+                      // Hide INFERENCE 3, 4, 5, 6 for Iodide check in Wet Test
+                      if (activeHalide === "I" && resolvedDryTestMode === "wet") {
+                        return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
                       // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
                       if (activeHalide === "S" && resolvedDryTestMode === "acid") {
@@ -5964,7 +6173,7 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && (
+              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && !(activeHalide === "I" && resolvedDryTestMode === "wet") && !(activeHalide === "SC" && resolvedDryTestMode === "acid") && (
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                     <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
@@ -6025,6 +6234,13 @@ function ChemicalEquilibriumVirtualLab({
                       // Hide Inference 2, 3, 4, 5, 6 highlights for Sulfide Check in Wet Test for Acid Radicals
                       if (activeHalide === "S" && resolvedDryTestMode === "wet") {
                         return !highlight.includes("Inference 2") && !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
+                      }
+                      // Hide Inference 2, 3, 4, 5, 6 highlights for Iodide Check in Wet Test until second heating
+                      if (activeHalide === "I" && resolvedDryTestMode === "wet") {
+                        if (iodideWetHeatingCount < 2 && highlight.includes("Inference 2")) {
+                          return false;
+                        }
+                        return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                       }
                       // Hide Inference 4, 5, 6 highlights for Special Cases in Wet Test for Acid Radicals
                       if (activeHalide === "SC" && resolvedDryTestMode === "wet") {

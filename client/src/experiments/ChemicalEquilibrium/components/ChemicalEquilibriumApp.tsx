@@ -117,15 +117,15 @@ const CHLORIDE_EXCLUDE_EQUIPMENT = [
   "Acetate Solution",
   "NaOH Solution",
   "NaOH",
-  "CHCl3",
+  "CHCl₃",
   "Dilute HNO₃",
   "Dil. HNO₃",
   "Dil. HCL",
   "Dil. HCl",
   "Dilute HCl",
   "Soda extract",
-  "KMnO4",
-  "Acidified KMnO4",
+  "KMnO₄",
+  "Acidified KMnO₄",
   "Acetic Acid",
   "Acetic acid",
   "Glass Rod",
@@ -257,8 +257,8 @@ export default function ChemicalEquilibriumApp({
   // For bromide dry acid flow, remove reagents that are not used in this specific section
   const BROMIDE_EXCLUDE_EQUIPMENT = [
     "AgNO₃",
-    "Acidified KMnO4",
-    "CHCl3",
+    "Acidified KMnO₄",
+    "CHCl₃",
     "Soda extract",
     "Dilute HCl",
     "Dilute HNO₃",
@@ -267,8 +267,8 @@ export default function ChemicalEquilibriumApp({
   // For iodide dry acid flow, remove specified reagents from the equipment list
   const IODIDE_EXCLUDE_EQUIPMENT = [
     "MnO₂",
-    "Acidified KMnO4",
-    "CHCl3",
+    "Acidified KMnO₄",
+    "CHCl₃",
     "Soda extract",
     "Dilute HNO₃",
     "Dilute HCl",
@@ -363,8 +363,8 @@ export default function ChemicalEquilibriumApp({
   // keep only the requested equipment and remove the rest.
   const isBromideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "Br";
   if (isBromideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
-    // Ensure CHCl3 and KMnO4 are available in the equipment list for bromide wet acid flow
-    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "CHCl3", "KMnO4"]));
+    // Ensure CHCl₃ and KMnO₄ are available in the equipment list for bromide wet acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "CHCl₃", "KMnO₄"]));
 
     // Keep only the requested equipment for the bromide wet acid flow
     const BROMIDE_WET_KEEP = [
@@ -375,9 +375,9 @@ export default function ChemicalEquilibriumApp({
       "AgNO₃",
       "Soda extract",
       "Dil. HCL",
-      "CHCl3",
-      "KMnO4",
-      "Acidified KMnO4",
+      "CHCl₃",
+      "KMnO₄",
+      "Acidified KMnO₄",
     ];
     dryTestEquipmentToUse = (dryTestEquipmentToUse as string[]).filter((name) =>
       BROMIDE_WET_KEEP.includes(name)
@@ -391,8 +391,8 @@ export default function ChemicalEquilibriumApp({
       "Dilute HNO₃",
       "AgNO₃",
       "Dil. HCL",
-      "CHCl3",
-      "KMnO4",
+      "CHCl₃",
+      "KMnO₄",
       "Bunsen Burner (virtual heat source)",
     ];
 
@@ -406,8 +406,8 @@ export default function ChemicalEquilibriumApp({
   // manage equipment items and enforce specific ordering.
   const isIodideWetAcidFlow = activeDryTestMode === "wet" && activeHalide === "I";
   if (isIodideWetAcidFlow && experiment.id === ChemicalEquilibriumData.id && dryTestEquipmentToUse) {
-    // Ensure CHCl3 and KMnO4 are available in the equipment list for iodide wet acid flow
-    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "CHCl3", "KMnO4"]));
+    // Ensure CHCl₃ and KMnO₄ are available in the equipment list for iodide wet acid flow
+    dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "CHCl₃", "KMnO₄"]));
 
     // Remove specific equipment items for iodide wet acid flow
     const IODIDE_WET_EXCLUDE = [
@@ -430,8 +430,8 @@ export default function ChemicalEquilibriumApp({
       "Dilute HNO₃",
       "AgNO₃",
       "Dil. HCL",
-      "CHCl3",
-      "KMnO4",
+      "CHCl₃",
+      "KMnO₄",
       "Bunsen Burner (virtual heat source)",
     ];
 
@@ -574,8 +574,8 @@ export default function ChemicalEquilibriumApp({
     ? FLAME_TEST_SECTIONS.filter((section) => section.symbol !== "Ch" && section.symbol !== "Co" && section.symbol !== "BB")
     : FLAME_TEST_SECTIONS;
 
-  const limitSaltAnalysisProgressSteps = (steps: ExperimentStep[]) =>
-    experiment.id === ChemicalEquilibriumData.id ? steps.slice(0, 6) : steps;
+  const limitSaltAnalysisProgressSteps = (steps: ExperimentStep[], limit: number = 6) =>
+    experiment.id === ChemicalEquilibriumData.id ? steps.slice(0, limit) : steps;
 
   const isBasicRadicalsFlameTest = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest !== null && activeFlameTest !== "Am";
 
@@ -584,12 +584,14 @@ export default function ChemicalEquilibriumApp({
       isDryTestExperiment && activeDryTestMode === "basic"
         ? limitSaltAnalysisProgressSteps(BASIC_DRY_TEST_STEPS)
         : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
-          ? limitSaltAnalysisProgressSteps(BROMIDE_WET_TEST_STEPS)
+          ? BROMIDE_WET_TEST_STEPS
           : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "I"
-          ? IODIDE_WET_TEST_STEPS
-          : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"
-            ? experiment.stepDetails.slice(0, 5)
-            : limitSaltAnalysisProgressSteps(experiment.stepDetails);
+            ? IODIDE_WET_TEST_STEPS
+            : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"
+              ? experiment.stepDetails.slice(0, 5)
+              : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "I"
+                ? limitSaltAnalysisProgressSteps(experiment.stepDetails, 5)
+                : limitSaltAnalysisProgressSteps(experiment.stepDetails);
 
     // For Flame Test, allow 8 steps instead of 6
     const steps = isBasicRadicalsFlameTest
