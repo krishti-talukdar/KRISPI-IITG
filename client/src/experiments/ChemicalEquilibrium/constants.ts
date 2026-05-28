@@ -23,6 +23,9 @@ export const PLATINUM_WIRE_IMAGE_URL =
 export const PH_PAPER_IMAGE_URL =
   "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Fa1eea72a49464b2f93611a90f0edd819?format=webp&width=800";
 
+export const SALT_IMAGE_URL =
+  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F9ac7ff7f623f4d48adbc719283c3c9b7?format=webp&width=800&height=1200";
+
 // Chemical reagents specific to Chemical Equilibrium experiment
 export const CHEMICAL_EQUILIBRIUM_CHEMICALS: Chemical[] = [
   {

@@ -58,6 +58,7 @@ const DRY_TEST_MODE_CONFIG: Record<DryTestMode, {
       "Test Tubes",
       "Salt Sample",
       "Watch Glass",
+      "Salt",
       "Glass Rod",
       "Bunsen Burner (virtual heat source)",
       "Conc. HCl",
@@ -536,8 +537,8 @@ export default function ChemicalEquilibriumApp({
         // Add Na₂CO₃ and pH paper for Ammonium Radical Test
         dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Na₂CO₃", "pH paper"]));
       } else {
-        // Add Platinum Wire, Watch glass & concentrated HCL for other Basic Radicals tests (like Flame Test)
-        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Concentrated HCl"]));
+        // Add Platinum Wire, Watch glass, Salt & concentrated HCL for other Basic Radicals tests (like Flame Test)
+        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Salt", "Concentrated HCl"]));
       }
     }
   }
