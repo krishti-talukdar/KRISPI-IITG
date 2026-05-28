@@ -574,16 +574,34 @@ export default function ChemicalEquilibriumApp({
   const limitSaltAnalysisProgressSteps = (steps: ExperimentStep[]) =>
     experiment.id === ChemicalEquilibriumData.id ? steps.slice(0, 6) : steps;
 
-  const activeStepDetails =
-    isDryTestExperiment && activeDryTestMode === "basic"
-      ? limitSaltAnalysisProgressSteps(BASIC_DRY_TEST_STEPS)
-      : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
-        ? limitSaltAnalysisProgressSteps(BROMIDE_WET_TEST_STEPS)
-        : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "I"
-        ? IODIDE_WET_TEST_STEPS
-        : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"
-          ? experiment.stepDetails.slice(0, 5)
-          : limitSaltAnalysisProgressSteps(experiment.stepDetails);
+  const isBasicRadicalsFlameTest = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest !== null && activeFlameTest !== "Am";
+
+  const activeStepDetails = (() => {
+    const steps =
+      isDryTestExperiment && activeDryTestMode === "basic"
+        ? limitSaltAnalysisProgressSteps(BASIC_DRY_TEST_STEPS)
+        : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
+          ? limitSaltAnalysisProgressSteps(BROMIDE_WET_TEST_STEPS)
+          : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "I"
+          ? IODIDE_WET_TEST_STEPS
+          : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"
+            ? experiment.stepDetails.slice(0, 5)
+            : limitSaltAnalysisProgressSteps(experiment.stepDetails);
+
+    if (isBasicRadicalsFlameTest) {
+      return steps.map((step) =>
+        step.id === 1
+          ? {
+              ...step,
+              title: "Step 1 : Place the test tube, drag the platinum wire and watch glass in the workbench.",
+              description: "Move a clean test tube onto the workbench, and drag the platinum wire and watch glass to begin the flame test.",
+            }
+          : step
+      );
+    }
+
+    return steps;
+  })();
 
   // Auto-start when URL contains ?autostart=1 for the PH experiment
   useEffect(() => {
