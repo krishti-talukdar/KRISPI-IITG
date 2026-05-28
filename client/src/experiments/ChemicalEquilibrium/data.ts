@@ -24,8 +24,8 @@ const ChemicalEquilibriumData: ChemicalEquilibriumExperiment = {
     "Dilute HCl",
     "Dilute HNO₃",
     "Soda extract",
-    "CHCl3",
-    "Acidified KMnO4",
+    "CHCl₃",
+    "Acidified KMnO₄",
     "MnO₂",
   ],
   stepDetails: [
