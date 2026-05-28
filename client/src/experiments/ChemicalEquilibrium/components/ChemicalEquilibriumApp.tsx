@@ -1106,7 +1106,7 @@ export default function ChemicalEquilibriumApp({
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-900 text-sm">Special Cases</h3>
-                <p className="text-gray-600 text-sm mt-1">CO₃²⁻ ,NO₂⁻,  SO₃²⁻, NO₃⁻, C₂O₄²⁻, SO₄²⁻, SO₃²⁻, PO₄³⁻ radicals are present</p>
+                <p className="text-gray-600 text-sm mt-1">CO₃²⁻ ,NO₂⁻, SO₃²⁻, NO₃⁻, C₂O₄²⁻, SO₄²⁻, PO₄³⁻ radicals are present</p>
               </div>
             </div>
           </div>
