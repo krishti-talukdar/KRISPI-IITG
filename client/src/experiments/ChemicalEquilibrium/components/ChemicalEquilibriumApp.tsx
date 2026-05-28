@@ -604,6 +604,13 @@ export default function ChemicalEquilibriumApp({
             description: "Pour the salt sample from the test tube onto the watch glass for the flame test.",
           };
         }
+        if (step.id === 4) {
+          return {
+            ...step,
+            title: "Step 4 : Dip the platinum wire in the salt sample of the watch glass.",
+            description: "Dip the platinum wire into the salt sample placed on the watch glass before heating.",
+          };
+        }
         return step;
       });
     }
