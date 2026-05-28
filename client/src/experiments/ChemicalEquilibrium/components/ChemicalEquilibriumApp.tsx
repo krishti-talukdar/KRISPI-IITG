@@ -614,6 +614,13 @@ export default function ChemicalEquilibriumApp({
             description: "Dip the platinum wire into the salt sample placed on the watch glass before heating.",
           };
         }
+        if (step.id === 5) {
+          return {
+            ...step,
+            title: 'Step 5 : Reset the workbench by pressing the "RESET WORKBENCH" button.',
+            description: 'Press the "RESET WORKBENCH" button to clear the current setup before proceeding.',
+          };
+        }
         return step;
       });
     }
