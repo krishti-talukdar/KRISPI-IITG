@@ -5068,7 +5068,7 @@ function ChemicalEquilibriumVirtualLab({
             </div>
 
             {isBasicFlameAnalysis ? (
-              <div className="mb-3">
+              <div className="mb-3 flex flex-col gap-2">
                 <button
                   type="button"
                   onClick={() => {
@@ -5085,6 +5085,22 @@ function ChemicalEquilibriumVirtualLab({
                   }`}
                 >
                   NEXT STEP
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (currentStep > 1) {
+                      setCurrentStep((prev) => Math.max(prev - 1, 1));
+                    }
+                  }}
+                  disabled={currentStep <= 1}
+                  className={`w-full py-2 px-4 rounded-lg text-sm font-bold transition ${
+                    currentStep <= 1
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-slate-500 hover:bg-slate-600 text-white"
+                  }`}
+                >
+                  PREVIOUS STEP
                 </button>
               </div>
             ) : (
