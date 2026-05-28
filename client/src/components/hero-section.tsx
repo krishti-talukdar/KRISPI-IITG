@@ -24,7 +24,7 @@ export default function HeroSection() {
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-[64vh] flex-col items-center justify-center py-10 text-center">
-          <h2 className="max-w-4xl text-[2.85rem] font-black leading-[1.05] tracking-tight text-slate-900 md:text-6xl lg:text-[4.5rem]">
+          <h2 className="max-w-4xl text-[2.25rem] font-black leading-[1.05] tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
             Discover Chemistry Through Virtual Experiments
           </h2>
 
