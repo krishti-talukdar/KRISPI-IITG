@@ -2320,25 +2320,35 @@ function ChemicalEquilibriumVirtualLab({
       // Always skip the amount dialog for Platinum Wire and add immediately
       if (isPlatinumEquipment) {
         if (isFlameTestContext) {
-          // Drop 5 platinum wire samples on the workbench at different positions
+          // Place the main platinum wire via the standard add button (preserves automations),
+          // then add 4 additional wires directly with offsets so all 5 are visible.
+          handleEquipmentAddButton(equipment.id);
           const workbenchEl =
             typeof document !== "undefined"
               ? document.querySelector('[data-workbench="true"]')
               : null;
           const workbenchRect = workbenchEl?.getBoundingClientRect() ?? null;
-          const centerX = workbenchRect
-            ? workbenchRect.left + workbenchRect.width / 2
-            : 200;
-          const centerY = workbenchRect
-            ? workbenchRect.top + workbenchRect.height / 2
-            : 200;
-          const spacing = workbenchRect ? Math.min(80, workbenchRect.width / 7) : 60;
+          const spacing = workbenchRect ? Math.min(70, workbenchRect.width / 8) : 60;
           const baseIdPrefix = equipment.id.replace(/-\d+$/, "");
-          for (let i = 0; i < 5; i++) {
-            const offsetX = (i - 2) * spacing;
-            const newId = `${baseIdPrefix}-${200 + i}`;
-            handleEquipmentDrop(newId, centerX + offsetX, centerY);
-          }
+          pushHistorySnapshot();
+          setEquipmentPositions((prev) => {
+            const main = prev.find((pos) => stripEquipmentIdSuffix(pos.id) === "platinum-wire");
+            const baseX = main?.x ?? (workbenchRect ? workbenchRect.left + workbenchRect.width / 2 : 200);
+            const baseY = main?.y ?? (workbenchRect ? workbenchRect.top + workbenchRect.height / 2 : 200);
+            const additions = [];
+            for (let i = 1; i <= 4; i++) {
+              const newId = `${baseIdPrefix}-${200 + i}`;
+              if (!prev.some((pos) => pos.id === newId)) {
+                additions.push({
+                  id: newId,
+                  x: baseX + i * spacing,
+                  y: baseY + (i % 2 === 0 ? 20 : -20),
+                  chemicals: [],
+                });
+              }
+            }
+            return [...prev, ...additions];
+          });
         } else {
           handleEquipmentAddButton(equipment.id);
         }
@@ -2357,7 +2367,7 @@ function ChemicalEquilibriumVirtualLab({
       setAddDialogAmount("3.0");
       setAddDialogError(null);
     },
-    [handleEquipmentAddButton, handleEquipmentDrop, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest, activeTopLevelSection, activeBasicRadicalsSubsection],
+    [handleEquipmentAddButton, handleEquipmentDrop, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest, activeTopLevelSection, activeBasicRadicalsSubsection, setEquipmentPositions, pushHistorySnapshot],
   );
 
   const handleEquipmentAddDialogClose = useCallback(() => {
