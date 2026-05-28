@@ -1241,7 +1241,6 @@ function ChemicalEquilibriumVirtualLab({
     if (!allSaltQuizAnswered) return;
     setQuizSubmitted(true);
   };
-  const [currentStep, setCurrentStep] = useState(stepNumber);
   const [isWorkbenchHeating, setIsWorkbenchHeating] = useState(false);
   const [basicFlameHeatingCount, setBasicFlameHeatingCount] = useState(0);
   const shouldUseWatchGlassForSaltSample =
@@ -1506,52 +1505,47 @@ function ChemicalEquilibriumVirtualLab({
       ),
     );
 
-    if (currentStep === 1) {
+    if (stepNumber === 1) {
       if (hasTestTube && !bromideWetTestTubeTracked) {
         setBromideWetTestTubeTracked(true);
         onStepComplete();
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
         setToastMessage("Test tube placed on the workbench. Moving to Step 2.");
         setTimeout(() => setToastMessage(null), 3000);
       }
       return;
     }
 
-    if (currentStep === 2) {
+    if (stepNumber === 2) {
       if (hasSaltSample && !bromideWetSaltAddedTracked) {
         setBromideWetSaltAddedTracked(true);
         onStepComplete();
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
         setToastMessage("Salt sample added. Moving to Step 3.");
         setTimeout(() => setToastMessage(null), 3000);
       }
       return;
     }
 
-    if (currentStep === 3) {
+    if (stepNumber === 3) {
       if (hasSodaExtract && !bromideWetSodaExtractAddedTracked) {
         setBromideWetSodaExtractAddedTracked(true);
         onStepComplete();
-        setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
         setToastMessage("Soda extract added. Moving to Step 4.");
         setTimeout(() => setToastMessage(null), 3000);
       }
       return;
     }
 
-    if (currentStep === 4 && hasDiluteHNO3 && !bromideWetHNO3AddedTracked) {
+    if (stepNumber === 4 && hasDiluteHNO3 && !bromideWetHNO3AddedTracked) {
       setBromideWetHNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep(5);
       setToastMessage("Dil. HNO₃ added. Moving to Step 5.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
     }
 
-    if (currentStep === 5 && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
+    if (stepNumber === 5 && hasAgNO3 && !bromideWetAgNO3AddedTracked) {
       setBromideWetAgNO3AddedTracked(true);
       onStepComplete();
-      setCurrentStep(6);
       setToastMessage("AgNO₃ added. Moving to Step 6.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1561,46 +1555,41 @@ function ChemicalEquilibriumVirtualLab({
       pos.id === "bunsen-burner-virtual-heat-source",
     );
 
-    if (currentStep === 6 && hasBunsenBurner && !bromideWetBunsenAddedTracked) {
+    if (stepNumber === 6 && hasBunsenBurner && !bromideWetBunsenAddedTracked) {
       setBromideWetBunsenAddedTracked(true);
       onStepComplete();
-      setCurrentStep(7);
       setToastMessage("Bunsen burner added. Moving to Step 7.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
     }
 
-    if (currentStep === 7 && bromideWetHeatingCount >= 1 && !bromideWetFirstHeatingTracked) {
+    if (stepNumber === 7 && bromideWetHeatingCount >= 1 && !bromideWetFirstHeatingTracked) {
       setBromideWetFirstHeatingTracked(true);
       onStepComplete();
-      setCurrentStep(8);
       setToastMessage("Start heating pressed. Moving to Step 8.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
     }
 
-    if (currentStep === 9 && hasTestTube && !bromideWetSecondTestTubeTracked) {
+    if (stepNumber === 9 && hasTestTube && !bromideWetSecondTestTubeTracked) {
       setBromideWetSecondTestTubeTracked(true);
       onStepComplete();
-      setCurrentStep(10);
       setToastMessage("Test tube added. Moving to Step 10.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
     }
 
-    if (currentStep === 10 && hasSaltSample && !bromideWetSecondSaltTracked) {
+    if (stepNumber === 10 && hasSaltSample && !bromideWetSecondSaltTracked) {
       setBromideWetSecondSaltTracked(true);
       onStepComplete();
-      setCurrentStep(11);
       setToastMessage("Salt sample added. Moving to Step 11.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
     }
 
-    if (currentStep === 11 && hasSodaExtract && !bromideWetSecondSodaTracked) {
+    if (stepNumber === 11 && hasSodaExtract && !bromideWetSecondSodaTracked) {
       setBromideWetSecondSodaTracked(true);
       onStepComplete();
-      setCurrentStep(12);
       setToastMessage("Soda extract added. Moving to Step 12.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1617,10 +1606,9 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    if (currentStep === 12 && hasDilHCl && !bromideWetDilHClTracked) {
+    if (stepNumber === 12 && hasDilHCl && !bromideWetDilHClTracked) {
       setBromideWetDilHClTracked(true);
       onStepComplete();
-      setCurrentStep(13);
       setToastMessage("Dil. HCL added. Moving to Step 13.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1637,10 +1625,9 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    if (currentStep === 13 && hasCHCl3 && !bromideWetCHCl3Tracked) {
+    if (stepNumber === 13 && hasCHCl3 && !bromideWetCHCl3Tracked) {
       setBromideWetCHCl3Tracked(true);
       onStepComplete();
-      setCurrentStep(14);
       setToastMessage("CHCl₃ added. Moving to Step 14.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1657,19 +1644,17 @@ function ChemicalEquilibriumVirtualLab({
       }),
     );
 
-    if (currentStep === 14 && hasKMnO4 && !bromideWetKMnO4Tracked) {
+    if (stepNumber === 14 && hasKMnO4 && !bromideWetKMnO4Tracked) {
       setBromideWetKMnO4Tracked(true);
       onStepComplete();
-      setCurrentStep(15);
       setToastMessage("KMnO₄ added. Moving to Step 15.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
     }
 
-    if (currentStep === 15 && hasBunsenBurner && !bromideWetSecondBunsenTracked) {
+    if (stepNumber === 15 && hasBunsenBurner && !bromideWetSecondBunsenTracked) {
       setBromideWetSecondBunsenTracked(true);
       onStepComplete();
-      setCurrentStep(16);
       setToastMessage("Bunsen burner added. Moving to Step 16.");
       setTimeout(() => setToastMessage(null), 3000);
       return;
@@ -1691,7 +1676,7 @@ function ChemicalEquilibriumVirtualLab({
     bromideWetKMnO4Tracked,
     bromideWetSecondBunsenTracked,
     bromideWetHeatingCount,
-    currentStep,
+    stepNumber,
     equipmentPositions,
     experimentStarted,
     isDryTestExperiment,
@@ -1709,7 +1694,7 @@ function ChemicalEquilibriumVirtualLab({
     ) {
       return;
     }
-    if (currentStep === 16 && bromideWetHeatingCount >= 2) {
+    if (stepNumber === 16 && bromideWetHeatingCount >= 2) {
       onStepComplete();
       setToastMessage("Start heating pressed. Experiment complete.");
       setTimeout(() => setToastMessage(null), 3000);
@@ -1717,7 +1702,7 @@ function ChemicalEquilibriumVirtualLab({
   }, [
     activeHalide,
     bromideWetHeatingCount,
-    currentStep,
+    stepNumber,
     experimentStarted,
     isDryTestExperiment,
     onStepComplete,
@@ -2032,7 +2017,7 @@ function ChemicalEquilibriumVirtualLab({
     const isBromideWetResetStep =
       resolvedDryTestMode === "wet" &&
       activeHalide === "Br" &&
-      currentStep === 8 &&
+      currentStep + 1 === 8 &&
       !bromideWetResetTracked;
     const isChlorideResetStep =
       resolvedDryTestMode === "acid" &&
