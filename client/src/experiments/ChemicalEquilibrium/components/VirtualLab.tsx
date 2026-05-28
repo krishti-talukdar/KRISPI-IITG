@@ -901,6 +901,8 @@ function ChemicalEquilibriumVirtualLab({
   const caseTwoReady = caseTwoResult !== DEFAULT_CASE_RESULT;
   const isBasicRadicalsAnalysis = resolvedDryTestMode === "wetBasic" || resolvedDryTestMode === "basic";
   const isBasicRadicalsWetResults = resolvedDryTestMode === "wetBasic";
+  const isAmmoniumRadicalAnalysis = isDryTestExperiment && activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest === "Am";
+  const isSpecialCasesAnalysis = isDryTestExperiment && activeHalide === "SC" && (resolvedDryTestMode === "acid" || resolvedDryTestMode === "wet");
   const caseThreeDisplayResult =
     isBasicRadicalsAnalysis && caseThreeResult === DEFAULT_CASE_RESULT
       ? BASIC_RADICAL_CASE_THREE_RESULT
@@ -5311,7 +5313,7 @@ function ChemicalEquilibriumVirtualLab({
               <div className="mt-1 text-sm">{allSteps[stepNumber - 1]?.title ?? 'No step selected'}</div>
             </div>
 
-            {isBasicFlameAnalysis ? (
+            {isBasicFlameAnalysis || isBasicRadicalsWetResults || isAmmoniumRadicalAnalysis || isSpecialCasesAnalysis ? (
               <div className="mb-3 flex flex-col gap-2">
                 <button
                   type="button"
@@ -6031,6 +6033,7 @@ function ChemicalEquilibriumVirtualLab({
                   {detailedInsights.filter((insight) => {
                     // For Flame Test show Inferences 1-5 only
                     if (isBasicFlameAnalysis) return insight.hint !== "Inference 6";
+                    if (isAmmoniumRadicalAnalysis) return insight.hint !== "Inference 2";
                     if ((activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") {
                       return insight.hint === "Inference 1";
                     }
@@ -6127,6 +6130,7 @@ function ChemicalEquilibriumVirtualLab({
                     .filter((entry) => {
                       // For Flame Test show INFERENCE 1-5 only
                       if (isBasicFlameAnalysis) return entry.label !== "INFERENCE 6";
+                      if (isAmmoniumRadicalAnalysis) return entry.label !== "INFERENCE 2";
                       if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
                         return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
@@ -6238,6 +6242,7 @@ function ChemicalEquilibriumVirtualLab({
                     {observationHighlights.filter((highlight, index) => {
                       // For Flame Test show all 5 inference highlights
                       if (isBasicFlameAnalysis) return true;
+                      if (isAmmoniumRadicalAnalysis) return !highlight.includes("Inference 2");
                       if (activeHalide === "Cl" && resolvedDryTestMode === "acid") {
                         return !highlight.includes("Inference 3") && !highlight.includes("Inference 4") && !highlight.includes("Inference 5") && !highlight.includes("Inference 6");
                       }
