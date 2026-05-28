@@ -621,6 +621,13 @@ export default function ChemicalEquilibriumApp({
             description: 'Press the "RESET WORKBENCH" button to clear the current setup before proceeding.',
           };
         }
+        if (step.id === 6) {
+          return {
+            ...step,
+            title: "Step 6 : Add the bunsen burner and 5 samples of platinum wire dipped in salt sample in the workbench one by one.",
+            description: "Drag the bunsen burner onto the workbench, then add each of the 5 platinum wire samples dipped in the salt sample one by one.",
+          };
+        }
         return step;
       });
     }
