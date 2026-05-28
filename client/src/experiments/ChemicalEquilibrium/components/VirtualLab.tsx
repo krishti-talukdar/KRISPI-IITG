@@ -1035,9 +1035,11 @@ function ChemicalEquilibriumVirtualLab({
           ? "Bromide gas formation"
           : activeHalide === "Br" && resolvedDryTestMode === "wet"
             ? ""
-            : activeHalide === "S" && resolvedDryTestMode === "acid"
-              ? "Sulfide present"
-              : "Initial chloride clues",
+            : activeHalide === "I" && resolvedDryTestMode === "wet"
+              ? ""
+              : activeHalide === "S" && resolvedDryTestMode === "acid"
+                ? "Sulfide present"
+                : "Initial chloride clues",
       hint: "Inference 1",
       description: caseOneResult,
     },
@@ -1048,7 +1050,9 @@ function ChemicalEquilibriumVirtualLab({
           ? "Bromide gas acceleration"
           : activeHalide === "Br" && resolvedDryTestMode === "wet"
             ? ""
-            : "Chlorine confirmation",
+            : activeHalide === "I" && resolvedDryTestMode === "wet"
+              ? ""
+              : "Chlorine confirmation",
       hint: "Inference 2",
       description: caseTwoResult,
     },
