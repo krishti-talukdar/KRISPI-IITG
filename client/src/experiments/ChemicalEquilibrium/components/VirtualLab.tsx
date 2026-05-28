@@ -6041,6 +6041,10 @@ function ChemicalEquilibriumVirtualLab({
                     if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                       return !["Inference 3", "Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
                     }
+                    // Hide Inference 4, 5, 6 for Special Cases in Wet Test for Acid Radicals
+                    if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
+                      return !["Inference 4", "Inference 5", "Inference 6"].includes(insight.hint);
+                    }
                     // Hide Inference 3, 4, 5, 6 for Iodide check in Wet Test for Acid Radicals
                     // Also hide Inference 2 until second heating
                     if (activeHalide === "I" && resolvedDryTestMode === "wet") {
@@ -6088,7 +6092,11 @@ function ChemicalEquilibriumVirtualLab({
                   if (activeHalide === "SC" && resolvedDryTestMode === "acid") {
                     return false;
                   }
-                  // For Iodide check in Wet Test, hide Next steps and Confidence
+                  // For Special Cases wet test, keep only the Wet test focus note
+                  if (activeHalide === "SC" && resolvedDryTestMode === "wet") {
+                    return note.label === "Wet test focus";
+                  }
+                  // For Iodide check in Wet Test, keep only the Wet test focus note
                   if (activeHalide === "I" && resolvedDryTestMode === "wet") {
                     return note.label === "Wet test focus";
                   }
@@ -6173,7 +6181,7 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && !(activeHalide === "I" && resolvedDryTestMode === "wet") && !(activeHalide === "SC" && resolvedDryTestMode === "acid") && (
+              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && !(activeHalide === "I" && resolvedDryTestMode === "wet") && !(activeHalide === "SC" && resolvedDryTestMode === "acid") && !(activeHalide === "SC" && resolvedDryTestMode === "wet") && (
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                     <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
