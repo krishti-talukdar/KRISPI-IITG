@@ -589,15 +589,23 @@ export default function ChemicalEquilibriumApp({
             : limitSaltAnalysisProgressSteps(experiment.stepDetails);
 
     if (isBasicRadicalsFlameTest) {
-      return steps.map((step) =>
-        step.id === 1
-          ? {
-              ...step,
-              title: "Step 1 : Place the test tube, drag the platinum wire and watch glass in the workbench.",
-              description: "Move a clean test tube onto the workbench, and drag the platinum wire and watch glass to begin the flame test.",
-            }
-          : step
-      );
+      return steps.map((step) => {
+        if (step.id === 1) {
+          return {
+            ...step,
+            title: "Step 1 : Place the test tube, drag the platinum wire and watch glass in the workbench.",
+            description: "Move a clean test tube onto the workbench, and drag the platinum wire and watch glass to begin the flame test.",
+          };
+        }
+        if (step.id === 3) {
+          return {
+            ...step,
+            title: "Step 3 : Pour the salt sample in the test tube to the watch glass.",
+            description: "Pour the salt sample from the test tube onto the watch glass for the flame test.",
+          };
+        }
+        return step;
+      });
     }
 
     return steps;
