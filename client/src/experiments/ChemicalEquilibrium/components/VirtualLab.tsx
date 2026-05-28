@@ -6074,6 +6074,10 @@ function ChemicalEquilibriumVirtualLab({
                   if (activeHalide === "Br" && resolvedDryTestMode === "wet") {
                     return note.label === "Wet test focus";
                   }
+                  // For Iodide check in Wet Test, hide Next steps and Confidence
+                  if (activeHalide === "I" && resolvedDryTestMode === "wet") {
+                    return note.label === "Wet test focus";
+                  }
                   return true;
                 }).map((note) => (
                   <div
@@ -6110,6 +6114,10 @@ function ChemicalEquilibriumVirtualLab({
                       // Hide INFERENCE 2, 3, 4, 5, 6 for Chloride Check in Wet Test for Acid Radicals
                       if (activeHalide === "Cl" && resolvedDryTestMode === "wet") {
                         return !["INFERENCE 2", "INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
+                      }
+                      // Hide INFERENCE 3, 4, 5, 6 for Iodide check in Wet Test
+                      if (activeHalide === "I" && resolvedDryTestMode === "wet") {
+                        return !["INFERENCE 3", "INFERENCE 4", "INFERENCE 5", "INFERENCE 6"].includes(entry.label);
                       }
                       // Hide INFERENCE 2, 3, 4, 5, 6 for Sulfide Check in Dry Test for Acid Radicals
                       if (activeHalide === "S" && resolvedDryTestMode === "acid") {
@@ -6151,7 +6159,7 @@ function ChemicalEquilibriumVirtualLab({
                 </div>
               </div>
 
-              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && (
+              {!((activeHalide === "Br" || activeHalide === "I" || activeHalide === "S") && resolvedDryTestMode === "acid") && !(activeHalide === "Br" && resolvedDryTestMode === "wet") && !(activeHalide === "I" && resolvedDryTestMode === "wet") && (
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="rounded-lg border border-gray-100 bg-white p-4 shadow">
                     <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
