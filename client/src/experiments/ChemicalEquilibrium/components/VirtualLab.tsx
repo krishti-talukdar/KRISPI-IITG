@@ -748,7 +748,7 @@ function ChemicalEquilibriumVirtualLab({
   const [wetBasicHeatingCount, setWetBasicHeatingCount] = useState(0);
   const [phPaperColor, setPhPaperColor] = useState<string | undefined>(undefined);
   const MNO2_CASE_TWO_RESULT =
-    "On adding a small amount of MnO₂ to the mixture in the test tube accelarates the formation of brown fumes.";
+    "On adding a small amount of MnO₂ to the mixture in the test tube a greenish-yellow gas is evolved.";
   const [workbenchResetTrigger, setWorkbenchResetTrigger] = useState(0);
   const workbenchResetTriggerRef = useRef(workbenchResetTrigger);
   const rinseTimerRef = useRef<number | null>(null);
