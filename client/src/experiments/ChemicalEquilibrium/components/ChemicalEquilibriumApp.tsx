@@ -580,7 +580,7 @@ export default function ChemicalEquilibriumApp({
   const isBasicRadicalsFlameTest = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest !== null && activeFlameTest !== "Am";
 
   const activeStepDetails = (() => {
-    const steps =
+    const baseSteps =
       isDryTestExperiment && activeDryTestMode === "basic"
         ? limitSaltAnalysisProgressSteps(BASIC_DRY_TEST_STEPS)
         : isDryTestExperiment && activeDryTestMode === "wet" && activeHalide === "Br"
@@ -590,6 +590,11 @@ export default function ChemicalEquilibriumApp({
           : isDryTestExperiment && activeDryTestMode === "acid" && activeHalide === "S"
             ? experiment.stepDetails.slice(0, 5)
             : limitSaltAnalysisProgressSteps(experiment.stepDetails);
+
+    // For Flame Test, allow 7 steps instead of 6
+    const steps = isBasicRadicalsFlameTest
+      ? experiment.stepDetails.slice(0, 7)
+      : baseSteps;
 
     if (isBasicRadicalsFlameTest) {
       return steps.map((step) => {
@@ -626,6 +631,13 @@ export default function ChemicalEquilibriumApp({
             ...step,
             title: "Step 6 : Add the bunsen burner and 5 samples of platinum wire dipped in salt sample in the workbench one by one.",
             description: "Drag the bunsen burner onto the workbench, then add each of the 5 platinum wire samples dipped in the salt sample one by one.",
+          };
+        }
+        if (step.id === 7) {
+          return {
+            ...step,
+            title: 'Step 7 : Press the "Start Heating" button of the bunsen burner and observe the colour of the flame in the "OBSERVATIONS" on the right side.',
+            description: 'Click the "Start Heating" button on the bunsen burner and watch the flame colour appear in the OBSERVATIONS panel on the right.',
           };
         }
         return step;
