@@ -547,8 +547,8 @@ export default function ChemicalEquilibriumApp({
         // Add Na₂CO₃ and pH paper for Ammonium Radical Test
         dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Na₂CO₃", "pH paper"]));
       } else {
-        // Add Platinum Wire, Watch glass, Salt & concentrated HCL for other Basic Radicals tests (like Flame Test)
-        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Salt", "Concentrated HCl"]));
+        // Add Platinum Wire, Watch glass & concentrated HCL for other Basic Radicals tests (like Flame Test)
+        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Concentrated HCl"]));
       }
     } else if (activeBasicRadicalsSubsection === "wet") {
       // For Wet Test section (non-GROUPS), ensure Test Tube is present before Salt Sample
