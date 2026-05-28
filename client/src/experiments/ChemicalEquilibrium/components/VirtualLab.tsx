@@ -1068,9 +1068,13 @@ function ChemicalEquilibriumVirtualLab({
       ? `Inference 1 & 2 confirm the basic radical flow: ${caseOneResult} ${caseTwoResult}`
       : activeHalide === "S" && resolvedDryTestMode === "acid"
         ? `Inference confirms sulfide radicals: ${caseOneResult}`
-        : activeHalide === "Br" && resolvedDryTestMode === "acid"
-          ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
-          : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
+        : activeHalide === "Br" && resolvedDryTestMode === "wet"
+          ? bromideWetHeatingCount >= 2
+            ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
+            : `Inference 1 confirms bromide radicals: ${caseOneResult}`
+          : activeHalide === "Br" && resolvedDryTestMode === "acid"
+            ? `Inference 1 & 2 confirm bromide radicals: ${caseOneResult}\n\n${caseTwoResult}`
+            : `Inference 1 & 2 confirm chloride radicals: ${caseOneResult} ${caseTwoResult}`,
     `Inference 3: ${caseThreeDisplayResult}`,
     `Inference 4: ${caseFourDisplayResult}`,
     `Inference 5: ${caseFiveDisplayResult}`,
