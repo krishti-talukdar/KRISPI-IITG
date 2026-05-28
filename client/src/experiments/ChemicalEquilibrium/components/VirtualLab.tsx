@@ -6174,7 +6174,7 @@ function ChemicalEquilibriumVirtualLab({
                       : (activeFlameTest === "Am" && entry.label === "INFERENCE 1")
                         ? "INFERENCE "
                         : entry.label;
-                    const displayIndicator = isBasicRadicalsWetResults ? "" : entry.indicator;
+                    const displayIndicator = isBasicRadicalsWetResults || (activeHalide === "SC" && resolvedDryTestMode === "acid") ? "" : entry.indicator;
 
                       return (
                         <div
