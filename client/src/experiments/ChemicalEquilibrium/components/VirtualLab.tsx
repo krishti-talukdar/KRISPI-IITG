@@ -1023,9 +1023,11 @@ function ChemicalEquilibriumVirtualLab({
         ? "Yellow flame - Fe³⁺"
         : activeHalide === "Br" && resolvedDryTestMode === "acid"
           ? "Bromide gas formation"
-          : activeHalide === "S" && resolvedDryTestMode === "acid"
-            ? "Sulfide present"
-            : "Initial chloride clues",
+          : activeHalide === "Br" && resolvedDryTestMode === "wet"
+            ? ""
+            : activeHalide === "S" && resolvedDryTestMode === "acid"
+              ? "Sulfide present"
+              : "Initial chloride clues",
       hint: "Inference 1",
       description: caseOneResult,
     },
@@ -1034,7 +1036,9 @@ function ChemicalEquilibriumVirtualLab({
         ? "Green flame - Cu²⁺"
         : activeHalide === "Br" && resolvedDryTestMode === "acid"
           ? "Bromide gas acceleration"
-          : "Chlorine confirmation",
+          : activeHalide === "Br" && resolvedDryTestMode === "wet"
+            ? ""
+            : "Chlorine confirmation",
       hint: "Inference 2",
       description: caseTwoResult,
     },
