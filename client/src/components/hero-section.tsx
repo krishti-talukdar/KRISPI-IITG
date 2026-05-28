@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import SafetyGuideModal from "./safety-guide-modal";
 
 const HERO_BACKGROUND_IMAGE =
-  "https://images.pexels.com/photos/5428266/pexels-photo-5428266.jpeg?auto=compress&cs=tinysrgb&w=1600";
+  "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F766443c4dfda4acdbbccf3e3a35b1953?format=webp&width=800&height=1200";
 
 export default function HeroSection() {
   const scrollToExperiments = () => {
