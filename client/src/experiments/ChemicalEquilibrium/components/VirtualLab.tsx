@@ -3731,7 +3731,7 @@ function ChemicalEquilibriumVirtualLab({
           }
         }
 
-        if ((activeHalide ?? "").toLowerCase() === "sc") {
+        if ((activeHalide ?? "").toLowerCase() === "sc" && !isWorkbenchHeating) {
           const nextCount = specialCasesWetHeatingCount + 1;
           setSpecialCasesWetHeatingCount(nextCount);
           if (nextCount === 1) {
