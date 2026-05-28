@@ -4769,6 +4769,11 @@ function ChemicalEquilibriumVirtualLab({
                       (isCaClCard && hasCaClBeenUsed) ||
                       (isFeCl3Card && hasFeCl3BeenUsed));
                   const addButtonDisabled = showAddButton && shouldDisableAddButton;
+                  const isWatchGlass = normalizedEquipmentName.includes("watch glass");
+                  const isPlatinumWire = normalizedEquipmentName.includes("platinum wire");
+                  const isBasicRadicalsDryFlameTest = activeTopLevelSection === "BR" && activeBasicRadicalsSubsection === "dry" && activeFlameTest !== null;
+                  const shouldShowDragButton = isBasicRadicalsDryFlameTest && (isWatchGlass || isPlatinumWire);
+                  const buttonLabel = shouldShowDragButton ? "DRAG" : "ADD";
                   return (
                     <div
                       key={equipment.id}
@@ -4810,7 +4815,7 @@ function ChemicalEquilibriumVirtualLab({
                                 : "bg-orange-500 hover:bg-orange-600"
                             }`}
                           >
-                            ADD
+                            {buttonLabel}
                           </button>
                         )}
                       </div>
