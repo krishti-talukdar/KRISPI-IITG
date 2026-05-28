@@ -2313,9 +2313,35 @@ function ChemicalEquilibriumVirtualLab({
       // If the equipment is Platinum Wire and we are in Salt Analysis -> Basic Radicals -> Dry -> Flame Test,
       // skip the amount dialog and add immediately
       const isPlatinumEquipment = (equipment.name || "").toLowerCase().includes("platinum");
+      const isFlameTestContext =
+        activeTopLevelSection === "BR" &&
+        activeBasicRadicalsSubsection === "dry" &&
+        activeFlameTest === "Fl";
       // Always skip the amount dialog for Platinum Wire and add immediately
       if (isPlatinumEquipment) {
-        handleEquipmentAddButton(equipment.id);
+        if (isFlameTestContext) {
+          // Drop 5 platinum wire samples on the workbench at different positions
+          const workbenchEl =
+            typeof document !== "undefined"
+              ? document.querySelector('[data-workbench="true"]')
+              : null;
+          const workbenchRect = workbenchEl?.getBoundingClientRect() ?? null;
+          const centerX = workbenchRect
+            ? workbenchRect.left + workbenchRect.width / 2
+            : 200;
+          const centerY = workbenchRect
+            ? workbenchRect.top + workbenchRect.height / 2
+            : 200;
+          const spacing = workbenchRect ? Math.min(80, workbenchRect.width / 7) : 60;
+          const baseIdPrefix = equipment.id.replace(/-\d+$/, "");
+          for (let i = 0; i < 5; i++) {
+            const offsetX = (i - 2) * spacing;
+            const newId = `${baseIdPrefix}-${200 + i}`;
+            handleEquipmentDrop(newId, centerX + offsetX, centerY);
+          }
+        } else {
+          handleEquipmentAddButton(equipment.id);
+        }
         return;
       }
 
@@ -2331,7 +2357,7 @@ function ChemicalEquilibriumVirtualLab({
       setAddDialogAmount("3.0");
       setAddDialogError(null);
     },
-    [handleEquipmentAddButton, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest, activeTopLevelSection, activeBasicRadicalsSubsection],
+    [handleEquipmentAddButton, handleEquipmentDrop, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest, activeTopLevelSection, activeBasicRadicalsSubsection],
   );
 
   const handleEquipmentAddDialogClose = useCallback(() => {
