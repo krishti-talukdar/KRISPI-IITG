@@ -935,7 +935,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
           !isFlameTestSalt &&
           overlayColor !== "transparent" &&
           totalChemicalsAmount > 0;
-        const saltCrystalHeight = Math.max(40, Math.min(110, overlayHeight));
+        const saltCrystalHeight = Math.max(34, Math.min(72, overlayHeight));
         const displayLabel = name.toLowerCase().includes("test tube")
           ? "25ml Test Tube"
           : name;
@@ -966,24 +966,24 @@ export const Equipment: React.FC<EquipmentProps> = ({
                   <div
                     className="absolute left-1/2 -translate-x-1/2 overflow-hidden transition-all duration-500"
                     style={{
-                      bottom: "28px",
-                      width: "28px",
+                      bottom: "84px",
+                      width: "18px",
                       height: `${saltCrystalHeight}px`,
-                      borderRadius: "0 0 14px 14px",
+                      borderRadius: "0 0 9px 9px",
                       background:
                         "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(226,232,240,0.9) 55%, rgba(203,213,225,0.98) 100%)",
                       boxShadow:
-                        "inset 0 0 6px rgba(0,0,0,0.18), 0 0 3px rgba(0,0,0,0.1)",
+                        "inset 0 0 4px rgba(0,0,0,0.18)",
                     }}
                   >
                     {[
-                      { left: "6%", bottom: "3%", size: 12, rot: -18 },
-                      { left: "46%", bottom: "0%", size: 14, rot: 12 },
-                      { left: "24%", bottom: "20%", size: 11, rot: 26 },
-                      { left: "60%", bottom: "28%", size: 10, rot: -22 },
-                      { left: "12%", bottom: "42%", size: 10, rot: 8 },
-                      { left: "46%", bottom: "52%", size: 9, rot: -14 },
-                      { left: "28%", bottom: "66%", size: 8, rot: 18 },
+                      { left: "2%", bottom: "2%", size: 8, rot: -18 },
+                      { left: "44%", bottom: "0%", size: 9, rot: 12 },
+                      { left: "20%", bottom: "16%", size: 7, rot: 26 },
+                      { left: "56%", bottom: "22%", size: 6, rot: -22 },
+                      { left: "8%", bottom: "34%", size: 6, rot: 8 },
+                      { left: "40%", bottom: "44%", size: 6, rot: -14 },
+                      { left: "22%", bottom: "56%", size: 5, rot: 18 },
                     ].map((crystal, index) => (
                       <span
                         key={index}
