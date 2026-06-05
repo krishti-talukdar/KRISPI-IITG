@@ -141,6 +141,15 @@ export const Equipment: React.FC<EquipmentProps> = ({
   const lastUpdateTime = useRef(0);
   const animationFrameId = useRef<number>();
 
+  // Platinum wire dip animation state
+  const [isDipping, setIsDipping] = useState(false);
+  const dipTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => {
+    return () => {
+      if (dipTimeoutRef.current) clearTimeout(dipTimeoutRef.current);
+    };
+  }, []);
+
   // Heating states for test tube
   const [showHeatingMessage, setShowHeatingMessage] = useState(false);
   const [useHeatedImage, setUseHeatedImage] = useState(false);
@@ -596,14 +605,134 @@ export const Equipment: React.FC<EquipmentProps> = ({
               onClick={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                onInteract?.(id);
+                if (isDipping) return;
+                setIsDipping(true);
+                if (dipTimeoutRef.current) clearTimeout(dipTimeoutRef.current);
+                dipTimeoutRef.current = setTimeout(() => {
+                  setIsDipping(false);
+                  onInteract?.(id);
+                }, 2600);
               }}
               onPointerDown={(event) => event.stopPropagation()}
-              disabled={interactDisabled}
+              disabled={interactDisabled || isDipping}
               className="mt-2 rounded-md bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white text-xs font-semibold px-4 py-1 shadow-md"
             >
-              DIP
+              {isDipping ? "DIPPING..." : "DIP"}
             </button>
+          )}
+          {isDipping && (
+            <div
+              className="fixed inset-0 z-[1000] flex items-center justify-center"
+              style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(2px)" }}
+              onPointerDown={(event) => event.stopPropagation()}
+            >
+              <div className="flex flex-col items-center gap-6">
+                <div className="text-white text-base font-semibold tracking-wide drop-shadow">
+                  Platinum wire is being dipped in the test tube salt sample
+                </div>
+                <div className="relative" style={{ width: 220, height: 260 }}>
+                  {/* Platinum wire dipping in from the top */}
+                  <div
+                    className="absolute left-1/2"
+                    style={{
+                      top: 0,
+                      transform: "translateX(-50%)",
+                      animation: "platinumWireDip 2.4s ease-in-out both",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 6,
+                        height: 150,
+                        margin: "0 auto",
+                        borderRadius: 3,
+                        background: "linear-gradient(90deg,#9ca3af,#e5e7eb,#6b7280)",
+                        boxShadow: "0 0 6px rgba(255,255,255,0.5)",
+                      }}
+                    />
+                    <div
+                      style={{
+                        width: 18,
+                        height: 18,
+                        margin: "-3px auto 0",
+                        borderRadius: "0 0 50% 50%",
+                        border: "3px solid #d1d5db",
+                        borderTop: "none",
+                      }}
+                    />
+                    {/* sparkle when it touches the salt */}
+                    <div
+                      className="absolute left-1/2"
+                      style={{
+                        bottom: -6,
+                        transform: "translateX(-50%)",
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        background: "radial-gradient(circle,#fff7d6,#fbbf24)",
+                        animation: "dipSparkle 2.4s ease-in-out both",
+                      }}
+                    />
+                  </div>
+
+                  {/* Test tube with salt sample */}
+                  <div
+                    className="absolute left-1/2"
+                    style={{ bottom: 0, transform: "translateX(-50%)", width: 56, height: 170 }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        borderRadius: "0 0 28px 28px",
+                        border: "3px solid rgba(255,255,255,0.7)",
+                        borderTop: "none",
+                        background: "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.18))",
+                        boxShadow: "inset 0 0 10px rgba(255,255,255,0.15)",
+                      }}
+                    />
+                    {/* salt sample at the bottom */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        bottom: 4,
+                        width: 44,
+                        height: 46,
+                        borderRadius: "0 0 22px 22px",
+                        overflow: "hidden",
+                        background:
+                          "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(226,232,240,0.9) 55%, rgba(203,213,225,0.98) 100%)",
+                      }}
+                    >
+                      {[
+                        { left: "6%", bottom: "4%", size: 9, rot: -18 },
+                        { left: "48%", bottom: "0%", size: 10, rot: 12 },
+                        { left: "26%", bottom: "20%", size: 8, rot: 26 },
+                        { left: "62%", bottom: "26%", size: 7, rot: -22 },
+                        { left: "12%", bottom: "40%", size: 7, rot: 8 },
+                        { left: "46%", bottom: "52%", size: 6, rot: -14 },
+                      ].map((c, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            position: "absolute",
+                            left: c.left,
+                            bottom: c.bottom,
+                            width: c.size,
+                            height: c.size,
+                            transform: `rotate(${c.rot}deg)`,
+                            background: "linear-gradient(135deg,#ffffff,#cbd5e1)",
+                            boxShadow: "0 0 2px rgba(0,0,0,0.2)",
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       );
