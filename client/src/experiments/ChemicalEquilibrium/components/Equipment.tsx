@@ -910,8 +910,19 @@ export const Equipment: React.FC<EquipmentProps> = ({
                   : shouldForceNaOHBlue
                     ? NAOH_SOLUTION_COLOR
                     : baseOverlayColor;
+        const isFlameTestSalt =
+          activeFlameTest === "Fl" &&
+          dryTestMode === "basic" &&
+          hasSaltSample &&
+          !hasAcidSample &&
+          !hasConcHclSample &&
+          !hasNaOHSample &&
+          !hasAmmoniumSample;
         const showOverlay =
-          overlayColor !== "transparent" && totalChemicalsAmount > 0;
+          !isFlameTestSalt &&
+          overlayColor !== "transparent" &&
+          totalChemicalsAmount > 0;
+        const saltCrystalHeight = Math.max(40, Math.min(110, overlayHeight));
         const displayLabel = name.toLowerCase().includes("test tube")
           ? "25ml Test Tube"
           : name;
@@ -934,6 +945,25 @@ export const Equipment: React.FC<EquipmentProps> = ({
                     style={{
                       height: `${Math.max(10, overlayHeight)}px`,
                       backgroundColor: overlayColor,
+                    }}
+                  />
+                )}
+
+                {isFlameTestSalt && (
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 overflow-hidden transition-all duration-500"
+                    style={{
+                      bottom: "28px",
+                      width: "28px",
+                      height: `${saltCrystalHeight}px`,
+                      borderRadius: "0 0 14px 14px",
+                      backgroundImage:
+                        "url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F5ae30db53a8f4ffd987a0e5c373c7114?format=webp&width=400')",
+                      backgroundSize: "auto 220px",
+                      backgroundPosition: "center 78%",
+                      backgroundRepeat: "no-repeat",
+                      boxShadow:
+                        "inset 0 0 6px rgba(0,0,0,0.18), 0 0 3px rgba(0,0,0,0.1)",
                     }}
                   />
                 )}
