@@ -1136,6 +1136,16 @@ export const Equipment: React.FC<EquipmentProps> = ({
                       { left: "10%", bottom: "54%", size: 5, rot: 22, shape: "cube" },
                       { left: "40%", bottom: "60%", size: 5, rot: -18, shape: "diamond" },
                       { left: "26%", bottom: "72%", size: 4, rot: 10, shape: "cube" },
+                      { left: "70%", bottom: "6%", size: 6, rot: 18, shape: "diamond" },
+                      { left: "50%", bottom: "18%", size: 6, rot: -24, shape: "cube" },
+                      { left: "2%", bottom: "38%", size: 5, rot: 28, shape: "diamond" },
+                      { left: "62%", bottom: "40%", size: 5, rot: -12, shape: "cube" },
+                      { left: "34%", bottom: "50%", size: 5, rot: 16, shape: "diamond" },
+                      { left: "56%", bottom: "54%", size: 4, rot: -20, shape: "cube" },
+                      { left: "18%", bottom: "64%", size: 4, rot: 24, shape: "diamond" },
+                      { left: "48%", bottom: "76%", size: 4, rot: -16, shape: "cube" },
+                      { left: "8%", bottom: "78%", size: 3, rot: 12, shape: "diamond" },
+                      { left: "36%", bottom: "86%", size: 3, rot: -22, shape: "cube" },
                     ].map((crystal, index) => (
                       <span
                         key={index}
