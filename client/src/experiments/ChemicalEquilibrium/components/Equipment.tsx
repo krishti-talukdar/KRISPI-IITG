@@ -63,6 +63,7 @@ interface EquipmentProps {
   iodideWetHeatingCount?: number;
   specialCasesHeatingCount?: number;
   activeFlameTest?: string;
+  isBasicRadicalsFlameTest?: boolean;
   phPaperColor?: string;
   color?: string;
   volume?: number;
@@ -97,6 +98,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   iodideWetHeatingCount = 0,
   specialCasesHeatingCount = 0,
   activeFlameTest,
+  isBasicRadicalsFlameTest = false,
   phPaperColor,
 }) => {
   const normalizedName = name.toLowerCase();
@@ -923,8 +925,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
                     ? NAOH_SOLUTION_COLOR
                     : baseOverlayColor;
         const isFlameTestSalt =
-          activeFlameTest === "Fl" &&
-          dryTestMode === "basic" &&
+          isBasicRadicalsFlameTest &&
           hasSaltSample &&
           !hasAcidSample &&
           !hasConcHclSample &&
@@ -969,15 +970,40 @@ export const Equipment: React.FC<EquipmentProps> = ({
                       width: "28px",
                       height: `${saltCrystalHeight}px`,
                       borderRadius: "0 0 14px 14px",
-                      backgroundImage:
-                        "url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F5ae30db53a8f4ffd987a0e5c373c7114?format=webp&width=400')",
-                      backgroundSize: "auto 220px",
-                      backgroundPosition: "center 78%",
-                      backgroundRepeat: "no-repeat",
+                      background:
+                        "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(226,232,240,0.9) 55%, rgba(203,213,225,0.98) 100%)",
                       boxShadow:
                         "inset 0 0 6px rgba(0,0,0,0.18), 0 0 3px rgba(0,0,0,0.1)",
                     }}
-                  />
+                  >
+                    {[
+                      { left: "6%", bottom: "3%", size: 12, rot: -18 },
+                      { left: "46%", bottom: "0%", size: 14, rot: 12 },
+                      { left: "24%", bottom: "20%", size: 11, rot: 26 },
+                      { left: "60%", bottom: "28%", size: 10, rot: -22 },
+                      { left: "12%", bottom: "42%", size: 10, rot: 8 },
+                      { left: "46%", bottom: "52%", size: 9, rot: -14 },
+                      { left: "28%", bottom: "66%", size: 8, rot: 18 },
+                    ].map((crystal, index) => (
+                      <span
+                        key={index}
+                        style={{
+                          position: "absolute",
+                          left: crystal.left,
+                          bottom: crystal.bottom,
+                          width: `${crystal.size}px`,
+                          height: `${crystal.size}px`,
+                          transform: `rotate(${crystal.rot}deg)`,
+                          clipPath:
+                            "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)",
+                          background:
+                            "linear-gradient(135deg, #ffffff 0%, #eef2f7 45%, #c4d0dd 100%)",
+                          border: "0.5px solid rgba(255,255,255,0.9)",
+                          boxShadow: "0 1px 1px rgba(15,23,42,0.25)",
+                        }}
+                      />
+                    ))}
+                  </div>
                 )}
 
                 {/* Render a precipitate layer at the bottom when a precipitate chemical is present (eg. AgBr) */}
