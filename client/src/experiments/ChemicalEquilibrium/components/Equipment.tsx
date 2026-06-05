@@ -590,6 +590,21 @@ export const Equipment: React.FC<EquipmentProps> = ({
               }}
             />
           </div>
+          {position && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onInteract?.(id);
+              }}
+              onPointerDown={(event) => event.stopPropagation()}
+              disabled={interactDisabled}
+              className="mt-2 rounded-md bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white text-xs font-semibold px-4 py-1 shadow-md"
+            >
+              DIP
+            </button>
+          )}
         </div>
       );
     }
