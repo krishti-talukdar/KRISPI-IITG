@@ -772,9 +772,7 @@ function ChemicalEquilibriumVirtualLab({
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const resolvedDryTestMode = dryTestMode ?? "acid";
-  const isBasicRadicalsFlameTestMode =
-    isDryTestExperiment && resolvedDryTestMode === "basic" && activeFlameTest === "Fl";
-  const displayedEquipmentList = (
+  const displayedEquipmentList =
     isSaltAnalysisExperiment && resolvedDryTestMode === "acid" && activeHalide === "Br"
       ? equipmentList.filter((equipment) => {
           const normalizedName = equipment.name?.toLowerCase() ?? "";
@@ -783,12 +781,7 @@ function ChemicalEquilibriumVirtualLab({
             (normalizedName.includes("h2so4") || normalizedName.includes("h₂so₄"))
           ) && !normalizedName.includes("glass rod") && !normalizedName.includes("glass container");
         })
-      : equipmentList
-  ).filter((equipment) =>
-    isBasicRadicalsFlameTestMode
-      ? !(equipment.name?.toLowerCase() ?? "").includes("watch glass")
-      : true,
-  );
+      : equipmentList;
   const glassContainerEquipmentId =
     displayedEquipmentList.find((eq) => eq.name?.toLowerCase().includes("glass container"))?.id ?? null;
   const watchGlassEquipmentId =

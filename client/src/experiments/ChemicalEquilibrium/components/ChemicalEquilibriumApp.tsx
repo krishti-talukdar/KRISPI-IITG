@@ -547,8 +547,8 @@ export default function ChemicalEquilibriumApp({
         // Add Na₂CO₃ for Ammonium Radical Test
         dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Na₂CO₃"]));
       } else if (activeFlameTest === "Fl") {
-        // Flame Test: Add Platinum Wire and Watch glass only (no Concentrated HCl)
-        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass"]));
+        // Flame Test: Add Platinum Wire only (no Watch glass, no Concentrated HCl)
+        dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire"]));
       } else {
         // Other Basic Radicals tests: Add Platinum Wire, Watch glass & Concentrated HCl
         dryTestEquipmentToUse = Array.from(new Set([...(dryTestEquipmentToUse as string[]), "Platinum Wire", "Watch glass", "Concentrated HCl"]));
