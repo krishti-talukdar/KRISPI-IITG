@@ -1095,6 +1095,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
                   src="https://cdn.builder.io/api/v1/image/assets%2F5b489eed84cd44f89c5431dbe9fd14d3%2F3f3b9fb2343b4e74a0b66661affefadb?format=webp&width=800"
                   alt="25ml Test Tube"
                   className="w-full h-full object-contain"
+                  style={isFlameTestSalt ? { opacity: 0.55 } : undefined}
                 />
                 {showOverlay && (
                   <div
@@ -1113,6 +1114,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
                       bottom: "84px",
                       width: "18px",
                       height: `${saltCrystalHeight}px`,
+                      zIndex: 20,
                       borderRadius: "0 0 9px 9px",
                       background:
                         "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(226,232,240,0.9) 55%, rgba(203,213,225,0.98) 100%)",
