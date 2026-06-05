@@ -5286,7 +5286,7 @@ function ChemicalEquilibriumVirtualLab({
                         iodideWetHeatingCount={iodideWetHeatingCount}
                         specialCasesHeatingCount={specialCasesHeatingCount}
                         activeFlameTest={activeFlameTest}
-                        isBasicRadicalsFlameTest={isBasicRadicalsFlameTest}
+                        isSaltAnalysis={isSaltAnalysisExperiment}
                         phPaperColor={phPaperColor}
                         volume={
                           pos.id === "test_tubes"
@@ -5621,7 +5621,7 @@ function ChemicalEquilibriumVirtualLab({
                       dryTestMode={resolvedDryTestMode}
                       imageUrl={equipment.imageUrl}
                       activeFlameTest={activeFlameTest}
-                      isBasicRadicalsFlameTest={isBasicRadicalsFlameTest}
+                      isSaltAnalysis={isSaltAnalysisExperiment}
                       isHeating={isWorkbenchHeating}
                       // Special: color/volume for test tube reaction when heating conc H2SO4 with salt under Bromide Check
                       color={

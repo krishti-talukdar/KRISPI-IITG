@@ -63,7 +63,7 @@ interface EquipmentProps {
   iodideWetHeatingCount?: number;
   specialCasesHeatingCount?: number;
   activeFlameTest?: string;
-  isBasicRadicalsFlameTest?: boolean;
+  isSaltAnalysis?: boolean;
   phPaperColor?: string;
   color?: string;
   volume?: number;
@@ -98,7 +98,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   iodideWetHeatingCount = 0,
   specialCasesHeatingCount = 0,
   activeFlameTest,
-  isBasicRadicalsFlameTest = false,
+  isSaltAnalysis = false,
   phPaperColor,
 }) => {
   const normalizedName = name.toLowerCase();
@@ -925,7 +925,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
                     ? NAOH_SOLUTION_COLOR
                     : baseOverlayColor;
         const isFlameTestSalt =
-          isBasicRadicalsFlameTest &&
+          isSaltAnalysis &&
           hasSaltSample &&
           !hasAcidSample &&
           !hasConcHclSample &&
