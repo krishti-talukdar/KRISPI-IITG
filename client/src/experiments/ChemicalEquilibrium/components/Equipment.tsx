@@ -1121,13 +1121,21 @@ export const Equipment: React.FC<EquipmentProps> = ({
                     }}
                   >
                     {[
-                      { left: "2%", bottom: "2%", size: 8, rot: -18 },
-                      { left: "44%", bottom: "0%", size: 9, rot: 12 },
-                      { left: "20%", bottom: "16%", size: 7, rot: 26 },
-                      { left: "56%", bottom: "22%", size: 6, rot: -22 },
-                      { left: "8%", bottom: "34%", size: 6, rot: 8 },
-                      { left: "40%", bottom: "44%", size: 6, rot: -14 },
-                      { left: "22%", bottom: "56%", size: 5, rot: 18 },
+                      { left: "2%", bottom: "1%", size: 8, rot: -18, shape: "diamond" },
+                      { left: "30%", bottom: "0%", size: 9, rot: 12, shape: "cube" },
+                      { left: "58%", bottom: "2%", size: 7, rot: 30, shape: "diamond" },
+                      { left: "78%", bottom: "0%", size: 6, rot: -10, shape: "cube" },
+                      { left: "14%", bottom: "12%", size: 7, rot: 26, shape: "cube" },
+                      { left: "44%", bottom: "10%", size: 8, rot: -22, shape: "diamond" },
+                      { left: "68%", bottom: "14%", size: 6, rot: 16, shape: "cube" },
+                      { left: "6%", bottom: "24%", size: 6, rot: 8, shape: "diamond" },
+                      { left: "32%", bottom: "26%", size: 7, rot: -14, shape: "cube" },
+                      { left: "58%", bottom: "28%", size: 6, rot: 20, shape: "diamond" },
+                      { left: "20%", bottom: "40%", size: 6, rot: -28, shape: "cube" },
+                      { left: "46%", bottom: "44%", size: 5, rot: 14, shape: "diamond" },
+                      { left: "10%", bottom: "54%", size: 5, rot: 22, shape: "cube" },
+                      { left: "40%", bottom: "60%", size: 5, rot: -18, shape: "diamond" },
+                      { left: "26%", bottom: "72%", size: 4, rot: 10, shape: "cube" },
                     ].map((crystal, index) => (
                       <span
                         key={index}
@@ -1139,11 +1147,36 @@ export const Equipment: React.FC<EquipmentProps> = ({
                           height: `${crystal.size}px`,
                           transform: `rotate(${crystal.rot}deg)`,
                           clipPath:
-                            "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)",
+                            crystal.shape === "diamond"
+                              ? "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)"
+                              : "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)",
                           background:
-                            "linear-gradient(135deg, #ffffff 0%, #eef2f7 45%, #c4d0dd 100%)",
-                          border: "0.5px solid rgba(255,255,255,0.9)",
-                          boxShadow: "0 1px 1px rgba(15,23,42,0.25)",
+                            "linear-gradient(135deg, #ffffff 0%, #f1f5f9 40%, #b8c6d6 100%)",
+                          border: "0.5px solid rgba(255,255,255,0.95)",
+                          boxShadow:
+                            "0 1px 1.5px rgba(15,23,42,0.3), inset 0 0 2px rgba(255,255,255,0.9)",
+                        }}
+                      />
+                    ))}
+                    {/* sparkle highlights for a glittery crystalline look */}
+                    {[
+                      { left: "24%", bottom: "8%", size: 2 },
+                      { left: "62%", bottom: "20%", size: 1.5 },
+                      { left: "36%", bottom: "34%", size: 2 },
+                      { left: "16%", bottom: "48%", size: 1.5 },
+                      { left: "50%", bottom: "66%", size: 1.5 },
+                    ].map((sparkle, index) => (
+                      <span
+                        key={`sparkle-${index}`}
+                        style={{
+                          position: "absolute",
+                          left: sparkle.left,
+                          bottom: sparkle.bottom,
+                          width: `${sparkle.size}px`,
+                          height: `${sparkle.size}px`,
+                          borderRadius: "50%",
+                          background: "rgba(255,255,255,0.95)",
+                          boxShadow: "0 0 3px rgba(255,255,255,0.95)",
                         }}
                       />
                     ))}
