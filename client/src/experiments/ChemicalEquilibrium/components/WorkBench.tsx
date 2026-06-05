@@ -62,6 +62,7 @@ interface WorkBenchProps {
   activeHalide?: string;
   dryTestMode?: string;
   activeFlameTest?: string;
+  isBasicRadicalsFlameTest?: boolean;
   mno2AddedDuringHeating?: boolean;
   specialCasesHeatingCount?: number;
   chlorideHeatingCount?: number;
@@ -90,6 +91,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   activeHalide,
   dryTestMode,
   activeFlameTest,
+  isBasicRadicalsFlameTest = false,
   mno2AddedDuringHeating,
   specialCasesHeatingCount = 0,
   chlorideHeatingCount = 0,
@@ -372,9 +374,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   // PH-specific classes
   const phRootClass =
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
-
-  const isBasicRadicalsFlameTest =
-    dryTestMode === "basic" && activeFlameTest === "Fl";
 
   const dryTestWorkbenchClass = isBasicRadicalsFlameTest
     ? `relative w-full h-full min-h-[500px] rounded-lg overflow-hidden transition-all duration-300 shadow-sm ${

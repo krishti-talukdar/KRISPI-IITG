@@ -772,6 +772,11 @@ function ChemicalEquilibriumVirtualLab({
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const resolvedDryTestMode = dryTestMode ?? "acid";
+  const isBasicRadicalsFlameTest =
+    isDryTestExperiment &&
+    activeTopLevelSection === "BR" &&
+    activeBasicRadicalsSubsection === "dry" &&
+    activeFlameTest === "Fl";
   const displayedEquipmentList =
     isSaltAnalysisExperiment && resolvedDryTestMode === "acid" && activeHalide === "Br"
       ? equipmentList.filter((equipment) => {
@@ -5206,6 +5211,7 @@ function ChemicalEquilibriumVirtualLab({
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
                 activeFlameTest={activeFlameTest}
+                isBasicRadicalsFlameTest={isBasicRadicalsFlameTest}
                 onObservePlatinumWire={handleObserveFlameTest}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
@@ -5579,6 +5585,7 @@ function ChemicalEquilibriumVirtualLab({
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
                 activeFlameTest={activeFlameTest}
+                isBasicRadicalsFlameTest={isBasicRadicalsFlameTest}
                 onObservePlatinumWire={handleObserveFlameTest}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
