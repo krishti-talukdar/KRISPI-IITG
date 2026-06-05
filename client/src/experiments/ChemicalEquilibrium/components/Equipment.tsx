@@ -501,12 +501,24 @@ export const Equipment: React.FC<EquipmentProps> = ({
             />
             {shouldShowWatchGlassParticles && (
               <div className="absolute inset-0">
-                <span className="absolute left-[28%] top-[42%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
-                <span className="absolute left-[40%] top-[54%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
-                <span className="absolute left-[52%] top-[39%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
-                <span className="absolute left-[61%] top-[58%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
-                <span className="absolute left-[46%] top-[47%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
-                <span className="absolute left-[34%] top-[62%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
+                <div
+                  className="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                    width: "72px",
+                    height: "38px",
+                    backgroundImage:
+                      "url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F5ae30db53a8f4ffd987a0e5c373c7114?format=webp&width=400')",
+                    backgroundSize: "130px auto",
+                    backgroundPosition: "center 74%",
+                    backgroundRepeat: "no-repeat",
+                    borderRadius: "48% 48% 42% 42% / 62% 62% 38% 38%",
+                    filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.25))",
+                    WebkitMaskImage:
+                      "radial-gradient(ellipse 60% 80% at 50% 45%, #000 60%, transparent 100%)",
+                    maskImage:
+                      "radial-gradient(ellipse 60% 80% at 50% 45%, #000 60%, transparent 100%)",
+                  }}
+                />
               </div>
             )}
           </div>
