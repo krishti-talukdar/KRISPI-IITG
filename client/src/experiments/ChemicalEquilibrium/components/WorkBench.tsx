@@ -62,6 +62,7 @@ interface WorkBenchProps {
   activeHalide?: string;
   dryTestMode?: string;
   activeFlameTest?: string;
+  isBasicRadicalsFlameTest?: boolean;
   mno2AddedDuringHeating?: boolean;
   specialCasesHeatingCount?: number;
   chlorideHeatingCount?: number;
@@ -90,6 +91,7 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   activeHalide,
   dryTestMode,
   activeFlameTest,
+  isBasicRadicalsFlameTest = false,
   mno2AddedDuringHeating,
   specialCasesHeatingCount = 0,
   chlorideHeatingCount = 0,
@@ -373,11 +375,17 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   const phRootClass =
     "relative w-full h-full min-h-[500px] bg-white rounded-lg overflow-hidden transition-all duration-300 border border-gray-200";
 
-  const dryTestWorkbenchClass = `relative w-full h-full min-h-[500px] rounded-lg overflow-hidden transition-all duration-300 shadow-sm ${
-    isDragOver
-      ? "bg-[#d1d5db] border-blue-400 ring-4 ring-green-300 ring-opacity-50"
-      : "bg-[#d3d3d3] border border-[#bcbcbc]"
-  }`;
+  const dryTestWorkbenchClass = isBasicRadicalsFlameTest
+    ? `relative w-full h-full min-h-[500px] rounded-lg overflow-hidden transition-all duration-300 shadow-sm ${
+        isDragOver
+          ? "bg-black border-blue-400 ring-4 ring-green-300 ring-opacity-50"
+          : "bg-black border border-black"
+      }`
+    : `relative w-full h-full min-h-[500px] rounded-lg overflow-hidden transition-all duration-300 shadow-sm ${
+        isDragOver
+          ? "bg-[#d1d5db] border-blue-400 ring-4 ring-green-300 ring-opacity-50"
+          : "bg-[#d3d3d3] border border-[#bcbcbc]"
+      }`;
 
   const defaultRootClass = isDryTestWorkbench
     ? dryTestWorkbenchClass

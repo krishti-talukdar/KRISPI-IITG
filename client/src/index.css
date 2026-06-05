@@ -629,6 +629,23 @@
   }
 }
 
+@keyframes platinumWireDip {
+  0% { transform: translateX(-50%) translateY(-70px); }
+  35% { transform: translateX(-50%) translateY(40px); }
+  45% { transform: translateX(-50%) translateY(46px); }
+  55% { transform: translateX(-50%) translateY(40px); }
+  65% { transform: translateX(-50%) translateY(44px); }
+  100% { transform: translateX(-50%) translateY(-70px); }
+}
+
+@keyframes dipSparkle {
+  0%, 30% { opacity: 0; transform: translateX(-50%) scale(0.2); }
+  40% { opacity: 1; transform: translateX(-50%) scale(1.3); }
+  55% { opacity: 0.8; transform: translateX(-50%) scale(1); }
+  70% { opacity: 1; transform: translateX(-50%) scale(1.4); }
+  85%, 100% { opacity: 0; transform: translateX(-50%) scale(0.4); }
+}
+
 @keyframes splash {
   0% { transform: translateX(-50%) scale(0.2); opacity: 0; }
   40% { transform: translateX(-50%) scale(1.1); opacity: 0.95; }

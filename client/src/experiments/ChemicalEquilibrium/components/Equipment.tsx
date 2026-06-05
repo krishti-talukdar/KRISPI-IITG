@@ -63,6 +63,7 @@ interface EquipmentProps {
   iodideWetHeatingCount?: number;
   specialCasesHeatingCount?: number;
   activeFlameTest?: string;
+  isSaltAnalysis?: boolean;
   phPaperColor?: string;
   color?: string;
   volume?: number;
@@ -97,6 +98,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
   iodideWetHeatingCount = 0,
   specialCasesHeatingCount = 0,
   activeFlameTest,
+  isSaltAnalysis = false,
   phPaperColor,
 }) => {
   const normalizedName = name.toLowerCase();
@@ -138,6 +140,15 @@ export const Equipment: React.FC<EquipmentProps> = ({
   const elementRef = useRef<HTMLDivElement>(null);
   const lastUpdateTime = useRef(0);
   const animationFrameId = useRef<number>();
+
+  // Platinum wire dip animation state
+  const [isDipping, setIsDipping] = useState(false);
+  const dipTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => {
+    return () => {
+      if (dipTimeoutRef.current) clearTimeout(dipTimeoutRef.current);
+    };
+  }, []);
 
   // Heating states for test tube
   const [showHeatingMessage, setShowHeatingMessage] = useState(false);
@@ -501,12 +512,24 @@ export const Equipment: React.FC<EquipmentProps> = ({
             />
             {shouldShowWatchGlassParticles && (
               <div className="absolute inset-0">
-                <span className="absolute left-[28%] top-[42%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
-                <span className="absolute left-[40%] top-[54%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
-                <span className="absolute left-[52%] top-[39%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
-                <span className="absolute left-[61%] top-[58%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
-                <span className="absolute left-[46%] top-[47%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
-                <span className="absolute left-[34%] top-[62%] h-1.5 w-1.5 rounded-full bg-white/95 shadow-[0_0_6px_rgba(255,255,255,0.95)]" />
+                <div
+                  className="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                    width: "72px",
+                    height: "38px",
+                    backgroundImage:
+                      "url('https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F5ae30db53a8f4ffd987a0e5c373c7114?format=webp&width=400')",
+                    backgroundSize: "130px auto",
+                    backgroundPosition: "center 74%",
+                    backgroundRepeat: "no-repeat",
+                    borderRadius: "48% 48% 42% 42% / 62% 62% 38% 38%",
+                    filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.25))",
+                    WebkitMaskImage:
+                      "radial-gradient(ellipse 60% 80% at 50% 45%, #000 60%, transparent 100%)",
+                    maskImage:
+                      "radial-gradient(ellipse 60% 80% at 50% 45%, #000 60%, transparent 100%)",
+                  }}
+                />
               </div>
             )}
           </div>
@@ -576,6 +599,141 @@ export const Equipment: React.FC<EquipmentProps> = ({
               }}
             />
           </div>
+          {position && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                if (isDipping) return;
+                setIsDipping(true);
+                if (dipTimeoutRef.current) clearTimeout(dipTimeoutRef.current);
+                dipTimeoutRef.current = setTimeout(() => {
+                  setIsDipping(false);
+                  onInteract?.(id);
+                }, 2600);
+              }}
+              onPointerDown={(event) => event.stopPropagation()}
+              disabled={interactDisabled || isDipping}
+              className="mt-2 rounded-md bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white text-xs font-semibold px-4 py-1 shadow-md"
+            >
+              {isDipping ? "DIPPING..." : "DIP"}
+            </button>
+          )}
+          {isDipping && (
+            <div
+              className="fixed inset-0 z-[1000] flex items-center justify-center"
+              style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(2px)" }}
+              onPointerDown={(event) => event.stopPropagation()}
+            >
+              <div className="flex flex-col items-center gap-6">
+                <div className="text-white text-base font-semibold tracking-wide drop-shadow">
+                  Platinum wire is being dipped in the test tube salt sample
+                </div>
+                <div className="relative" style={{ width: 220, height: 260 }}>
+                  {/* Platinum wire dipping in from the top */}
+                  <div
+                    className="absolute left-1/2"
+                    style={{
+                      top: 0,
+                      transform: "translateX(-50%)",
+                      animation: "platinumWireDip 2.4s ease-in-out both",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 6,
+                        height: 150,
+                        margin: "0 auto",
+                        borderRadius: 3,
+                        background: "linear-gradient(90deg,#9ca3af,#e5e7eb,#6b7280)",
+                        boxShadow: "0 0 6px rgba(255,255,255,0.5)",
+                      }}
+                    />
+                    <div
+                      style={{
+                        width: 18,
+                        height: 18,
+                        margin: "-3px auto 0",
+                        borderRadius: "0 0 50% 50%",
+                        border: "3px solid #d1d5db",
+                        borderTop: "none",
+                      }}
+                    />
+                    {/* sparkle when it touches the salt */}
+                    <div
+                      className="absolute left-1/2"
+                      style={{
+                        bottom: -6,
+                        transform: "translateX(-50%)",
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        background: "radial-gradient(circle,#fff7d6,#fbbf24)",
+                        animation: "dipSparkle 2.4s ease-in-out both",
+                      }}
+                    />
+                  </div>
+
+                  {/* Test tube with salt sample */}
+                  <div
+                    className="absolute left-1/2"
+                    style={{ bottom: 0, transform: "translateX(-50%)", width: 56, height: 170 }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        borderRadius: "0 0 28px 28px",
+                        border: "3px solid rgba(255,255,255,0.7)",
+                        borderTop: "none",
+                        background: "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.18))",
+                        boxShadow: "inset 0 0 10px rgba(255,255,255,0.15)",
+                      }}
+                    />
+                    {/* salt sample at the bottom */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        bottom: 4,
+                        width: 44,
+                        height: 46,
+                        borderRadius: "0 0 22px 22px",
+                        overflow: "hidden",
+                        background:
+                          "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(226,232,240,0.9) 55%, rgba(203,213,225,0.98) 100%)",
+                      }}
+                    >
+                      {[
+                        { left: "6%", bottom: "4%", size: 9, rot: -18 },
+                        { left: "48%", bottom: "0%", size: 10, rot: 12 },
+                        { left: "26%", bottom: "20%", size: 8, rot: 26 },
+                        { left: "62%", bottom: "26%", size: 7, rot: -22 },
+                        { left: "12%", bottom: "40%", size: 7, rot: 8 },
+                        { left: "46%", bottom: "52%", size: 6, rot: -14 },
+                      ].map((c, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            position: "absolute",
+                            left: c.left,
+                            bottom: c.bottom,
+                            width: c.size,
+                            height: c.size,
+                            transform: `rotate(${c.rot}deg)`,
+                            background: "linear-gradient(135deg,#ffffff,#cbd5e1)",
+                            boxShadow: "0 0 2px rgba(0,0,0,0.2)",
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       );
     }
@@ -910,8 +1068,18 @@ export const Equipment: React.FC<EquipmentProps> = ({
                   : shouldForceNaOHBlue
                     ? NAOH_SOLUTION_COLOR
                     : baseOverlayColor;
+        const isFlameTestSalt =
+          isSaltAnalysis &&
+          hasSaltSample &&
+          !hasAcidSample &&
+          !hasConcHclSample &&
+          !hasNaOHSample &&
+          !hasAmmoniumSample;
         const showOverlay =
-          overlayColor !== "transparent" && totalChemicalsAmount > 0;
+          !isFlameTestSalt &&
+          overlayColor !== "transparent" &&
+          totalChemicalsAmount > 0;
+        const saltCrystalHeight = Math.max(34, Math.min(72, overlayHeight));
         const displayLabel = name.toLowerCase().includes("test tube")
           ? "25ml Test Tube"
           : name;
@@ -927,6 +1095,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
                   src="https://cdn.builder.io/api/v1/image/assets%2F5b489eed84cd44f89c5431dbe9fd14d3%2F3f3b9fb2343b4e74a0b66661affefadb?format=webp&width=800"
                   alt="25ml Test Tube"
                   className="w-full h-full object-contain"
+                  style={isFlameTestSalt ? { opacity: 0.55 } : undefined}
                 />
                 {showOverlay && (
                   <div
@@ -936,6 +1105,94 @@ export const Equipment: React.FC<EquipmentProps> = ({
                       backgroundColor: overlayColor,
                     }}
                   />
+                )}
+
+                {isFlameTestSalt && (
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 overflow-hidden transition-all duration-500"
+                    style={{
+                      bottom: "84px",
+                      width: "18px",
+                      height: `${saltCrystalHeight}px`,
+                      zIndex: 20,
+                      borderRadius: "0 0 9px 9px",
+                      background:
+                        "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(226,232,240,0.9) 55%, rgba(203,213,225,0.98) 100%)",
+                      boxShadow:
+                        "inset 0 0 4px rgba(0,0,0,0.18)",
+                    }}
+                  >
+                    {[
+                      { left: "2%", bottom: "1%", size: 8, rot: -18, shape: "diamond" },
+                      { left: "30%", bottom: "0%", size: 9, rot: 12, shape: "cube" },
+                      { left: "58%", bottom: "2%", size: 7, rot: 30, shape: "diamond" },
+                      { left: "78%", bottom: "0%", size: 6, rot: -10, shape: "cube" },
+                      { left: "14%", bottom: "12%", size: 7, rot: 26, shape: "cube" },
+                      { left: "44%", bottom: "10%", size: 8, rot: -22, shape: "diamond" },
+                      { left: "68%", bottom: "14%", size: 6, rot: 16, shape: "cube" },
+                      { left: "6%", bottom: "24%", size: 6, rot: 8, shape: "diamond" },
+                      { left: "32%", bottom: "26%", size: 7, rot: -14, shape: "cube" },
+                      { left: "58%", bottom: "28%", size: 6, rot: 20, shape: "diamond" },
+                      { left: "20%", bottom: "40%", size: 6, rot: -28, shape: "cube" },
+                      { left: "46%", bottom: "44%", size: 5, rot: 14, shape: "diamond" },
+                      { left: "10%", bottom: "54%", size: 5, rot: 22, shape: "cube" },
+                      { left: "40%", bottom: "60%", size: 5, rot: -18, shape: "diamond" },
+                      { left: "26%", bottom: "72%", size: 4, rot: 10, shape: "cube" },
+                      { left: "70%", bottom: "6%", size: 6, rot: 18, shape: "diamond" },
+                      { left: "50%", bottom: "18%", size: 6, rot: -24, shape: "cube" },
+                      { left: "2%", bottom: "38%", size: 5, rot: 28, shape: "diamond" },
+                      { left: "62%", bottom: "40%", size: 5, rot: -12, shape: "cube" },
+                      { left: "34%", bottom: "50%", size: 5, rot: 16, shape: "diamond" },
+                      { left: "56%", bottom: "54%", size: 4, rot: -20, shape: "cube" },
+                      { left: "18%", bottom: "64%", size: 4, rot: 24, shape: "diamond" },
+                      { left: "48%", bottom: "76%", size: 4, rot: -16, shape: "cube" },
+                      { left: "8%", bottom: "78%", size: 3, rot: 12, shape: "diamond" },
+                      { left: "36%", bottom: "86%", size: 3, rot: -22, shape: "cube" },
+                    ].map((crystal, index) => (
+                      <span
+                        key={index}
+                        style={{
+                          position: "absolute",
+                          left: crystal.left,
+                          bottom: crystal.bottom,
+                          width: `${crystal.size}px`,
+                          height: `${crystal.size}px`,
+                          transform: `rotate(${crystal.rot}deg)`,
+                          clipPath:
+                            crystal.shape === "diamond"
+                              ? "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)"
+                              : "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)",
+                          background:
+                            "linear-gradient(135deg, #ffffff 0%, #f1f5f9 40%, #b8c6d6 100%)",
+                          border: "0.5px solid rgba(255,255,255,0.95)",
+                          boxShadow:
+                            "0 1px 1.5px rgba(15,23,42,0.3), inset 0 0 2px rgba(255,255,255,0.9)",
+                        }}
+                      />
+                    ))}
+                    {/* sparkle highlights for a glittery crystalline look */}
+                    {[
+                      { left: "24%", bottom: "8%", size: 2 },
+                      { left: "62%", bottom: "20%", size: 1.5 },
+                      { left: "36%", bottom: "34%", size: 2 },
+                      { left: "16%", bottom: "48%", size: 1.5 },
+                      { left: "50%", bottom: "66%", size: 1.5 },
+                    ].map((sparkle, index) => (
+                      <span
+                        key={`sparkle-${index}`}
+                        style={{
+                          position: "absolute",
+                          left: sparkle.left,
+                          bottom: sparkle.bottom,
+                          width: `${sparkle.size}px`,
+                          height: `${sparkle.size}px`,
+                          borderRadius: "50%",
+                          background: "rgba(255,255,255,0.95)",
+                          boxShadow: "0 0 3px rgba(255,255,255,0.95)",
+                        }}
+                      />
+                    ))}
+                  </div>
                 )}
 
                 {/* Render a precipitate layer at the bottom when a precipitate chemical is present (eg. AgBr) */}
@@ -1510,7 +1767,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
           }}
           className={`absolute bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center font-bold transition-colors shadow-lg hover:shadow-xl ${
             id === "test_tubes"
-              ? "w-8 h-8 text-xs top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 border-white z-50"
+              ? "w-8 h-8 text-xs top-1/2 right-2 transform -translate-y-1/2 border-2 border-white z-50"
               : "w-6 h-6 text-xs -top-2 -right-2 z-30"
           }`}
           title="Remove equipment"

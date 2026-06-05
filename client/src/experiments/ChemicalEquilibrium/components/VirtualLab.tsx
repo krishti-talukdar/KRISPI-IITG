@@ -772,6 +772,11 @@ function ChemicalEquilibriumVirtualLab({
     : CHEMICAL_EQUILIBRIUM_EQUIPMENT;
   const normalizedTitle = experimentTitle?.toLowerCase() ?? "";
   const resolvedDryTestMode = dryTestMode ?? "acid";
+  const isBasicRadicalsFlameTest =
+    isDryTestExperiment &&
+    activeTopLevelSection === "BR" &&
+    activeBasicRadicalsSubsection === "dry" &&
+    activeFlameTest === "Fl";
   const displayedEquipmentList =
     isSaltAnalysisExperiment && resolvedDryTestMode === "acid" && activeHalide === "Br"
       ? equipmentList.filter((equipment) => {
@@ -1259,7 +1264,7 @@ function ChemicalEquilibriumVirtualLab({
   const shouldUseWatchGlassForSaltSample =
     isDryTestExperiment &&
     resolvedDryTestMode === "basic" &&
-    (activeFlameTest === "Fl" || isWatchGlassOnWorkbench);
+    isWatchGlassOnWorkbench;
   const shouldShowBasicFlameObservation = isBasicFlameAnalysis && isWorkbenchHeating;
   const shouldUseBlueBasicFlame = basicFlameHeatingCount === 3;
   const shouldUseGreenBasicFlame = basicFlameHeatingCount === 2;
@@ -5206,6 +5211,7 @@ function ChemicalEquilibriumVirtualLab({
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
                 activeFlameTest={activeFlameTest}
+                isBasicRadicalsFlameTest={isBasicRadicalsFlameTest}
                 onObservePlatinumWire={handleObserveFlameTest}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
@@ -5280,6 +5286,7 @@ function ChemicalEquilibriumVirtualLab({
                         iodideWetHeatingCount={iodideWetHeatingCount}
                         specialCasesHeatingCount={specialCasesHeatingCount}
                         activeFlameTest={activeFlameTest}
+                        isSaltAnalysis={isSaltAnalysisExperiment}
                         phPaperColor={phPaperColor}
                         volume={
                           pos.id === "test_tubes"
@@ -5579,6 +5586,7 @@ function ChemicalEquilibriumVirtualLab({
                 activeHalide={activeHalide}
                 dryTestMode={resolvedDryTestMode}
                 activeFlameTest={activeFlameTest}
+                isBasicRadicalsFlameTest={isBasicRadicalsFlameTest}
                 onObservePlatinumWire={handleObserveFlameTest}
                 mno2AddedDuringHeating={mno2AddedDuringHeating}
                 specialCasesHeatingCount={specialCasesHeatingCount}
@@ -5613,6 +5621,7 @@ function ChemicalEquilibriumVirtualLab({
                       dryTestMode={resolvedDryTestMode}
                       imageUrl={equipment.imageUrl}
                       activeFlameTest={activeFlameTest}
+                      isSaltAnalysis={isSaltAnalysisExperiment}
                       isHeating={isWorkbenchHeating}
                       // Special: color/volume for test tube reaction when heating conc H2SO4 with salt under Bromide Check
                       color={
