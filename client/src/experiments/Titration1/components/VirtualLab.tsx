@@ -898,25 +898,6 @@ export default function VirtualLab({
                             );
                           })}
                         </div>
-
-                        <div className="relative" style={{ marginLeft: -100 }}>
-                          <div style={{ width: 8, borderRadius: 8, background: 'linear-gradient(to bottom, rgba(59,130,246,0.95), rgba(99,102,241,0.95))', animation: 'pourStream 300ms linear forwards' }} className="origin-top" />
-
-                          <div style={{ position: 'absolute', left: -6, top: 0 }}>
-                            {[0,1,2].map((i) => (
-                              <div key={i} style={{ width: 8, height: 10, background: 'rgba(59,130,246,0.95)', borderRadius: 8, marginTop: 6, animation: `dripFall 900ms cubic-bezier(.2,.9,.3,1) ${i * 160}ms infinite` }} />
-                            ))}
-                          </div>
-
-                          {/* Countdown */}
-                          {autoTitrating && (
-                            <div className="mt-2 bg-white/95 p-2 rounded-lg shadow text-center text-sm">
-                              <div className="text-xs text-gray-500">Auto-stop at</div>
-                              <div className="text-lg font-bold text-green-600">10.0 mL</div>
-                              <div className="text-xs text-gray-700">{Math.max(0, Math.ceil(((10 - burette.reading) / 0.5 * 300) / 1000))}s remaining</div>
-                            </div>
-                          )}
-                        </div>
                       </div>
                     </div>
 
