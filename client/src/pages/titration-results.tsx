@@ -17,7 +17,7 @@ export default function TitrationResultsPage() {
   const [trials, setTrials] = useState<Array<{ initial: string; final: string }>>([
     { initial: "", final: "" },
   ]);
-  const [showResultsAnalysis, setShowResultsAnalysis] = useState(false);
+  const [showResultsPage, setShowResultsPage] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -111,6 +111,18 @@ export default function TitrationResultsPage() {
     { label: 'Color', value: 'Colorless → Pale pink at endpoint' },
   ];
 
+  useEffect(() => {
+    if (!isNaOHStrengthExperiment && showResultsPage) {
+      setShowResultsPage(false);
+    }
+  }, [isNaOHStrengthExperiment, showResultsPage]);
+
+  useEffect(() => {
+    if (showResultsPage && trials.length < 3) {
+      setShowResultsPage(false);
+    }
+  }, [showResultsPage, trials.length]);
+
   if (isOxalicPreparation) {
     const summary = {
       stepsCompleted: experiment?.stepDetails?.length ?? 7,
@@ -196,7 +208,7 @@ export default function TitrationResultsPage() {
     );
   }
 
-  if (isNaOHStrengthExperiment) {
+  if (isNaOHStrengthExperiment && showResultsPage) {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
@@ -363,7 +375,7 @@ export default function TitrationResultsPage() {
               </div>
             </div>
 
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between mt-6 flex-wrap gap-2">
               <Link href="/">
                 <Button className="bg-gray-500 hover:bg-gray-600 text-white flex items-center space-x-2">
                   <Home className="w-4 h-4" />
@@ -371,6 +383,9 @@ export default function TitrationResultsPage() {
                 </Button>
               </Link>
               <div className="flex items-center space-x-2">
+                <Button variant="outline" onClick={() => setShowResultsPage(false)}>
+                  Back to Calculation
+                </Button>
                 <Link href={`/experiment/${experimentId}/quiz`}>
                   <Button className="bg-amber-600 hover:bg-amber-700 text-white">QUIZ</Button>
                 </Link>
@@ -507,73 +522,33 @@ export default function TitrationResultsPage() {
               <div className="text-lg font-bold">{strength.toFixed(2)} g/L</div>
             </div>
 
-            {/* Show extra analysis once there are at least 3 trials recorded */}
-            {trials.length >= 3 && (
-              <div className="pt-2 space-y-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
-                  onClick={() => setShowResultsAnalysis((prev) => !prev)}
-                >
-                  Results and Analysis
-                </Button>
-
-                {showResultsAnalysis && (
-                  <div className="space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-2">Data Used</h3>
-                      <div className="grid grid-cols-1 gap-2 text-sm text-gray-700">
-                        <div><strong>Oxalic Acid Normality (N₁):</strong> {acidNormality || "—"}</div>
-                        <div><strong>Oxalic Acid Volume (V₁):</strong> {acidVolume || "—"} mL</div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-2">Trial Readings</h3>
-                      <div className="space-y-1 text-sm">
-                        {trials.map((trial, idx) => {
-                          const i = parseFloat(trial.initial);
-                          const f = parseFloat(trial.final);
-                          const used = Number.isFinite(i) && Number.isFinite(f) ? Math.max(0, f - i) : 0;
-
-                          return (
-                            <div key={idx} className="rounded bg-white px-3 py-2 border border-gray-200">
-                              <div className="font-medium">Trial {idx + 1}</div>
-                              <div className="text-gray-600">Initial: {trial.initial || "—"} mL, Final: {trial.final || "—"} mL, NaOH Used: {used.toFixed(2)} mL</div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-2">Formulas Used</h3>
-                      <div className="space-y-2 text-sm text-gray-700 rounded bg-white border border-gray-200 p-3">
-                        <div><strong>Mean Titre Volume (V₂):</strong> V₂ = (Σ trial volumes) / n</div>
-                        <div><strong>NaOH Normality (N₂):</strong> N₁V₁ = N₂V₂ → N₂ = (N₁ × V₁) / V₂</div>
-                        <div><strong>Strength:</strong> Strength = N₂ × 40</div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-2">Calculated Values</h3>
-                      <div className="grid grid-cols-1 gap-2 text-sm text-gray-700">
-                        <div><strong>Mean Titre Volume (V₂):</strong> {meanV2.toFixed(2)} mL</div>
-                        <div><strong>NaOH Normality (N₂):</strong> {n2.toFixed(4)} N</div>
-                        <div><strong>Strength:</strong> {strength.toFixed(2)} g/L</div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
+            <div className="pt-2 space-y-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
+                onClick={() => {
+                  if (trials.length >= 3) {
+                    setShowResultsPage(true);
+                  }
+                }}
+                disabled={trials.length < 3}
+              >
+                Results and Analysis
+              </Button>
+              {trials.length < 3 && (
+                <p className="text-xs text-gray-500">
+                  Add {3 - trials.length} more trial{trials.length === 2 ? "" : "s"} to unlock the results page.
+                </p>
+              )}
+              {trials.length >= 3 && (
                 <Link href={`/experiment/${experimentId}/quiz`}>
                   <Button className="w-full bg-amber-500 text-white hover:bg-amber-600">
                     QUIZ
                   </Button>
                 </Link>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
