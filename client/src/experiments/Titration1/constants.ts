@@ -7,7 +7,7 @@ export const COLORS = {
   COLORLESS: "#F8F9FA",
   PINK: "#FFB6C1", 
   LIGHT_PINK: "#FFC0CB",
-  OXALIC_ACID: "#F0F8FF",
+  OXALIC_ACID: "#4A90E2",
   NAOH: "#E6F3FF",
   WATER: "#87CEEB"
 };
