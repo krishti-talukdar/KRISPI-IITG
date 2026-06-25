@@ -33,16 +33,22 @@ export default function TitrationResultsPage() {
     return () => { mounted = false; };
   }, [experimentId]);
 
-  // Helper derived values for titration
-  const volumes = trials
-    .map((t) => {
-      const i = parseFloat(t.initial);
-      const f = parseFloat(t.final);
-      if (Number.isFinite(i) && Number.isFinite(f)) {
-        return Math.max(0, f - i);
-      }
-      return null;
-    })
+  const trialReadings = trials.map((trial) => {
+    const initial = parseFloat(trial.initial);
+    const final = parseFloat(trial.final);
+    const validInitial = Number.isFinite(initial);
+    const validFinal = Number.isFinite(final);
+    const used = validInitial && validFinal ? Math.max(0, final - initial) : null;
+
+    return {
+      initial: validInitial ? initial : null,
+      final: validFinal ? final : null,
+      used,
+    };
+  });
+
+  const volumes = trialReadings
+    .map((reading) => reading.used)
     .filter((v): v is number => v !== null);
 
   const meanV2 = volumes.length ? volumes.reduce((a, b) => a + b, 0) / volumes.length : 0;
@@ -50,7 +56,28 @@ export default function TitrationResultsPage() {
   const v1 = parseFloat(acidVolume);
   const validInputs = Number.isFinite(n1) && Number.isFinite(v1) && meanV2 > 0;
   const n2 = validInputs ? (n1 * v1) / meanV2 : 0;
-  const strength = n2 * 40;
+  const strength = validInputs ? n2 * 40 : 0;
+  const meanV2Display = volumes.length ? `${meanV2.toFixed(2)} mL` : "—";
+  const normalityDisplay = validInputs ? `${n2.toFixed(4)} N` : "—";
+  const strengthDisplay = validInputs ? `${strength.toFixed(2)} g/L` : "—";
+  const formulaData = [
+    {
+      label: 'Mean titre volume (V₂)',
+      value: meanV2Display,
+      formula: 'V₂ = (Σ trial volumes) / n',
+    },
+    {
+      label: 'NaOH normality (N₂)',
+      value: normalityDisplay,
+      formula: 'N₂ = (N₁ × V₁) / V₂',
+    },
+    {
+      label: 'Strength',
+      value: strengthDisplay,
+      formula: 'Strength = N₂ × 40',
+    },
+  ];
+  const formatReadingValue = (value: number | null) => (value !== null ? value.toFixed(2) : '—');
 
   // Show a summary page only for Oxalic Acid PREPARATION experiments.
   // NaOH standardization against oxalic acid should use the live titration layout.
@@ -282,6 +309,51 @@ export default function TitrationResultsPage() {
                       <li>• Endpoint detected by phenolphthalein</li>
                       <li>• Strength computed using N₁V₁ = N₂V₂</li>
                     </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-1">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Inputs Provided</h3>
+                  <div className="space-y-3 text-sm text-gray-600">
+                    <div>
+                      <span className="font-medium text-gray-800">Oxalic acid normality (N₁):</span> {acidNormality || '—'} N
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-800">Oxalic acid volume (V₁):</span> {acidVolume ? `${acidVolume} mL` : '—'}
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-medium text-gray-800">Trial readings</p>
+                      {trialReadings.map((reading, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between rounded border border-gray-100 bg-gray-50 px-3 py-2 text-xs text-gray-600"
+                        >
+                          <span>Trial {idx + 1}</span>
+                          <span className="font-mono">
+                            {formatReadingValue(reading.initial)} → {formatReadingValue(reading.final)}
+                          </span>
+                          <span className="font-semibold text-gray-800">
+                            {reading.used !== null ? `${reading.used.toFixed(2)} mL` : '—'}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="lg:col-span-2">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Calculated Values &amp; Formulas</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {formulaData.map((item) => (
+                      <div key={item.label} className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-3">
+                        <div className="text-xs uppercase tracking-wide text-gray-500">{item.label}</div>
+                        <div className="text-2xl font-semibold text-gray-800">{item.value}</div>
+                        <div className="text-xs font-mono text-gray-500">{item.formula}</div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
