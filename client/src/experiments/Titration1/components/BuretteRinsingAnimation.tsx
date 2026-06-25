@@ -265,8 +265,11 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
                     className="absolute inset-0 z-20 h-full w-full object-contain pointer-events-none"
                   />
 
-                  {/* Liquid clipped to the inner graduated tube of the burette image */}
-                  <div className="absolute z-30 overflow-hidden left-[41.7%] w-[16.6%] top-[15.7%] h-[60.8%]">
+                  {/* Liquid clipped to the full inner cavity (graduated tube + taper) */}
+                  <div
+                    className="absolute z-30 left-[41.7%] w-[16.6%] top-[15.7%] h-[68.3%]"
+                    style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 89%, 66% 100%, 34% 100%, 0% 89%)' }}
+                  >
                     <div
                       className="absolute bottom-0 left-0 right-0 transition-[height] duration-500 ease-out"
                       style={{ height: `${liquidLevel}%` }}
