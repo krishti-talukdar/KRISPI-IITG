@@ -884,7 +884,7 @@ export default function VirtualLab({
                   <>
                     <style>{`@keyframes pourStream { 0% { height: 0 } 100% { height: 120px } } @keyframes dripFall { 0% { transform: translateY(0); opacity:1 } 80% { opacity:1 } 100% { transform: translateY(120px); opacity:0 } }`}</style>
 
-                    <div className="absolute pointer-events-none" style={{ left: left + 160, top, zIndex: 80 }}>
+                    <div className="absolute pointer-events-none" style={{ left: left + 210, top, zIndex: 80 }}>
                       <div className="flex items-start space-x-3">
                         {/* Burette scale (downcounting 10→1) - moved to side */}
                         <div className="flex flex-col items-center bg-white p-2 rounded-md shadow-lg ring-1 ring-green-200" style={{ width: 60, zIndex: 70 }}>
