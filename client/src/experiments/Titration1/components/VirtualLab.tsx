@@ -1125,8 +1125,8 @@ export default function VirtualLab({
 
             {/* Titration pouring animation (shown during titration) */}
             {currentStep >= 5 && !experimentCompleted && (
-              <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+              <div className="bg-black rounded-xl p-4 border border-gray-700 shadow-sm">
+                <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
                   <Droplets className="w-5 h-5 mr-2 text-pink-500" />
                   Titration in Progress
                 </h3>
@@ -1168,7 +1168,7 @@ export default function VirtualLab({
                     </div>
                   </div>
                 </div>
-                <p className="text-xs text-center text-gray-500 mt-2">
+                <p className="text-xs text-center text-gray-300 mt-2">
                   NaOH is being added drop by drop — the solution slowly turns light pink.
                 </p>
               </div>
