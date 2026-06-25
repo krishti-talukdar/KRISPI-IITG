@@ -186,7 +186,7 @@ export const GUIDED_STEPS: GuidedStep[] = [
   {
     id: 2,
     title: "Add Oxalic Acid",
-    description: "Use the pipette to transfer exactly 25.0 mL of 0.1N oxalic acid to the conical flask.",
+    description: "Press the pipette icon in the workbench to transfer exactly 25.0 mL of 0.1N oxalic acid to the conical flask.",
     action: "Click pipette to transfer solution",
     equipment: ["pipette", "oxalic-acid"],
     completed: false
