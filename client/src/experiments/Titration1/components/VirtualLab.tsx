@@ -96,7 +96,7 @@ export default function VirtualLab({
 
   // Step 1 pipette planning state
   const [showPipetteVolumeModal, setShowPipetteVolumeModal] = useState(false);
-  const [pipetteVolumeInput, setPipetteVolumeInput] = useState<string>("10");
+  const [pipetteVolumeInput, setPipetteVolumeInput] = useState<string>("0");
   const [plannedOxalicVolume, setPlannedOxalicVolume] = useState<number | null>(10);
 
   const setSafeTimeout = useCallback((fn: () => void, delay: number) => {
