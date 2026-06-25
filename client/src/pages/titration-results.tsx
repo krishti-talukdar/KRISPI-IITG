@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Calculator, Clock, FlaskConical, Home, TrendingUp } from "lucide-react";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Link, useParams } from "wouter";
@@ -55,6 +56,60 @@ export default function TitrationResultsPage() {
   // NaOH standardization against oxalic acid should use the live titration layout.
   const title = experiment?.title ?? '';
   const isOxalicPreparation = /preparation/i.test(title) && /oxalic/i.test(title);
+  const isNaOHStrengthExperiment = /sodium hydroxide/i.test(title) && /oxalic/i.test(title);
+
+  const naohSummary = {
+    stepsCompleted: experiment?.stepDetails?.length ?? 8,
+    actionsPerformed: 4,
+    finalVolume: 'Average titre 24.8 mL',
+  };
+
+  const naohTimeline = [
+    {
+      action: 'Rinsed burette and standardized the NaOH solution',
+      observation: 'Burette was rinsed with distilled water and NaOH, set to zero at room temperature.',
+      colorBefore: '#fefefe',
+      colorAfter: '#fefefe',
+    },
+    {
+      action: 'Pipetted 25 mL oxalic acid with phenolphthalein',
+      observation: 'Clear oxalic acid solution remained colorless after adding 2–3 drops of the indicator on the white tile.',
+      colorBefore: '#fffaf7',
+      colorAfter: '#fffaf7',
+    },
+    {
+      action: 'Titrated slowly to pale pink endpoint',
+      observation: 'Indicator turned pale pink and stayed for 30 seconds, signaling a slight excess of NaOH.',
+      colorBefore: '#fffaf7',
+      colorAfter: '#ffd6e8',
+      isEndpoint: true,
+    },
+    {
+      action: 'Calculated normality and strength',
+      observation: 'Concordant titres averaged 24.8 mL → NaOH ≈0.098 N (≈3.92 g/L).',
+      colorBefore: '#ffd6e8',
+      colorAfter: '#ffd6e8',
+    },
+  ];
+
+  const titrationHighlights = [
+    {
+      title: 'Standardization with a primary acid',
+      description:
+        'Oxalic acid is diprotic and stable, so 1 mole reacts with 2 moles of NaOH. Using 0.1 N oxalic acid lets us derive the unknown NaOH normality via N₁V₁ = N₂V₂.',
+    },
+    {
+      title: 'Phenolphthalein as an endpoint marker',
+      description:
+        'The indicator stays colorless in acidic medium and turns pink once there is a slight excess of base. A persistent pale pink for ~30 s indicates a reliable endpoint.',
+    },
+  ];
+
+  const contentsAnalysis = [
+    { label: 'Volume', value: '25.0 mL (average titre)' },
+    { label: 'Components', value: 'Oxalic acid, NaOH, phenolphthalein indicator' },
+    { label: 'Color', value: 'Colorless → Pale pink at endpoint' },
+  ];
 
   if (isOxalicPreparation) {
     const summary = {
@@ -134,6 +189,195 @@ export default function TitrationResultsPage() {
                   <Button variant="outline" className="flex-1">Close Analysis</Button>
                 </div>
               </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isNaOHStrengthExperiment) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <div className="flex items-center space-x-2 mb-1">
+                <TrendingUp className="w-6 h-6 text-green-600" />
+                <h1 className="text-2xl font-bold">Experiment Results &amp; Analysis</h1>
+              </div>
+              <p className="text-sm text-gray-600">Complete analysis of your NaOH vs Oxalic acid titration</p>
+            </div>
+            <Link href={`/experiment/${experimentId}`}>
+              <Button variant="outline">Return to Experiment</Button>
+            </Link>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <FlaskConical className="w-5 h-5 mr-2 text-green-600" />
+                Experiment Summary
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-2xl font-bold text-green-600">{naohSummary.stepsCompleted}</div>
+                  <div className="text-sm text-gray-600">Steps Completed</div>
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-2xl font-bold text-green-600">{naohSummary.actionsPerformed}</div>
+                  <div className="text-sm text-gray-600">Actions Performed</div>
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-2xl font-bold text-purple-600">{naohSummary.finalVolume}</div>
+                  <div className="text-sm text-gray-600">Average Volume</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Reaction Overview</h3>
+              <div className="space-y-4">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-700 mb-2">Chemical Equation</h4>
+                  <div className="text-center text-lg font-mono bg-white rounded p-3 border">
+                    <span className="text-blue-600 font-bold">H₂C₂O₄</span>
+                    <span className="mx-3">+</span>
+                    <span className="text-green-700 font-bold">2NaOH</span>
+                    <span className="mx-4 text-xl">→</span>
+                    <span className="text-purple-600 font-bold">Na₂C₂O₄</span>
+                    <span className="mx-3">+</span>
+                    <span className="font-bold">2H₂O</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-pink-50 rounded-lg p-4 border border-pink-200">
+                    <h4 className="font-semibold text-pink-800 mb-2">Oxalic Acid (H₂C₂O₄)</h4>
+                    <ul className="text-sm text-pink-700 space-y-1">
+                      <li>• Diprotic primary standard</li>
+                      <li>• Colorless aqueous solution</li>
+                      <li>• Provides known acidity (0.1 N)</li>
+                      <li>• Ensures stoichiometric titration with NaOH</li>
+                    </ul>
+                  </div>
+                  <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                    <h4 className="font-semibold text-blue-800 mb-2">Sodium Hydroxide (NaOH)</h4>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      <li>• Strong base, colorless</li>
+                      <li>• Delivered via burette with precise drops</li>
+                      <li>• Endpoint detected by phenolphthalein</li>
+                      <li>• Strength computed using N₁V₁ = N₂V₂</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <Clock className="w-5 h-5 mr-2 text-gray-600" />
+                Action Timeline
+              </h3>
+              <div className="space-y-3 max-h-64 overflow-y-auto">
+                {naohTimeline.map((log, index) => (
+                  <div
+                    key={log.action}
+                    className={`flex items-start space-x-3 p-3 rounded-lg ${
+                      log.isEndpoint ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
+                    }`}
+                  >
+                    <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-800">{log.action}</div>
+                      <div className="text-sm text-gray-600">{log.observation}</div>
+                      <div className="flex items-center space-x-4 mt-2 text-xs">
+                        <span className="flex items-center">
+                          <span
+                            className="w-5 h-5 rounded-full mr-2 border-2 border-gray-700"
+                            style={{ backgroundColor: log.colorBefore }}
+                          ></span>
+                          Before
+                        </span>
+                        <span>→</span>
+                        <span className="flex items-center">
+                          <span
+                            className="w-5 h-5 rounded-full mr-2 border-2 border-gray-700"
+                            style={{ backgroundColor: log.colorAfter }}
+                          ></span>
+                          After
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 border border-purple-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <Calculator className="w-5 h-5 mr-2 text-purple-600" />
+                Titration Concepts Demonstrated
+              </h3>
+              <div className="space-y-3">
+                {titrationHighlights.map((highlight) => (
+                  <div key={highlight.title} className="bg-white rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 mb-2">{highlight.title}</h4>
+                    <p className="text-sm text-gray-700">{highlight.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Final Experimental State</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2">Current Solution</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <span
+                        className="w-6 h-6 rounded-full border-2 border-gray-300"
+                        style={{ backgroundColor: '#ffd6e8' }}
+                      ></span>
+                      <span className="text-sm font-medium">Standardized NaOH (pale pink endpoint)</span>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Indicator turned pale pink and remained for 30 seconds, confirming a slight excess of NaOH at endpoint.
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2">Contents Analysis</h4>
+                  <div className="space-y-1">
+                    {contentsAnalysis.map((item) => (
+                      <div key={item.label} className="text-sm text-gray-600">
+                        {item.label}: <span className="font-medium text-gray-800">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between mt-6">
+              <Link href="/">
+                <Button className="bg-gray-500 hover:bg-gray-600 text-white flex items-center space-x-2">
+                  <Home className="w-4 h-4" />
+                  <span>Return to Experiments</span>
+                </Button>
+              </Link>
+              <div className="flex items-center space-x-2">
+                <Link href={`/experiment/${experimentId}/quiz`}>
+                  <Button className="bg-amber-600 hover:bg-amber-700 text-white">QUIZ</Button>
+                </Link>
+                <Link href={`/experiment/${experimentId}`}>
+                  <Button className="bg-green-500 hover:bg-green-600 text-white">Back to Experiment</Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
