@@ -1168,7 +1168,7 @@ export default function VirtualLab({
                       {/* Liquid changing color */}
                       <div
                         className="absolute inset-0"
-                        style={{ clipPath: 'polygon(34% 58%, 66% 58%, 90% 98%, 10% 98%)', opacity: 0.85, animation: 'flaskToPinkAnim 9s ease-in-out forwards' }}
+                        style={{ clipPath: 'polygon(34% 58%, 66% 58%, 90% 98%, 10% 98%)', opacity: 0.85, animation: 'flaskToPinkAnim 10s ease-in-out forwards' }}
                       />
                     </div>
                   </div>
