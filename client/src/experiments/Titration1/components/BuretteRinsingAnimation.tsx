@@ -329,17 +329,6 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
                     </div>
                   )}
 
-                  {/* Funnel (appears during filling) at the tube opening */}
-                  {(currentStep === 0 || currentStep === 2 || currentStep === 4) && (
-                    <div className="absolute z-40 left-1/2 top-[7%] -translate-x-1/2">
-                      <div className="w-8 h-6 bg-gray-300 rounded-t-full border-2 border-gray-400 relative">
-                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-4 bg-gray-400"></div>
-                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0.5 h-6 animate-pulse"
-                             style={{ backgroundColor: liquidColor, opacity: 0.6 }}></div>
-                      </div>
-                    </div>
-                  )}
-
                   {/* Beaker for waste (appears during draining) below the stopcock */}
                   {(currentStep === 1 || currentStep === 3) && (
                     <div className="absolute z-10 left-1/2 top-[96%] -translate-x-1/2">
