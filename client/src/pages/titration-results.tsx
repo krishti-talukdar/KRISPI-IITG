@@ -314,44 +314,53 @@ export default function TitrationResultsPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-6 border border-gray-200">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-1">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Inputs Provided</h3>
-                  <div className="space-y-3 text-sm text-gray-600">
-                    <div>
-                      <span className="font-medium text-gray-800">Oxalic acid normality (N₁):</span> {acidNormality || '—'} N
+            <div className="bg-gradient-to-br from-indigo-50 via-white to-amber-50 rounded-2xl border border-indigo-100 p-6 shadow-lg">
+              <div className="mb-6">
+                <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500">Titration Results</p>
+                <h3 className="text-2xl font-black text-gray-900">Insights from your titration</h3>
+              </div>
+              <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                <div className="xl:col-span-1 bg-white/90 rounded-2xl border border-indigo-100 p-5 shadow-sm">
+                  <h4 className="text-sm font-semibold text-indigo-600 mb-3">Inputs Provided</h4>
+                  <div className="space-y-3 text-sm text-gray-700">
+                    <div className="rounded-lg bg-indigo-50/70 px-3 py-2">
+                      <div className="text-xs uppercase tracking-wide text-indigo-400">Oxalic acid normality (N₁)</div>
+                      <div className="text-xl font-semibold text-indigo-900">{acidNormality || '—'} N</div>
+                    </div>
+                    <div className="rounded-lg bg-indigo-50/70 px-3 py-2">
+                      <div className="text-xs uppercase tracking-wide text-indigo-400">Oxalic acid volume (V₁)</div>
+                      <div className="text-xl font-semibold text-indigo-900">{acidVolume ? `${acidVolume} mL` : '—'}</div>
                     </div>
                     <div>
-                      <span className="font-medium text-gray-800">Oxalic acid volume (V₁):</span> {acidVolume ? `${acidVolume} mL` : '—'}
-                    </div>
-                    <div className="space-y-1">
-                      <p className="font-medium text-gray-800">Trial readings</p>
-                      {trialReadings.map((reading, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center justify-between rounded border border-gray-100 bg-gray-50 px-3 py-2 text-xs text-gray-600"
-                        >
-                          <span>Trial {idx + 1}</span>
-                          <span className="font-mono">
-                            {formatReadingValue(reading.initial)} → {formatReadingValue(reading.final)}
-                          </span>
-                          <span className="font-semibold text-gray-800">
-                            {reading.used !== null ? `${reading.used.toFixed(2)} mL` : '—'}
-                          </span>
-                        </div>
-                      ))}
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Trial readings</p>
+                      <div className="space-y-2">
+                        {trialReadings.map((reading, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between rounded-2xl border border-indigo-100 bg-gradient-to-r from-white to-indigo-50 px-4 py-2 text-xs text-indigo-700 shadow-inner"
+                          >
+                            <span className="font-semibold">Trial {idx + 1}</span>
+                            <span className="font-mono">{formatReadingValue(reading.initial)} → {formatReadingValue(reading.final)}</span>
+                            <span className="text-sm font-semibold text-indigo-900">
+                              {reading.used !== null ? `${reading.used.toFixed(2)} mL` : '—'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="lg:col-span-2">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Calculated Values &amp; Formulas</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="xl:col-span-3 bg-white/80 rounded-2xl border border-pink-100 p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-semibold text-pink-600">Calculated Values &amp; Formulas</h4>
+                    <span className="text-xs font-semibold uppercase tracking-widest text-pink-300">Based on inputs</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                     {formulaData.map((item) => (
-                      <div key={item.label} className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-3">
-                        <div className="text-xs uppercase tracking-wide text-gray-500">{item.label}</div>
-                        <div className="text-2xl font-semibold text-gray-800">{item.value}</div>
-                        <div className="text-xs font-mono text-gray-500">{item.formula}</div>
+                      <div key={item.label} className="rounded-2xl border border-pink-100 bg-gradient-to-br from-white to-pink-50 px-4 py-4 text-center shadow-inner">
+                        <div className="text-xs uppercase tracking-wide text-pink-400">{item.label}</div>
+                        <div className="text-3xl font-bold text-pink-700 mt-2">{item.value}</div>
+                        <div className="text-xs font-mono text-pink-500 mt-2">{item.formula}</div>
                       </div>
                     ))}
                   </div>
