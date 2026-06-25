@@ -100,7 +100,7 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
     setShowComplete(true);
     setCompletedSteps([0, 1, 2, 3, 4, 5, 6]); // Mark all steps as completed
     setLiquidLevel(100); // Set final liquid level
-    setLiquidColor('#FFB6C1'); // Set final NaOH color
+    setLiquidColor('#C8A2E8'); // Set final NaOH color (light purple)
     setIsDraining(false);
     setShowBubbles(false);
     setShowStopcockFlow(false);
@@ -136,14 +136,14 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
         drainBurette(() => setStepAnimationComplete(true));
         break;
       case 2: // Rinse with NaOH
-        setLiquidColor('#FFB6C1'); // Light pink NaOH
+        setLiquidColor('#C8A2E8'); // Light purple NaOH
         fillBurette(30, () => setStepAnimationComplete(true));
         break;
       case 3: // Discard NaOH rinse
         drainBurette(() => setStepAnimationComplete(true));
         break;
       case 4: // Fill with NaOH
-        setLiquidColor('#FFB6C1'); // Pink NaOH solution
+        setLiquidColor('#C8A2E8'); // Light purple NaOH solution
         fillBurette(98, () => setStepAnimationComplete(true));
         break;
       case 5: // Remove air bubbles
