@@ -90,16 +90,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         </span>
       </div>
 
-      {/* White tile for better endpoint visibility */}
-      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-32 h-24 bg-white border-2 border-gray-300 rounded-lg shadow-md">
-        <div className="flex items-center justify-center h-full">
-          <span className="text-xs text-gray-500 text-center">
-            White Tile<br/>
-            (for endpoint detection)
-          </span>
-        </div>
-      </div>
-
       {/* Drop zone indicator */}
       {isDragOver && (
         <div className="absolute inset-0 flex items-center justify-center bg-green-500/10 backdrop-blur-sm">
