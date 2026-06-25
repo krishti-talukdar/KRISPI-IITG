@@ -207,9 +207,10 @@ export const Equipment: React.FC<EquipmentProps> = ({
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
-                    background: `linear-gradient(to bottom, transparent 50%, ${color} 70%, ${color} 85%, ${color} 95%)`,
-                    clipPath: 'polygon(30% 70%, 70% 70%, 65% 95%, 35% 95%)',
-                    opacity: 0.7
+                    backgroundColor: color,
+                    backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(0,0,0,0.08))`,
+                    clipPath: 'polygon(37% 64%, 63% 64%, 72% 89%, 28% 89%)',
+                    opacity: 0.8
                   }}
                 />
               )}
@@ -220,21 +221,21 @@ export const Equipment: React.FC<EquipmentProps> = ({
                 {/* Horizontal stirring motion */}
                 <div
                   className="absolute inset-0 flex items-center justify-center"
-                  style={{ clipPath: 'polygon(30% 70%, 70% 70%, 65% 95%, 35% 95%)' }}
+                  style={{ clipPath: 'polygon(37% 64%, 63% 64%, 72% 89%, 28% 89%)' }}
                 >
                   <div className="w-12 h-1 bg-blue-400/50 rounded-full animate-pulse"></div>
                 </div>
                 {/* Vertical stirring motion */}
                 <div
                   className="absolute inset-0 flex items-center justify-center pt-4"
-                  style={{ clipPath: 'polygon(30% 70%, 70% 70%, 65% 95%, 35% 95%)' }}
+                  style={{ clipPath: 'polygon(37% 64%, 63% 64%, 72% 89%, 28% 89%)' }}
                 >
                   <div className="w-1 h-8 bg-purple-400/40 rounded-full animate-pulse" style={{ animationDelay: '0.15s' }}></div>
                 </div>
                 {/* Additional stirring effects */}
                 <div
                   className="absolute inset-0 flex items-end justify-center pb-6"
-                  style={{ clipPath: 'polygon(30% 70%, 70% 70%, 65% 95%, 35% 95%)' }}
+                  style={{ clipPath: 'polygon(37% 64%, 63% 64%, 72% 89%, 28% 89%)' }}
                 >
                   <div className="w-8 h-1 bg-pink-400/30 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
                 </div>
