@@ -254,7 +254,34 @@ export default function VirtualLab({
       setAutoTitrating(false);
       setActiveEquipment("");
       setShowProceedButton(true);
-      setShowTitrationLimitWarning(true);
+
+      // Slowly transition the conical flask solution from blue to light pink
+      const fromColor = conicalFlask.colorHex || '#87CEEB';
+      const toColor = '#FFB6C1';
+      const totalSteps = 50;
+      const r1 = parseInt(fromColor.slice(1, 3), 16);
+      const g1 = parseInt(fromColor.slice(3, 5), 16);
+      const b1 = parseInt(fromColor.slice(5, 7), 16);
+      const r2 = parseInt(toColor.slice(1, 3), 16);
+      const g2 = parseInt(toColor.slice(3, 5), 16);
+      const b2 = parseInt(toColor.slice(5, 7), 16);
+      let step = 0;
+      if (colorIntervalRef.current) { clearInterval(colorIntervalRef.current as number); colorIntervalRef.current = null; }
+      colorIntervalRef.current = window.setInterval(() => {
+        step++;
+        const p = step / totalSteps;
+        const r = Math.round(r1 + (r2 - r1) * p);
+        const g = Math.round(g1 + (g2 - g1) * p);
+        const b = Math.round(b1 + (b2 - b1) * p);
+        const currentColor = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        setConicalFlask(prev => ({ ...prev, colorHex: currentColor }));
+        if (step >= totalSteps) {
+          if (colorIntervalRef.current) { clearInterval(colorIntervalRef.current as number); colorIntervalRef.current = null; }
+          setConicalFlask(prev => ({ ...prev, colorHex: toColor }));
+          setTitrationState(prev => ({ ...prev, flaskColor: toColor }));
+          setShowTitrationLimitWarning(true);
+        }
+      }, 200); // 50 steps * 200ms = 10s
     }
   }, [autoTitrating, burette.reading]);
 
