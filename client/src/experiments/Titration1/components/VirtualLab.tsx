@@ -180,6 +180,7 @@ export default function VirtualLab({
   // Auto titration flow after start prompt
   const [autoTitrating, setAutoTitrating] = useState(false);
   const [showTitrationLimitWarning, setShowTitrationLimitWarning] = useState(false);
+  const [showProceedButton, setShowProceedButton] = useState(false);
   const [showStrengthPrompt, setShowStrengthPrompt] = useState(false);
   const autoFlowIntervalRef = useRef<number | null>(null);
   const prevBuretteReadingRef = useRef<number>(burette.reading);
@@ -252,6 +253,7 @@ export default function VirtualLab({
       }
       setAutoTitrating(false);
       setActiveEquipment("");
+      setShowProceedButton(true);
       setShowTitrationLimitWarning(true);
     }
   }, [autoTitrating, burette.reading]);
@@ -705,6 +707,7 @@ export default function VirtualLab({
     setActiveEquipment("");
     setShowResultsModal(false);
     setExperimentCompleted(false);
+    setShowProceedButton(false);
     setLastAction(null);
     setStepHistory([]);
     setShowTitrating(false);
@@ -841,9 +844,11 @@ export default function VirtualLab({
           <div className="lg:col-span-6">
             <WorkBench
               onDrop={handleEquipmentDrop}
-              isRunning={isRunning}
-              currentStep={currentStep}
-            >
+      isRunning={isRunning}
+      currentStep={currentStep}
+      showProceedButton={showProceedButton && !experimentCompleted}
+      onProceed={() => setShowTitrationLimitWarning(true)}
+    >
               {/* Positioned Equipment */}
               {equipmentOnBench.map((equipment) => {
                 const equipmentData = LAB_EQUIPMENT.find(eq => eq.id === equipment.id);

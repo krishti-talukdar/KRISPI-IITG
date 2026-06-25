@@ -5,6 +5,8 @@ interface WorkBenchProps {
   children: React.ReactNode;
   isRunning: boolean;
   currentStep: number;
+  showProceedButton?: boolean;
+  onProceed?: () => void;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -12,6 +14,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   children,
   isRunning,
   currentStep,
+  showProceedButton = false,
+  onProceed,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -119,6 +123,16 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {showProceedButton && (
+        <button
+          type="button"
+          onClick={onProceed}
+          className="absolute bottom-6 right-6 z-30 h-20 w-20 rounded-full bg-pink-600 text-white shadow-lg ring-4 ring-white/20 transition-transform hover:scale-105"
+        >
+          <span className="text-xs font-bold tracking-wide">PROCEED</span>
+        </button>
       )}
 
       {/* Workbench content */}
