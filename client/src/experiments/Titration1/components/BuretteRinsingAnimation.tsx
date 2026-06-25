@@ -268,24 +268,42 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
                   {/* Liquid clipped to the inner graduated tube of the burette image */}
                   <div className="absolute z-30 overflow-hidden left-[41.7%] w-[16.6%] top-[15.7%] h-[60.8%]">
                     <div
-                      className="absolute bottom-0 left-0 right-0 transition-all duration-300 ease-in-out"
-                      style={{
-                        height: `${liquidLevel}%`,
-                        backgroundColor: liquidColor,
-                        opacity: 0.65
-                      }}
+                      className="absolute bottom-0 left-0 right-0 transition-[height] duration-500 ease-out"
+                      style={{ height: `${liquidLevel}%` }}
                     >
-                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-white opacity-50 animate-pulse"></div>
+                      {/* Liquid body with depth gradient */}
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          backgroundColor: liquidColor,
+                          opacity: 0.7,
+                          backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 22%, rgba(0,0,0,0.18) 100%)`
+                        }}
+                      />
+                      {/* Glass shine running down the tube */}
+                      <div className="absolute inset-y-0 left-[18%] w-[14%] bg-white/40 blur-[1px] rounded-full" />
+                      {/* Curved meniscus surface */}
+                      <div
+                        className="absolute -top-[3px] left-0 right-0 h-[6px] rounded-[50%]"
+                        style={{
+                          backgroundColor: liquidColor,
+                          opacity: 0.85,
+                          boxShadow: '0 1px 2px rgba(255,255,255,0.6) inset'
+                        }}
+                      />
+                      <div className="absolute top-0 left-0 right-0 h-[2px] bg-white/70 rounded-full animate-pulse" />
                     </div>
 
                     {showBubbles && (
                       <>
-                        <div className="absolute bottom-10 left-1 w-1.5 h-1.5 bg-white rounded-full animate-bounce"
+                        <div className="absolute bottom-10 left-1 w-1.5 h-1.5 bg-white/80 rounded-full animate-bounce"
                              style={{ animationDelay: '0s' }}></div>
-                        <div className="absolute bottom-16 right-1 w-1.5 h-1.5 bg-white rounded-full animate-bounce"
+                        <div className="absolute bottom-16 right-1 w-1.5 h-1.5 bg-white/80 rounded-full animate-bounce"
                              style={{ animationDelay: '0.2s' }}></div>
-                        <div className="absolute bottom-8 left-1/2 w-1.5 h-1.5 bg-white rounded-full animate-bounce"
+                        <div className="absolute bottom-8 left-1/2 w-1.5 h-1.5 bg-white/80 rounded-full animate-bounce"
                              style={{ animationDelay: '0.4s' }}></div>
+                        <div className="absolute bottom-24 left-1.5 w-1 h-1 bg-white/70 rounded-full animate-bounce"
+                             style={{ animationDelay: '0.6s' }}></div>
                       </>
                     )}
                   </div>
@@ -293,13 +311,16 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
                   {/* Liquid flow from the stopcock tip */}
                   {showStopcockFlow && (
                     <div className="absolute z-30 left-1/2 top-[90%] -translate-x-1/2">
-                      <div className="w-0.5 h-8 animate-pulse"
-                           style={{ backgroundColor: liquidColor, opacity: 0.8 }}>
-                        <div className="w-1 h-1 rounded-full absolute -left-0.25 top-0 animate-ping"
+                      <div className="w-[2px] h-8 rounded-full animate-pulse"
+                           style={{
+                             backgroundImage: `linear-gradient(to bottom, ${liquidColor}, transparent)`,
+                             opacity: 0.85
+                           }}>
+                        <div className="w-1.5 h-1.5 rounded-full absolute -left-0.5 top-1 animate-ping"
                              style={{ backgroundColor: liquidColor }}></div>
-                        <div className="w-1 h-1 rounded-full absolute -left-0.25 top-4 animate-ping"
+                        <div className="w-1.5 h-1.5 rounded-full absolute -left-0.5 top-4 animate-ping"
                              style={{ backgroundColor: liquidColor, animationDelay: '0.2s' }}></div>
-                        <div className="w-1 h-1 rounded-full absolute -left-0.25 top-6 animate-ping"
+                        <div className="w-1 h-1 rounded-full absolute -left-0.25 top-7 animate-ping"
                              style={{ backgroundColor: liquidColor, animationDelay: '0.4s' }}></div>
                       </div>
                     </div>
