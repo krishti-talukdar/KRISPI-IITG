@@ -304,6 +304,15 @@ export default function TitrationResultsPage() {
                     </div>
 
                     <div>
+                      <h3 className="font-semibold text-gray-800 mb-2">Formulas Used</h3>
+                      <div className="space-y-2 text-sm text-gray-700 rounded bg-white border border-gray-200 p-3">
+                        <div><strong>Mean Titre Volume (V₂):</strong> V₂ = (Σ trial volumes) / n</div>
+                        <div><strong>NaOH Normality (N₂):</strong> N₁V₁ = N₂V₂ → N₂ = (N₁ × V₁) / V₂</div>
+                        <div><strong>Strength:</strong> Strength = N₂ × 40</div>
+                      </div>
+                    </div>
+
+                    <div>
                       <h3 className="font-semibold text-gray-800 mb-2">Calculated Values</h3>
                       <div className="grid grid-cols-1 gap-2 text-sm text-gray-700">
                         <div><strong>Mean Titre Volume (V₂):</strong> {meanV2.toFixed(2)} mL</div>
