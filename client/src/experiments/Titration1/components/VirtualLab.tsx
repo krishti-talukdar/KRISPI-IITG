@@ -1143,6 +1143,57 @@ export default function VirtualLab({
                 </div>
               )}
             </div>
+
+            {/* Titration pouring animation (shown during titration) */}
+            {currentStep >= 5 && !experimentCompleted && (
+              <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                  <Droplets className="w-5 h-5 mr-2 text-pink-500" />
+                  Titration in Progress
+                </h3>
+                <style>{`
+                  @keyframes naohDripAnim { 0% { transform: translateY(0); opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(86px); opacity: 0; } }
+                  @keyframes flaskToPinkAnim { 0%, 35% { background-color: #4A90E2; } 100% { background-color: #FFB6C1; } }
+                  @keyframes flaskSwirl { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
+                `}</style>
+                <div className="relative mx-auto" style={{ width: 150, height: 230 }}>
+                  {/* Burette */}
+                  <div className="absolute left-1/2 -translate-x-1/2 top-0 w-3 h-28 bg-gradient-to-b from-gray-100 to-gray-300 border border-gray-400 rounded-b-sm overflow-hidden">
+                    <div className="absolute inset-x-0 top-0" style={{ height: '55%', backgroundColor: '#C8A2E8', opacity: 0.75 }} />
+                  </div>
+                  {/* Stopcock */}
+                  <div className="absolute left-1/2 -translate-x-1/2 top-28 w-2.5 h-3 bg-gray-500 rounded-sm" />
+                  {/* NaOH drops */}
+                  <div className="absolute left-1/2 -translate-x-1/2 top-[120px]">
+                    {[0, 1, 2].map((i) => (
+                      <div
+                        key={i}
+                        className="absolute rounded-full"
+                        style={{ left: -3, width: 6, height: 9, backgroundColor: '#C8A2E8', animation: `naohDripAnim 1.3s ease-in ${i * 0.43}s infinite` }}
+                      />
+                    ))}
+                  </div>
+                  {/* Conical flask */}
+                  <div className="absolute left-1/2 -translate-x-1/2 bottom-0" style={{ width: 100, height: 95, animation: 'flaskSwirl 2.2s ease-in-out infinite' }}>
+                    <div className="relative w-full h-full">
+                      {/* Flask outline */}
+                      <div
+                        className="absolute inset-0 bg-gray-100/40 border-2 border-gray-300"
+                        style={{ clipPath: 'polygon(40% 0, 60% 0, 60% 38%, 92% 100%, 8% 100%, 40% 38%)' }}
+                      />
+                      {/* Liquid changing color */}
+                      <div
+                        className="absolute inset-0"
+                        style={{ clipPath: 'polygon(34% 58%, 66% 58%, 90% 98%, 10% 98%)', opacity: 0.85, animation: 'flaskToPinkAnim 9s ease-in-out forwards' }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-center text-gray-500 mt-2">
+                  NaOH is being added drop by drop — the solution slowly turns light pink.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
