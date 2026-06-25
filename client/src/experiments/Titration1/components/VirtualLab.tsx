@@ -1286,19 +1286,7 @@ export default function VirtualLab({
             <div className="p-6 bg-white">
               <p className="text-sm text-gray-700 mb-4">You have added 10.0 mL of NaOH. Continuing beyond this limit may change the endpoint reading and affect accuracy. Choose an action:</p>
 
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-pink-50 flex items-center justify-center border border-pink-100">
-                    <svg className="w-5 h-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m4 0h.01M12 20h.01" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold">Stop Titration</div>
-                    <div className="text-xs text-gray-500">Record current reading and proceed to analysis</div>
-                  </div>
-                </div>
-
+              <div className="mb-6">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100">
                     <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1306,26 +1294,13 @@ export default function VirtualLab({
                     </svg>
                   </div>
                   <div>
-                    <div className="text-sm font-semibold">Continue Titrating</div>
+                    <div className="text-sm font-semibold">Proceed to calculation</div>
                     <div className="text-xs text-gray-500">Proceed beyond recommended limit (may overshoot)</div>
                   </div>
                 </div>
               </div>
 
               <div className="flex justify-end gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setShowTitrationLimitWarning(false);
-                    setConicalFlask(prev => ({ ...prev, colorHex: ENDPOINT_COLORS.ENDPOINT, endpointReached: true }));
-                    setTitrationState(prev => ({ ...prev, currentPhase: 'endpoint', flaskColor: ENDPOINT_COLORS.ENDPOINT, explanation: 'Stopped at safe limit (light pink observed)' }));
-                    setExperimentCompleted(true);
-                    setLocation(`/experiment/${experimentId}/results`);
-                  }}
-                  className="border-pink-300 text-pink-700 hover:bg-pink-50"
-                >
-                  Stop titration
-                </Button>
                 <Button
                   onClick={() => {
                     setShowTitrationLimitWarning(false);
@@ -1336,7 +1311,7 @@ export default function VirtualLab({
                   }}
                   className="bg-pink-600 hover:bg-pink-700 text-white"
                 >
-                  Continue titrating
+                  Proceed to calculation
                 </Button>
               </div>
             </div>
