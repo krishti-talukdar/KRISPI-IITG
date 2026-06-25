@@ -184,7 +184,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
             <img
               src="https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2F73ac259c4cb845619a548dafd6799255?format=webp&width=800"
               alt="Burette with NaOH solution"
-              className={`${currentStep >= 4 ? 'h-[420px]' : 'h-80'} w-auto object-contain transition-transform duration-200 ${isActive ? 'scale-105' : ''}`}
+              className={`${currentStep >= 4 ? 'h-[500px]' : 'h-96'} w-auto object-contain transition-transform duration-200 ${isActive ? 'scale-105' : ''}`}
               style={{ filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.15))' }}
             />
             {flowing && (
@@ -199,7 +199,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
               <img
                 src="https://cdn.builder.io/api/v1/image/assets%2Fc52292a04d4c4255a87bdaa80a28beb9%2F83364a0ee9aa408e91a299c5b7ef0886?format=webp&width=800"
                 alt="Conical Flask"
-                className={`h-32 w-auto object-contain transition-transform duration-200 ${isActive ? 'scale-105' : ''}`}
+                className={`h-48 w-auto object-contain transition-transform duration-200 ${isActive ? 'scale-105' : ''}`}
                 style={{ filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.15))' }}
               />
               {/* Oxalic acid solution overlay */}
@@ -246,7 +246,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
           <div className={`${id === 'pipette' && isActive ? 'relative' : ''}`}>
             {React.cloneElement(icon, {
               className: `${icon.props.className} transition-transform duration-200 ${isActive ? 'scale-110' : ''}`,
-              size: isPositioned ? 48 : 36
+              size: isPositioned ? 64 : 36
             })}
             {/* White glow effect for active pipette */}
             {id === 'pipette' && isActive && (
