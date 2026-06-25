@@ -1285,7 +1285,7 @@ export default function VirtualLab({
                     setConicalFlask(prev => ({ ...prev, colorHex: ENDPOINT_COLORS.ENDPOINT, endpointReached: true }));
                     setTitrationState(prev => ({ ...prev, currentPhase: 'endpoint', flaskColor: ENDPOINT_COLORS.ENDPOINT, explanation: 'Stopped at safe limit (light pink observed)' }));
                     setExperimentCompleted(true);
-                    setSafeTimeout(() => setShowStrengthPrompt(true), 6000);
+                    setLocation(`/experiment/${experimentId}/results`);
                   }}
                   className="border-pink-300 text-pink-700 hover:bg-pink-50"
                 >
@@ -1297,7 +1297,7 @@ export default function VirtualLab({
                     setConicalFlask(prev => ({ ...prev, colorHex: ENDPOINT_COLORS.OVERSHOOT }));
                     setTitrationState(prev => ({ ...prev, currentPhase: 'completed', flaskColor: ENDPOINT_COLORS.OVERSHOOT, explanation: 'Continued beyond limit (dark pink observed)' }));
                     setExperimentCompleted(true);
-                    setSafeTimeout(() => setShowStrengthPrompt(true), 6000);
+                    setLocation(`/experiment/${experimentId}/results`);
                   }}
                   className="bg-pink-600 hover:bg-pink-700 text-white"
                 >
