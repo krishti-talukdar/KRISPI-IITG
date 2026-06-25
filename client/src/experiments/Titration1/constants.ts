@@ -87,47 +87,11 @@ export const LAB_EQUIPMENT: Array<{
   {
     id: "burette",
     name: "Burette (50 mL)",
-    icon: React.createElement(
-      "svg",
-      {
-        width: "36",
-        height: "36", 
-        viewBox: "0 0 36 36",
-        fill: "none",
-        className: "text-green-600",
-      },
-      [
-        React.createElement("rect", {
-          key: "tube",
-          x: "14",
-          y: "4",
-          width: "8",
-          height: "28",
-          stroke: "currentColor",
-          strokeWidth: "2",
-          fill: "rgba(59, 130, 246, 0.1)",
-        }),
-        React.createElement("path", {
-          key: "graduations",
-          d: "M14 8h4 M14 12h4 M14 16h4 M14 20h4 M14 24h4 M14 28h4",
-          stroke: "currentColor",
-          strokeWidth: "1",
-        }),
-        React.createElement("circle", {
-          key: "stopcock",
-          cx: "18",
-          cy: "30",
-          r: "2",
-          fill: "currentColor",
-        }),
-        React.createElement("path", {
-          key: "tip",
-          d: "M17 32v2",
-          stroke: "currentColor",
-          strokeWidth: "2",
-        }),
-      ],
-    ),
+    icon: React.createElement("img", {
+      src: "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Ffb48351209734a0e9d347cc8bc413c1e?format=webp&width=800&height=1200",
+      alt: "Burette",
+      style: { width: "36px", height: "36px", objectFit: "contain" }
+    }),
     type: "burette"
   },
   {
