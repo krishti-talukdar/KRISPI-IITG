@@ -1121,27 +1121,6 @@ export default function VirtualLab({
               </div>
               )}
 
-              {/* Recent Actions */}
-              {titrationLog.length > 0 && (
-                <div>
-                  <h4 className="font-semibold text-sm text-gray-700 mb-2">Recent Actions</h4>
-                  <div className="space-y-2 max-h-32 overflow-y-auto">
-                    {titrationLog.slice(-3).reverse().map((log) => (
-                      <div key={log.id} className={`text-xs p-2 rounded ${
-                        log.isEndpoint ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
-                      }`}>
-                        <div className="font-medium">{log.action}</div>
-                        <div className="text-gray-600">{log.observation}</div>
-                        {log.volume && (
-                          <div className="text-green-600 font-mono">
-                            {log.volume.toFixed(1)} mL
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Titration pouring animation (shown during titration) */}
@@ -1152,29 +1131,29 @@ export default function VirtualLab({
                   Titration in Progress
                 </h3>
                 <style>{`
-                  @keyframes naohDripAnim { 0% { transform: translateY(0); opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(86px); opacity: 0; } }
+                  @keyframes naohDripAnim { 0% { transform: translateY(0); opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(56px); opacity: 0; } }
                   @keyframes flaskToPinkAnim { 0%, 35% { background-color: #4A90E2; } 100% { background-color: #FFB6C1; } }
                   @keyframes flaskSwirl { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
                 `}</style>
-                <div className="relative mx-auto" style={{ width: 150, height: 230 }}>
+                <div className="relative mx-auto flex flex-col items-center" style={{ width: 150 }}>
                   {/* Burette */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-0 w-3 h-28 bg-gradient-to-b from-gray-100 to-gray-300 border border-gray-400 rounded-b-sm overflow-hidden">
+                  <div className="relative w-3 h-28 bg-gradient-to-b from-gray-100 to-gray-300 border border-gray-400 rounded-b-sm overflow-hidden">
                     <div className="absolute inset-x-0 top-0" style={{ height: '55%', backgroundColor: '#C8A2E8', opacity: 0.75 }} />
                   </div>
                   {/* Stopcock */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-28 w-2.5 h-3 bg-gray-500 rounded-sm" />
+                  <div className="w-2.5 h-3 bg-gray-500 rounded-sm" />
                   {/* NaOH drops */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-[120px]">
+                  <div className="relative w-2 h-14">
                     {[0, 1, 2].map((i) => (
                       <div
                         key={i}
-                        className="absolute rounded-full"
-                        style={{ left: -3, width: 6, height: 9, backgroundColor: '#C8A2E8', animation: `naohDripAnim 1.3s ease-in ${i * 0.43}s infinite` }}
+                        className="absolute left-1/2 -translate-x-1/2 top-0 rounded-full"
+                        style={{ width: 6, height: 9, backgroundColor: '#C8A2E8', animation: `naohDripAnim 1.3s ease-in ${i * 0.43}s infinite` }}
                       />
                     ))}
                   </div>
                   {/* Conical flask */}
-                  <div className="absolute left-1/2 -translate-x-1/2 bottom-0" style={{ width: 100, height: 95, animation: 'flaskSwirl 2.2s ease-in-out infinite' }}>
+                  <div className="relative -mt-1" style={{ width: 100, height: 95, animation: 'flaskSwirl 2.2s ease-in-out infinite' }}>
                     <div className="relative w-full h-full">
                       {/* Flask outline */}
                       <div
