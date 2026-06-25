@@ -267,7 +267,7 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
 
                   {/* Liquid clipped to the full inner cavity (graduated tube + taper) */}
                   <div
-                    className="absolute z-30 left-[41.7%] w-[16.6%] top-[15.7%] h-[68.3%]"
+                    className="absolute z-30 left-[44%] w-[16.6%] top-[15.7%] h-[68.3%]"
                     style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 89%, 66% 100%, 34% 100%, 0% 89%)' }}
                   >
                     <div
