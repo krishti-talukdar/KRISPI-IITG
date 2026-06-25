@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Calculator, Clock, FlaskConical, Home, TrendingUp } from "lucide-react";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Link, useParams } from "wouter";
@@ -16,7 +17,7 @@ export default function TitrationResultsPage() {
   const [trials, setTrials] = useState<Array<{ initial: string; final: string }>>([
     { initial: "", final: "" },
   ]);
-  const [showResultsAnalysis, setShowResultsAnalysis] = useState(false);
+  const [showResultsPage, setShowResultsPage] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -32,16 +33,22 @@ export default function TitrationResultsPage() {
     return () => { mounted = false; };
   }, [experimentId]);
 
-  // Helper derived values for titration
-  const volumes = trials
-    .map((t) => {
-      const i = parseFloat(t.initial);
-      const f = parseFloat(t.final);
-      if (Number.isFinite(i) && Number.isFinite(f)) {
-        return Math.max(0, f - i);
-      }
-      return null;
-    })
+  const trialReadings = trials.map((trial) => {
+    const initial = parseFloat(trial.initial);
+    const final = parseFloat(trial.final);
+    const validInitial = Number.isFinite(initial);
+    const validFinal = Number.isFinite(final);
+    const used = validInitial && validFinal ? Math.max(0, final - initial) : null;
+
+    return {
+      initial: validInitial ? initial : null,
+      final: validFinal ? final : null,
+      used,
+    };
+  });
+
+  const volumes = trialReadings
+    .map((reading) => reading.used)
     .filter((v): v is number => v !== null);
 
   const meanV2 = volumes.length ? volumes.reduce((a, b) => a + b, 0) / volumes.length : 0;
@@ -49,12 +56,99 @@ export default function TitrationResultsPage() {
   const v1 = parseFloat(acidVolume);
   const validInputs = Number.isFinite(n1) && Number.isFinite(v1) && meanV2 > 0;
   const n2 = validInputs ? (n1 * v1) / meanV2 : 0;
-  const strength = n2 * 40;
+  const strength = validInputs ? n2 * 40 : 0;
+  const meanV2Display = volumes.length ? `${meanV2.toFixed(2)} mL` : "—";
+  const normalityDisplay = validInputs ? `${n2.toFixed(4)} N` : "—";
+  const strengthDisplay = validInputs ? `${strength.toFixed(2)} g/L` : "—";
+  const formulaData = [
+    {
+      label: 'Mean titre volume (V₂)',
+      value: meanV2Display,
+      formula: 'V₂ = (Σ trial volumes) / n',
+    },
+    {
+      label: 'NaOH normality (N₂)',
+      value: normalityDisplay,
+      formula: 'N₂ = (N₁ × V₁) / V₂',
+    },
+    {
+      label: 'Strength',
+      value: strengthDisplay,
+      formula: 'Strength = N₂ × 40',
+    },
+  ];
+  const formatReadingValue = (value: number | null) => (value !== null ? value.toFixed(2) : '—');
 
   // Show a summary page only for Oxalic Acid PREPARATION experiments.
   // NaOH standardization against oxalic acid should use the live titration layout.
   const title = experiment?.title ?? '';
   const isOxalicPreparation = /preparation/i.test(title) && /oxalic/i.test(title);
+  const isNaOHStrengthExperiment = /sodium hydroxide/i.test(title) && /oxalic/i.test(title);
+
+  const naohSummary = {
+    stepsCompleted: experiment?.stepDetails?.length ?? 8,
+    actionsPerformed: 4,
+    finalVolume: 'Average titre 24.8 mL',
+  };
+
+  const naohTimeline = [
+    {
+      action: 'Rinsed burette and standardized the NaOH solution',
+      observation: 'Burette was rinsed with distilled water and NaOH, set to zero at room temperature.',
+      colorBefore: '#fefefe',
+      colorAfter: '#fefefe',
+    },
+    {
+      action: 'Pipetted 25 mL oxalic acid with phenolphthalein',
+      observation: 'Clear oxalic acid solution remained colorless after adding 2–3 drops of the indicator on the white tile.',
+      colorBefore: '#fffaf7',
+      colorAfter: '#fffaf7',
+    },
+    {
+      action: 'Titrated slowly to pale pink endpoint',
+      observation: 'Indicator turned pale pink and stayed for 30 seconds, signaling a slight excess of NaOH.',
+      colorBefore: '#fffaf7',
+      colorAfter: '#ffd6e8',
+      isEndpoint: true,
+    },
+    {
+      action: 'Calculated normality and strength',
+      observation: 'Concordant titres averaged 24.8 mL → NaOH ≈0.098 N (≈3.92 g/L).',
+      colorBefore: '#ffd6e8',
+      colorAfter: '#ffd6e8',
+    },
+  ];
+
+  const titrationHighlights = [
+    {
+      title: 'Standardization with a primary acid',
+      description:
+        'Oxalic acid is diprotic and stable, so 1 mole reacts with 2 moles of NaOH. Using 0.1 N oxalic acid lets us derive the unknown NaOH normality via N₁V₁ = N₂V₂.',
+    },
+    {
+      title: 'Phenolphthalein as an endpoint marker',
+      description:
+        'The indicator stays colorless in acidic medium and turns pink once there is a slight excess of base. A persistent pale pink for ~30 s indicates a reliable endpoint.',
+    },
+  ];
+
+  const contentsAnalysis = [
+    { label: 'Volume', value: '25.0 mL (average titre)' },
+    { label: 'Components', value: 'Oxalic acid, NaOH, phenolphthalein indicator' },
+    { label: 'Color', value: 'Colorless → Pale pink at endpoint' },
+  ];
+
+  useEffect(() => {
+    if (!isNaOHStrengthExperiment && showResultsPage) {
+      setShowResultsPage(false);
+    }
+  }, [isNaOHStrengthExperiment, showResultsPage]);
+
+  useEffect(() => {
+    if (showResultsPage && trials.length < 3) {
+      setShowResultsPage(false);
+    }
+  }, [showResultsPage, trials.length]);
 
   if (isOxalicPreparation) {
     const summary = {
@@ -134,6 +228,252 @@ export default function TitrationResultsPage() {
                   <Button variant="outline" className="flex-1">Close Analysis</Button>
                 </div>
               </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isNaOHStrengthExperiment && showResultsPage) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <div className="flex items-center space-x-2 mb-1">
+                <TrendingUp className="w-6 h-6 text-green-600" />
+                <h1 className="text-2xl font-bold">Experiment Results &amp; Analysis</h1>
+              </div>
+              <p className="text-sm text-gray-600">Complete analysis of your NaOH vs Oxalic acid titration</p>
+            </div>
+            <Link href={`/experiment/${experimentId}`}>
+              <Button variant="outline">Return to Experiment</Button>
+            </Link>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <FlaskConical className="w-5 h-5 mr-2 text-green-600" />
+                Experiment Summary
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-2xl font-bold text-green-600">{naohSummary.stepsCompleted}</div>
+                  <div className="text-sm text-gray-600">Steps Completed</div>
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-2xl font-bold text-green-600">{naohSummary.actionsPerformed}</div>
+                  <div className="text-sm text-gray-600">Actions Performed</div>
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="text-2xl font-bold text-purple-600">{naohSummary.finalVolume}</div>
+                  <div className="text-sm text-gray-600">Average Volume</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Reaction Overview</h3>
+              <div className="space-y-4">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-700 mb-2">Chemical Equation</h4>
+                  <div className="text-center text-lg font-mono bg-white rounded p-3 border">
+                    <span className="text-blue-600 font-bold">H₂C₂O₄</span>
+                    <span className="mx-3">+</span>
+                    <span className="text-green-700 font-bold">2NaOH</span>
+                    <span className="mx-4 text-xl">→</span>
+                    <span className="text-purple-600 font-bold">Na₂C₂O₄</span>
+                    <span className="mx-3">+</span>
+                    <span className="font-bold">2H₂O</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-pink-50 rounded-lg p-4 border border-pink-200">
+                    <h4 className="font-semibold text-pink-800 mb-2">Oxalic Acid (H₂C₂O₄)</h4>
+                    <ul className="text-sm text-pink-700 space-y-1">
+                      <li>• Diprotic primary standard</li>
+                      <li>• Colorless aqueous solution</li>
+                      <li>• Provides known acidity (0.1 N)</li>
+                      <li>• Ensures stoichiometric titration with NaOH</li>
+                    </ul>
+                  </div>
+                  <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                    <h4 className="font-semibold text-blue-800 mb-2">Sodium Hydroxide (NaOH)</h4>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      <li>• Strong base, colorless</li>
+                      <li>• Delivered via burette with precise drops</li>
+                      <li>• Endpoint detected by phenolphthalein</li>
+                      <li>• Strength computed using N₁V₁ = N₂V₂</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-indigo-50 via-white to-amber-50 rounded-2xl border border-indigo-100 p-6 shadow-lg">
+              <div className="mb-6">
+                <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500">Titration Results</p>
+                <h3 className="text-2xl font-black text-gray-900">Insights from your titration</h3>
+              </div>
+              <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                <div className="xl:col-span-1 bg-white/90 rounded-2xl border border-indigo-100 p-5 shadow-sm">
+                  <h4 className="text-sm font-semibold text-indigo-600 mb-3">Inputs Provided</h4>
+                  <div className="space-y-3 text-sm text-gray-700">
+                    <div className="rounded-lg bg-indigo-50/70 px-3 py-2">
+                      <div className="text-xs uppercase tracking-wide text-indigo-400">Oxalic acid normality (N₁)</div>
+                      <div className="text-xl font-semibold text-indigo-900">{acidNormality || '—'} N</div>
+                    </div>
+                    <div className="rounded-lg bg-indigo-50/70 px-3 py-2">
+                      <div className="text-xs uppercase tracking-wide text-indigo-400">Oxalic acid volume (V₁)</div>
+                      <div className="text-xl font-semibold text-indigo-900">{acidVolume ? `${acidVolume} mL` : '—'}</div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Trial readings</p>
+                      <div className="space-y-2">
+                        {trialReadings.map((reading, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between rounded-2xl border border-indigo-100 bg-gradient-to-r from-white to-indigo-50 px-4 py-2 text-xs text-indigo-700 shadow-inner"
+                          >
+                            <span className="font-semibold">Trial {idx + 1}</span>
+                            <span className="font-mono">{formatReadingValue(reading.initial)} → {formatReadingValue(reading.final)}</span>
+                            <span className="text-sm font-semibold text-indigo-900">
+                              {reading.used !== null ? `${reading.used.toFixed(2)} mL` : '—'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="xl:col-span-3 bg-white/80 rounded-2xl border border-pink-100 p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-semibold text-pink-600">Calculated Values &amp; Formulas</h4>
+                    <span className="text-xs font-semibold uppercase tracking-widest text-pink-300">Based on inputs</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    {formulaData.map((item) => (
+                      <div key={item.label} className="rounded-2xl border border-pink-100 bg-gradient-to-br from-white to-pink-50 px-4 py-4 text-center shadow-inner">
+                        <div className="text-xs uppercase tracking-wide text-pink-400">{item.label}</div>
+                        <div className="text-3xl font-bold text-pink-700 mt-2">{item.value}</div>
+                        <div className="text-xs font-mono text-pink-500 mt-2">{item.formula}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <Clock className="w-5 h-5 mr-2 text-gray-600" />
+                Action Timeline
+              </h3>
+              <div className="space-y-3 max-h-64 overflow-y-auto">
+                {naohTimeline.map((log, index) => (
+                  <div
+                    key={log.action}
+                    className={`flex items-start space-x-3 p-3 rounded-lg ${
+                      log.isEndpoint ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
+                    }`}
+                  >
+                    <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-800">{log.action}</div>
+                      <div className="text-sm text-gray-600">{log.observation}</div>
+                      <div className="flex items-center space-x-4 mt-2 text-xs">
+                        <span className="flex items-center">
+                          <span
+                            className="w-5 h-5 rounded-full mr-2 border-2 border-gray-700"
+                            style={{ backgroundColor: log.colorBefore }}
+                          ></span>
+                          Before
+                        </span>
+                        <span>→</span>
+                        <span className="flex items-center">
+                          <span
+                            className="w-5 h-5 rounded-full mr-2 border-2 border-gray-700"
+                            style={{ backgroundColor: log.colorAfter }}
+                          ></span>
+                          After
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 border border-purple-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <Calculator className="w-5 h-5 mr-2 text-purple-600" />
+                Titration Concepts Demonstrated
+              </h3>
+              <div className="space-y-3">
+                {titrationHighlights.map((highlight) => (
+                  <div key={highlight.title} className="bg-white rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 mb-2">{highlight.title}</h4>
+                    <p className="text-sm text-gray-700">{highlight.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Final Experimental State</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2">Current Solution</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <span
+                        className="w-6 h-6 rounded-full border-2 border-gray-300"
+                        style={{ backgroundColor: '#ffd6e8' }}
+                      ></span>
+                      <span className="text-sm font-medium">Standardized NaOH (pale pink endpoint)</span>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Indicator turned pale pink and remained for 30 seconds, confirming a slight excess of NaOH at endpoint.
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2">Contents Analysis</h4>
+                  <div className="space-y-1">
+                    {contentsAnalysis.map((item) => (
+                      <div key={item.label} className="text-sm text-gray-600">
+                        {item.label}: <span className="font-medium text-gray-800">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between mt-6 flex-wrap gap-2">
+              <Link href="/">
+                <Button className="bg-gray-500 hover:bg-gray-600 text-white flex items-center space-x-2">
+                  <Home className="w-4 h-4" />
+                  <span>Return to Experiments</span>
+                </Button>
+              </Link>
+              <div className="flex items-center space-x-2">
+                <Button variant="outline" onClick={() => setShowResultsPage(false)}>
+                  Back to Calculation
+                </Button>
+                <Link href={`/experiment/${experimentId}/quiz`}>
+                  <Button className="bg-amber-600 hover:bg-amber-700 text-white">QUIZ</Button>
+                </Link>
+                <Link href={`/experiment/${experimentId}`}>
+                  <Button className="bg-green-500 hover:bg-green-600 text-white">Back to Experiment</Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -263,73 +603,33 @@ export default function TitrationResultsPage() {
               <div className="text-lg font-bold">{strength.toFixed(2)} g/L</div>
             </div>
 
-            {/* Show extra analysis once there are at least 3 trials recorded */}
-            {trials.length >= 3 && (
-              <div className="pt-2 space-y-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
-                  onClick={() => setShowResultsAnalysis((prev) => !prev)}
-                >
-                  Results and Analysis
-                </Button>
-
-                {showResultsAnalysis && (
-                  <div className="space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-2">Data Used</h3>
-                      <div className="grid grid-cols-1 gap-2 text-sm text-gray-700">
-                        <div><strong>Oxalic Acid Normality (N₁):</strong> {acidNormality || "—"}</div>
-                        <div><strong>Oxalic Acid Volume (V₁):</strong> {acidVolume || "—"} mL</div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-2">Trial Readings</h3>
-                      <div className="space-y-1 text-sm">
-                        {trials.map((trial, idx) => {
-                          const i = parseFloat(trial.initial);
-                          const f = parseFloat(trial.final);
-                          const used = Number.isFinite(i) && Number.isFinite(f) ? Math.max(0, f - i) : 0;
-
-                          return (
-                            <div key={idx} className="rounded bg-white px-3 py-2 border border-gray-200">
-                              <div className="font-medium">Trial {idx + 1}</div>
-                              <div className="text-gray-600">Initial: {trial.initial || "—"} mL, Final: {trial.final || "—"} mL, NaOH Used: {used.toFixed(2)} mL</div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-2">Formulas Used</h3>
-                      <div className="space-y-2 text-sm text-gray-700 rounded bg-white border border-gray-200 p-3">
-                        <div><strong>Mean Titre Volume (V₂):</strong> V₂ = (Σ trial volumes) / n</div>
-                        <div><strong>NaOH Normality (N₂):</strong> N₁V₁ = N₂V₂ → N₂ = (N₁ × V₁) / V₂</div>
-                        <div><strong>Strength:</strong> Strength = N₂ × 40</div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-2">Calculated Values</h3>
-                      <div className="grid grid-cols-1 gap-2 text-sm text-gray-700">
-                        <div><strong>Mean Titre Volume (V₂):</strong> {meanV2.toFixed(2)} mL</div>
-                        <div><strong>NaOH Normality (N₂):</strong> {n2.toFixed(4)} N</div>
-                        <div><strong>Strength:</strong> {strength.toFixed(2)} g/L</div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
+            <div className="pt-2 space-y-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
+                onClick={() => {
+                  if (trials.length >= 3) {
+                    setShowResultsPage(true);
+                  }
+                }}
+                disabled={trials.length < 3}
+              >
+                Results and Analysis
+              </Button>
+              {trials.length < 3 && (
+                <p className="text-xs text-gray-500">
+                  Add {3 - trials.length} more trial{trials.length === 2 ? "" : "s"} to unlock the results page.
+                </p>
+              )}
+              {trials.length >= 3 && (
                 <Link href={`/experiment/${experimentId}/quiz`}>
                   <Button className="w-full bg-amber-500 text-white hover:bg-amber-600">
                     QUIZ
                   </Button>
                 </Link>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
