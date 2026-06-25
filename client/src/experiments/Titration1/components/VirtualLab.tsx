@@ -1073,6 +1073,33 @@ export default function VirtualLab({
                 </div>
               )}
 
+              {/* Step navigation */}
+              <div className="mb-4 grid grid-cols-2 gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentStep <= 1}
+                  onClick={() => {
+                    onStepUndo?.(currentStep);
+                    setCurrentStep((s) => Math.max(1, s - 1));
+                  }}
+                >
+                  <ArrowLeft className="w-4 h-4 mr-1" />
+                  Previous Step
+                </Button>
+                <Button
+                  size="sm"
+                  disabled={currentStep >= GUIDED_STEPS.length}
+                  onClick={() => {
+                    onStepComplete(currentStep);
+                    setCurrentStep((s) => Math.min(GUIDED_STEPS.length, s + 1));
+                  }}
+                >
+                  Next Step
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+
               {/* Current State */}
               <div className="mb-4">
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Current Phase</h4>
