@@ -88,7 +88,7 @@ export const LAB_EQUIPMENT: Array<{
     id: "burette",
     name: "Burette (50 mL)",
     icon: React.createElement("img", {
-      src: "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2Ffb48351209734a0e9d347cc8bc413c1e?format=webp&width=800&height=1200",
+      src: "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F3c222211533741c08f09bbd2cb619bbe?format=webp&width=800&height=1200",
       alt: "Burette",
       style: { width: "36px", height: "36px", objectFit: "contain" }
     }),
