@@ -257,24 +257,25 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
           {isAnimating && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Animation Visual */}
-              <div className="flex justify-center items-center min-h-[320px]">
-                <div className="relative h-[300px] w-[170px]">
+              <div className="flex justify-center items-center min-h-[340px]">
+                <div className="relative h-[320px] w-[150px]">
                   <img
                     src={buretteImageUrl}
                     alt="Burette"
                     className="absolute inset-0 z-20 h-full w-full object-contain pointer-events-none"
                   />
 
-                  <div className="absolute left-1/2 top-[28px] z-30 h-[195px] w-[30px] -translate-x-[62%] overflow-hidden rounded-full">
+                  {/* Liquid clipped to the inner graduated tube of the burette image */}
+                  <div className="absolute z-30 overflow-hidden left-[41.7%] w-[16.6%] top-[15.7%] h-[60.8%]">
                     <div
-                      className="absolute bottom-0 left-0 right-0 transition-all duration-300 ease-in-out rounded-b-sm"
+                      className="absolute bottom-0 left-0 right-0 transition-all duration-300 ease-in-out"
                       style={{
                         height: `${liquidLevel}%`,
                         backgroundColor: liquidColor,
-                        opacity: 0.5
+                        opacity: 0.65
                       }}
                     >
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-white opacity-40 animate-pulse"></div>
+                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-white opacity-50 animate-pulse"></div>
                     </div>
 
                     {showBubbles && (
@@ -289,22 +290,24 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
                     )}
                   </div>
 
+                  {/* Liquid flow from the stopcock tip */}
                   {showStopcockFlow && (
-                    <div className="absolute left-1/2 top-[242px] z-30 -translate-x-[36%]">
-                      <div className="w-0.5 h-12 animate-pulse"
+                    <div className="absolute z-30 left-1/2 top-[90%] -translate-x-1/2">
+                      <div className="w-0.5 h-8 animate-pulse"
                            style={{ backgroundColor: liquidColor, opacity: 0.8 }}>
                         <div className="w-1 h-1 rounded-full absolute -left-0.25 top-0 animate-ping"
                              style={{ backgroundColor: liquidColor }}></div>
                         <div className="w-1 h-1 rounded-full absolute -left-0.25 top-4 animate-ping"
                              style={{ backgroundColor: liquidColor, animationDelay: '0.2s' }}></div>
-                        <div className="w-1 h-1 rounded-full absolute -left-0.25 top-8 animate-ping"
+                        <div className="w-1 h-1 rounded-full absolute -left-0.25 top-6 animate-ping"
                              style={{ backgroundColor: liquidColor, animationDelay: '0.4s' }}></div>
                       </div>
                     </div>
                   )}
 
+                  {/* Funnel (appears during filling) at the tube opening */}
                   {(currentStep === 0 || currentStep === 2 || currentStep === 4) && (
-                    <div className="absolute left-1/2 top-[20px] z-40 -translate-x-[62%]">
+                    <div className="absolute z-40 left-1/2 top-[7%] -translate-x-1/2">
                       <div className="w-8 h-6 bg-gray-300 rounded-t-full border-2 border-gray-400 relative">
                         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-4 bg-gray-400"></div>
                         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0.5 h-6 animate-pulse"
@@ -313,8 +316,9 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
                     </div>
                   )}
 
+                  {/* Beaker for waste (appears during draining) below the stopcock */}
                   {(currentStep === 1 || currentStep === 3) && (
-                    <div className="absolute left-1/2 top-[262px] z-10 -translate-x-[36%]">
+                    <div className="absolute z-10 left-1/2 top-[96%] -translate-x-1/2">
                       <div className="w-12 h-8 bg-gray-200 border-2 border-gray-400 rounded-b-lg relative">
                         {isDraining && (
                           <div className="absolute bottom-0 left-0 right-0 h-2 rounded-b-lg transition-all duration-1000"
