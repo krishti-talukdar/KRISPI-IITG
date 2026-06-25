@@ -5,6 +5,8 @@ interface WorkBenchProps {
   children: React.ReactNode;
   isRunning: boolean;
   currentStep: number;
+  showProceedButton?: boolean;
+  onProceed?: () => void;
 }
 
 export const WorkBench: React.FC<WorkBenchProps> = ({
@@ -12,6 +14,8 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
   children,
   isRunning,
   currentStep,
+  showProceedButton = false,
+  onProceed,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -49,13 +53,13 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={`relative w-full h-full min-h-[500px] bg-gray-200 rounded-lg overflow-hidden transition-all duration-300 border-2 border-dashed ${
+      className={`relative w-full h-full min-h-[500px] bg-black rounded-lg overflow-hidden transition-all duration-300 border-2 border-dashed ${
         isDragOver
-          ? "border-blue-400 bg-gray-300"
+          ? "border-blue-400"
           : "border-gray-400"
       }`}
       style={{
-        backgroundColor: isDragOver ? '#d1d5db' : '#d3d3d3',
+        backgroundColor: isDragOver ? '#1a1a1a' : '#000000',
       }}
     >
       {/* Laboratory surface pattern */}
@@ -90,16 +94,6 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
         </span>
       </div>
 
-      {/* White tile for better endpoint visibility */}
-      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-32 h-24 bg-white border-2 border-gray-300 rounded-lg shadow-md">
-        <div className="flex items-center justify-center h-full">
-          <span className="text-xs text-gray-500 text-center">
-            White Tile<br/>
-            (for endpoint detection)
-          </span>
-        </div>
-      </div>
-
       {/* Drop zone indicator */}
       {isDragOver && (
         <div className="absolute inset-0 flex items-center justify-center bg-green-500/10 backdrop-blur-sm">
@@ -129,6 +123,16 @@ export const WorkBench: React.FC<WorkBenchProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {showProceedButton && (
+        <button
+          type="button"
+          onClick={onProceed}
+          className="absolute bottom-6 right-6 z-30 h-20 w-20 rounded-full bg-pink-600 text-white shadow-lg ring-4 ring-white/20 transition-transform hover:scale-105"
+        >
+          <span className="text-xs font-bold tracking-wide">PROCEED</span>
+        </button>
       )}
 
       {/* Workbench content */}

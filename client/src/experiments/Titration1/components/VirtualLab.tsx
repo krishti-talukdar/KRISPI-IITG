@@ -96,7 +96,7 @@ export default function VirtualLab({
 
   // Step 1 pipette planning state
   const [showPipetteVolumeModal, setShowPipetteVolumeModal] = useState(false);
-  const [pipetteVolumeInput, setPipetteVolumeInput] = useState<string>("10");
+  const [pipetteVolumeInput, setPipetteVolumeInput] = useState<string>("0");
   const [plannedOxalicVolume, setPlannedOxalicVolume] = useState<number | null>(10);
 
   const setSafeTimeout = useCallback((fn: () => void, delay: number) => {
@@ -180,6 +180,7 @@ export default function VirtualLab({
   // Auto titration flow after start prompt
   const [autoTitrating, setAutoTitrating] = useState(false);
   const [showTitrationLimitWarning, setShowTitrationLimitWarning] = useState(false);
+  const [showProceedButton, setShowProceedButton] = useState(false);
   const [showStrengthPrompt, setShowStrengthPrompt] = useState(false);
   const autoFlowIntervalRef = useRef<number | null>(null);
   const prevBuretteReadingRef = useRef<number>(burette.reading);
@@ -252,7 +253,35 @@ export default function VirtualLab({
       }
       setAutoTitrating(false);
       setActiveEquipment("");
-      setShowTitrationLimitWarning(true);
+      setShowProceedButton(true);
+
+      // Slowly transition the conical flask solution from blue to light pink
+      const fromColor = conicalFlask.colorHex || '#87CEEB';
+      const toColor = '#FFB6C1';
+      const totalSteps = 50;
+      const r1 = parseInt(fromColor.slice(1, 3), 16);
+      const g1 = parseInt(fromColor.slice(3, 5), 16);
+      const b1 = parseInt(fromColor.slice(5, 7), 16);
+      const r2 = parseInt(toColor.slice(1, 3), 16);
+      const g2 = parseInt(toColor.slice(3, 5), 16);
+      const b2 = parseInt(toColor.slice(5, 7), 16);
+      let step = 0;
+      if (colorIntervalRef.current) { clearInterval(colorIntervalRef.current as number); colorIntervalRef.current = null; }
+      colorIntervalRef.current = window.setInterval(() => {
+        step++;
+        const p = step / totalSteps;
+        const r = Math.round(r1 + (r2 - r1) * p);
+        const g = Math.round(g1 + (g2 - g1) * p);
+        const b = Math.round(b1 + (b2 - b1) * p);
+        const currentColor = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        setConicalFlask(prev => ({ ...prev, colorHex: currentColor }));
+        if (step >= totalSteps) {
+          if (colorIntervalRef.current) { clearInterval(colorIntervalRef.current as number); colorIntervalRef.current = null; }
+          setConicalFlask(prev => ({ ...prev, colorHex: toColor }));
+          setTitrationState(prev => ({ ...prev, flaskColor: toColor }));
+          setShowTitrationLimitWarning(true);
+        }
+      }, 200); // 50 steps * 200ms = 10s
     }
   }, [autoTitrating, burette.reading]);
 
@@ -705,6 +734,7 @@ export default function VirtualLab({
     setActiveEquipment("");
     setShowResultsModal(false);
     setExperimentCompleted(false);
+    setShowProceedButton(false);
     setLastAction(null);
     setStepHistory([]);
     setShowTitrating(false);
@@ -841,9 +871,11 @@ export default function VirtualLab({
           <div className="lg:col-span-6">
             <WorkBench
               onDrop={handleEquipmentDrop}
-              isRunning={isRunning}
-              currentStep={currentStep}
-            >
+      isRunning={isRunning}
+      currentStep={currentStep}
+      showProceedButton={showProceedButton && !experimentCompleted}
+      onProceed={() => setShowTitrationLimitWarning(true)}
+    >
               {/* Positioned Equipment */}
               {equipmentOnBench.map((equipment) => {
                 const equipmentData = LAB_EQUIPMENT.find(eq => eq.id === equipment.id);
@@ -884,7 +916,7 @@ export default function VirtualLab({
                   <>
                     <style>{`@keyframes pourStream { 0% { height: 0 } 100% { height: 120px } } @keyframes dripFall { 0% { transform: translateY(0); opacity:1 } 80% { opacity:1 } 100% { transform: translateY(120px); opacity:0 } }`}</style>
 
-                    <div className="absolute pointer-events-none" style={{ left: left + 160, top, zIndex: 80 }}>
+                    <div className="absolute pointer-events-none" style={{ left: left + 280, top, zIndex: 80 }}>
                       <div className="flex items-start space-x-3">
                         {/* Burette scale (downcounting 10→1) - moved to side */}
                         <div className="flex flex-col items-center bg-white p-2 rounded-md shadow-lg ring-1 ring-green-200" style={{ width: 60, zIndex: 70 }}>
@@ -897,25 +929,6 @@ export default function VirtualLab({
                               </div>
                             );
                           })}
-                        </div>
-
-                        <div className="relative" style={{ marginLeft: -100 }}>
-                          <div style={{ width: 8, borderRadius: 8, background: 'linear-gradient(to bottom, rgba(59,130,246,0.95), rgba(99,102,241,0.95))', animation: 'pourStream 300ms linear forwards' }} className="origin-top" />
-
-                          <div style={{ position: 'absolute', left: -6, top: 0 }}>
-                            {[0,1,2].map((i) => (
-                              <div key={i} style={{ width: 8, height: 10, background: 'rgba(59,130,246,0.95)', borderRadius: 8, marginTop: 6, animation: `dripFall 900ms cubic-bezier(.2,.9,.3,1) ${i * 160}ms infinite` }} />
-                            ))}
-                          </div>
-
-                          {/* Countdown */}
-                          {autoTitrating && (
-                            <div className="mt-2 bg-white/95 p-2 rounded-lg shadow text-center text-sm">
-                              <div className="text-xs text-gray-500">Auto-stop at</div>
-                              <div className="text-lg font-bold text-green-600">10.0 mL</div>
-                              <div className="text-xs text-gray-700">{Math.max(0, Math.ceil(((10 - burette.reading) / 0.5 * 300) / 1000))}s remaining</div>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -1073,6 +1086,33 @@ export default function VirtualLab({
                 </div>
               )}
 
+              {/* Step navigation */}
+              <div className="mb-4 grid grid-cols-2 gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentStep <= 1}
+                  onClick={() => {
+                    onStepUndo?.(currentStep);
+                    setCurrentStep((s) => Math.max(1, s - 1));
+                  }}
+                >
+                  <ArrowLeft className="w-4 h-4 mr-1" />
+                  Previous Step
+                </Button>
+                <Button
+                  size="sm"
+                  disabled={currentStep >= GUIDED_STEPS.length}
+                  onClick={() => {
+                    onStepComplete(currentStep);
+                    setCurrentStep((s) => Math.min(GUIDED_STEPS.length, s + 1));
+                  }}
+                >
+                  Next Step
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+
               {/* Current State */}
               <div className="mb-4">
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Current Phase</h4>
@@ -1113,28 +1153,58 @@ export default function VirtualLab({
               </div>
               )}
 
-              {/* Recent Actions */}
-              {titrationLog.length > 0 && (
-                <div>
-                  <h4 className="font-semibold text-sm text-gray-700 mb-2">Recent Actions</h4>
-                  <div className="space-y-2 max-h-32 overflow-y-auto">
-                    {titrationLog.slice(-3).reverse().map((log) => (
-                      <div key={log.id} className={`text-xs p-2 rounded ${
-                        log.isEndpoint ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
-                      }`}>
-                        <div className="font-medium">{log.action}</div>
-                        <div className="text-gray-600">{log.observation}</div>
-                        {log.volume && (
-                          <div className="text-green-600 font-mono">
-                            {log.volume.toFixed(1)} mL
-                          </div>
-                        )}
-                      </div>
+            </div>
+
+            {/* Titration pouring animation (shown during titration) */}
+            {currentStep >= 5 && !experimentCompleted && (
+              <div className="bg-black rounded-xl p-4 border border-gray-700 shadow-sm">
+                <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
+                  <Droplets className="w-5 h-5 mr-2 text-pink-500" />
+                  Titration in Progress
+                </h3>
+                <style>{`
+                  @keyframes naohDripAnim { 0% { transform: translateY(0); opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(56px); opacity: 0; } }
+                  @keyframes flaskToPinkAnim { 0%, 35% { background-color: #4A90E2; } 100% { background-color: #FFB6C1; } }
+                  @keyframes flaskSwirl { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
+                `}</style>
+                <div className="relative mx-auto flex flex-col items-center" style={{ width: 150 }}>
+                  {/* Burette */}
+                  <div className="relative w-3 h-28 bg-gradient-to-b from-gray-100 to-gray-300 border border-gray-400 rounded-b-sm overflow-hidden">
+                    <div className="absolute inset-x-0 top-0" style={{ height: '55%', backgroundColor: '#C8A2E8', opacity: 0.75 }} />
+                  </div>
+                  {/* Stopcock */}
+                  <div className="w-2.5 h-3 bg-gray-500 rounded-sm" />
+                  {/* NaOH drops */}
+                  <div className="relative w-2 h-14">
+                    {[0, 1, 2].map((i) => (
+                      <div
+                        key={i}
+                        className="absolute left-1/2 -translate-x-1/2 top-0 rounded-full"
+                        style={{ width: 6, height: 9, backgroundColor: '#C8A2E8', animation: `naohDripAnim 1.3s ease-in ${i * 0.43}s infinite` }}
+                      />
                     ))}
                   </div>
+                  {/* Conical flask */}
+                  <div className="relative -mt-1" style={{ width: 100, height: 95, animation: 'flaskSwirl 2.2s ease-in-out infinite' }}>
+                    <div className="relative w-full h-full">
+                      {/* Flask outline */}
+                      <div
+                        className="absolute inset-0 bg-gray-100/40 border-2 border-gray-300"
+                        style={{ clipPath: 'polygon(40% 0, 60% 0, 60% 38%, 92% 100%, 8% 100%, 40% 38%)' }}
+                      />
+                      {/* Liquid changing color */}
+                      <div
+                        className="absolute inset-0"
+                        style={{ clipPath: 'polygon(34% 58%, 66% 58%, 90% 98%, 10% 98%)', opacity: 0.85, animation: 'flaskToPinkAnim 10s ease-in-out forwards' }}
+                      />
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
+                <p className="text-xs text-center text-gray-300 mt-2">
+                  NaOH is being added drop by drop — the solution slowly turns light pink.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -1243,19 +1313,7 @@ export default function VirtualLab({
             <div className="p-6 bg-white">
               <p className="text-sm text-gray-700 mb-4">You have added 10.0 mL of NaOH. Continuing beyond this limit may change the endpoint reading and affect accuracy. Choose an action:</p>
 
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-pink-50 flex items-center justify-center border border-pink-100">
-                    <svg className="w-5 h-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m4 0h.01M12 20h.01" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold">Stop Titration</div>
-                    <div className="text-xs text-gray-500">Record current reading and proceed to analysis</div>
-                  </div>
-                </div>
-
+              <div className="mb-6">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100">
                     <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1263,7 +1321,7 @@ export default function VirtualLab({
                     </svg>
                   </div>
                   <div>
-                    <div className="text-sm font-semibold">Continue Titrating</div>
+                    <div className="text-sm font-semibold">Proceed to calculation</div>
                     <div className="text-xs text-gray-500">Proceed beyond recommended limit (may overshoot)</div>
                   </div>
                 </div>
@@ -1271,29 +1329,16 @@ export default function VirtualLab({
 
               <div className="flex justify-end gap-3">
                 <Button
-                  variant="outline"
-                  onClick={() => {
-                    setShowTitrationLimitWarning(false);
-                    setConicalFlask(prev => ({ ...prev, colorHex: ENDPOINT_COLORS.ENDPOINT, endpointReached: true }));
-                    setTitrationState(prev => ({ ...prev, currentPhase: 'endpoint', flaskColor: ENDPOINT_COLORS.ENDPOINT, explanation: 'Stopped at safe limit (light pink observed)' }));
-                    setExperimentCompleted(true);
-                    setSafeTimeout(() => setShowStrengthPrompt(true), 6000);
-                  }}
-                  className="border-pink-300 text-pink-700 hover:bg-pink-50"
-                >
-                  Stop titration
-                </Button>
-                <Button
                   onClick={() => {
                     setShowTitrationLimitWarning(false);
                     setConicalFlask(prev => ({ ...prev, colorHex: ENDPOINT_COLORS.OVERSHOOT }));
                     setTitrationState(prev => ({ ...prev, currentPhase: 'completed', flaskColor: ENDPOINT_COLORS.OVERSHOOT, explanation: 'Continued beyond limit (dark pink observed)' }));
                     setExperimentCompleted(true);
-                    setSafeTimeout(() => setShowStrengthPrompt(true), 6000);
+                    setLocation(`/experiment/${experimentId}/results`);
                   }}
                   className="bg-pink-600 hover:bg-pink-700 text-white"
                 >
-                  Continue titrating
+                  Proceed to calculation
                 </Button>
               </div>
             </div>

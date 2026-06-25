@@ -16,6 +16,7 @@ export default function TitrationResultsPage() {
   const [trials, setTrials] = useState<Array<{ initial: string; final: string }>>([
     { initial: "", final: "" },
   ]);
+  const [showResultsAnalysis, setShowResultsAnalysis] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -262,9 +263,66 @@ export default function TitrationResultsPage() {
               <div className="text-lg font-bold">{strength.toFixed(2)} g/L</div>
             </div>
 
-            {/* Show QUIZ button when there are at least 3 trials recorded */}
+            {/* Show extra analysis once there are at least 3 trials recorded */}
             {trials.length >= 3 && (
-              <div className="pt-2">
+              <div className="pt-2 space-y-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
+                  onClick={() => setShowResultsAnalysis((prev) => !prev)}
+                >
+                  Results and Analysis
+                </Button>
+
+                {showResultsAnalysis && (
+                  <div className="space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                    <div>
+                      <h3 className="font-semibold text-gray-800 mb-2">Data Used</h3>
+                      <div className="grid grid-cols-1 gap-2 text-sm text-gray-700">
+                        <div><strong>Oxalic Acid Normality (N₁):</strong> {acidNormality || "—"}</div>
+                        <div><strong>Oxalic Acid Volume (V₁):</strong> {acidVolume || "—"} mL</div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-semibold text-gray-800 mb-2">Trial Readings</h3>
+                      <div className="space-y-1 text-sm">
+                        {trials.map((trial, idx) => {
+                          const i = parseFloat(trial.initial);
+                          const f = parseFloat(trial.final);
+                          const used = Number.isFinite(i) && Number.isFinite(f) ? Math.max(0, f - i) : 0;
+
+                          return (
+                            <div key={idx} className="rounded bg-white px-3 py-2 border border-gray-200">
+                              <div className="font-medium">Trial {idx + 1}</div>
+                              <div className="text-gray-600">Initial: {trial.initial || "—"} mL, Final: {trial.final || "—"} mL, NaOH Used: {used.toFixed(2)} mL</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-semibold text-gray-800 mb-2">Formulas Used</h3>
+                      <div className="space-y-2 text-sm text-gray-700 rounded bg-white border border-gray-200 p-3">
+                        <div><strong>Mean Titre Volume (V₂):</strong> V₂ = (Σ trial volumes) / n</div>
+                        <div><strong>NaOH Normality (N₂):</strong> N₁V₁ = N₂V₂ → N₂ = (N₁ × V₁) / V₂</div>
+                        <div><strong>Strength:</strong> Strength = N₂ × 40</div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-semibold text-gray-800 mb-2">Calculated Values</h3>
+                      <div className="grid grid-cols-1 gap-2 text-sm text-gray-700">
+                        <div><strong>Mean Titre Volume (V₂):</strong> {meanV2.toFixed(2)} mL</div>
+                        <div><strong>NaOH Normality (N₂):</strong> {n2.toFixed(4)} N</div>
+                        <div><strong>Strength:</strong> {strength.toFixed(2)} g/L</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <Link href={`/experiment/${experimentId}/quiz`}>
                   <Button className="w-full bg-amber-500 text-white hover:bg-amber-600">
                     QUIZ

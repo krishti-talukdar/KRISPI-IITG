@@ -15,6 +15,8 @@ interface AnimationStep {
   duration: number;
 }
 
+const buretteImageUrl = "https://cdn.builder.io/api/v1/image/assets%2F3c8edf2c5e3b436684f709f440180093%2F370ce19fbcca41b7ae21ad51225414c7?format=webp&width=800&height=1200";
+
 const animationSteps: AnimationStep[] = [
   {
     id: 1,
@@ -98,7 +100,7 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
     setShowComplete(true);
     setCompletedSteps([0, 1, 2, 3, 4, 5, 6]); // Mark all steps as completed
     setLiquidLevel(100); // Set final liquid level
-    setLiquidColor('#FFB6C1'); // Set final NaOH color
+    setLiquidColor('#C8A2E8'); // Set final NaOH color (light purple)
     setIsDraining(false);
     setShowBubbles(false);
     setShowStopcockFlow(false);
@@ -134,14 +136,14 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
         drainBurette(() => setStepAnimationComplete(true));
         break;
       case 2: // Rinse with NaOH
-        setLiquidColor('#FFB6C1'); // Light pink NaOH
+        setLiquidColor('#C8A2E8'); // Light purple NaOH
         fillBurette(30, () => setStepAnimationComplete(true));
         break;
       case 3: // Discard NaOH rinse
         drainBurette(() => setStepAnimationComplete(true));
         break;
       case 4: // Fill with NaOH
-        setLiquidColor('#FFB6C1'); // Pink NaOH solution
+        setLiquidColor('#C8A2E8'); // Light purple NaOH solution
         fillBurette(98, () => setStepAnimationComplete(true));
         break;
       case 5: // Remove air bubbles
@@ -255,108 +257,84 @@ export default function BuretteRinsingAnimation({ onComplete }: BuretteRinsingAn
           {isAnimating && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Animation Visual */}
-              <div className="flex justify-center items-center min-h-[200px]">
-                <div className="relative">
-                  {/* Burette Stand */}
-                  <div className="w-6 h-48 bg-gray-600 rounded-sm mx-auto relative">
-                    {/* Clamp */}
-                    <div className="absolute top-12 -left-1 w-8 h-4 bg-gray-700 rounded"></div>
-                  </div>
+              <div className="flex justify-center items-center min-h-[340px]">
+                <div className="relative h-[320px] w-[150px]">
+                  <img
+                    src={buretteImageUrl}
+                    alt="Burette"
+                    className="absolute inset-0 z-20 h-full w-full object-contain pointer-events-none"
+                  />
 
-                  {/* Burette */}
-                  <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
-                    <div className="relative w-8 h-48 bg-gray-100 border-2 border-gray-300 rounded-sm">
-                      {/* Volume markings */}
-                      {[0, 10, 20, 30, 40, 50].map((mark) => (
-                        <div
-                          key={mark}
-                          className="absolute right-full mr-2 -translate-y-1/2 text-xs font-mono text-gray-600 font-semibold"
-                          style={{ top: `${(mark / 50) * 100}%` }}
-                        >
-                          {50 - mark}
-                        </div>
-                      ))}
-
-                      {/* Minor graduations */}
-                      {[5, 15, 25, 35, 45].map((mark) => (
-                        <div
-                          key={`minor-${mark}`}
-                          className="absolute right-full mr-1 -translate-y-1/2 text-[10px] font-mono text-gray-400"
-                          style={{ top: `${(mark / 50) * 100}%` }}
-                        >
-                          {50 - mark}
-                        </div>
-                      ))}
-                      
-                      {/* Liquid inside burette */}
-                      <div 
-                        className="absolute bottom-0 left-0 right-0 transition-all duration-300 ease-in-out rounded-b-sm"
-                        style={{ 
-                          height: `${liquidLevel}%`, 
+                  {/* Liquid clipped to the full inner cavity (graduated tube + taper) */}
+                  <div
+                    className="absolute z-30 left-[44%] w-[16.6%] top-[15.7%] h-[68.3%]"
+                    style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 89%, 66% 100%, 34% 100%, 0% 89%)' }}
+                  >
+                    <div
+                      className="absolute bottom-0 left-0 right-0 transition-[height] duration-500 ease-out"
+                      style={{ height: `${liquidLevel}%` }}
+                    >
+                      {/* Liquid body with depth gradient */}
+                      <div
+                        className="absolute inset-0"
+                        style={{
                           backgroundColor: liquidColor,
-                          opacity: 0.8
+                          opacity: 0.7,
+                          backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 22%, rgba(0,0,0,0.18) 100%)`
                         }}
-                      >
-                        {/* Liquid surface animation */}
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-white opacity-30 animate-pulse"></div>
-                      </div>
-                      
-                      {/* Air bubbles */}
-                      {showBubbles && (
-                        <>
-                          <div className="absolute bottom-10 left-1 w-1 h-1 bg-white rounded-full animate-bounce" 
-                               style={{ animationDelay: '0s' }}></div>
-                          <div className="absolute bottom-16 right-1 w-1 h-1 bg-white rounded-full animate-bounce" 
-                               style={{ animationDelay: '0.2s' }}></div>
-                          <div className="absolute bottom-8 left-1/2 w-1 h-1 bg-white rounded-full animate-bounce" 
-                               style={{ animationDelay: '0.4s' }}></div>
-                        </>
-                      )}
+                      />
+                      {/* Glass shine running down the tube */}
+                      <div className="absolute inset-y-0 left-[18%] w-[14%] bg-white/40 blur-[1px] rounded-full" />
+                      {/* Curved meniscus surface */}
+                      <div
+                        className="absolute -top-[3px] left-0 right-0 h-[6px] rounded-[50%]"
+                        style={{
+                          backgroundColor: liquidColor,
+                          opacity: 0.85,
+                          boxShadow: '0 1px 2px rgba(255,255,255,0.6) inset'
+                        }}
+                      />
+                      <div className="absolute top-0 left-0 right-0 h-[2px] bg-white/70 rounded-full animate-pulse" />
                     </div>
-                    
-                    {/* Stopcock */}
-                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                      <div className="w-4 h-4 bg-gray-400 rounded-full relative">
-                        <div className="w-2 h-2 bg-gray-600 rounded-full absolute top-1 left-1"></div>
-                      </div>
-                      
-                      {/* Liquid flow from stopcock */}
-                      {showStopcockFlow && (
-                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
-                          <div className="w-0.5 h-12 animate-pulse"
-                               style={{ backgroundColor: liquidColor, opacity: 0.8 }}>
-                            {/* Flow droplets */}
-                            <div className="w-1 h-1 rounded-full absolute -left-0.25 top-0 animate-ping" 
-                                 style={{ backgroundColor: liquidColor }}></div>
-                            <div className="w-1 h-1 rounded-full absolute -left-0.25 top-4 animate-ping" 
-                                 style={{ backgroundColor: liquidColor, animationDelay: '0.2s' }}></div>
-                            <div className="w-1 h-1 rounded-full absolute -left-0.25 top-8 animate-ping" 
-                                 style={{ backgroundColor: liquidColor, animationDelay: '0.4s' }}></div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+
+                    {showBubbles && (
+                      <>
+                        <div className="absolute bottom-10 left-1 w-1.5 h-1.5 bg-white/80 rounded-full animate-bounce"
+                             style={{ animationDelay: '0s' }}></div>
+                        <div className="absolute bottom-16 right-1 w-1.5 h-1.5 bg-white/80 rounded-full animate-bounce"
+                             style={{ animationDelay: '0.2s' }}></div>
+                        <div className="absolute bottom-8 left-1/2 w-1.5 h-1.5 bg-white/80 rounded-full animate-bounce"
+                             style={{ animationDelay: '0.4s' }}></div>
+                        <div className="absolute bottom-24 left-1.5 w-1 h-1 bg-white/70 rounded-full animate-bounce"
+                             style={{ animationDelay: '0.6s' }}></div>
+                      </>
+                    )}
                   </div>
-                  
-                  {/* Funnel (appears during filling) */}
-                  {(currentStep === 0 || currentStep === 2 || currentStep === 4) && (
-                    <div className="absolute top-8 left-1/2 transform -translate-x-1/2">
-                      <div className="w-8 h-6 bg-gray-300 rounded-t-full border-2 border-gray-400 relative">
-                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-4 bg-gray-400"></div>
-                        {/* Liquid flowing through funnel */}
-                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0.5 h-6 animate-pulse"
-                             style={{ backgroundColor: liquidColor, opacity: 0.6 }}></div>
+
+                  {/* Liquid flow from the stopcock tip */}
+                  {showStopcockFlow && (
+                    <div className="absolute z-30 left-1/2 top-[90%] -translate-x-1/2">
+                      <div className="w-[2px] h-8 rounded-full animate-pulse"
+                           style={{
+                             backgroundImage: `linear-gradient(to bottom, ${liquidColor}, transparent)`,
+                             opacity: 0.85
+                           }}>
+                        <div className="w-1.5 h-1.5 rounded-full absolute -left-0.5 top-1 animate-ping"
+                             style={{ backgroundColor: liquidColor }}></div>
+                        <div className="w-1.5 h-1.5 rounded-full absolute -left-0.5 top-4 animate-ping"
+                             style={{ backgroundColor: liquidColor, animationDelay: '0.2s' }}></div>
+                        <div className="w-1 h-1 rounded-full absolute -left-0.25 top-7 animate-ping"
+                             style={{ backgroundColor: liquidColor, animationDelay: '0.4s' }}></div>
                       </div>
                     </div>
                   )}
-                  
-                  {/* Beaker for waste (appears during draining) */}
+
+                  {/* Beaker for waste (appears during draining) below the stopcock */}
                   {(currentStep === 1 || currentStep === 3) && (
-                    <div className="absolute top-48 left-1/2 transform -translate-x-1/2">
+                    <div className="absolute z-10 left-1/2 top-[96%] -translate-x-1/2">
                       <div className="w-12 h-8 bg-gray-200 border-2 border-gray-400 rounded-b-lg relative">
-                        {/* Waste liquid collecting */}
                         {isDraining && (
-                          <div className="absolute bottom-0 left-0 right-0 h-2 rounded-b-lg transition-all duration-1000" 
+                          <div className="absolute bottom-0 left-0 right-0 h-2 rounded-b-lg transition-all duration-1000"
                                style={{ backgroundColor: liquidColor, opacity: 0.6 }}></div>
                         )}
                       </div>
