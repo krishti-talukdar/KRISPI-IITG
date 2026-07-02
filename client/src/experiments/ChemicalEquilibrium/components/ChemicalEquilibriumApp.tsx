@@ -603,7 +603,7 @@ export default function ChemicalEquilibriumApp({
         if (step.id === 1) {
           return {
             ...step,
-            title: "Step 1 : Place the test tube, drag the platinum wire and watch glass in the workbench.",
+            title: "Step 1 : Press the ADD button of test tube in the equipmennts section.",
             description: "Move a clean test tube onto the workbench, and drag the platinum wire and watch glass to begin the flame test.",
           };
         }
