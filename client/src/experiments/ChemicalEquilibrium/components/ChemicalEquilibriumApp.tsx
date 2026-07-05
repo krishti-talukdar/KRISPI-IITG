@@ -631,8 +631,8 @@ export default function ChemicalEquilibriumApp({
         if (step.id === 6) {
           return {
             ...step,
-            title: "Step 6 : Add the bunsen burner and 5 samples of platinum wire dipped in salt sample in the workbench one by one.",
-            description: "Drag the bunsen burner onto the workbench, then add each of the 5 platinum wire samples dipped in the salt sample one by one.",
+            title: "Step 6 : Press the ADD button of the test tube.",
+            description: "Press the ADD button of the test tube.",
           };
         }
         if (step.id === 7) {
