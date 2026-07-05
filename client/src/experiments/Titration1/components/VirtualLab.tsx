@@ -1232,7 +1232,7 @@ export default function VirtualLab({
           <DialogContent className="max-w-sm">
             <DialogHeader>
               <DialogTitle className="text-lg font-semibold">Enter Oxalic Acid Volume</DialogTitle>
-              <DialogDescription>enter the amount of oxalic acid(10ml-25ml)</DialogDescription>
+              <DialogDescription>enter the amount of oxalic acid(25ml)</DialogDescription>
             </DialogHeader>
             <div className="space-y-3">
               <Input
