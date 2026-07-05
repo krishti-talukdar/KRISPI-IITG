@@ -610,8 +610,8 @@ export default function ChemicalEquilibriumApp({
         if (step.id === 3) {
           return {
             ...step,
-            title: "Step 3 : Pour the salt sample in the test tube to the watch glass.",
-            description: "Pour the salt sample from the test tube onto the watch glass for the flame test.",
+            title: "Step 3 : Drag the platinum wire in the workbench and then press the DIP button.",
+            description: "Drag the platinum wire in the workbench and then press the DIP button.",
           };
         }
         if (step.id === 4) {
