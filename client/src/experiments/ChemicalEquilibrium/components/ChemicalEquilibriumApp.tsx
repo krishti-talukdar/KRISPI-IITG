@@ -593,9 +593,19 @@ export default function ChemicalEquilibriumApp({
                 ? limitSaltAnalysisProgressSteps(experiment.stepDetails, 5)
                 : limitSaltAnalysisProgressSteps(experiment.stepDetails);
 
-    // For Flame Test, allow 8 steps instead of 6
+    // For Flame Test, allow 25 steps instead of 6
+    const flameTestExtraSteps: ExperimentStep[] = Array.from({ length: 15 }, (_, index) => ({
+      id: 11 + index,
+      title: "",
+      description: "",
+      completed: false,
+    }));
+    const flameTestSteps = [
+      ...experiment.stepDetails.slice(0, 10),
+      ...flameTestExtraSteps,
+    ];
     const steps = isBasicRadicalsFlameTest
-      ? experiment.stepDetails.slice(0, 8)
+      ? flameTestSteps
       : baseSteps;
 
     if (isBasicRadicalsFlameTest) {
@@ -610,15 +620,15 @@ export default function ChemicalEquilibriumApp({
         if (step.id === 3) {
           return {
             ...step,
-            title: "Step 3 : Pour the salt sample in the test tube to the watch glass.",
-            description: "Pour the salt sample from the test tube onto the watch glass for the flame test.",
+            title: "Step 3 : Drag the platinum wire in the workbench and then press the DIP button.",
+            description: "Drag the platinum wire in the workbench and then press the DIP button.",
           };
         }
         if (step.id === 4) {
           return {
             ...step,
-            title: "Step 4 : Dip the platinum wire in the salt sample of the watch glass.",
-            description: "Dip the platinum wire into the salt sample placed on the watch glass before heating.",
+            title: "Step 4 : Press the ADD button of the bunsen burner then press the START HEATING button of the bunsen burner.",
+            description: "Press the ADD button of the bunsen burner then press the START HEATING button of the bunsen burner.",
           };
         }
         if (step.id === 5) {
@@ -631,22 +641,141 @@ export default function ChemicalEquilibriumApp({
         if (step.id === 6) {
           return {
             ...step,
-            title: "Step 6 : Add the bunsen burner and 5 samples of platinum wire dipped in salt sample in the workbench one by one.",
-            description: "Drag the bunsen burner onto the workbench, then add each of the 5 platinum wire samples dipped in the salt sample one by one.",
+            title: "Step 6 : Press the ADD button of the test tube.",
+            description: "Press the ADD button of the test tube.",
           };
         }
         if (step.id === 7) {
           return {
             ...step,
-            title: 'Step 7 : Press the "Start Heating" button of the bunsen burner and observe the colour of the flame in the "OBSERVATIONS" on the right side.',
-            description: 'Click the "Start Heating" button on the bunsen burner and watch the flame colour appear in the OBSERVATIONS panel on the right.',
+            title: 'Step 7 : Press the ADD button of the salt sample.',
+            description: 'Press the ADD button of the salt sample.',
           };
         }
         if (step.id === 8) {
           return {
             ...step,
-            title: 'Step 8 : Press the "Stop Heating" button of the bunsen burner and again press the "Start Heating" button of the bunsen burner. Do it 4 times for next 4 observations.',
-            description: 'Press "Stop Heating" then "Start Heating" repeatedly — do this 4 times to record the next 4 flame colour observations.',
+            title: "Step 8 : Drag the platinum wire in the workbench and press the DIP button.",
+            description: "Drag the platinum wire in the workbench and press the DIP button.",
+          };
+        }
+        if (step.id === 9) {
+          return {
+            ...step,
+            title: 'Step 9 : Press the ADD button of the bunsen burner and press the START HEATING button.',
+            description: 'Press the ADD button of the bunsen burner and press the START HEATING button.',
+          };
+        }
+        if (step.id === 10) {
+          return {
+            ...step,
+            title: 'Step 10 : Press the RESET WORKBENCH button.',
+            description: 'Press the RESET WORKBENCH button.',
+          };
+        }
+        if (step.id === 11) {
+          return {
+            ...step,
+            title: 'Step 11 : Press the ADD button of the test tube.',
+            description: 'Press the ADD button of the test tube.',
+          };
+        }
+        if (step.id === 12) {
+          return {
+            ...step,
+            title: 'Step 12 : Press the ADD button of the salt sample.',
+            description: 'Press the ADD button of the salt sample.',
+          };
+        }
+        if (step.id === 13) {
+          return {
+            ...step,
+            title: 'Step 13 : Drag the platinum wire in the workbench and press the DIP button.',
+            description: 'Drag the platinum wire in the workbench and press the DIP button.',
+          };
+        }
+        if (step.id === 14) {
+          return {
+            ...step,
+            title: 'Step 14 : Press the ADD button of the bunsen burner and press the START HEATING button.',
+            description: 'Press the ADD button of the bunsen burner and press the START HEATING button.',
+          };
+        }
+        if (step.id === 15) {
+          return {
+            ...step,
+            title: 'Step 15 : Press the RESET WORKBENCH button.',
+            description: 'Press the RESET WORKBENCH button.',
+          };
+        }
+        if (step.id === 16) {
+          return {
+            ...step,
+            title: 'Step 16 : Press the ADD button of the test tube.',
+            description: 'Press the ADD button of the test tube.',
+          };
+        }
+        if (step.id === 17) {
+          return {
+            ...step,
+            title: 'Step 17 : Press the ADD button of the salt sample.',
+            description: 'Press the ADD button of the salt sample.',
+          };
+        }
+        if (step.id === 18) {
+          return {
+            ...step,
+            title: 'Step 18 : Drag the platinum wire in the workbench and press the DIP button.',
+            description: 'Drag the platinum wire in the workbench and press the DIP button.',
+          };
+        }
+        if (step.id === 19) {
+          return {
+            ...step,
+            title: 'Step 19 : Press the ADD button of the bunsen burner and press the START HEATING button.',
+            description: 'Press the ADD button of the bunsen burner and press the START HEATING button.',
+          };
+        }
+        if (step.id === 20) {
+          return {
+            ...step,
+            title: 'Step 20 : Press the RESET WORKBENCH button.',
+            description: 'Press the RESET WORKBENCH button.',
+          };
+        }
+        if (step.id === 21) {
+          return {
+            ...step,
+            title: 'Step 21 : Press the ADD button of the test tube.',
+            description: 'Press the ADD button of the test tube.',
+          };
+        }
+        if (step.id === 22) {
+          return {
+            ...step,
+            title: 'Step 22 : Press the ADD button of the salt sample.',
+            description: 'Press the ADD button of the salt sample.',
+          };
+        }
+        if (step.id === 23) {
+          return {
+            ...step,
+            title: 'Step 23 : Drag the platinum wire in the workbench and press the DIP button.',
+            description: 'Drag the platinum wire in the workbench and press the DIP button.',
+          };
+        }
+        if (step.id === 24) {
+          return {
+            ...step,
+            title: 'Step 24 : Press the ADD button of the bunsen burner and press the START HEATING button.',
+            description: 'Press the ADD button of the bunsen burner and press the START HEATING button.',
+          };
+        }
+        if (step.id === 25) {
+          return {
+            ...step,
+            title: 'Step 25 : Press the RESET WORKBENCH button.',
+            description: 'Press the RESET WORKBENCH button.',
           };
         }
         return step;
