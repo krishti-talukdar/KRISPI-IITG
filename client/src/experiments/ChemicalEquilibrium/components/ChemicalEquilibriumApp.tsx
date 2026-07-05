@@ -593,8 +593,8 @@ export default function ChemicalEquilibriumApp({
                 ? limitSaltAnalysisProgressSteps(experiment.stepDetails, 5)
                 : limitSaltAnalysisProgressSteps(experiment.stepDetails);
 
-    // For Flame Test, allow 15 steps instead of 6
-    const flameTestExtraSteps: ExperimentStep[] = Array.from({ length: 5 }, (_, index) => ({
+    // For Flame Test, allow 20 steps instead of 6
+    const flameTestExtraSteps: ExperimentStep[] = Array.from({ length: 10 }, (_, index) => ({
       id: 11 + index,
       title: "",
       description: "",
@@ -705,6 +705,41 @@ export default function ChemicalEquilibriumApp({
           return {
             ...step,
             title: 'Step 15 : Press the RESET WORKBENCH button.',
+            description: 'Press the RESET WORKBENCH button.',
+          };
+        }
+        if (step.id === 16) {
+          return {
+            ...step,
+            title: 'Step 16 : Press the ADD button of the test tube.',
+            description: 'Press the ADD button of the test tube.',
+          };
+        }
+        if (step.id === 17) {
+          return {
+            ...step,
+            title: 'Step 17 : Press the ADD button of the salt sample.',
+            description: 'Press the ADD button of the salt sample.',
+          };
+        }
+        if (step.id === 18) {
+          return {
+            ...step,
+            title: 'Step 18 : Drag the platinum wire in the workbench and press the DIP button.',
+            description: 'Drag the platinum wire in the workbench and press the DIP button.',
+          };
+        }
+        if (step.id === 19) {
+          return {
+            ...step,
+            title: 'Step 19 : Press the ADD button of the bunsen burner and press the START HEATING button.',
+            description: 'Press the ADD button of the bunsen burner and press the START HEATING button.',
+          };
+        }
+        if (step.id === 20) {
+          return {
+            ...step,
+            title: 'Step 20 : Press the RESET WORKBENCH button.',
             description: 'Press the RESET WORKBENCH button.',
           };
         }
