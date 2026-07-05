@@ -617,8 +617,8 @@ export default function ChemicalEquilibriumApp({
         if (step.id === 4) {
           return {
             ...step,
-            title: "Step 4 : Dip the platinum wire in the salt sample of the watch glass.",
-            description: "Dip the platinum wire into the salt sample placed on the watch glass before heating.",
+            title: "Step 4 : Press the ADD button of the bunsen burner then press the START HEATING button of the bunsen burner.",
+            description: "Press the ADD button of the bunsen burner then press the START HEATING button of the bunsen burner.",
           };
         }
         if (step.id === 5) {
