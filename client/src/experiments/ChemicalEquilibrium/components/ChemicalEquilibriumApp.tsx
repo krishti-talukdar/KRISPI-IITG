@@ -638,8 +638,8 @@ export default function ChemicalEquilibriumApp({
         if (step.id === 7) {
           return {
             ...step,
-            title: 'Step 7 : Press the "Start Heating" button of the bunsen burner and observe the colour of the flame in the "OBSERVATIONS" on the right side.',
-            description: 'Click the "Start Heating" button on the bunsen burner and watch the flame colour appear in the OBSERVATIONS panel on the right.',
+            title: 'Step 7 : Press the ADD button of the salt sample.',
+            description: 'Press the ADD button of the salt sample.',
           };
         }
         if (step.id === 8) {
