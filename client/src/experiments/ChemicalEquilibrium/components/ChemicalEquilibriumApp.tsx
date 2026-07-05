@@ -593,9 +593,9 @@ export default function ChemicalEquilibriumApp({
                 ? limitSaltAnalysisProgressSteps(experiment.stepDetails, 5)
                 : limitSaltAnalysisProgressSteps(experiment.stepDetails);
 
-    // For Flame Test, allow 9 steps instead of 6
+    // For Flame Test, allow 10 steps instead of 6
     const steps = isBasicRadicalsFlameTest
-      ? experiment.stepDetails.slice(0, 9)
+      ? experiment.stepDetails.slice(0, 10)
       : baseSteps;
 
     if (isBasicRadicalsFlameTest) {
@@ -654,6 +654,13 @@ export default function ChemicalEquilibriumApp({
             ...step,
             title: 'Step 9 : Press the ADD button of the bunsen burner and press the START HEATING button.',
             description: 'Press the ADD button of the bunsen burner and press the START HEATING button.',
+          };
+        }
+        if (step.id === 10) {
+          return {
+            ...step,
+            title: 'Step 10 : Press the RESET WORKBENCH button.',
+            description: 'Press the RESET WORKBENCH button.',
           };
         }
         return step;
