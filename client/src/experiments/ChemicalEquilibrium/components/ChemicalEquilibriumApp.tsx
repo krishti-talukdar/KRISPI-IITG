@@ -593,9 +593,19 @@ export default function ChemicalEquilibriumApp({
                 ? limitSaltAnalysisProgressSteps(experiment.stepDetails, 5)
                 : limitSaltAnalysisProgressSteps(experiment.stepDetails);
 
-    // For Flame Test, allow 10 steps instead of 6
+    // For Flame Test, allow 15 steps instead of 6
+    const flameTestExtraSteps: ExperimentStep[] = Array.from({ length: 5 }, (_, index) => ({
+      id: 11 + index,
+      title: "",
+      description: "",
+      completed: false,
+    }));
+    const flameTestSteps = [
+      ...experiment.stepDetails.slice(0, 10),
+      ...flameTestExtraSteps,
+    ];
     const steps = isBasicRadicalsFlameTest
-      ? experiment.stepDetails.slice(0, 10)
+      ? flameTestSteps
       : baseSteps;
 
     if (isBasicRadicalsFlameTest) {
@@ -660,6 +670,41 @@ export default function ChemicalEquilibriumApp({
           return {
             ...step,
             title: 'Step 10 : Press the RESET WORKBENCH button.',
+            description: 'Press the RESET WORKBENCH button.',
+          };
+        }
+        if (step.id === 11) {
+          return {
+            ...step,
+            title: 'Step 11 : Press the ADD button of the test tube.',
+            description: 'Press the ADD button of the test tube.',
+          };
+        }
+        if (step.id === 12) {
+          return {
+            ...step,
+            title: 'Step 12 : Press the ADD button of the salt sample.',
+            description: 'Press the ADD button of the salt sample.',
+          };
+        }
+        if (step.id === 13) {
+          return {
+            ...step,
+            title: 'Step 13 : Drag the platinum wire in the workbench and press the DIP button.',
+            description: 'Drag the platinum wire in the workbench and press the DIP button.',
+          };
+        }
+        if (step.id === 14) {
+          return {
+            ...step,
+            title: 'Step 14 : Press the ADD button of the bunsen burner and press the START HEATING button.',
+            description: 'Press the ADD button of the bunsen burner and press the START HEATING button.',
+          };
+        }
+        if (step.id === 15) {
+          return {
+            ...step,
+            title: 'Step 15 : Press the RESET WORKBENCH button.',
             description: 'Press the RESET WORKBENCH button.',
           };
         }
