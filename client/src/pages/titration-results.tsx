@@ -368,48 +368,6 @@ export default function TitrationResultsPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-6 border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <Clock className="w-5 h-5 mr-2 text-gray-600" />
-                Action Timeline
-              </h3>
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {naohTimeline.map((log, index) => (
-                  <div
-                    key={log.action}
-                    className={`flex items-start space-x-3 p-3 rounded-lg ${
-                      log.isEndpoint ? 'bg-green-50 border border-green-200' : 'bg-gray-50'
-                    }`}
-                  >
-                    <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-medium text-gray-800">{log.action}</div>
-                      <div className="text-sm text-gray-600">{log.observation}</div>
-                      <div className="flex items-center space-x-4 mt-2 text-xs">
-                        <span className="flex items-center">
-                          <span
-                            className="w-5 h-5 rounded-full mr-2 border-2 border-gray-700"
-                            style={{ backgroundColor: log.colorBefore }}
-                          ></span>
-                          Before
-                        </span>
-                        <span>→</span>
-                        <span className="flex items-center">
-                          <span
-                            className="w-5 h-5 rounded-full mr-2 border-2 border-gray-700"
-                            style={{ backgroundColor: log.colorAfter }}
-                          ></span>
-                          After
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 border border-purple-200">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                 <Calculator className="w-5 h-5 mr-2 text-purple-600" />
