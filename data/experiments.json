@@ -282,14 +282,14 @@
       {
         "id": 1,
         "title": "Prepare Acid Solutions",
-        "description": "Prepare three different strengths of hydrochloric acid solutions (for example: 0.1 M, 0.01 M, and 0.001 M) by appropriate dilution of a standard stock HCl solution using volumetric flasks and distilled water. Label each flask clearly.",
+        "description": "Drag and drop the test tube from the equipment section in the workbench.",
         "duration": "8 minutes",
         "completed": false
       },
       {
         "id": 2,
         "title": "Arrange Workspace and Safety",
-        "description": "Put on safety goggles and gloves. Place beakers on a clean bench, keep a wash bottle handy, and ensure all containers are labeled. Work in a well-ventilated area or under a fume hood if available.",
+        "description": "Drag and drop the HCL 0.1M ,HCL 0.01M & HCL 0.001M bottles in the workbench.",
         "duration": "3 minutes",
         "safety": "Handle acids with care; avoid spills and skin contact",
         "completed": false

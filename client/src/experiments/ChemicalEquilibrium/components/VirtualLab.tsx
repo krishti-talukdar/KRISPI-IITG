@@ -1150,7 +1150,7 @@ function ChemicalEquilibriumVirtualLab({
   const MIN_MNO2_MASS = 1.0;
   const MAX_MNO2_MASS = 3.0;
   const MNO2_RANGE_LABEL = "1.0 g - 3.0 g";
-  const MNO2_DEFAULT_MASS = "1.5";
+  const MNO2_DEFAULT_MASS = "0.0";
   const SALT_HEATING_STEP = 0.35;
   const SALT_HEATING_MIN_REMAINING = 0.5;
   const SALT_HEATING_INTERVAL_MS = 1200;
@@ -1175,7 +1175,7 @@ function ChemicalEquilibriumVirtualLab({
   const DILUTE_H2SO4_COLOR = "#fb7185";
   const DILUTE_H2SO4_VOLUME_INCREMENT = 4;
 
-  const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 4;
+  const GLASS_CONTAINER_HCL_DEFAULT_VOLUME = 0;
   const MIN_GLASS_HCL_VOLUME = 1;
   const MAX_GLASS_HCL_VOLUME = 6;
   const GLASS_CONTAINER_HCL_VOLUME_LABEL = "1 - 6 mL";
@@ -1183,28 +1183,28 @@ function ChemicalEquilibriumVirtualLab({
   const MAX_AMMONIUM_VOLUME = 10;
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [addDialogEquipment, setAddDialogEquipment] = useState<{ id: string; name: string } | null>(null);
-  const [addDialogAmount, setAddDialogAmount] = useState("3.0");
+  const [addDialogAmount, setAddDialogAmount] = useState("0.0");
   const [addDialogError, setAddDialogError] = useState<string | null>(null);
   const [saltDialogOpen, setSaltDialogOpen] = useState(false);
-  const [saltMass, setSaltMass] = useState("2.0");
+  const [saltMass, setSaltMass] = useState("0.0");
   const [saltDialogError, setSaltDialogError] = useState<string | null>(null);
   const [mno2DialogOpen, setMno2DialogOpen] = useState(false);
   const [mno2Mass, setMno2Mass] = useState(MNO2_DEFAULT_MASS);
   const [mno2DialogError, setMno2DialogError] = useState<string | null>(null);
   const [naohDialogOpen, setNaohDialogOpen] = useState(false);
-  const [naohVolume, setNaohVolume] = useState("2.5");
+  const [naohVolume, setNaohVolume] = useState("0.0");
   const [naohDialogError, setNaohDialogError] = useState<string | null>(null);
   const [acidDialogOpen, setAcidDialogOpen] = useState(false);
-  const [acidVolume, setAcidVolume] = useState("4");
+  const [acidVolume, setAcidVolume] = useState("0.0");
   const [acidDialogError, setAcidDialogError] = useState<string | null>(null);
   const [acidTarget, setAcidTarget] = useState<AcidTarget>("h2so4");
   const [glassAcidDialogOpen, setGlassAcidDialogOpen] = useState(false);
   const [glassAcidVolume, setGlassAcidVolume] = useState(
-    GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString(),
+    GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toFixed(1),
   );
   const [glassAcidDialogError, setGlassAcidDialogError] = useState<string | null>(null);
   const [ammoniumDialogOpen, setAmmoniumDialogOpen] = useState(false);
-  const [ammoniumVolume, setAmmoniumVolume] = useState("5.0");
+  const [ammoniumVolume, setAmmoniumVolume] = useState("0.0");
   const [ammoniumDialogError, setAmmoniumDialogError] = useState<string | null>(null);
   const [showSaltAnalysisQuizModal, setShowSaltAnalysisQuizModal] = useState(false);
   const [quizSelections, setQuizSelections] = useState<Record<string, string>>({});
@@ -2570,7 +2570,7 @@ function ChemicalEquilibriumVirtualLab({
       }
 
       setAddDialogEquipment({ id: equipment.id, name: equipment.name });
-      setAddDialogAmount("3.0");
+      setAddDialogAmount("0.0");
       setAddDialogError(null);
     },
     [handleEquipmentAddButton, handleEquipmentDrop, isDryTestExperiment, dryTestMode, activeHalide, activeFlameTest, activeTopLevelSection, activeBasicRadicalsSubsection, setEquipmentPositions, pushHistorySnapshot],
@@ -2578,7 +2578,7 @@ function ChemicalEquilibriumVirtualLab({
 
   const handleEquipmentAddDialogClose = useCallback(() => {
     setAddDialogEquipment(null);
-    setAddDialogAmount("3.0");
+    setAddDialogAmount("0.0");
     setAddDialogError(null);
   }, []);
 
@@ -3473,7 +3473,7 @@ function ChemicalEquilibriumVirtualLab({
   ]);
 
   const handleSaltDialogOpen = () => {
-    setSaltMass("0.00");
+    setSaltMass("0.0");
     setSaltDialogError(null);
     setSaltDialogOpen(true);
   };
@@ -3496,7 +3496,7 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleAcidDialogOpen = (target: AcidTarget = "h2so4") => {
-    setAcidVolume("4");
+    setAcidVolume("0.0");
     setAcidDialogError(null);
     setAcidTarget(target);
     setAcidDialogOpen(true);
@@ -3508,7 +3508,7 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleAmmoniumDialogOpen = () => {
-    setAmmoniumVolume("5.0");
+    setAmmoniumVolume("0.0");
     setAmmoniumDialogError(null);
     setAmmoniumDialogOpen(true);
   };
@@ -3868,7 +3868,7 @@ function ChemicalEquilibriumVirtualLab({
   ]);
 
   const handleNaOHDialogOpen = () => {
-    setNaohVolume("2.5");
+    setNaohVolume("0.0");
     setNaohDialogError(null);
     setNaohDialogOpen(true);
   };
@@ -3879,7 +3879,7 @@ function ChemicalEquilibriumVirtualLab({
   };
 
   const handleGlassAcidDialogOpen = () => {
-    setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toString());
+    setGlassAcidVolume(GLASS_CONTAINER_HCL_DEFAULT_VOLUME.toFixed(1));
     setGlassAcidDialogError(null);
     setGlassAcidDialogOpen(true);
   };
@@ -5717,7 +5717,7 @@ function ChemicalEquilibriumVirtualLab({
                 step="0.1"
                 value={addDialogAmount}
                 onChange={(event) => setAddDialogAmount(event.target.value)}
-                placeholder="3.0"
+                placeholder="0.0"
               />
               <p className="text-[11px] text-slate-500">
                 Equipment will be placed near the center of the workbench.
@@ -5766,7 +5766,7 @@ function ChemicalEquilibriumVirtualLab({
                 step="0.1"
                 value={saltMass}
                 onChange={(event) => setSaltMass(event.target.value)}
-                placeholder="2.5"
+                placeholder="0.0"
               />
               <p className="text-[11px] text-slate-500">Recommended range: {SALT_RANGE_LABEL}.</p>
               {saltDialogError && (
@@ -5813,7 +5813,7 @@ function ChemicalEquilibriumVirtualLab({
                 step="0.1"
                 value={mno2Mass}
                 onChange={(event) => setMno2Mass(event.target.value)}
-                placeholder="1.5"
+                placeholder="0.0"
               />
               <p className="text-[11px] text-slate-500">Recommended range: {MNO2_RANGE_LABEL}.</p>
               {mno2DialogError && (
@@ -5857,7 +5857,7 @@ function ChemicalEquilibriumVirtualLab({
                 step="0.1"
                 value={naohVolume}
                 onChange={(event) => setNaohVolume(event.target.value)}
-                placeholder="2.5"
+                placeholder="0.0"
               />
               <p className="text-[11px] text-slate-500">Recommended range: {NAOH_VOLUME_LABEL}.</p>
               {naohDialogError && (
@@ -5901,7 +5901,7 @@ function ChemicalEquilibriumVirtualLab({
                 step="0.1"
                 value={glassAcidVolume}
                 onChange={(event) => setGlassAcidVolume(event.target.value)}
-                placeholder="4.0"
+                placeholder="0.0"
               />
               <p className="text-[11px] text-slate-500">
                 Recommended range: {GLASS_CONTAINER_HCL_VOLUME_LABEL}.
@@ -5947,7 +5947,7 @@ function ChemicalEquilibriumVirtualLab({
                 step="1"
                 value={acidVolume}
                 onChange={(event) => setAcidVolume(event.target.value)}
-                placeholder="4"
+                placeholder="0.0"
               />
               <p className="text-[11px] text-slate-500">Recommended range: {ACID_RANGE_LABEL}.</p>
               {acidDialogError && (
@@ -5991,7 +5991,7 @@ function ChemicalEquilibriumVirtualLab({
                 step="0.1"
                 value={ammoniumVolume}
                 onChange={(event) => setAmmoniumVolume(event.target.value)}
-                placeholder="5.0"
+                placeholder="0.0"
               />
               <p className="text-[11px] text-slate-500">
                 Recommended range: {MIN_AMMONIUM_VOLUME} - {MAX_AMMONIUM_VOLUME} mL.

@@ -49,7 +49,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
 
   // Dialog state for adding HCl volumes
   const [dialogOpenFor, setDialogOpenFor] = useState<null | { id: string; label: string; molarity: number }>(null);
-  const [volumeStr, setVolumeStr] = useState("5.0");
+  const [volumeStr, setVolumeStr] = useState("0.0");
   const [volumeError, setVolumeError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function VirtualLab({ experiment, experimentStarted, onStartExper
       "hcl-0-001m": { label: "0.001 M HCl", molarity: 0.001 },
     };
     setDialogOpenFor({ id, ...map[id] });
-    setVolumeStr("10.0");
+    setVolumeStr("0.0");
     setVolumeError(null);
   };
 
