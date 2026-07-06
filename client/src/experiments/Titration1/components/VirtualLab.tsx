@@ -1243,7 +1243,7 @@ export default function VirtualLab({
                 value={pipetteVolumeInput}
                 onChange={(e) => setPipetteVolumeInput(e.target.value)}
               />
-              <p className="text-xs text-green-600">Recommendation: add 10ml of oxalic acid</p>
+              <p className="text-xs text-green-600">Recommendation: add 25ml of oxalic acid</p>
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setShowPipetteVolumeModal(false)}>Cancel</Button>
                 <Button onClick={() => {
