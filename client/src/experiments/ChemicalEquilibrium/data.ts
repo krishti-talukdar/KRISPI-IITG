@@ -428,8 +428,8 @@ export const PHHClExperiment: ChemicalEquilibriumExperiment = {
     "Labels and Marker"
   ],
   stepDetails: [
-    { id: 1, title: "Prepare Acid Solutions", description: "Prepare three different strengths of hydrochloric acid solutions (e.g. 0.1 M, 0.01 M, 0.001 M) by appropriate dilution of a standard HCl stock using volumetric flasks and distilled water. Label each flask clearly.", duration: "8 minutes", completed: false },
-    { id: 2, title: "Arrange Workspace and Safety", description: "Put on safety goggles and gloves. Place beakers on a clean bench, keep a wash bottle handy, and ensure all containers are labeled.", duration: "3 minutes", safety: "Handle acids with care; avoid spills and skin contact", completed: false },
+    { id: 1, title: "Prepare Acid Solutions", description: "Drag and drop the test tube from the equipment section in the workbench.", duration: "8 minutes", completed: false },
+    { id: 2, title: "Arrange Workspace and Safety", description: "Drag and drop the HCL 0.1M ,HCL 0.01M & HCL 0.001M bottles in the workbench.", duration: "3 minutes", safety: "Handle acids with care; avoid spills and skin contact", completed: false },
     { id: 3, title: "Measure pH with pH Paper", description: "Dip a strip of universal pH paper into each acid solution, or place a drop of solution onto the pH paper. Compare the resulting color with the pH chart to estimate pH and record the value for each concentration.", duration: "6 minutes", completed: false },
     { id: 4, title: "Measure with Universal Indicator", description: "Add a few drops of universal indicator solution to separate small aliquots of each acid strength in clean beakers. Observe and record the color change and compare to the indicator chart to determine pH range.", duration: "6 minutes", completed: false },
     { id: 5, title: "Compare and Analyze Results", description: "Compare pH readings obtained from pH paper and universal indicator for each concentration. Note discrepancies and discuss reasons (precision, indicator ranges, concentration effects).", duration: "8 minutes", completed: false },
