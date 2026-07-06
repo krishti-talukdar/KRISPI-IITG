@@ -86,7 +86,7 @@ export default function TitrationResultsPage() {
   const isNaOHStrengthExperiment = /sodium hydroxide/i.test(title) && /oxalic/i.test(title);
 
   const naohSummary = {
-    stepsCompleted: experiment?.stepDetails?.length ?? 8,
+    stepsCompleted: experiment?.stepDetails?.length ?? 6,
     actionsPerformed: 4,
     finalVolume: 'Average titre 24.8 mL',
   };
