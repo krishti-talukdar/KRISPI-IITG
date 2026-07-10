@@ -1062,11 +1062,9 @@ export const Equipment: React.FC<EquipmentProps> = ({
               ? K2CR2O7_SOLUTION_COLOR
               : shouldUseAmmoniumColor
                 ? NH4OH_WET_SOLUTION_COLOR
-                : shouldUseDiluteHNO3Color
-                  ? DILUTE_HNO3_WET_SOLUTION_COLOR
-                  : shouldForceNaOHBlue
-                    ? NAOH_SOLUTION_COLOR
-                    : baseOverlayColor;
+                : shouldForceNaOHBlue
+                  ? NAOH_SOLUTION_COLOR
+                  : baseOverlayColor;
         const isFlameTestSalt =
           isSaltAnalysis &&
           hasSaltSample &&
