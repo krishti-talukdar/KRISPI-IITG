@@ -981,14 +981,16 @@ export const Equipment: React.FC<EquipmentProps> = ({
           Math.min(naohAmount, MAX_NAOH_VOLUME_DISPLAY) / MAX_NAOH_VOLUME_DISPLAY;
         const totalHeightRatio = Math.min(totalChemicalsAmount, 25) / 25;
         const heightRatio = hasNaOHSample ? naohHeightRatio : totalHeightRatio;
+        const isBromideWetTest = dryTestMode === "wet" && activeHalide === "Br";
         const saltOverlayMinimumHeight = hasSaltSample || hasConcHclSample ? 60 : 0;
+        const bromideWetMinimumHeight = isBromideWetTest && (bromideWetHeatingTriggered || bromideWetHeatingCount > 0) ? 80 : 0;
         const ammoniumAmountInTube = chemicals
           .filter((chemical) => chemical.id === "nh4oh")
           .reduce((sum, chemical) => sum + (chemical.amount || 0), 0);
         const ammoniumHeightBoost = Math.min(60, ammoniumAmountInTube * 15);
         const baseOverlayHeight = Math.min(150, heightRatio * 150);
         const overlayHeight = Math.max(
-          saltOverlayMinimumHeight,
+          Math.max(saltOverlayMinimumHeight, bromideWetMinimumHeight),
           Math.min(150, baseOverlayHeight + (hasAmmoniumSample ? ammoniumHeightBoost : 0)),
         );
         const overrideWithWhite =
@@ -1075,7 +1077,7 @@ export const Equipment: React.FC<EquipmentProps> = ({
         const showOverlay =
           !isFlameTestSalt &&
           overlayColor !== "transparent" &&
-          totalChemicalsAmount > 0;
+          (isBromideWetTest || totalChemicalsAmount > 0);
         const saltCrystalHeight = Math.max(34, Math.min(72, overlayHeight));
         const displayLabel = name.toLowerCase().includes("test tube")
           ? "25ml Test Tube"
